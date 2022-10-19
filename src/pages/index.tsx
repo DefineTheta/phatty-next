@@ -1,3 +1,5 @@
+import SideStack from '@app-src/common/components/layout/SideStack'
+import Stack from '@app-src/common/components/layout/Stack'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -51,6 +53,15 @@ const Home: NextPage = () => {
             </p>
           </a>
         </div>
+
+        <Stack spacing='small'>
+          <h1>HIi</h1>
+          <h1>you</h1>
+        </Stack>
+        <SideStack spacing='medium'>
+          <span>Hello</span>
+          <span>World!</span>
+        </SideStack>
       </main>
 
       <footer className={styles.footer}>
