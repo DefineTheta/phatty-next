@@ -78,7 +78,7 @@ const SideBar = () => {
             : isVisible
             ? 'translate-x-0 w-220 pt-5 pb-7 pl-7 fixed'
             : '-translate-x-full w-0 p-0 fixed'
-        } h-screen bg-background-3 z-10 ease-in-out duration-300 overflow-hidden`}>
+        } h-screen bg-background-300 z-10 ease-in-out duration-300 overflow-hidden`}>
         <button
           onClick={() => setIsVisible(false)}
           className="w-20 h-20 absolute top-10 right-10 text-white sm:hidden">

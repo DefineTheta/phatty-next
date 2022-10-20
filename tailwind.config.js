@@ -7,12 +7,14 @@ module.exports = {
     extend: {
       colors: {
         secondary: 'rgb(148, 103, 251)',
-        'background-1': '#252a37',
-        'background-2': '#2b303f',
-        'background-3': '#2e3343',
+        'background-100': '#252a37',
+        'background-200': '#2b303f',
+        'background-300': '#2e3343',
         'text-100': '#dadada',
         'text-200': '#d1d1d1',
+        'text-300': '#dfdfdf',
         'text-900': '#9467FB',
+        'border-100':'#373e51',
         'bluegray-button': 'rgba(80, 137, 255, 0.1)'
       },
       backgroundImage: {

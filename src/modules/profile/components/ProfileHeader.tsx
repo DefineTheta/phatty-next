@@ -20,7 +20,7 @@ const ProfileHeader = () => {
   ]), [])
 
   return (
-    <div className='pt-36 flex flex-row justify-center bg-background-2'>
+    <div className='pt-36 flex flex-row justify-center bg-background-200'>
       <div className="w-full max-w-96 flex flex-col gap-y-30">
         <div className="flex flex-col gap-y-30">
           <div className="flex flex-row justify-between">
