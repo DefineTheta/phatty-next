@@ -7,7 +7,16 @@ module.exports = {
     extend: {
       colors: {
         secondary: 'rgb(148, 103, 251)',
-        'background-3': '#2e3343'
+        'background-1': '#252a37',
+        'background-2': '#2b303f',
+        'background-3': '#2e3343',
+        'text-100': '#dadada',
+        'text-200': '#d1d1d1',
+        'text-900': '#9467FB',
+        'bluegray-button': 'rgba(80, 137, 255, 0.1)'
+      },
+      backgroundImage: {
+        'purple-button': 'linear-gradient(88.63deg, rgb(148, 103, 251) 15.35%, rgb(67, 38, 136) 103.86%)'
       },
       fontSize: {
         xs: '0.6rem',
@@ -18,9 +27,11 @@ module.exports = {
         '2xl': '3rem'
       },
       spacing: {
+        1: '0.1rem',
         6: '0.6rem',
         10: '1rem',
         12: '1.2rem',
+        14: '1.4rem',
         18: '1.8rem',
         20: '2rem',
         24: '2.4rem',
@@ -85,7 +96,11 @@ module.exports = {
         570: '57rem',
         580: '58rem',
         590: '59rem',
-        600: '60rem'
+        600: '60rem',
+        960: '96rem'
+      },
+      maxWidth: {
+        96: '96rem'
       }
     }
   },
