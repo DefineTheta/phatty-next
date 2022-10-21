@@ -14,6 +14,7 @@ module.exports = {
         'text-100': '#dadada',
         'text-200': '#d1d1d1',
         'text-300': '#dfdfdf',
+        'text-800': '#5089ff',
         'text-900': '#9467FB',
         'border-100':'#373e51',
         'bluegray-button': 'rgba(80, 137, 255, 0.1)'
