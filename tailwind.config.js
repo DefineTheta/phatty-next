@@ -10,6 +10,7 @@ module.exports = {
         'background-100': '#252a37',
         'background-200': '#2b303f',
         'background-300': '#2e3343',
+        'background-900': 'rgba(148, 103, 251, 0.25)',
         'text-100': '#dadada',
         'text-200': '#d1d1d1',
         'text-300': '#dfdfdf',
@@ -103,6 +104,9 @@ module.exports = {
       },
       maxWidth: {
         96: '96rem'
+      },
+      minWidth: {
+        12: '12rem'
       }
     }
   },

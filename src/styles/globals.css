@@ -34,3 +34,7 @@ a {
 button {
   all: unset;
 }
+
+.unset {
+  all: unset;
+}

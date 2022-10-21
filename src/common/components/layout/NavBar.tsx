@@ -16,7 +16,7 @@ const NavBar = () => {
       <div className="w-full max-w-96">
         <div className="h-full flex flex-row justify-end items-center gap-x-24">
           <SearchInput onKeyDown={handleSearch} inputRef={searchInputRef} />
-          <button className="py-6 px-14 bg-purple-button rounded-full shadow-md cursor-pointer">
+          <button className="py-6 px-24 bg-purple-button rounded-full shadow-md cursor-pointer">
             <span className="text-base font-semibold text-text-300">
               Connect Wallet
             </span>
