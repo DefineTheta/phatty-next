@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 export type ITableRowCell = {
   className: string;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 const TableRowCell = ({ className, children }: ITableRowCell) => {

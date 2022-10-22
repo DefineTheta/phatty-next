@@ -1,4 +1,11 @@
-import { bscClient, ethClient, fetchPrices, tplsClient } from '@app-src/services/web3';
+import {
+  bscClient,
+  chainImages,
+  ethClient,
+  fetchPrices,
+  tokenImages,
+  tplsClient
+} from '@app-src/services/web3';
 import { WalletResponse, WalletTokenItem } from '@app-src/types/api';
 import { NextApiRequest, NextApiResponse } from 'next';
 import Web3 from 'web3';
@@ -130,8 +137,8 @@ const calculateWalletTokenData = async (
     balance,
     chain,
     price,
-    chainImg: 'src',
-    tokenImg: 'src',
+    chainImg: chainImages[chain],
+    tokenImg: tokenImages[name],
     usdValue: value
   } as WalletTokenItem;
 };

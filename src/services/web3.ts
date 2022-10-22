@@ -1,5 +1,71 @@
 import Web3 from 'web3';
 
+export const tokenImages: Record<string, string> = {
+  ETH: '/img/tokens/eth.png',
+  BNB: '/img/tokens/bnb.png',
+  WBNB: '/img/tokens/bnb.png',
+  BSC: '/img/tokens/bnb.png',
+  PLS: '/img/tokens/pls.svg',
+  PHSAC: '/img/tokens/phsac.png',
+  HEX: '/img/tokens/hex.svg',
+  pulseX: '/img/tokens/pulsex.jpeg',
+  HDRN: '/img/tokens/hdrn.png',
+  HELGO: '/img/tokens/helgo.png',
+  PHIAT: '/img/tokens/phsac.png',
+  USDC: '/img/tokens/usdc.png',
+  BUSD: '/img/tokens/busd.png',
+  USDT: '/img/tokens/usdt.png',
+  DAI: '/img/tokens/dai.png',
+  SHIB: '/img/tokens/shib.png',
+  LINK: '/img/tokens/link.png',
+  TUSD: '/img/tokens/tusd.png',
+  MANA: '/img/tokens/mana.png',
+  MATIC: '/img/tokens/matic.png',
+  WETH: '/img/tokens/weth.png',
+  FTM: '/img/tokens/ftm.png',
+  YFI: '/img/tokens/yfi.png',
+  PLSX: '/img/tokens/pulsex.jpeg',
+  STETH: '/img/tokens/steth.png',
+  MINT: '/img/tokens/mint.png',
+  NEAR: '/img/tokens/near.svg',
+  APE: '/img/tokens/ape.svg',
+  WFIL: '/img/tokens/wfil.svg',
+  WISE: '/img/tokens/wise.webp',
+  WBTC: '/img/tokens/wbtc.webp',
+  STPT: '/img/tokens/stpt.webp',
+  SAND: '/img/tokens/sand.webp',
+  CHZ: '/img/tokens/chz.webp',
+  GALA: '/img/tokens/gala.webp',
+  GMT: '/img/tokens/gmt.webp',
+  GRT: '/img/tokens/grt.webp',
+  SNT: '/img/tokens/snt.webp',
+  AERGO: '/img/tokens/aergo.webp',
+  ENS: '/img/tokens/ens.webp',
+  LDO: '/img/tokens/ldo.webp',
+  BIT: '/img/tokens/bit.webp',
+  VEN: '/img/tokens/ven.webp',
+  ENJ: '/img/tokens/enj.webp',
+  DYDX: '/img/tokens/dydx.webp',
+  ONE: '/img/tokens/one.webp',
+  POND: '/img/tokens/pond.webp',
+  POLY: '/img/tokens/poly.webp',
+  STG: '/img/tokens/stg.webp',
+  SNX: '/img/tokens/snx.webp',
+  OMG: '/img/tokens/omg.jpg',
+  POWR: '/img/tokens/powr.webp',
+  SUSHI: '/img/tokens/sushi.webp',
+  BAT: '/img/tokens/bat.webp',
+  '1INCH': '/img/tokens/1inch.webp',
+  GLM: '/img/tokens/glm.webp',
+  SYN: '/img/tokens/syn.webp'
+};
+
+export const chainImages: Record<string, string> = {
+  ETH: '/img/chains/eth.svg',
+  BSC: '/img/chains/bsc.svg',
+  TPLS: '/img/chains/tpls.svg'
+};
+
 const defillamaURL = 'https://coins.llama.fi/prices/current/';
 const phiatPriceURL = 'https://phiat.exchange/px';
 

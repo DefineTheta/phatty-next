@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 export type ITableHeaderRowCellProps = {
   className: string;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 const TableHeaderRowCell = ({ className, children }: ITableHeaderRowCellProps) => {
