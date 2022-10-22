@@ -1,9 +1,15 @@
-import useBreakpoint from "@app-src/common/hooks/useBreakpoint";
-import useClickOutside from "@app-src/common/hooks/useClickOutside";
-import { BanknotesIcon, Bars3Icon, Squares2X2Icon, UserIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { useCallback, useMemo, useState } from "react";
+import useBreakpoint from '@app-src/common/hooks/useBreakpoint';
+import useClickOutside from '@app-src/common/hooks/useClickOutside';
+import {
+  BanknotesIcon,
+  Bars3Icon,
+  Squares2X2Icon,
+  UserIcon,
+  XMarkIcon
+} from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useCallback, useMemo, useState } from 'react';
 
 const SideBar = () => {
   const router = useRouter();
@@ -11,7 +17,7 @@ const SideBar = () => {
   const currentTab = useMemo(() => router.pathname.split('/').at(1), [router]);
 
   const [isVisible, setIsVisible] = useState(false);
-  
+
   const breakpoint = useBreakpoint();
 
   const handleClickOutside = useCallback(() => {
@@ -78,16 +84,18 @@ const SideBar = () => {
             : isVisible
             ? 'translate-x-0 w-220 pt-5 pb-7 pl-7 fixed'
             : '-translate-x-full w-0 p-0 fixed'
-        } h-screen bg-background-300 z-10 ease-in-out duration-300 overflow-hidden`}>
+        } h-screen bg-background-300 z-10 ease-in-out duration-300 overflow-hidden`}
+      >
         <button
           onClick={() => setIsVisible(false)}
-          className="w-20 h-20 absolute top-10 right-10 text-white sm:hidden">
+          className="w-20 h-20 absolute top-10 right-10 text-white sm:hidden"
+        >
           <XMarkIcon />
         </button>
         <div className="h-full pt-20 pb-30 pl-20 sm:pl-30 flex flex-col justify-between">
           <div className="flex flex-col gap-y-50">
             <a>
-              <Image src='/img/logo-light.png' alt="Logo" width="140px" height="36px"/>
+              <Image src="/img/logo-light.png" alt="Logo" width="140px" height="36px" />
             </a>
             <div className="flex flex-col gap-y-24">
               {navItems.map((item) => (
@@ -98,7 +106,8 @@ const SideBar = () => {
                       ? 'border-r-4 border-secondary text-gray-200'
                       : 'text-gray-400'
                   }`}
-                  onClick={() => handleNavClick(item.name)}>
+                  onClick={() => handleNavClick(item.name)}
+                >
                   {item.icon}
                   <span className="text-base font-bold">{item.displayName}</span>
                 </a>
@@ -112,6 +121,6 @@ const SideBar = () => {
       </button>
     </>
   );
-}
+};
 
-export default SideBar
+export default SideBar;

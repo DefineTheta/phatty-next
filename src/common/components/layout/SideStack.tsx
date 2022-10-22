@@ -5,14 +5,12 @@ import { ReactNode, useMemo } from 'react';
 export type ISideStackProps = {
   spacing: Spacing;
   children?: ReactNode;
-}
+};
 
-const SideStack = ({spacing, children}: ISideStackProps) => {
-  const spacingClass = useMemo(() => getSpacingClass(spacing, 'col'), [spacing])
+const SideStack = ({ spacing, children }: ISideStackProps) => {
+  const spacingClass = useMemo(() => getSpacingClass(spacing, 'col'), [spacing]);
 
-  return (
-    <div className={`flex flex-row ${spacingClass}`}>{children}</div>
-  )
-}
+  return <div className={`flex flex-row ${spacingClass}`}>{children}</div>;
+};
 
 export default SideStack;

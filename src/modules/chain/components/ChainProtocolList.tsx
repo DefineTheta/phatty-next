@@ -1,8 +1,8 @@
-import ChainProtocolItem from "./ChainProtocolItem";
+import ChainProtocolItem from './ChainProtocolItem';
 
 export type IChainProtocolListProps = {
   currentAssetChain: string;
-}
+};
 
 const ChainProtocolList = ({ currentAssetChain }: IChainProtocolListProps) => {
   const testData = [
@@ -27,17 +27,22 @@ const ChainProtocolList = ({ currentAssetChain }: IChainProtocolListProps) => {
       imgAlt: 'Wallet',
       linkHref: '#wallet'
     }
-  ]
+  ];
 
   return (
     <div className="flex flex-row flex-wrap gap-x-10">
-      {
-        testData.map((protocol, index) => (
-          <ChainProtocolItem key={index} protocolName={protocol.protocolName} totalAmount={protocol.totalAmount} imgSrc={protocol.imgSrc} imgAlt={protocol.imgAlt} linkHref={protocol.linkHref} />
-        ))
-      }
+      {testData.map((protocol, index) => (
+        <ChainProtocolItem
+          key={index}
+          protocolName={protocol.protocolName}
+          totalAmount={protocol.totalAmount}
+          imgSrc={protocol.imgSrc}
+          imgAlt={protocol.imgAlt}
+          linkHref={protocol.linkHref}
+        />
+      ))}
     </div>
-  )
-}
+  );
+};
 
 export default ChainProtocolList;

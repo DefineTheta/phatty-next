@@ -13,6 +13,8 @@
 //   UniswapV3DataComponentEnum
 // } from 'src/types/crypto';
 
+import { WalletTokenItem } from '@app-src/types/api';
+
 export enum ProtocolImgEnum {
   WALLET = 'https://assets.debank.com/static/media/wallet.d67a695b.svg',
   HEX = 'https://cryptologos.cc/logos/hex-hex-logo.svg?v=022',
@@ -58,8 +60,6 @@ export interface ProtocolData {
   error: boolean;
 }
 
-export type WalletResponse = WalletItem[];
-
 type WalletItem = {
   name: string;
   price: number;
@@ -72,7 +72,7 @@ type WalletItem = {
 
 interface WalletData extends ProtocolData {
   total: Record<WalletDataComponentEnum, number>;
-  data: Record<WalletDataComponentEnum, WalletResponse[]>;
+  data: Record<WalletDataComponentEnum, WalletTokenItem[][]>;
 }
 
 // interface HexData extends ProtocolData {

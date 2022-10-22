@@ -23,9 +23,10 @@
 // import { RootState } from '../store';
 // import { ProtocolsState } from './types';
 
-import { RootState } from "@app-src/store/store";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ProtocolEnum, ProtocolImgEnum, ProtocolsState, WalletDataComponentEnum } from "./types";
+import { RootState } from '@app-src/store/store';
+import { WalletResponse } from '@app-src/types/api';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { ProtocolEnum, ProtocolImgEnum, ProtocolsState, WalletDataComponentEnum } from './types';
 
 const initialState: ProtocolsState = {
   [ProtocolEnum.WALLET]: {
@@ -45,7 +46,7 @@ const initialState: ProtocolsState = {
       [WalletDataComponentEnum.TPLS]: [],
       [WalletDataComponentEnum.BSC]: []
     }
-  },
+  }
   // [ProtocolEnum.HEX]: {
   //   name: ProtocolEnum.HEX,
   //   displayName: 'Hex',
@@ -140,26 +141,27 @@ const initialState: ProtocolsState = {
   // }
 };
 
-const fetchWalletData = createAsyncThunk<WalletData[][], string[], { state: RootState }>(
+const fetchWalletData = createAsyncThunk<WalletResponse, string, { state: RootState }>(
   'protocols/fetchWalletData',
-  async (addresses, thunkAPI) => {
+  async (address, thunkAPI) => {
     const controller = new AbortController();
 
     thunkAPI.signal.onabort = () => {
       controller.abort();
     };
 
-    await crypto.fetchPrices();
+    const res = await fetch(`/api/wallet?address=${address}`);
+    const data: WalletResponse = await res.json();
 
-    const data = await Promise.all(
-      addresses.map((address) => {
-        return Promise.all([
-          crypto.fetchEthTokenWalletData(address, controller.signal),
-          crypto.fetchTplsTokenWalletData(address, controller.signal),
-          crypto.fetchBscTokenWalletData(address, controller.signal)
-        ]);
-      })
-    );
+    // const data = await Promise.all(
+    //   addresses.map((address) => {
+    //     return Promise.all([
+    //       crypto.fetchEthTokenWalletData(address, controller.signal),
+    //       crypto.fetchTplsTokenWalletData(address, controller.signal),
+    //       crypto.fetchBscTokenWalletData(address, controller.signal)
+    //     ]);
+    //   })
+    // );
 
     return data;
   }
@@ -276,24 +278,26 @@ export const protocolsSlice = createSlice({
     });
 
     builder.addCase(fetchWalletData.fulfilled, (state, action) => {
-      const data = action.payload.reduce(
-        (prev, cur) => {
-          prev[0] = prev[0].concat(cur[0]);
-          prev[1] = prev[1].concat(cur[1]);
-          prev[2] = prev[2].concat(cur[2]);
+      // const data = action.payload.reduce(
+      //   (prev, cur) => {
+      //     prev[0] = prev[0].concat(cur[0]);
+      //     prev[1] = prev[1].concat(cur[1]);
+      //     prev[2] = prev[2].concat(cur[2]);
 
-          return prev;
-        },
-        [[], [], []] as WalletData[]
-      );
+      //     return prev;
+      //   },
+      //   [[], [], []] as WalletData[]
+      // );
 
-      state.WALLET.data.ETHEREUM.push(data[0]);
-      state.WALLET.data.TPLS.push(data[1]);
-      state.WALLET.data.BSC.push(data[2]);
+      const data = action.payload;
 
-      state.WALLET.total.ETHEREUM += addObjectValue(data[0], 'usdValue');
-      state.WALLET.total.TPLS += addObjectValue(data[1], 'usdValue');
-      state.WALLET.total.BSC += addObjectValue(data[2], 'usdValue');
+      state.WALLET.data.ETHEREUM.push(data.ETHEREUM.data);
+      state.WALLET.data.BSC.push(data.BSC.data);
+      state.WALLET.data.TPLS.push(data.TPLS.data);
+
+      state.WALLET.total.ETHEREUM += data.ETHEREUM.totalValue;
+      state.WALLET.total.BSC += data.BSC.totalValue;
+      state.WALLET.total.TPLS += data.TPLS.totalValue;
 
       state.WALLET.loading = false;
       state.WALLET.error = false;
@@ -482,7 +486,7 @@ export const protocolsSlice = createSlice({
 export const { reset } = protocolsSlice.actions;
 
 export {
-  fetchWalletData,
+  fetchWalletData
   // fetchHexData,
   // fetchPhiatData,
   // fetchPancakeData,

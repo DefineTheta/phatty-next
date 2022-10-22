@@ -1,10 +1,10 @@
-import NavBar from '@app-src/common/components/layout/NavBar'
-import SideBar from '@app-src/common/components/layout/SideBar'
-import { ReactNode } from 'react'
+import NavBar from '@app-src/common/components/layout/NavBar';
+import SideBar from '@app-src/common/components/layout/SideBar';
+import { ReactNode } from 'react';
 
 type IDefaultLayoutProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
 const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
   return (
@@ -15,7 +15,7 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
         {children}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DefaultLayout
+export default DefaultLayout;
