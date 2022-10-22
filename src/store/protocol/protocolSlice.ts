@@ -150,7 +150,7 @@ const fetchWalletData = createAsyncThunk<WalletResponse, string, { state: RootSt
       controller.abort();
     };
 
-    const res = await fetch(`/api/wallet?address=${address}`);
+    const res = await fetch(`/api/wallet?address=${address}&gt=0`);
     const data: WalletResponse = await res.json();
 
     // const data = await Promise.all(

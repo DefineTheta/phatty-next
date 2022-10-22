@@ -1,13 +1,13 @@
 /* eslint-env node */
 
-const plugin = require('tailwindcss/plugin')
+const plugin = require('tailwindcss/plugin');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   plugins: [
-    plugin(function({ addVariant }) {
-      addVariant('next-same-element', '& + &')
+    plugin(function ({ addVariant }) {
+      addVariant('next-same-element', '& + &');
     })
   ],
   theme: {
@@ -23,16 +23,18 @@ module.exports = {
         'text-300': '#dfdfdf',
         'text-800': '#5089ff',
         'text-900': '#9467FB',
-        'border-100':'#373e51',
+        'border-100': '#373e51',
         'border-200': '#252a37',
         'bluegray-button': 'rgba(80, 137, 255, 0.1)'
       },
       backgroundImage: {
-        'purple-button': 'linear-gradient(88.63deg, rgb(148, 103, 251) 15.35%, rgb(67, 38, 136) 103.86%)'
+        'purple-button':
+          'linear-gradient(88.63deg, rgb(148, 103, 251) 15.35%, rgb(67, 38, 136) 103.86%)'
       },
       fontSize: {
         xs: '0.6rem',
         sm: '1.2rem',
+        md: '1.4rem',
         base: '1.6rem',
         lg: '1.8rem',
         xl: '2.4rem',
@@ -41,6 +43,7 @@ module.exports = {
       spacing: {
         1: '0.1rem',
         6: '0.6rem',
+        8: '0.8rem',
         10: '1rem',
         12: '1.2rem',
         16: '1.6rem',

@@ -4,6 +4,7 @@ export type WalletTokenItem = {
   chain: string;
   price: number;
   chainImg: string;
+  tokenImg: string;
   usdValue: number;
 };
 

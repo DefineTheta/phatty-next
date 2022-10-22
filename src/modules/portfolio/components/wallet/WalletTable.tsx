@@ -23,7 +23,7 @@ const WalletTable = () => {
       {walletData.map((item, index) => (
         <TableRow key={index}>
           <TableRowCell className="basis-1/4">
-            <div className="flex flex-row gap-x-6">
+            <div className="flex flex-row gap-x-8">
               <Image
                 className="rounded-full"
                 width="20px"
@@ -34,9 +34,21 @@ const WalletTable = () => {
               <span>{item.chain}</span>
             </div>
           </TableRowCell>
-          <TableRowCell className="basis-1/4">Token</TableRowCell>
-          <TableRowCell className="basis-1/4">Token</TableRowCell>
-          <TableRowCell className="basis-1/4">Token</TableRowCell>
+          <TableRowCell className="basis-1/4">
+            <div className="flex flex-row gap-x-8">
+              <Image
+                className="rounded-full"
+                width="20px"
+                height="20px"
+                src={item.tokenImg}
+                alt={item.name}
+              />
+              <span>{item.name}</span>
+            </div>
+          </TableRowCell>
+          <TableRowCell className="basis-1/4">{item.balance}</TableRowCell>
+          <TableRowCell className="basis-1/6">{item.usdValue}</TableRowCell>
+          <TableRowCell className="basis-1/12"></TableRowCell>
         </TableRow>
       ))}
     </Card>

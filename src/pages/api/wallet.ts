@@ -144,7 +144,7 @@ const calculateWalletTokenData = async (
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<WalletResponse>) {
-  const { address } = req.query;
+  const { address, gt } = req.query;
 
   if (!address) return res.status(400);
 
@@ -204,13 +204,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     );
   });
 
-  const data = await Promise.all([
+  let data = await Promise.all([
     Promise.all(ethPromises),
     Promise.all(bscPromises),
     Promise.all(tplsPromises)
   ]);
 
-  res.status(200).json({
+  const resObj = {
     ETHEREUM: {
       data: data[0],
       totalValue: totalValues.ETHEREUM
@@ -223,5 +223,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       data: data[2],
       totalValue: totalValues.TPLS
     }
-  });
+  };
+
+  if (gt) {
+    const amount = Number(gt);
+    const filteredData = data.map((items) => items.filter((item) => item.usdValue > amount));
+
+    resObj.ETHEREUM.data = filteredData[0];
+    resObj.BSC.data = filteredData[1];
+    resObj.TPLS.data = filteredData[2];
+  }
+
+  res.status(200).json(resObj);
 }
