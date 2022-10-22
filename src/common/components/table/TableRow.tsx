@@ -6,7 +6,7 @@ export type ITableRowProps = {
 
 const TableRow = ({ children }: ITableRowProps) => {
   return (
-    <div className="transition-colors ease-in-out duration-100 hover:bg-background-200 next-same-element:border next-same-element:border-t-border-200">
+    <div className="transition-colors duration-100 border-t border-border-200 hover:bg-background-200">
       <div className="px-16 flex flex-row justify-between items-center">{children}</div>
     </div>
   );

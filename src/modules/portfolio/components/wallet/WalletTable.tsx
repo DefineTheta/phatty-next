@@ -3,6 +3,7 @@ import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
+import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
 import { selectWalletData } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
@@ -46,9 +47,20 @@ const WalletTable = () => {
               <span>{item.name}</span>
             </div>
           </TableRowCell>
-          <TableRowCell className="basis-1/4">{item.balance}</TableRowCell>
-          <TableRowCell className="basis-1/6">{item.usdValue}</TableRowCell>
-          <TableRowCell className="basis-1/12"></TableRowCell>
+          <TableRowCell className="basis-1/4">{styleNumber(item.balance, 3)}</TableRowCell>
+          <TableRowCell className="basis-1/6">{formatToMoney(item.usdValue)}</TableRowCell>
+          <TableRowCell className="basis-1/12">
+            {item.chain === 'TPLS' && (
+              <a
+                className="px-10 py-1 bg-purple-a text-md font-bold underline underline-offset-2 text-text-200 rounded-full cursor-pointer"
+                target="_blank"
+                href="https://testnet.phiat.io/markets"
+                rel="noreferrer"
+              >
+                Earn
+              </a>
+            )}
+          </TableRowCell>
         </TableRow>
       ))}
     </Card>
