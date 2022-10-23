@@ -35,7 +35,7 @@ const decodeDailyData = (encDay: any): HexDailyData => {
 
 export const addDays = (date: Date, days: number) => {
   const newDate = new Date(date.getTime());
-  newDate.setDate(newDate.getDate() + days);
+  newDate.setDate(date.getDate() + days);
 
   return newDate;
 };
@@ -96,6 +96,8 @@ const calculateHexStake = async (
   const stake: HexStake = await contract.methods.stakeLists(address, index).call();
   stake.stakedHearts = BigInt(stake.stakedHearts);
   stake.stakeShares = BigInt(stake.stakeShares);
+  stake.lockedDay = Number(stake.lockedDay);
+  stake.stakedDays = Number(stake.stakedDays);
 
   const endDate = addDays(startDate, stake.lockedDay + stake.stakedDays);
   const days = ((endDate.getTime() - today.getTime()) / 86400000).toFixed(0);
@@ -104,7 +106,7 @@ const calculateHexStake = async (
   const totalShares = Number(stake.stakeShares) / 10e11;
 
   // const oldTotalUSD = (((this.#prices['HEX'] || 1) * 1 * totalValue) / 10e7).toFixed(0);
-  const totalUSD = ((hexPrice || 1) * 1 * totalValue) / 10e7;
+  const totalUSD = (hexPrice * totalValue) / 10e7;
   // hexBal += totalUSD;
   const newTotalValue = totalValue / 10e7;
   const newTotalInterestToDate = Number(totalInterestToDate) / 10e7;

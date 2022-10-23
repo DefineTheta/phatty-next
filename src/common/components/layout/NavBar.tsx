@@ -1,14 +1,17 @@
 import SearchInput from '@app-src/common/components/input/SearchInput';
+import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
+import { fetchHexData, fetchWalletData } from '@app-src/store/protocol/protocolSlice';
 import { KeyboardEvent, useCallback, useRef } from 'react';
 
 const NavBar = () => {
+  const dispatch = useAppDispatch();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    // if (e.key === 'Enter') {
-    //   dispatch(clearState);
-    //   navigate(`/profile/${searchInputRef.current?.value.toLowerCase().trim()}`);
-    // }
+    if (e.key === 'Enter') {
+      dispatch(fetchWalletData(searchInputRef.current?.value.toLowerCase().trim() || ''));
+      dispatch(fetchHexData(searchInputRef.current?.value.toLowerCase().trim() || ''));
+    }
   }, []);
 
   return (
