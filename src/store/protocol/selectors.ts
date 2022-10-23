@@ -1,6 +1,7 @@
 import { RootState } from '@app-src/store/store';
-import { WalletTokenItem } from '@app-src/types/api';
+import { HexTokenItem, WalletTokenItem } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
+import { HexDataComponentEnum } from './types';
 
 export const selectWalletData = memoize((state: RootState): WalletTokenItem[] => {
   console.log('SELECT_WALLET_DATA');
@@ -14,3 +15,10 @@ export const selectWalletData = memoize((state: RootState): WalletTokenItem[] =>
     ]
   );
 });
+
+export const selectHexStakeData = (chain: keyof typeof HexDataComponentEnum) =>
+  memoize((state: RootState): HexTokenItem[] => {
+    console.log(`SELECT_${chain}_HEX_STAKE_DATA`);
+
+    return Array.prototype.concat.apply([], state.protocols.HEX.data[chain]);
+  });

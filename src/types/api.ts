@@ -25,8 +25,8 @@ export type HexTokenItem = {
   tShares: number;
   tSharesP: number;
   stakingEnd: string;
-  totalBalance: string;
-  totalInt: string;
+  totalBalance: number;
+  totalInt: number;
   usdValue: number;
 };
 

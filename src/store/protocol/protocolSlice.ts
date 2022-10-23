@@ -497,8 +497,8 @@ export const protocolsSlice = createSlice({
 export const { reset } = protocolsSlice.actions;
 
 export {
-  fetchWalletData
-  // fetchHexData,
+  fetchWalletData,
+  fetchHexData
   // fetchPhiatData,
   // fetchPancakeData,
   // fetchPulsexData,

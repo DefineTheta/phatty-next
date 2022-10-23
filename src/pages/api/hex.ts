@@ -104,10 +104,10 @@ const calculateHexStake = async (
   const totalShares = Number(stake.stakeShares) / 10e11;
 
   // const oldTotalUSD = (((this.#prices['HEX'] || 1) * 1 * totalValue) / 10e7).toFixed(0);
-  const totalUSD = (hexPrice * 1 * totalValue) / 10e7;
+  const totalUSD = ((hexPrice || 1) * 1 * totalValue) / 10e7;
   // hexBal += totalUSD;
-  const newTotalValue = (totalValue / 10e7).toFixed(0);
-  const newTotalInterestToDate = (Number(totalInterestToDate) / 10e7).toFixed(0);
+  const newTotalValue = totalValue / 10e7;
+  const newTotalInterestToDate = Number(totalInterestToDate) / 10e7;
   const TSharesP = totalShares / globalShares;
 
   totalValueObj[contractType] += totalUSD;
