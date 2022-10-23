@@ -144,7 +144,7 @@ const calculateWalletTokenData = async (
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<WalletResponse>) {
-  res.setHeader('Cache-Control', 's-maxage=86400');
+  res.setHeader('Cache-Control', 's-maxage=3600');
   const { address, gt } = req.query;
 
   if (!address) return res.status(400);

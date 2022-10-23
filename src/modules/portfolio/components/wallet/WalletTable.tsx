@@ -3,6 +3,7 @@ import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
+import useSort from '@app-src/modules/portfolio/hooks/useSort';
 import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
 import { selectWalletData } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
@@ -12,16 +13,27 @@ import { useSelector } from 'react-redux';
 const WalletTable = () => {
   const walletData = useSelector(useCallback(selectWalletData, []));
 
+  const [sortedWalletData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
+    typeof walletData[number]
+  >(walletData, 'usdValue', 'desc');
+
   return (
     <Card>
       <TableHeaderRow>
         <TableHeaderRowCell className="basis-1/4">Chain</TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/4">Token</TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/4">Balance</TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/6">USD Value</TableHeaderRowCell>
+        <TableHeaderRowCell
+          className="basis-1/6"
+          onClick={() => handleTableHeaderClick('usdValue')}
+          sorted={sortOrder}
+          sortable
+        >
+          USD Value
+        </TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/12"></TableHeaderRowCell>
       </TableHeaderRow>
-      {walletData.map((item, index) => (
+      {sortedWalletData.map((item, index) => (
         <TableRow key={index}>
           <TableRowCell className="basis-1/4">
             <div className="flex flex-row gap-x-8">
