@@ -1,4 +1,6 @@
 import Web3 from 'web3';
+import { AbiItem } from 'web3-utils';
+import { hexABI } from './abi';
 
 export const tokenImages: Record<string, string> = {
   ETH: '/img/tokens/eth.png',
@@ -103,3 +105,12 @@ bscClient.setProvider(new Web3.providers.HttpProvider(bscProviderURL));
 const tplsProviderURL = 'https://rpc.v2b.testnet.pulsechain.com';
 export const tplsClient = new Web3();
 tplsClient.setProvider(new Web3.providers.HttpProvider(tplsProviderURL));
+
+export const hexETHContract = new ethClient.eth.Contract(
+  hexABI as AbiItem[],
+  '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39'
+);
+export const hexPLSContract = new tplsClient.eth.Contract(
+  hexABI as AbiItem[],
+  '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39'
+);

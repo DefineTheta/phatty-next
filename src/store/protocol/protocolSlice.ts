@@ -24,9 +24,15 @@
 // import { ProtocolsState } from './types';
 
 import { RootState } from '@app-src/store/store';
-import { WalletResponse } from '@app-src/types/api';
+import { HexResponse, WalletResponse } from '@app-src/types/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ProtocolEnum, ProtocolImgEnum, ProtocolsState, WalletDataComponentEnum } from './types';
+import {
+  HexDataComponentEnum,
+  ProtocolEnum,
+  ProtocolImgEnum,
+  ProtocolsState,
+  WalletDataComponentEnum
+} from './types';
 
 const initialState: ProtocolsState = {
   [ProtocolEnum.WALLET]: {
@@ -46,23 +52,23 @@ const initialState: ProtocolsState = {
       [WalletDataComponentEnum.TPLS]: [],
       [WalletDataComponentEnum.BSC]: []
     }
+  },
+  [ProtocolEnum.HEX]: {
+    name: ProtocolEnum.HEX,
+    displayName: 'Hex',
+    id: '#hex',
+    img: ProtocolImgEnum.HEX,
+    total: {
+      [HexDataComponentEnum.ETHEREUM]: 0,
+      [HexDataComponentEnum.TPLS]: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [HexDataComponentEnum.ETHEREUM]: [],
+      [HexDataComponentEnum.TPLS]: []
+    }
   }
-  // [ProtocolEnum.HEX]: {
-  //   name: ProtocolEnum.HEX,
-  //   displayName: 'Hex',
-  //   id: '#hex',
-  //   img: ProtocolImgEnum.HEX,
-  //   total: {
-  //     [HexDataComponentEnum.ETHEREUM]: 0,
-  //     [HexDataComponentEnum.TPLS]: 0
-  //   },
-  //   loading: false,
-  //   error: false,
-  //   data: {
-  //     [HexDataComponentEnum.ETHEREUM]: [],
-  //     [HexDataComponentEnum.TPLS]: []
-  //   }
-  // },
   // [ProtocolEnum.PHIAT]: {
   //   name: ProtocolEnum.PHIAT,
   //   displayName: 'Phiat',
@@ -167,25 +173,28 @@ const fetchWalletData = createAsyncThunk<WalletResponse, string, { state: RootSt
   }
 );
 
-// const fetchHexData = createAsyncThunk<
-//   HexData[],
-//   string[],
-//   { state: RootState; signal: AbortSignal }
-// >('protocols/fetchHexData', async (addresses, thunkAPI) => {
-//   const controller = new AbortController();
+const fetchHexData = createAsyncThunk<
+  HexResponse,
+  string,
+  { state: RootState; signal: AbortSignal }
+>('protocols/fetchHexData', async (address, thunkAPI) => {
+  const controller = new AbortController();
 
-//   thunkAPI.signal.onabort = () => {
-//     controller.abort();
-//   };
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
 
-//   const data = await Promise.all(
-//     addresses.map((address) => {
-//       return crypto.fetchHexStakeData(address, controller.signal);
-//     })
-//   );
+  const res = await fetch(`/api/hex?address=${address}`);
+  const data: HexResponse = await res.json();
 
-//   return data;
-// });
+  // const data = await Promise.all(
+  //   addresses.map((address) => {
+  //     return crypto.fetchHexStakeData(address, controller.signal);
+  //   })
+  // );
+
+  return data;
+});
 
 // const fetchPhiatData = createAsyncThunk<PhiatData[], string[], { state: RootState }>(
 //   'protocols/fetchPhiatData',
@@ -308,42 +317,44 @@ export const protocolsSlice = createSlice({
       state.WALLET.error = true;
     });
 
-    // //Hex reducer functions
-    // builder.addCase(fetchHexData.pending, (state) => {
-    //   state.HEX.loading = true;
-    //   state.HEX.error = false;
-    // });
+    //Hex reducer functions
+    builder.addCase(fetchHexData.pending, (state) => {
+      state.HEX.loading = true;
+      state.HEX.error = false;
+    });
 
-    // builder.addCase(fetchHexData.fulfilled, (state, action) => {
-    //   if (!action.payload) return;
+    builder.addCase(fetchHexData.fulfilled, (state, action) => {
+      // if (!action.payload) return;
 
-    //   const data = action.payload.reduce(
-    //     (prev, cur) => {
-    //       prev.ETHEREUM = prev.ETHEREUM.concat(cur.ETHEREUM);
-    //       prev.TPLS = prev.TPLS.concat(cur.TPLS);
+      // const data = action.payload.reduce(
+      //   (prev, cur) => {
+      //     prev.ETHEREUM = prev.ETHEREUM.concat(cur.ETHEREUM);
+      //     prev.TPLS = prev.TPLS.concat(cur.TPLS);
 
-    //       return prev;
-    //     },
-    //     {
-    //       [HexDataComponentEnum.ETHEREUM]: [],
-    //       [HexDataComponentEnum.TPLS]: []
-    //     } as HexData
-    //   );
+      //     return prev;
+      //   },
+      //   {
+      //     [HexDataComponentEnum.ETHEREUM]: [],
+      //     [HexDataComponentEnum.TPLS]: []
+      //   } as HexData
+      // );
 
-    //   state.HEX.data.ETHEREUM.push(data.ETHEREUM);
-    //   state.HEX.data.TPLS.push(data.TPLS);
+      const data = action.payload;
 
-    //   state.HEX.total.ETHEREUM += addObjectValue(data.ETHEREUM, 'usdValue');
-    //   state.HEX.total.TPLS += addObjectValue(data.TPLS, 'usdValue');
+      state.HEX.data.ETHEREUM.push(data.ETHEREUM.data);
+      state.HEX.data.TPLS.push(data.TPLS.data);
 
-    //   state.HEX.loading = false;
-    //   state.HEX.error = false;
-    // });
+      state.HEX.total.ETHEREUM += data.ETHEREUM.totalValue;
+      state.HEX.total.TPLS += data.TPLS.totalValue;
 
-    // builder.addCase(fetchHexData.rejected, (state) => {
-    //   // state.HEX.loading = false;
-    //   state.HEX.error = true;
-    // });
+      state.HEX.loading = false;
+      state.HEX.error = false;
+    });
+
+    builder.addCase(fetchHexData.rejected, (state) => {
+      // state.HEX.loading = false;
+      state.HEX.error = true;
+    });
 
     // //Phiat reducer functions
     // builder.addCase(fetchPhiatData.pending, (state) => {
