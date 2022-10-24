@@ -1,3 +1,7 @@
+import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
+import { selectHextotal, selectWalletTotal } from '@app-src/store/protocol/selectors';
+import { useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import ChainProtocolItem from './ChainProtocolItem';
 
 export type IChainProtocolListProps = {
@@ -5,33 +9,32 @@ export type IChainProtocolListProps = {
 };
 
 const ChainProtocolList = ({ currentAssetChain }: IChainProtocolListProps) => {
-  const testData = [
-    {
-      protocolName: 'Wallet',
-      totalAmount: '$1,234,567.89',
-      imgSrc: '/img/icon/wallet.svg',
-      imgAlt: 'Wallet',
-      linkHref: '#wallet'
-    },
-    {
-      protocolName: 'Wallet',
-      totalAmount: '$1,234,567.89',
-      imgSrc: '/img/icon/wallet.svg',
-      imgAlt: 'Wallet',
-      linkHref: '#wallet'
-    },
-    {
-      protocolName: 'Wallet',
-      totalAmount: '$1,234,567.89',
-      imgSrc: '/img/icon/wallet.svg',
-      imgAlt: 'Wallet',
-      linkHref: '#wallet'
-    }
-  ];
+  const walletTotal = useSelector(useCallback(selectWalletTotal, []));
+  const hexTotal = useSelector(useCallback(selectHextotal, []));
+
+  const protocolData = useMemo(
+    () => [
+      {
+        protocolName: 'Wallet',
+        totalAmount: formatToMoney(walletTotal),
+        imgSrc: '/img/icon/wallet.svg',
+        imgAlt: 'Wallet',
+        linkHref: '#wallet'
+      },
+      {
+        protocolName: 'Hex',
+        totalAmount: formatToMoney(hexTotal),
+        imgSrc: '/img/icon/hex.svg',
+        imgAlt: 'Hex',
+        linkHref: '#hex'
+      }
+    ],
+    [walletTotal, hexTotal]
+  );
 
   return (
     <div className="flex flex-row flex-wrap gap-x-10">
-      {testData.map((protocol, index) => (
+      {protocolData.map((protocol, index) => (
         <ChainProtocolItem
           key={index}
           protocolName={protocol.protocolName}

@@ -1,13 +1,13 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
-import { selectHexStakeTotal } from '@app-src/store/protocol/selectors';
+import { selectHexComponentTotal } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { formatToMoney } from '../../utils/format';
 import HexStakeTable from './HexStakeTable';
 
 const HexTableGroup = () => {
-  const hexEthTotal = useSelector(useCallback(selectHexStakeTotal('ETHEREUM'), []));
-  const hexTplsTotal = useSelector(useCallback(selectHexStakeTotal('TPLS'), []));
+  const hexEthTotal = useSelector(useCallback(selectHexComponentTotal('ETHEREUM'), []));
+  const hexTplsTotal = useSelector(useCallback(selectHexComponentTotal('TPLS'), []));
 
   const styledHexEthTotal = useMemo(() => formatToMoney(hexEthTotal), [hexEthTotal]);
   const styledHexTplsTotal = useMemo(() => formatToMoney(hexTplsTotal), [hexTplsTotal]);

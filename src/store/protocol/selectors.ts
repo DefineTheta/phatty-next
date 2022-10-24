@@ -23,9 +23,49 @@ export const selectHexStakeData = (chain: keyof typeof HexDataComponentEnum) =>
     return Array.prototype.concat.apply([], state.protocols.HEX.data[chain]);
   });
 
-export const selectHexStakeTotal = (chain: keyof typeof HexDataComponentEnum) =>
+export const selectEthereumTotal = memoize((state: RootState): number => {
+  console.log('SELECT_ETHEREUM_TOTAL');
+
+  return state.protocols.WALLET.total.ETHEREUM + state.protocols.HEX.total.ETHEREUM;
+});
+
+export const selectBscTotal = memoize((state: RootState): number => {
+  console.log('SELECT_BSC_TOTAL');
+
+  return state.protocols.WALLET.total.BSC;
+});
+
+export const selectTplsTotal = memoize((state: RootState): number => {
+  console.log('SELECT_TPLS_TOTAL');
+
+  return state.protocols.WALLET.total.TPLS + state.protocols.HEX.total.TPLS;
+});
+
+export const selectWalletTotal = memoize((state: RootState): number => {
+  console.log('SELECT_WALLET_TOTAL');
+
+  return (
+    state.protocols.WALLET.total.ETHEREUM +
+    state.protocols.WALLET.total.BSC +
+    state.protocols.WALLET.total.TPLS
+  );
+});
+
+export const selectHexComponentTotal = (chain: keyof typeof HexDataComponentEnum) =>
   memoize((state: RootState): number => {
     console.log(`SELECT_${chain}_HEX_STAKE_TOTAL`);
 
     return state.protocols.HEX.total[chain];
   });
+
+export const selectHextotal = memoize((state: RootState): number => {
+  console.log('SELECT_HEX_TOTAL');
+
+  return selectHexComponentTotal('ETHEREUM')(state) + selectHexComponentTotal('TPLS')(state);
+});
+
+export const selectTotal = memoize((state: RootState): number => {
+  console.log('SELECT_TOTAL');
+
+  return selectWalletTotal(state) + selectHextotal(state);
+});

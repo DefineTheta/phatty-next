@@ -1,7 +1,13 @@
+import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
+import { selectTotal } from '@app-src/store/protocol/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const ProfileHeader = () => {
+  const total = useSelector(useCallback(selectTotal, []));
+  const styledTotal = useMemo(() => formatToMoney(total), [total]);
+
   const [currentTab, setCurrentTab] = useState('portfolio');
 
   const tabs = useMemo(
@@ -29,7 +35,7 @@ const ProfileHeader = () => {
           <div className="flex flex-row justify-between">
             <div className="flex flex-col gap-y-12 items-start">
               <div className="flex flex-row items-center gap-x-6">
-                <span className="text-lg font-semibold text-text-200">Hiii</span>
+                <span className="text-lg font-semibold text-text-200">test</span>
                 <button className="w-20 h-20 flex justify-center items-center cursor-pointer bg-gray-100 rounded-full">
                   <DocumentDuplicateIcon className="w-12 h-12" />
                 </button>
@@ -45,7 +51,7 @@ const ProfileHeader = () => {
                 </button>
               </div>
             </div>
-            <span className="text-2xl font-black text-text-100">$0</span>
+            <span className="text-2xl font-black text-text-100">{styledTotal}</span>
           </div>
         </div>
         <div className="flex flex-row justify-between items-center">
