@@ -22,3 +22,10 @@ export const selectHexStakeData = (chain: keyof typeof HexDataComponentEnum) =>
 
     return Array.prototype.concat.apply([], state.protocols.HEX.data[chain]);
   });
+
+export const selectHexStakeTotal = (chain: keyof typeof HexDataComponentEnum) =>
+  memoize((state: RootState): number => {
+    console.log(`SELECT_${chain}_HEX_STAKE_TOTAL`);
+
+    return state.protocols.HEX.total[chain];
+  });

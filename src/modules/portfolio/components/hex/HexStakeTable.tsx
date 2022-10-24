@@ -24,10 +24,24 @@ const HexStakeTable = ({ chain }: IHexStakeTableProps) => {
   return (
     <Card>
       <TableHeaderRow>
-        <TableHeaderRowCell className="basis-1/5">Staking End</TableHeaderRowCell>
+        <TableHeaderRowCell
+          className="basis-1/5"
+          onClick={() => handleTableHeaderClick('stakingEnd')}
+          sorted={sortKey === 'stakingEnd' ? sortOrder : undefined}
+          sortable
+        >
+          Staking End
+        </TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/5">Total Balance</TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/5">Interest To Date</TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/5">USD Value</TableHeaderRowCell>
+        <TableHeaderRowCell
+          className="basis-1/5"
+          onClick={() => handleTableHeaderClick('usdValue')}
+          sorted={sortKey === 'usdValue' ? sortOrder : undefined}
+          sortable
+        >
+          USD Value
+        </TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/5">TShares</TableHeaderRowCell>
       </TableHeaderRow>
       {sortedHexStakeData.map((item, index) => (

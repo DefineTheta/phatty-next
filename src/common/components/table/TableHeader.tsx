@@ -1,7 +1,6 @@
 import Image from 'next/image';
 
 export type ITableHeaderProps = {
-  tableId?: string;
   tableLink?: string;
   tableName: string;
   totalValue: string;
@@ -12,7 +11,6 @@ export type ITableHeaderProps = {
 };
 
 const TableHeader = ({
-  tableId,
   tableLink,
   tableName,
   totalValue,
@@ -27,13 +25,14 @@ const TableHeader = ({
         <div className="relative">
           <Image width="20px" height="20px" src={tablePrimaryImgSrc} alt={tablePrimaryImgAlt} />
           {tableSecondaryImgSrc && (
-            <Image
-              className="absolute -top-6 -right-6 z-10"
-              width="12px"
-              height="12px"
-              src={tableSecondaryImgSrc}
-              alt={tableSecondaryImgAlt}
-            />
+            <div className="absolute -top-6 -right-4 z-10">
+              <Image
+                width="12px"
+                height="12px"
+                src={tableSecondaryImgSrc}
+                alt={tableSecondaryImgAlt}
+              />
+            </div>
           )}
         </div>
         {tableLink ? (

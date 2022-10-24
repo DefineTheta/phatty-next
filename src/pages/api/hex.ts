@@ -134,6 +134,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   let page: number = Number(req.query.page || 1);
 
+  if (page < 1) return res.status(400);
+
   const price = await fetchPrices();
 
   if (!price) return res.status(500);
@@ -154,10 +156,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   const ethPromises: Promise<HexTokenItem>[] = [];
   const tplsPromises: Promise<HexTokenItem>[] = [];
 
-  const ethStakeCountGreater = ethStakeCount > page * 50;
-  const plsStakeCountGreater = plsStakeCount > page * 50;
+  const ethStakeCountGreater = ethStakeCount > page * 25;
+  const plsStakeCountGreater = plsStakeCount > page * 25;
 
-  for (let i = (page - 1) * 50; i < (ethStakeCountGreater ? page * 50 : ethStakeCount); i++) {
+  for (let i = (page - 1) * 25; i < (ethStakeCountGreater ? page * 25 : ethStakeCount); i++) {
     ethPromises.push(
       calculateHexStake(
         'ETHEREUM',
@@ -172,7 +174,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     );
   }
 
-  for (let i = (page - 1) * 50; i < (plsStakeCountGreater ? page * 50 : plsStakeCount); i++) {
+  for (let i = (page - 1) * 25; i < (plsStakeCountGreater ? page * 25 : plsStakeCount); i++) {
     tplsPromises.push(
       calculateHexStake(
         'TPLS',
