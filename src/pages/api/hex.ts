@@ -132,6 +132,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   if (!address) return res.status(400);
 
+  let page: number = Number(req.query.page || 1);
+
   const price = await fetchPrices();
 
   if (!price) return res.status(500);
@@ -152,47 +154,53 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   const ethPromises: Promise<HexTokenItem>[] = [];
   const tplsPromises: Promise<HexTokenItem>[] = [];
 
-  Array.from({ length: ethStakeCount }, (x, i) => i).forEach((index) =>
+  const ethStakeCountGreater = ethStakeCount > page * 50;
+  const plsStakeCountGreater = plsStakeCount > page * 50;
+
+  for (let i = (page - 1) * 50; i < (ethStakeCountGreater ? page * 50 : ethStakeCount); i++) {
     ethPromises.push(
       calculateHexStake(
         'ETHEREUM',
         address as string,
-        index,
+        i,
         startDate,
         today,
         globalETHShares,
         price['HEX'],
         totalValues
       )
-    )
-  );
+    );
+  }
 
-  Array.from({ length: plsStakeCount }, (x, i) => i).forEach((index) =>
+  for (let i = (page - 1) * 50; i < (plsStakeCountGreater ? page * 50 : plsStakeCount); i++) {
     tplsPromises.push(
       calculateHexStake(
         'TPLS',
         address as string,
-        index,
+        i,
         startDate,
         today,
         globalPLSShares,
         price['HEX'],
         totalValues
       )
-    )
-  );
+    );
+  }
 
   let data = await Promise.all([Promise.all(ethPromises), Promise.all(tplsPromises)]);
 
   const resObj = {
-    ETHEREUM: {
-      data: data[0].filter((item) => item.usdValue > 0),
-      totalValue: totalValues.ETHEREUM
+    data: {
+      ETHEREUM: {
+        data: data[0].filter((item) => item.usdValue > 0),
+        totalValue: totalValues.ETHEREUM
+      },
+      TPLS: {
+        data: data[1].filter((item) => item.usdValue > 0),
+        totalValue: totalValues.TPLS
+      }
     },
-    TPLS: {
-      data: data[1].filter((item) => item.usdValue > 0),
-      totalValue: totalValues.TPLS
-    }
+    next: ethStakeCountGreater || plsStakeCountGreater ? page + 1 : null
   };
 
   res.status(200).json(resObj);

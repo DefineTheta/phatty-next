@@ -184,8 +184,44 @@ const fetchHexData = createAsyncThunk<
     controller.abort();
   };
 
-  const res = await fetch(`/api/hex?address=${address}`);
-  const data: HexResponse = await res.json();
+  const responses: HexResponse[] = [];
+  let fetchMore = true;
+  let page = 1;
+
+  while (fetchMore) {
+    const res = await fetch(`/api/hex?address=${address}&page=${page}`);
+    const data: HexResponse = await res.json();
+    responses.push(data);
+
+    if (data.next === null) fetchMore = false;
+    else page = data.next;
+  }
+
+  if (responses.length === 1) return responses[0];
+
+  const collatedRes = {
+    data: {
+      ETHEREUM: {
+        data: [],
+        totalValue: 0
+      },
+      TPLS: {
+        data: [],
+        totalValue: 0
+      }
+    },
+    next: null
+  } as HexResponse;
+
+  for (let i = 0; i < responses.length; i++) {
+    collatedRes.data.ETHEREUM.data = collatedRes.data.ETHEREUM.data.concat(
+      responses[i].data.ETHEREUM.data
+    );
+    collatedRes.data.ETHEREUM.totalValue += responses[i].data.ETHEREUM.totalValue;
+
+    collatedRes.data.TPLS.data = collatedRes.data.TPLS.data.concat(responses[i].data.TPLS.data);
+    collatedRes.data.TPLS.totalValue += responses[i].data.TPLS.totalValue;
+  }
 
   // const data = await Promise.all(
   //   addresses.map((address) => {
@@ -193,7 +229,7 @@ const fetchHexData = createAsyncThunk<
   //   })
   // );
 
-  return data;
+  return collatedRes;
 });
 
 // const fetchPhiatData = createAsyncThunk<PhiatData[], string[], { state: RootState }>(
@@ -339,13 +375,13 @@ export const protocolsSlice = createSlice({
       //   } as HexData
       // );
 
-      const data = action.payload;
+      const res = action.payload;
 
-      state.HEX.data.ETHEREUM.push(data.ETHEREUM.data);
-      state.HEX.data.TPLS.push(data.TPLS.data);
+      state.HEX.data.ETHEREUM.push(res.data.ETHEREUM.data);
+      state.HEX.data.TPLS.push(res.data.TPLS.data);
 
-      state.HEX.total.ETHEREUM += data.ETHEREUM.totalValue;
-      state.HEX.total.TPLS += data.TPLS.totalValue;
+      state.HEX.total.ETHEREUM += res.data.ETHEREUM.totalValue;
+      state.HEX.total.TPLS += res.data.TPLS.totalValue;
 
       state.HEX.loading = false;
       state.HEX.error = false;

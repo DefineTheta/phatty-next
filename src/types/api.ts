@@ -36,6 +36,10 @@ export type HexChainItem = {
 };
 
 export type HexResponse = {
-  ETHEREUM: HexChainItem;
-  TPLS: HexChainItem;
+  data: {
+    ETHEREUM: HexChainItem;
+    TPLS: HexChainItem;
+  };
+  error?: string;
+  next: number | null;
 };
