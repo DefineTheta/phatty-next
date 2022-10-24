@@ -15,7 +15,7 @@ const NavBar = () => {
   }, []);
 
   return (
-    <div className="w-full h-60 flex flex-row justify-center bg-background-200 border-b border-border-100">
+    <div className="w-full py-10 flex flex-row justify-center bg-background-200 border-b border-border-100">
       <div className="w-full max-w-96">
         <div className="h-full flex flex-row justify-end items-center gap-x-24">
           <SearchInput onKeyDown={handleSearch} inputRef={searchInputRef} />
