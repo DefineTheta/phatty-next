@@ -24,10 +24,11 @@
 // import { ProtocolsState } from './types';
 
 import { RootState } from '@app-src/store/store';
-import { HexResponse, WalletResponse } from '@app-src/types/api';
+import { HexResponse, PhiatResponse, WalletResponse } from '@app-src/types/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   HexDataComponentEnum,
+  PhiatDataComponentEnum,
   ProtocolEnum,
   ProtocolImgEnum,
   ProtocolsState,
@@ -68,25 +69,26 @@ const initialState: ProtocolsState = {
       [HexDataComponentEnum.ETHEREUM]: [],
       [HexDataComponentEnum.TPLS]: []
     }
+  },
+  [ProtocolEnum.PHIAT]: {
+    name: ProtocolEnum.PHIAT,
+    displayName: 'Phiat',
+    id: '#phiat',
+    img: ProtocolImgEnum.PHIAT,
+    total: {
+      TPLS: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [PhiatDataComponentEnum.LENDING]: [],
+      [PhiatDataComponentEnum.STAKING]: [],
+      [PhiatDataComponentEnum.STABLE_DEBT]: [],
+      [PhiatDataComponentEnum.VARIABLE_DEBT]: [],
+      [PhiatDataComponentEnum.PH_TOKENS]: [],
+      STAKING_APY: 0
+    }
   }
-  // [ProtocolEnum.PHIAT]: {
-  //   name: ProtocolEnum.PHIAT,
-  //   displayName: 'Phiat',
-  //   id: '#phiat',
-  //   img: ProtocolImgEnum.PHIAT,
-  //   total: {
-  //     PHIAT: 0
-  //   },
-  //   loading: false,
-  //   error: false,
-  //   data: {
-  //     [PhiatDataComponentEnum.PHIAT_LENDING]: [],
-  //     [PhiatDataComponentEnum.PHIAT_STAKING]: [],
-  //     [PhiatDataComponentEnum.PHIAT_STABLE_DEBT]: [],
-  //     [PhiatDataComponentEnum.PHIAT_VARIABLE_DEBT]: [],
-  //     [PhiatDataComponentEnum.PHIAT_TOKENS]: []
-  //   }
-  // },
   // [ProtocolEnum.PULSEX]: {
   //   name: ProtocolEnum.PULSEX,
   //   displayName: 'PulseX',
@@ -232,24 +234,96 @@ const fetchHexData = createAsyncThunk<
   return collatedRes;
 });
 
-// const fetchPhiatData = createAsyncThunk<PhiatData[], string[], { state: RootState }>(
-//   'protocols/fetchPhiatData',
-//   async (addresses, thunkAPI) => {
-//     const controller = new AbortController();
+const fetchPhiatData = createAsyncThunk<PhiatResponse, string, { state: RootState }>(
+  'protocols/fetchPhiatData',
+  async (address, thunkAPI) => {
+    const controller = new AbortController();
 
-//     thunkAPI.signal.onabort = () => {
-//       controller.abort();
-//     };
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
 
-//     const data = await Promise.all(
-//       addresses.map((address) => {
-//         return crypto.fetchPhiatData(address, controller.signal);
-//       })
-//     );
+    // const data = await Promise.all(
+    //   addresses.map((address) => {
+    //     return crypto.fetchPhiatData(address, controller.signal);
+    //   })
+    // );
 
-//     return data;
-//   }
-// );
+    const responses: PhiatResponse[] = [];
+    let fetchMore = true;
+    let page = 1;
+
+    while (fetchMore) {
+      const res = await fetch(`/api/phiat?address=${address}&page=${page}`);
+      const data: PhiatResponse = await res.json();
+      responses.push(data);
+
+      if (data.next === null) fetchMore = false;
+      else page = data.next;
+    }
+
+    if (responses.length === 1) return responses[0];
+
+    const collatedRes = {
+      data: {
+        STABLE_DEBT: {
+          data: [],
+          totalValue: 0
+        },
+        VARIABLE_DEBT: {
+          data: [],
+          totalValue: 0
+        },
+        LENDING: {
+          data: [],
+          totalValue: 0
+        },
+        STAKING: {
+          data: [],
+          totalValue: 0
+        },
+        PH_TOKENS: {
+          data: [],
+          totalValue: 0
+        },
+        STAKING_APY: 0
+      },
+      next: null
+    } as PhiatResponse;
+
+    for (let i = 0; i < responses.length; i++) {
+      collatedRes.data.STABLE_DEBT.data = collatedRes.data.STABLE_DEBT.data.concat(
+        responses[i].data.STABLE_DEBT.data
+      );
+      collatedRes.data.VARIABLE_DEBT.data = collatedRes.data.VARIABLE_DEBT.data.concat(
+        responses[i].data.VARIABLE_DEBT.data
+      );
+      collatedRes.data.LENDING.data = collatedRes.data.LENDING.data.concat(
+        responses[i].data.LENDING.data
+      );
+      collatedRes.data.STAKING.data = collatedRes.data.STAKING.data.concat(
+        responses[i].data.STAKING.data
+      );
+      collatedRes.data.PH_TOKENS.data = collatedRes.data.PH_TOKENS.data.concat(
+        responses[i].data.PH_TOKENS.data
+      );
+
+      collatedRes.data.STABLE_DEBT.totalValue += responses[i].data.STABLE_DEBT.totalValue;
+      collatedRes.data.VARIABLE_DEBT.totalValue += responses[i].data.VARIABLE_DEBT.totalValue;
+      collatedRes.data.LENDING.totalValue += responses[i].data.LENDING.totalValue;
+      collatedRes.data.STAKING.totalValue += responses[i].data.STAKING.totalValue;
+      collatedRes.data.PH_TOKENS.totalValue += responses[i].data.PH_TOKENS.totalValue;
+
+      collatedRes.data.STAKING_APY = responses[i].data.STAKING_APY;
+      // collatedRes.data.ETHEREUM.totalValue += responses[i].data.ETHEREUM.totalValue;
+
+      // collatedRes.data.TPLS.data = collatedRes.data.TPLS.data.concat(responses[i].data.TPLS.data);
+      // collatedRes.data.TPLS.totalValue += responses[i].data.TPLS.totalValue;
+    }
+
+    return collatedRes;
+  }
+);
 
 // const fetchPulsexData = createAsyncThunk<PulsexData[], string[], { state: RootState }>(
 //   'protocols/fetchPulsexData',
@@ -392,53 +466,70 @@ export const protocolsSlice = createSlice({
       state.HEX.error = true;
     });
 
-    // //Phiat reducer functions
-    // builder.addCase(fetchPhiatData.pending, (state) => {
-    //   state.PHIAT.loading = true;
-    // });
+    //Phiat reducer functions
+    builder.addCase(fetchPhiatData.pending, (state) => {
+      state.PHIAT.loading = true;
+    });
 
-    // builder.addCase(fetchPhiatData.fulfilled, (state, action) => {
-    //   if (!action.payload) return;
+    builder.addCase(fetchPhiatData.fulfilled, (state, action) => {
+      if (!action.payload) return;
 
-    //   const data = action.payload.reduce(
-    //     (prev, cur) => {
-    //       prev.PHIAT_LENDING = prev.PHIAT_LENDING.concat(cur.PHIAT_LENDING);
-    //       prev.PHIAT_STAKING = prev.PHIAT_STAKING.concat(cur.PHIAT_STAKING);
-    //       prev.PHIAT_STABLE_DEBT = prev.PHIAT_STABLE_DEBT.concat(cur.PHIAT_STABLE_DEBT);
-    //       prev.PHIAT_VARIABLE_DEBT = prev.PHIAT_VARIABLE_DEBT.concat(cur.PHIAT_VARIABLE_DEBT);
-    //       prev.PHIAT_TOKENS = prev.PHIAT_TOKENS.concat(cur.PHIAT_TOKENS);
+      const res = action.payload;
 
-    //       return prev;
-    //     },
-    //     {
-    //       [PhiatDataComponentEnum.PHIAT_LENDING]: [],
-    //       [PhiatDataComponentEnum.PHIAT_STAKING]: [],
-    //       [PhiatDataComponentEnum.PHIAT_STABLE_DEBT]: [],
-    //       [PhiatDataComponentEnum.PHIAT_VARIABLE_DEBT]: [],
-    //       [PhiatDataComponentEnum.PHIAT_TOKENS]: []
-    //     } as PhiatData
-    //   );
+      state.PHIAT.data.LENDING.push(res.data.LENDING.data);
+      state.PHIAT.data.STABLE_DEBT.push(res.data.STABLE_DEBT.data);
+      state.PHIAT.data.VARIABLE_DEBT.push(res.data.VARIABLE_DEBT.data);
+      state.PHIAT.data.STAKING.push(res.data.STAKING.data);
+      state.PHIAT.data.PH_TOKENS.push(res.data.PH_TOKENS.data);
 
-    //   state.PHIAT.data.PHIAT_LENDING.push(data.PHIAT_LENDING);
-    //   state.PHIAT.data.PHIAT_STAKING.push(data.PHIAT_STAKING);
-    //   state.PHIAT.data.PHIAT_STABLE_DEBT.push(data.PHIAT_STABLE_DEBT);
-    //   state.PHIAT.data.PHIAT_VARIABLE_DEBT.push(data.PHIAT_VARIABLE_DEBT);
-    //   state.PHIAT.data.PHIAT_TOKENS.push(data.PHIAT_TOKENS);
+      state.PHIAT.data.STAKING_APY = res.data.STAKING_APY;
 
-    //   state.PHIAT.total.PHIAT +=
-    //     addObjectValue(data.PHIAT_LENDING, 'usdValue') +
-    //     addObjectValue(data.PHIAT_STAKING, 'usdValue') -
-    //     addObjectValue(data.PHIAT_VARIABLE_DEBT, 'usdValue') -
-    //     addObjectValue(data.PHIAT_STABLE_DEBT, 'usdValue');
+      state.PHIAT.total.TPLS =
+        res.data.LENDING.totalValue +
+        res.data.PH_TOKENS.totalValue +
+        res.data.STABLE_DEBT.totalValue +
+        res.data.STAKING.totalValue +
+        res.data.VARIABLE_DEBT.totalValue;
 
-    //   state.PHIAT.loading = false;
-    //   state.PHIAT.error = false;
-    // });
+      // const data = action.payload.reduce(
+      //   (prev, cur) => {
+      //     prev.PHIAT_LENDING = prev.PHIAT_LENDING.concat(cur.PHIAT_LENDING);
+      //     prev.PHIAT_STAKING = prev.PHIAT_STAKING.concat(cur.PHIAT_STAKING);
+      //     prev.PHIAT_STABLE_DEBT = prev.PHIAT_STABLE_DEBT.concat(cur.PHIAT_STABLE_DEBT);
+      //     prev.PHIAT_VARIABLE_DEBT = prev.PHIAT_VARIABLE_DEBT.concat(cur.PHIAT_VARIABLE_DEBT);
+      //     prev.PHIAT_TOKENS = prev.PHIAT_TOKENS.concat(cur.PHIAT_TOKENS);
 
-    // builder.addCase(fetchPhiatData.rejected, (state) => {
-    //   // state.PHIAT.loading = false;
-    //   state.PHIAT.error = true;
-    // });
+      //     return prev;
+      //   },
+      //   {
+      //     [PhiatDataComponentEnum.PHIAT_LENDING]: [],
+      //     [PhiatDataComponentEnum.PHIAT_STAKING]: [],
+      //     [PhiatDataComponentEnum.PHIAT_STABLE_DEBT]: [],
+      //     [PhiatDataComponentEnum.PHIAT_VARIABLE_DEBT]: [],
+      //     [PhiatDataComponentEnum.PHIAT_TOKENS]: []
+      //   } as PhiatData
+      // );
+
+      // state.PHIAT.data.PHIAT_LENDING.push(data.PHIAT_LENDING);
+      // state.PHIAT.data.PHIAT_STAKING.push(data.PHIAT_STAKING);
+      // state.PHIAT.data.PHIAT_STABLE_DEBT.push(data.PHIAT_STABLE_DEBT);
+      // state.PHIAT.data.PHIAT_VARIABLE_DEBT.push(data.PHIAT_VARIABLE_DEBT);
+      // state.PHIAT.data.PHIAT_TOKENS.push(data.PHIAT_TOKENS);
+
+      // state.PHIAT.total.PHIAT +=
+      //   addObjectValue(data.PHIAT_LENDING, 'usdValue') +
+      //   addObjectValue(data.PHIAT_STAKING, 'usdValue') -
+      //   addObjectValue(data.PHIAT_VARIABLE_DEBT, 'usdValue') -
+      //   addObjectValue(data.PHIAT_STABLE_DEBT, 'usdValue');
+
+      state.PHIAT.loading = false;
+      state.PHIAT.error = false;
+    });
+
+    builder.addCase(fetchPhiatData.rejected, (state) => {
+      // state.PHIAT.loading = false;
+      state.PHIAT.error = true;
+    });
 
     // // Pulsex reducer functions
     // builder.addCase(fetchPulsexData.pending, (state) => {
@@ -534,7 +625,8 @@ export const { reset } = protocolsSlice.actions;
 
 export {
   fetchWalletData,
-  fetchHexData
+  fetchHexData,
+  fetchPhiatData
   // fetchPhiatData,
   // fetchPancakeData,
   // fetchPulsexData,

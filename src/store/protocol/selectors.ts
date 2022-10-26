@@ -1,7 +1,7 @@
 import { RootState } from '@app-src/store/store';
-import { HexTokenItem, WalletTokenItem } from '@app-src/types/api';
+import { HexTokenItem, PhiatTokenItem, WalletTokenItem } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
-import { HexDataComponentEnum } from './types';
+import { HexDataComponentEnum, PhiatDataComponentEnum } from './types';
 
 export const selectWalletData = memoize((state: RootState): WalletTokenItem[] => {
   console.log('SELECT_WALLET_DATA');
@@ -22,6 +22,19 @@ export const selectHexStakeData = (chain: keyof typeof HexDataComponentEnum) =>
 
     return Array.prototype.concat.apply([], state.protocols.HEX.data[chain]);
   });
+
+export const selectPhiatComponentData = (component: keyof typeof PhiatDataComponentEnum) =>
+  memoize((state: RootState): PhiatTokenItem[] => {
+    console.log(`SELECT_${component}_PHIAT_DATA`);
+
+    return Array.prototype.concat.apply([], state.protocols.PHIAT.data[component]);
+  });
+
+export const selectPhiatStakingAPY = memoize((state: RootState) => {
+  console.log('SELECT_PHIAT_STAKING_APY');
+
+  return state.protocols.PHIAT.data.STAKING_APY;
+});
 
 export const selectEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
@@ -62,6 +75,12 @@ export const selectHextotal = memoize((state: RootState): number => {
   console.log('SELECT_HEX_TOTAL');
 
   return selectHexComponentTotal('ETHEREUM')(state) + selectHexComponentTotal('TPLS')(state);
+});
+
+export const selectPhiatTotal = memoize((state: RootState): number => {
+  console.log('SELECT_PHIAT_TOTAL');
+
+  return state.protocols.PHIAT.total.TPLS;
 });
 
 export const selectTotal = memoize((state: RootState): number => {

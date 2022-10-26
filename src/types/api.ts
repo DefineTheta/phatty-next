@@ -43,3 +43,33 @@ export type HexResponse = {
   error?: string;
   next: number | null;
 };
+
+// PHIAT Types
+
+export type PhiatTokenItem = {
+  address: string;
+  balance: number;
+  symbol: string;
+  image: string;
+  usdValue: number;
+};
+
+export type PhiatComponentItem = {
+  data: PhiatTokenItem[];
+  totalValue: number;
+};
+
+export type PhiatData = {
+  STABLE_DEBT: PhiatComponentItem;
+  VARIABLE_DEBT: PhiatComponentItem;
+  LENDING: PhiatComponentItem;
+  STAKING: PhiatComponentItem;
+  PH_TOKENS: PhiatComponentItem;
+  STAKING_APY: number;
+};
+
+export type PhiatResponse = {
+  data: PhiatData;
+  error?: string;
+  next: number | null;
+};

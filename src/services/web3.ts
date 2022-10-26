@@ -68,6 +68,37 @@ export const chainImages: Record<string, string> = {
   TPLS: '/img/chains/tpls.svg'
 };
 
+export const phiatTokensLookupMap = {
+  '0x189246E1451757938b4C43c5309e54f5587C6DCC': {
+    symbol: 'phPLS',
+    address: '0x189246E1451757938b4C43c5309e54f5587C6DCC'
+  },
+  '0xc70Cbbadc81b0D39A5E8a5D4C565f6a64896D6D3': {
+    symbol: 'phPHIAT',
+    address: '0xc70Cbbadc81b0D39A5E8a5D4C565f6a64896D6D3'
+  },
+  '0xC5106910120cedC9b213fb29D0f03F760702599b': {
+    symbol: 'phHEX',
+    address: '0xC5106910120cedC9b213fb29D0f03F760702599b'
+  },
+  '0x74a2B18310E75697Abb484F6b47CFe51FE6d714A': {
+    symbol: 'phPLSX',
+    address: '0x74a2B18310E75697Abb484F6b47CFe51FE6d714A'
+  },
+  '0xb729391DF6a6cbeB0Fe14c0f4b45355b4942CF84': {
+    symbol: 'phHDRN',
+    address: '0xb729391DF6a6cbeB0Fe14c0f4b45355b4942CF84'
+  },
+  '0x77AD698773699eFBA06d6b477B5eF5Ab86170d5e': {
+    symbol: 'phHELGO',
+    address: '0x77AD698773699eFBA06d6b477B5eF5Ab86170d5e'
+  },
+  '0x0D14F7b11fCBa90E66E7b26F21cf875Ddc83fF39': {
+    symbol: 'phUSDC',
+    address: '0x0D14F7b11fCBa90E66E7b26F21cf875Ddc83fF39'
+  }
+};
+
 const defillamaURL = 'https://coins.llama.fi/prices/current/';
 const phiatPriceURL = 'https://phiat.exchange/px';
 

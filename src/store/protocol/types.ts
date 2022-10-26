@@ -13,7 +13,7 @@
 //   UniswapV3DataComponentEnum
 // } from 'src/types/crypto';
 
-import { HexTokenItem, WalletTokenItem } from '@app-src/types/api';
+import { HexTokenItem, PhiatTokenItem, WalletTokenItem } from '@app-src/types/api';
 
 export enum ProtocolImgEnum {
   WALLET = 'https://assets.debank.com/static/media/wallet.d67a695b.svg',
@@ -46,10 +46,18 @@ export enum HexDataComponentEnum {
   TPLS = 'TPLS'
 }
 
+export enum PhiatDataComponentEnum {
+  STABLE_DEBT = 'STABLE_DEBT',
+  VARIABLE_DEBT = 'VARIABLE_DEBT',
+  LENDING = 'LENDING',
+  STAKING = 'STAKING',
+  PH_TOKENS = 'PH_TOKENS'
+}
+
 export interface ProtocolsState {
   [ProtocolEnum.WALLET]: WalletData;
   [ProtocolEnum.HEX]: HexData;
-  // [ProtocolEnum.PHIAT]: PhiatData;
+  [ProtocolEnum.PHIAT]: PhiatData;
   // [ProtocolEnum.PULSEX]: PulsexData;
   // [ProtocolEnum.PANCAKE]: PancakeData;
   // [ProtocolEnum.UNISWAPV2]: UniswapV2Data;
@@ -85,12 +93,12 @@ interface HexData extends ProtocolData {
   data: Record<keyof typeof HexDataComponentEnum, HexTokenItem[][]>;
 }
 
-// interface PhiatData extends ProtocolData {
-//   total: {
-//     PHIAT: number;
-//   };
-//   data: Record<PhiatDataComponentEnum, any[]>;
-// }
+interface PhiatData extends ProtocolData {
+  total: {
+    TPLS: number;
+  };
+  data: Record<keyof typeof PhiatDataComponentEnum, PhiatTokenItem[][]> & { STAKING_APY: number };
+}
 
 // interface PulsexData extends ProtocolData {
 //   total: Record<PulsexDataComponentEnum, number>;

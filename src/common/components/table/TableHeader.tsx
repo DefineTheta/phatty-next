@@ -20,7 +20,7 @@ const TableHeader = ({
   tableSecondaryImgAlt
 }: ITableHeaderProps) => {
   return (
-    <div id="table-header" className="flex flex-row justify-between">
+    <div id="table-header" className="flex flex-row justify-between items-center">
       <div className="flex flex-row gap-x-14 items-center">
         <div className="relative">
           <Image width="20px" height="20px" src={tablePrimaryImgSrc} alt={tablePrimaryImgAlt} />
