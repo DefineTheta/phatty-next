@@ -3,6 +3,7 @@ import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import {
   fetchHexData,
   fetchPhiatData,
+  fetchPulsexData,
   fetchWalletData
 } from '@app-src/store/protocol/protocolSlice';
 import { KeyboardEvent, useCallback, useRef } from 'react';
@@ -16,6 +17,7 @@ const NavBar = () => {
       dispatch(fetchWalletData(searchInputRef.current?.value.toLowerCase().trim() || ''));
       dispatch(fetchHexData(searchInputRef.current?.value.toLowerCase().trim() || ''));
       dispatch(fetchPhiatData(searchInputRef.current?.value.toLowerCase().trim() || ''));
+      dispatch(fetchPulsexData(searchInputRef.current?.value.toLowerCase().trim() || ''));
     }
   }, []);
 

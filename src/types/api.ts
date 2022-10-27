@@ -73,3 +73,38 @@ export type PhiatResponse = {
   error?: string;
   next: number | null;
 };
+
+// PULSEX Types
+
+export type PulsexTokenItem = {
+  tokenOne: {
+    address: string;
+    balance: number;
+    value: number;
+    symbol: string;
+    price: number;
+    image: string;
+  };
+  tokenTwo: {
+    address: string;
+    balance: number;
+    value: number;
+    symbol: string;
+    price: number;
+    image: string;
+  };
+  usdValue: number;
+  ratio: number;
+};
+
+export type PulsexComponentItem = {
+  data: PulsexTokenItem[];
+  totalValue: number;
+};
+
+export type PulsexResponse = {
+  data: {
+    LIQUIDITY_POOL: PulsexComponentItem;
+  };
+  error?: string;
+};

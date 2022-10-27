@@ -1,5 +1,5 @@
 import { RootState } from '@app-src/store/store';
-import { HexTokenItem, PhiatTokenItem, WalletTokenItem } from '@app-src/types/api';
+import { HexTokenItem, PhiatTokenItem, PulsexTokenItem, WalletTokenItem } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
 import { HexDataComponentEnum, PhiatDataComponentEnum } from './types';
 
@@ -34,6 +34,12 @@ export const selectPhiatStakingAPY = memoize((state: RootState) => {
   console.log('SELECT_PHIAT_STAKING_APY');
 
   return state.protocols.PHIAT.data.STAKING_APY;
+});
+
+export const selectPulsexLiquidityPoolData = memoize((state: RootState): PulsexTokenItem[] => {
+  console.log('SELECT_PULSEX_LIQUIDITY_POOL_DATA');
+
+  return Array.prototype.concat.apply([], state.protocols.PULSEX.data.LIQUIDITY_POOL);
 });
 
 export const selectEthereumTotal = memoize((state: RootState): number => {
@@ -81,6 +87,12 @@ export const selectPhiatTotal = memoize((state: RootState): number => {
   console.log('SELECT_PHIAT_TOTAL');
 
   return state.protocols.PHIAT.total.TPLS;
+});
+
+export const selectPulsexTotal = memoize((state: RootState): number => {
+  console.log('SELECT_PULSEX_TOTAL');
+
+  return state.protocols.PULSEX.total.LIQUIDITY_POOL;
 });
 
 export const selectTotal = memoize((state: RootState): number => {

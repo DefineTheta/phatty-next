@@ -24,7 +24,7 @@
 // import { ProtocolsState } from './types';
 
 import { RootState } from '@app-src/store/store';
-import { HexResponse, PhiatResponse, WalletResponse } from '@app-src/types/api';
+import { HexResponse, PhiatResponse, PulsexResponse, WalletResponse } from '@app-src/types/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   HexDataComponentEnum,
@@ -32,6 +32,7 @@ import {
   ProtocolEnum,
   ProtocolImgEnum,
   ProtocolsState,
+  PulsexDataComponentEnum,
   WalletDataComponentEnum
 } from './types';
 
@@ -88,21 +89,21 @@ const initialState: ProtocolsState = {
       [PhiatDataComponentEnum.PH_TOKENS]: [],
       STAKING_APY: 0
     }
+  },
+  [ProtocolEnum.PULSEX]: {
+    name: ProtocolEnum.PULSEX,
+    displayName: 'PulseX',
+    id: '#pulsex',
+    img: ProtocolImgEnum.PULSEX,
+    total: {
+      [PulsexDataComponentEnum.LIQUIDITY_POOL]: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [PulsexDataComponentEnum.LIQUIDITY_POOL]: []
+    }
   }
-  // [ProtocolEnum.PULSEX]: {
-  //   name: ProtocolEnum.PULSEX,
-  //   displayName: 'PulseX',
-  //   id: '#pulsex',
-  //   img: ProtocolImgEnum.PULSEX,
-  //   total: {
-  //     [PulsexDataComponentEnum.PULSEX]: 0
-  //   },
-  //   loading: false,
-  //   error: false,
-  //   data: {
-  //     [PulsexDataComponentEnum.PULSEX]: []
-  //   }
-  // },
   // [ProtocolEnum.PANCAKE]: {
   //   name: ProtocolEnum.PANCAKE,
   //   displayName: 'Pancake',
@@ -325,26 +326,29 @@ const fetchPhiatData = createAsyncThunk<PhiatResponse, string, { state: RootStat
   }
 );
 
-// const fetchPulsexData = createAsyncThunk<PulsexData[], string[], { state: RootState }>(
-//   'protocols/fetchPulsexData',
-//   async (addresses, thunkAPI) => {
-//     const controller = new AbortController();
+const fetchPulsexData = createAsyncThunk<PulsexResponse, string, { state: RootState }>(
+  'protocols/fetchPulsexData',
+  async (address, thunkAPI) => {
+    const controller = new AbortController();
 
-//     thunkAPI.signal.onabort = () => {
-//       controller.abort();
-//     };
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
 
-//     const data = await Promise.all(
-//       addresses.map((address) => {
-//         return crypto.fetchPulsexData(address, controller.signal);
-//       })
-//     );
+    const res = await fetch(`/api/pulsex?address=${address}`);
+    const data: PulsexResponse = await res.json();
 
-//     // const data = await crypto.fetchPulsexData(address, controller.signal);
+    // const data = await Promise.all(
+    //   addresses.map((address) => {
+    //     return crypto.fetchPulsexData(address, controller.signal);
+    //   })
+    // );
 
-//     return data;
-//   }
-// );
+    // const data = await crypto.fetchPulsexData(address, controller.signal);
+
+    return data;
+  }
+);
 
 // const fetchPancakeData = createAsyncThunk<PancakeData[], string[], { state: RootState }>(
 //   'protocols/fetchPancakeData',
@@ -531,27 +535,35 @@ export const protocolsSlice = createSlice({
       state.PHIAT.error = true;
     });
 
-    // // Pulsex reducer functions
-    // builder.addCase(fetchPulsexData.pending, (state) => {
-    //   state.PULSEX.loading = true;
-    // });
+    // Pulsex reducer functions
+    builder.addCase(fetchPulsexData.pending, (state) => {
+      state.PULSEX.loading = true;
+    });
 
-    // builder.addCase(fetchPulsexData.fulfilled, (state, action) => {
-    //   const data = action.payload.reduce((prev, cur) => {
-    //     return prev.concat(cur);
-    //   }, [] as PulsexData);
+    builder.addCase(fetchPulsexData.fulfilled, (state, action) => {
+      if (!action.payload) return;
 
-    //   state.PULSEX.data.PULSEX.push(data);
-    //   state.PULSEX.total.PULSEX += addObjectValue(data, 'usdValue');
+      const res = action.payload;
 
-    //   state.PULSEX.loading = false;
-    //   state.PULSEX.error = false;
-    // });
+      state.PULSEX.data.LIQUIDITY_POOL.push(res.data.LIQUIDITY_POOL.data);
 
-    // builder.addCase(fetchPulsexData.rejected, (state) => {
-    //   // state.PULSEX.loading = false;
-    //   state.PULSEX.error = true;
-    // });
+      state.PULSEX.total.LIQUIDITY_POOL += res.data.LIQUIDITY_POOL.totalValue;
+
+      // const data = action.payload.reduce((prev, cur) => {
+      //   return prev.concat(cur);
+      // }, [] as PulsexData);
+
+      // state.PULSEX.data.PULSEX.push(data);
+      // state.PULSEX.total.PULSEX += addObjectValue(data, 'usdValue');
+
+      state.PULSEX.loading = false;
+      state.PULSEX.error = false;
+    });
+
+    builder.addCase(fetchPulsexData.rejected, (state) => {
+      // state.PULSEX.loading = false;
+      state.PULSEX.error = true;
+    });
 
     // // Pancake reducer functions
     // builder.addCase(fetchPancakeData.pending, (state) => {
@@ -626,10 +638,10 @@ export const { reset } = protocolsSlice.actions;
 export {
   fetchWalletData,
   fetchHexData,
-  fetchPhiatData
-  // fetchPhiatData,
+  fetchPhiatData,
   // fetchPancakeData,
-  // fetchPulsexData,
+  // fetchPancakeData,
+  fetchPulsexData
   // fetchEthereumLPData
 };
 

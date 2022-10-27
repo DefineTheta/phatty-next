@@ -2,6 +2,712 @@ import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { hexABI } from './abi';
 
+export type PhiatReserveDataItem = {
+  underlyingAsset: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+  variableBorrowBps: string;
+  stableBorrowBps: string;
+  stableBorrowRateEnables: boolean;
+  aTokenAddress: string;
+  stableDebtTokenAddress: string;
+  variableDebtTokenAddress: string;
+  priceInPls: string;
+  priceInUsd: number;
+};
+
+export type PhiatReserveResponse = PhiatReserveDataItem[];
+
+const phattyUIDataProviderABI = [
+  {
+    inputs: [
+      {
+        internalType: 'contract ILendingPoolAddressesProvider',
+        name: 'provider',
+        type: 'address'
+      },
+      {
+        internalType: 'contract IChainlinkAggregator',
+        name: 'plsUsdPriceOracle',
+        type: 'address'
+      }
+    ],
+    name: 'getPhiatReserveData',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'underlyingAsset',
+            type: 'address'
+          },
+          {
+            internalType: 'string',
+            name: 'name',
+            type: 'string'
+          },
+          {
+            internalType: 'string',
+            name: 'symbol',
+            type: 'string'
+          },
+          {
+            internalType: 'uint256',
+            name: 'decimals',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint128',
+            name: 'variableBorrowBps',
+            type: 'uint128'
+          },
+          {
+            internalType: 'uint128',
+            name: 'stableBorrowBps',
+            type: 'uint128'
+          },
+          {
+            internalType: 'bool',
+            name: 'stableBorrowRateEnabled',
+            type: 'bool'
+          },
+          {
+            internalType: 'address',
+            name: 'aTokenAddress',
+            type: 'address'
+          },
+          {
+            internalType: 'address',
+            name: 'stableDebtTokenAddress',
+            type: 'address'
+          },
+          {
+            internalType: 'address',
+            name: 'variableDebtTokenAddress',
+            type: 'address'
+          },
+          {
+            internalType: 'uint256',
+            name: 'priceInPls',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'priceInUsd',
+            type: 'uint256'
+          }
+        ],
+        internalType: 'struct IPhattyUiDataProvider.PhiatReserveData[]',
+        name: 'data',
+        type: 'tuple[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'contract IPhiatFeeDistribution',
+        name: 'feeDistributor',
+        type: 'address'
+      }
+    ],
+    name: 'getPhiatStakingData',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'stakingToken',
+            type: 'address'
+          },
+          {
+            internalType: 'uint256',
+            name: 'totalSupply',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'totalStakedSupply',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'stakingTokenPrecision',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'rewardDuration',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'unstakeDuration',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'withdrawDuration',
+            type: 'uint256'
+          },
+          {
+            components: [
+              {
+                internalType: 'address',
+                name: 'token',
+                type: 'address'
+              },
+              {
+                internalType: 'uint256',
+                name: 'amount',
+                type: 'uint256'
+              }
+            ],
+            internalType: 'struct IPhiatFeeDistribution.RewardAmount[]',
+            name: 'rewardsPerToken',
+            type: 'tuple[]'
+          }
+        ],
+        internalType: 'struct IPhattyUiDataProvider.PhiatStakingData',
+        name: 'data',
+        type: 'tuple'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'contract IPhiatFeeDistribution',
+        name: 'feeDistributor',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: 'user',
+        type: 'address'
+      }
+    ],
+    name: 'getPhiatStakingUserData',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'walletBalance',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'stakedBalance',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'unstakedBalance',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'withdrawTimestamp',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'withdrawableBalance',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'expirationTimestamp',
+            type: 'uint256'
+          },
+          {
+            components: [
+              {
+                internalType: 'address',
+                name: 'token',
+                type: 'address'
+              },
+              {
+                internalType: 'uint256',
+                name: 'amount',
+                type: 'uint256'
+              }
+            ],
+            internalType: 'struct IPhiatFeeDistribution.RewardAmount[]',
+            name: 'claimableRewards',
+            type: 'tuple[]'
+          }
+        ],
+        internalType: 'struct IPhattyUiDataProvider.PhiatUserStakingData',
+        name: 'data',
+        type: 'tuple'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'contract IPhiatFeeDistribution',
+        name: 'feeDistributor',
+        type: 'address'
+      },
+      {
+        internalType: 'address[]',
+        name: 'users',
+        type: 'address[]'
+      }
+    ],
+    name: 'getPhiatStakingUsersData',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'walletBalance',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'stakedBalance',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'unstakedBalance',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'withdrawableBalance',
+            type: 'uint256'
+          },
+          {
+            components: [
+              {
+                internalType: 'address',
+                name: 'token',
+                type: 'address'
+              },
+              {
+                internalType: 'uint256',
+                name: 'amount',
+                type: 'uint256'
+              }
+            ],
+            internalType: 'struct IPhiatFeeDistribution.RewardAmount[]',
+            name: 'claimableRewards',
+            type: 'tuple[]'
+          }
+        ],
+        internalType: 'struct IPhattyUiDataProvider.PhiatUsersStakingData',
+        name: 'data',
+        type: 'tuple'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'contract ILendingPoolAddressesProvider',
+        name: 'provider',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: 'user',
+        type: 'address'
+      }
+    ],
+    name: 'getPhiatUserData',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'underlyingAsset',
+            type: 'address'
+          },
+          {
+            internalType: 'uint256',
+            name: 'aTokenBalance',
+            type: 'uint256'
+          },
+          {
+            internalType: 'bool',
+            name: 'usageAsCollateralEnabledOnUser',
+            type: 'bool'
+          },
+          {
+            internalType: 'uint256',
+            name: 'variableDebt',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'principalStableDebt',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'stableBorrowRate',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'stableBorrowLastUpdateTimestamp',
+            type: 'uint256'
+          }
+        ],
+        internalType: 'struct IPhattyUiDataProvider.PhiatUserReserveData[]',
+        name: 'data',
+        type: 'tuple[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'contract ILendingPoolAddressesProvider',
+        name: 'provider',
+        type: 'address'
+      },
+      {
+        internalType: 'address[]',
+        name: 'users',
+        type: 'address[]'
+      }
+    ],
+    name: 'getPhiatUsersData',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'underlyingAsset',
+            type: 'address'
+          },
+          {
+            internalType: 'uint256',
+            name: 'aTokenBalance',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'variableDebt',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'principalStableDebt',
+            type: 'uint256'
+          }
+        ],
+        internalType: 'struct IPhattyUiDataProvider.PhiatUsersReserveData[]',
+        name: 'data',
+        type: 'tuple[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'contract IPulseXFactory',
+        name: 'pulseXFactory',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: 'startIdx_',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'endIdx_',
+        type: 'uint256'
+      }
+    ],
+    name: 'getPulsexPoolData',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'totalCount',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'startIdx',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'endIdx',
+        type: 'uint256'
+      },
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'poolAddress',
+            type: 'address'
+          },
+          {
+            internalType: 'string',
+            name: 'name',
+            type: 'string'
+          },
+          {
+            internalType: 'string',
+            name: 'symbol',
+            type: 'string'
+          },
+          {
+            internalType: 'address',
+            name: 'token0',
+            type: 'address'
+          },
+          {
+            internalType: 'address',
+            name: 'token1',
+            type: 'address'
+          },
+          {
+            internalType: 'string',
+            name: 'name0',
+            type: 'string'
+          },
+          {
+            internalType: 'string',
+            name: 'name1',
+            type: 'string'
+          },
+          {
+            internalType: 'string',
+            name: 'symbol0',
+            type: 'string'
+          },
+          {
+            internalType: 'string',
+            name: 'symbol1',
+            type: 'string'
+          },
+          {
+            internalType: 'uint256',
+            name: 'decimals0',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'decimals1',
+            type: 'uint256'
+          }
+        ],
+        internalType: 'struct IPhattyUiDataProvider.PulsexPoolData[]',
+        name: 'data',
+        type: 'tuple[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'contract IPulseXFactory',
+        name: 'pulseXFactory',
+        type: 'address'
+      }
+    ],
+    name: 'getPulsexPools',
+    outputs: [
+      {
+        internalType: 'address[]',
+        name: 'pools',
+        type: 'address[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'contract IPulseXFactory',
+        name: 'pulseXFactory',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: 'startIdx_',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'endIdx_',
+        type: 'uint256'
+      },
+      {
+        internalType: 'address',
+        name: 'user',
+        type: 'address'
+      }
+    ],
+    name: 'getPulsexUserData',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'totalCount',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'startIdx',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'endIdx',
+        type: 'uint256'
+      },
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'poolAddress',
+            type: 'address'
+          },
+          {
+            internalType: 'uint256',
+            name: 'poolBalance',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'poolBalance0',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'poolBalance1',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'walletBalance0',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'walletBalance1',
+            type: 'uint256'
+          }
+        ],
+        internalType: 'struct IPhattyUiDataProvider.PulsexUserPoolData[]',
+        name: 'data',
+        type: 'tuple[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'contract IPulseXFactory',
+        name: 'pulseXFactory',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: 'startIdx_',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'endIdx_',
+        type: 'uint256'
+      },
+      {
+        internalType: 'address[]',
+        name: 'users',
+        type: 'address[]'
+      }
+    ],
+    name: 'getPulsexUsersData',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'totalCount',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'startIdx',
+        type: 'uint256'
+      },
+      {
+        internalType: 'uint256',
+        name: 'endIdx',
+        type: 'uint256'
+      },
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'poolAddress',
+            type: 'address'
+          },
+          {
+            internalType: 'uint256',
+            name: 'poolBalance',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'poolBalance0',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'poolBalance1',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'walletBalance0',
+            type: 'uint256'
+          },
+          {
+            internalType: 'uint256',
+            name: 'walletBalance1',
+            type: 'uint256'
+          }
+        ],
+        internalType: 'struct IPhattyUiDataProvider.PulsexUserPoolData[]',
+        name: 'data',
+        type: 'tuple[]'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  }
+];
+
+export const lendingPoolProviderAddress = '0xa17f0A2634aE032dC9a4dD74F9f7D0beb194f320';
+
 export const tokenImages: Record<string, string> = {
   ETH: '/img/tokens/eth.png',
   BNB: '/img/tokens/bnb.png',
@@ -144,4 +850,10 @@ export const hexETHContract = new ethClient.eth.Contract(
 export const hexPLSContract = new tplsClient.eth.Contract(
   hexABI as AbiItem[],
   '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39'
+);
+
+const phattyUIDataProviderAddress = '0x050faCf199CE9bF0E982619880225C55c90b2536';
+export const phiatProviderContract = new tplsClient.eth.Contract(
+  phattyUIDataProviderABI as AbiItem[],
+  phattyUIDataProviderAddress
 );
