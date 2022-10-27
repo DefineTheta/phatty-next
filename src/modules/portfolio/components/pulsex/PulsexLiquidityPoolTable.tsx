@@ -23,7 +23,7 @@ const PulsexLiquidityPoolTable = () => {
         <TableHeaderRowCell className="basis-1/5">Pool</TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/5">Share of Pool</TableHeaderRowCell>
         <TableHeaderRowCell className="basis-2/5">Balance</TableHeaderRowCell>
-        <TableHeaderRowCell 
+        <TableHeaderRowCell
           className="basis-1/5"
           onClick={() => handleTableHeaderClick('usdValue')}
           sorted={sortOrder}
@@ -43,7 +43,7 @@ const PulsexLiquidityPoolTable = () => {
                 src={item.tokenOne.image}
                 alt={item.tokenOne.symbol}
               />
-              <div className='w-20 h-20 -ml-16'>
+              <div className="w-20 h-20 -ml-16">
                 <Image
                   className="rounded-full"
                   width="20px"
@@ -57,12 +57,18 @@ const PulsexLiquidityPoolTable = () => {
           </TableRowCell>
           <TableRowCell className="basis-1/5">{`${styleNumber(item.ratio, 2)}%`}</TableRowCell>
           <TableRowCell className="basis-2/5">
-            <div className='flex flex-col gap-y-2'>
+            <div className="flex flex-col gap-y-2">
               <span>
-                {`${styleNumber(item.tokenOne.balance, 2)} ${item.tokenOne.symbol} (${styleNumber(item.tokenOne.value, 2)})`}
+                {`${styleNumber(item.tokenOne.balance, 2)} ${item.tokenOne.symbol} (${styleNumber(
+                  item.tokenOne.value,
+                  2
+                )})`}
               </span>
               <span>
-                {`${styleNumber(item.tokenTwo.balance, 2)} ${item.tokenTwo.symbol} (${styleNumber(item.tokenTwo.value, 2)})`}
+                {`${styleNumber(item.tokenTwo.balance, 2)} ${item.tokenTwo.symbol} (${styleNumber(
+                  item.tokenTwo.value,
+                  2
+                )})`}
               </span>
             </div>
           </TableRowCell>

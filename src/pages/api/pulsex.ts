@@ -492,7 +492,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   });
 
   const liquidityPoolData = await Promise.all(liquidityPoolPromises);
-  
+
   let totalValue = 0;
   const filteredLiquidityPoolData: PulsexTokenItem[] = [];
 
