@@ -29,7 +29,8 @@ module.exports = {
       },
       backgroundImage: {
         'purple-button':
-          'linear-gradient(88.63deg, rgb(148, 103, 251) 15.35%, rgb(67, 38, 136) 103.86%)'
+          'linear-gradient(88.63deg, rgb(148, 103, 251) 15.35%, rgb(67, 38, 136) 103.86%)',
+        skeleton: 'linear-gradient(to right, #252a37 0px, #2b303f   53.077%, #252a37 100%)'
       },
       fontSize: {
         xs: '0.6rem',
@@ -121,6 +122,19 @@ module.exports = {
       },
       minWidth: {
         12: '12rem'
+      },
+      animation: {
+        skeleton: 'skeleton 1.5s ease infinite'
+      },
+      keyframes: {
+        skeleton: {
+          from: {
+            transform: 'translateX(-100%)'
+          },
+          to: {
+            transform: 'translateX(100%)'
+          }
+        }
       }
     }
   },

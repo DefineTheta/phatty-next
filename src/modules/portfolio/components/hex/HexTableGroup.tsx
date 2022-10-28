@@ -1,5 +1,5 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
-import { selectHexComponentTotal } from '@app-src/store/protocol/selectors';
+import { selectHexComponentTotal, selectHexStakeLoading } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { formatToMoney } from '../../utils/format';
@@ -8,9 +8,14 @@ import HexStakeTable from './HexStakeTable';
 const HexTableGroup = () => {
   const hexEthTotal = useSelector(useCallback(selectHexComponentTotal('ETHEREUM'), []));
   const hexTplsTotal = useSelector(useCallback(selectHexComponentTotal('TPLS'), []));
+  const loading = useSelector(useCallback(selectHexStakeLoading, []));
 
   const styledHexEthTotal = useMemo(() => formatToMoney(hexEthTotal), [hexEthTotal]);
   const styledHexTplsTotal = useMemo(() => formatToMoney(hexTplsTotal), [hexTplsTotal]);
+
+  if (hexEthTotal + hexTplsTotal === 0 && !loading) {
+    return null;
+  }
 
   return (
     <div id="#hex" className="w-full max-w-96 flex flex-col gap-y-24">

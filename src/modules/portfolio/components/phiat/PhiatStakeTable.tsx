@@ -1,9 +1,14 @@
 import Card from '@app-src/common/components/layout/Card';
+import SkeletonLoader from '@app-src/common/components/skeleton/SkeletonLoader';
 import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
-import { selectPhiatComponentData, selectPhiatStakingAPY } from '@app-src/store/protocol/selectors';
+import {
+  selectPhiatComponentData,
+  selectPhiatLoading,
+  selectPhiatStakingAPY
+} from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -14,6 +19,7 @@ const PhiatStakeTable = () => {
   const phiatStakingAPY = useSelector(useCallback(selectPhiatStakingAPY, []));
   const phiatStakingData = useSelector(useCallback(selectPhiatComponentData('STAKING'), []));
   const phiatTokenData = useSelector(useCallback(selectPhiatComponentData('PH_TOKENS'), []));
+  const loading = useSelector(useCallback(selectPhiatLoading, []));
 
   const styledPhiatStakingAPY = useMemo(
     () => styleNumber(phiatStakingAPY, 2) + '%',
@@ -24,33 +30,88 @@ const PhiatStakeTable = () => {
     typeof phiatTokenData[number]
   >(phiatTokenData, 'usdValue', 'desc');
 
+  if (loading) {
+    return (
+      <Card>
+        <TableHeaderRow>
+          <TableHeaderRowCell className="basis-1/4">Token</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/3">Balance</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/3">USD Value</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/6">APY</TableHeaderRowCell>
+        </TableHeaderRow>
+        {Array.from({ length: 3 }, (x, i) => i).map((index) => (
+          <TableRow key={index}>
+            <TableRowCell className="pr-20 basis-1/4">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/3">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/3">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/6">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+          </TableRow>
+        ))}
+        <TableHeaderRow>
+          <TableHeaderRowCell className="basis-1/4">Reward</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/3">Balance</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/2">USD Value</TableHeaderRowCell>
+        </TableHeaderRow>
+        {Array.from({ length: 3 }, (x, i) => i).map((index) => (
+          <TableRow key={index}>
+            <TableRowCell className="pr-20 basis-1/4">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/3">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/2">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+          </TableRow>
+        ))}
+      </Card>
+    );
+  }
+
+  if (phiatStakingData.length === 0 && sortedPhiatTokeData.length === 0) {
+    return null;
+  }
+
   return (
     <Card>
-      <TableHeaderRow>
-        <TableHeaderRowCell className="basis-1/4">Token</TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/3">Balance</TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/3">USD Value</TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/6">APY</TableHeaderRowCell>
-      </TableHeaderRow>
-      {phiatStakingData.map((stake, index) => (
-        <TableRow key={index}>
-          <TableRowCell className="basis-1/4">
-            <div className="flex flex-row gap-x-8">
-              <Image
-                className="rounded-full"
-                width="20px"
-                height="20px"
-                src={stake.image}
-                alt={stake.symbol}
-              />
-              <span>{stake.symbol}</span>
-            </div>
-          </TableRowCell>
-          <TableRowCell className="basis-1/3">{styleNumber(stake.balance, 3)}</TableRowCell>
-          <TableRowCell className="basis-1/3">{formatToMoney(stake.usdValue)}</TableRowCell>
-          <TableRowCell className="basis-1/6">{styledPhiatStakingAPY}</TableRowCell>
-        </TableRow>
-      ))}
+      {phiatStakingData.length > 0 && (
+        <>
+          <TableHeaderRow>
+            <TableHeaderRowCell className="basis-1/4">Token</TableHeaderRowCell>
+            <TableHeaderRowCell className="basis-1/3">Balance</TableHeaderRowCell>
+            <TableHeaderRowCell className="basis-1/3">USD Value</TableHeaderRowCell>
+            <TableHeaderRowCell className="basis-1/6">APY</TableHeaderRowCell>
+          </TableHeaderRow>
+          {phiatStakingData.map((stake, index) => (
+            <TableRow key={index}>
+              <TableRowCell className="basis-1/4">
+                <div className="flex flex-row gap-x-8">
+                  <Image
+                    className="rounded-full"
+                    width="20px"
+                    height="20px"
+                    src={stake.image}
+                    alt={stake.symbol}
+                  />
+                  <span>{stake.symbol}</span>
+                </div>
+              </TableRowCell>
+              <TableRowCell className="basis-1/3">{styleNumber(stake.balance, 3)}</TableRowCell>
+              <TableRowCell className="basis-1/3">{formatToMoney(stake.usdValue)}</TableRowCell>
+              <TableRowCell className="basis-1/6">{styledPhiatStakingAPY}</TableRowCell>
+            </TableRow>
+          ))}
+        </>
+      )}
       <TableHeaderRow>
         <TableHeaderRowCell className="basis-1/4">Reward</TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/3">Balance</TableHeaderRowCell>

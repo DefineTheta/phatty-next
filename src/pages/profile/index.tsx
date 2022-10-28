@@ -1,5 +1,6 @@
 import ChainSummaryCard from '@app-src/modules/chain/components/ChainSummaryCard';
 import HexTableGroup from '@app-src/modules/portfolio/components/hex/HexTableGroup';
+import PancakeTableGroup from '@app-src/modules/portfolio/components/pancake/PancakeTableGroup';
 import PhiatTableGroup from '@app-src/modules/portfolio/components/phiat/PhiatTableGroup';
 import PulsexTableGroup from '@app-src/modules/portfolio/components/pulsex/PulsexTableGroup';
 import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/WalletTableGroup';
@@ -15,6 +16,7 @@ const ProfilePage = () => {
         <HexTableGroup />
         <PhiatTableGroup />
         <PulsexTableGroup />
+        <PancakeTableGroup />
       </div>
     </div>
   );

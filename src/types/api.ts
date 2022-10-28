@@ -108,3 +108,66 @@ export type PulsexResponse = {
   };
   error?: string;
 };
+
+// PANCAKE Types
+
+export type PancakeLPTokenItem = {
+  tokenOne: {
+    address: string;
+    balance: number;
+    value: number;
+    symbol: string;
+    price: number;
+    image: string;
+    reserve: number;
+    decimals: number;
+  };
+  tokenTwo: {
+    address: string;
+    balance: number;
+    value: number;
+    symbol: string;
+    price: number;
+    image: string;
+    reserve: number;
+    decimals: number;
+  };
+  usdValue: number;
+  ratio: number;
+  supply: number;
+  liquidityPoolAddress: string;
+};
+
+export type PancakeFarmTokenItem = {
+  tokenOne: {
+    balance: number;
+    value: number;
+    symbol: string;
+    price: number;
+    image: string;
+  };
+  tokenTwo: {
+    balance: number;
+    value: number;
+    symbol: string;
+    price: number;
+    image: string;
+  };
+  usdValue: number;
+  pendingCakeBalance: number;
+  pendingCakeValue: number;
+};
+
+export type PancakeResponse = {
+  data: {
+    LIQUIDITY_POOL: {
+      data: PancakeLPTokenItem[];
+      totalValue: number;
+    };
+    FARMING: {
+      data: PancakeFarmTokenItem[];
+      totalValue: number;
+    };
+  };
+  error?: string;
+};

@@ -2,6 +2,7 @@ import SearchInput from '@app-src/common/components/input/SearchInput';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import {
   fetchHexData,
+  fetchPancakeData,
   fetchPhiatData,
   fetchPulsexData,
   fetchWalletData
@@ -18,6 +19,7 @@ const NavBar = () => {
       dispatch(fetchHexData(searchInputRef.current?.value.toLowerCase().trim() || ''));
       dispatch(fetchPhiatData(searchInputRef.current?.value.toLowerCase().trim() || ''));
       dispatch(fetchPulsexData(searchInputRef.current?.value.toLowerCase().trim() || ''));
+      dispatch(fetchPancakeData(searchInputRef.current?.value.toLowerCase().trim() || ''));
     }
   }, []);
 

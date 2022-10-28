@@ -1,5 +1,12 @@
 import { RootState } from '@app-src/store/store';
-import { HexTokenItem, PhiatTokenItem, PulsexTokenItem, WalletTokenItem } from '@app-src/types/api';
+import {
+  HexTokenItem,
+  PancakeFarmTokenItem,
+  PancakeLPTokenItem,
+  PhiatTokenItem,
+  PulsexTokenItem,
+  WalletTokenItem
+} from '@app-src/types/api';
 import memoize from 'proxy-memoize';
 import { HexDataComponentEnum, PhiatDataComponentEnum } from './types';
 
@@ -40,6 +47,18 @@ export const selectPulsexLiquidityPoolData = memoize((state: RootState): PulsexT
   console.log('SELECT_PULSEX_LIQUIDITY_POOL_DATA');
 
   return Array.prototype.concat.apply([], state.protocols.PULSEX.data.LIQUIDITY_POOL);
+});
+
+export const selectPancakeFarmingData = memoize((state: RootState): PancakeFarmTokenItem[] => {
+  console.log('SELECT_PANCAKE_FARM_DATA');
+
+  return state.protocols.PANCAKE.data.FARMING;
+});
+
+export const selectPancakeLiquidityPoolData = memoize((state: RootState): PancakeLPTokenItem[] => {
+  console.log('SELECT_PANCAKE_LIQUIDITY_POOL_DATA');
+
+  return state.protocols.PANCAKE.data.LIQUIDITY_POOL;
 });
 
 export const selectEthereumTotal = memoize((state: RootState): number => {
@@ -95,8 +114,26 @@ export const selectPulsexTotal = memoize((state: RootState): number => {
   return state.protocols.PULSEX.total.LIQUIDITY_POOL;
 });
 
+export const selectPancakeTotal = memoize((state: RootState): number => {
+  console.log('SELECT_PANCAKE_TOTAL');
+
+  return state.protocols.PANCAKE.total.LIQUIDITY_POOL + state.protocols.PANCAKE.total.FARMING;
+});
+
 export const selectTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
   return selectWalletTotal(state) + selectHextotal(state);
+});
+
+export const selectHexStakeLoading = memoize((state: RootState): boolean => {
+  console.log('SELECT_HEX_STAKE_LOADING');
+
+  return state.protocols.HEX.loading;
+});
+
+export const selectPhiatLoading = memoize((state: RootState): boolean => {
+  console.log('SELECT_PHIAT_LOADING');
+
+  return state.protocols.PHIAT.loading;
 });

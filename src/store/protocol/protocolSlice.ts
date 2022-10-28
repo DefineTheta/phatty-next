@@ -24,10 +24,17 @@
 // import { ProtocolsState } from './types';
 
 import { RootState } from '@app-src/store/store';
-import { HexResponse, PhiatResponse, PulsexResponse, WalletResponse } from '@app-src/types/api';
+import {
+  HexResponse,
+  PancakeResponse,
+  PhiatResponse,
+  PulsexResponse,
+  WalletResponse
+} from '@app-src/types/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   HexDataComponentEnum,
+  PancakeDataComponentEnum,
   PhiatDataComponentEnum,
   ProtocolEnum,
   ProtocolImgEnum,
@@ -103,23 +110,23 @@ const initialState: ProtocolsState = {
     data: {
       [PulsexDataComponentEnum.LIQUIDITY_POOL]: []
     }
+  },
+  [ProtocolEnum.PANCAKE]: {
+    name: ProtocolEnum.PANCAKE,
+    displayName: 'Pancake',
+    id: '#pancake',
+    img: ProtocolImgEnum.PANCAKE,
+    total: {
+      [PancakeDataComponentEnum.FARMING]: 0,
+      [PancakeDataComponentEnum.LIQUIDITY_POOL]: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [PancakeDataComponentEnum.FARMING]: [],
+      [PancakeDataComponentEnum.LIQUIDITY_POOL]: []
+    }
   }
-  // [ProtocolEnum.PANCAKE]: {
-  //   name: ProtocolEnum.PANCAKE,
-  //   displayName: 'Pancake',
-  //   id: '#pancake',
-  //   img: ProtocolImgEnum.PANCAKE,
-  //   total: {
-  //     [PancakeDataComponentEnum.FARMING]: 0,
-  //     [PancakeDataComponentEnum.LIQUIDITY_POOL]: 0
-  //   },
-  //   loading: false,
-  //   error: false,
-  //   data: {
-  //     [PancakeDataComponentEnum.FARMING]: [],
-  //     [PancakeDataComponentEnum.LIQUIDITY_POOL]: []
-  //   }
-  // },
   // [ProtocolEnum.UNISWAPV2]: {
   //   name: ProtocolEnum.UNISWAPV2,
   //   displayName: 'Uniswap V2',
@@ -350,24 +357,27 @@ const fetchPulsexData = createAsyncThunk<PulsexResponse, string, { state: RootSt
   }
 );
 
-// const fetchPancakeData = createAsyncThunk<PancakeData[], string[], { state: RootState }>(
-//   'protocols/fetchPancakeData',
-//   async (addresses, thunkAPI) => {
-//     const controller = new AbortController();
+const fetchPancakeData = createAsyncThunk<PancakeResponse, string, { state: RootState }>(
+  'protocols/fetchPancakeData',
+  async (address, thunkAPI) => {
+    const controller = new AbortController();
 
-//     thunkAPI.signal.onabort = () => {
-//       controller.abort();
-//     };
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
 
-//     const data = await Promise.all(
-//       addresses.map((address) => {
-//         return crypto.fetchPancakeData(address, controller.signal);
-//       })
-//     );
+    const res = await fetch(`/api/pancake?address=${address}`);
+    const data: PancakeResponse = await res.json();
 
-//     return data;
-//   }
-// );
+    // const data = await Promise.all(
+    //   addresses.map((address) => {
+    //     return crypto.fetchPancakeData(address, controller.signal);
+    //   })
+    // );
+
+    return data;
+  }
+);
 
 // const fetchEthereumLPData = createAsyncThunk<EthereumLPData[], string[], { state: RootState }>(
 //   'protocols/fetchEthereumLPData',
@@ -565,39 +575,49 @@ export const protocolsSlice = createSlice({
       state.PULSEX.error = true;
     });
 
-    // // Pancake reducer functions
-    // builder.addCase(fetchPancakeData.pending, (state) => {
-    //   state.PANCAKE.loading = true;
-    // });
+    // Pancake reducer functions
+    builder.addCase(fetchPancakeData.pending, (state) => {
+      state.PANCAKE.loading = true;
+    });
 
-    // builder.addCase(fetchPancakeData.fulfilled, (state, action) => {
-    //   const data = action.payload.reduce(
-    //     (prev, cur) => {
-    //       prev.FARMING = prev.FARMING.concat(cur.FARMING);
-    //       prev.LIQUIDITY_POOL = prev.LIQUIDITY_POOL.concat(cur.LIQUIDITY_POOL);
+    builder.addCase(fetchPancakeData.fulfilled, (state, action) => {
+      if (!action.payload) return;
 
-    //       return prev;
-    //     },
-    //     {
-    //       [PancakeDataComponentEnum.FARMING]: [],
-    //       [PancakeDataComponentEnum.LIQUIDITY_POOL]: []
-    //     } as PancakeData
-    //   );
+      const res = action.payload;
 
-    //   state.PANCAKE.data.FARMING.push(data.FARMING);
-    //   state.PANCAKE.data.LIQUIDITY_POOL.push(data.LIQUIDITY_POOL);
+      state.PANCAKE.data.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.data;
+      state.PANCAKE.data.FARMING = res.data.FARMING.data;
 
-    //   state.PANCAKE.total.FARMING += addObjectValue(data.FARMING, 'usdValue');
-    //   state.PANCAKE.total.LIQUIDITY_POOL += addObjectValue(data.LIQUIDITY_POOL, 'usdValue');
+      state.PANCAKE.total.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.totalValue;
+      state.PANCAKE.total.FARMING = res.data.FARMING.totalValue;
 
-    //   state.PANCAKE.loading = false;
-    //   state.PANCAKE.error = false;
-    // });
+      // const data = action.payload.reduce(
+      //   (prev, cur) => {
+      //     prev.FARMING = prev.FARMING.concat(cur.FARMING);
+      //     prev.LIQUIDITY_POOL = prev.LIQUIDITY_POOL.concat(cur.LIQUIDITY_POOL);
 
-    // builder.addCase(fetchPancakeData.rejected, (state) => {
-    //   // state.PANCAKE.loading = false;
-    //   state.PANCAKE.error = true;
-    // });
+      //     return prev;
+      //   },
+      //   {
+      //     [PancakeDataComponentEnum.FARMING]: [],
+      //     [PancakeDataComponentEnum.LIQUIDITY_POOL]: []
+      //   } as PancakeData
+      // );
+
+      // state.PANCAKE.data.FARMING.push(data.FARMING);
+      // state.PANCAKE.data.LIQUIDITY_POOL.push(data.LIQUIDITY_POOL);
+
+      // state.PANCAKE.total.FARMING += addObjectValue(data.FARMING, 'usdValue');
+      // state.PANCAKE.total.LIQUIDITY_POOL += addObjectValue(data.LIQUIDITY_POOL, 'usdValue');
+
+      state.PANCAKE.loading = false;
+      state.PANCAKE.error = false;
+    });
+
+    builder.addCase(fetchPancakeData.rejected, (state) => {
+      // state.PANCAKE.loading = false;
+      state.PANCAKE.error = true;
+    });
 
     // builder.addCase(fetchEthereumLPData.pending, (state) => {
     //   state.UNISWAPV2.loading = true;
@@ -635,14 +655,6 @@ export const protocolsSlice = createSlice({
 
 export const { reset } = protocolsSlice.actions;
 
-export {
-  fetchWalletData,
-  fetchHexData,
-  fetchPhiatData,
-  // fetchPancakeData,
-  // fetchPancakeData,
-  fetchPulsexData
-  // fetchEthereumLPData
-};
+export { fetchWalletData, fetchHexData, fetchPhiatData, fetchPancakeData, fetchPulsexData };
 
 export default protocolsSlice.reducer;

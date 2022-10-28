@@ -13,7 +13,14 @@
 //   UniswapV3DataComponentEnum
 // } from 'src/types/crypto';
 
-import { HexTokenItem, PhiatTokenItem, PulsexTokenItem, WalletTokenItem } from '@app-src/types/api';
+import {
+  HexTokenItem,
+  PancakeFarmTokenItem,
+  PancakeLPTokenItem,
+  PhiatTokenItem,
+  PulsexTokenItem,
+  WalletTokenItem
+} from '@app-src/types/api';
 
 export enum ProtocolImgEnum {
   WALLET = 'https://assets.debank.com/static/media/wallet.d67a695b.svg',
@@ -58,12 +65,17 @@ export enum PulsexDataComponentEnum {
   LIQUIDITY_POOL = 'LIQUIDITY_POOL'
 }
 
+export enum PancakeDataComponentEnum {
+  LIQUIDITY_POOL = 'LIQUIDITY_POOL',
+  FARMING = 'FARMING'
+}
+
 export interface ProtocolsState {
   [ProtocolEnum.WALLET]: WalletData;
   [ProtocolEnum.HEX]: HexData;
   [ProtocolEnum.PHIAT]: PhiatData;
   [ProtocolEnum.PULSEX]: PulsexData;
-  // [ProtocolEnum.PANCAKE]: PancakeData;
+  [ProtocolEnum.PANCAKE]: PancakeData;
   // [ProtocolEnum.UNISWAPV2]: UniswapV2Data;
   // [ProtocolEnum.UNISWAPV3]: UniswapV3Data;
 }
@@ -109,10 +121,13 @@ interface PulsexData extends ProtocolData {
   data: Record<keyof typeof PulsexDataComponentEnum, PulsexTokenItem[][]>;
 }
 
-// interface PancakeData extends ProtocolData {
-//   total: Record<PancakeDataComponentEnum, number>;
-//   data: Record<keyof typeof PancakeDataComponentEnum, any[]>;
-// }
+interface PancakeData extends ProtocolData {
+  total: Record<PancakeDataComponentEnum, number>;
+  data: {
+    LIQUIDITY_POOL: PancakeLPTokenItem[];
+    FARMING: PancakeFarmTokenItem[];
+  };
+}
 
 // interface UniswapV2Data extends ProtocolData {
 //   total: Record<UniswapV2DataComponentEnum, number>;
