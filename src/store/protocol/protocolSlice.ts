@@ -23,6 +23,7 @@
 // import { RootState } from '../store';
 // import { ProtocolsState } from './types';
 
+import { getHex, getPancake, getPhiat, getPulsex, getWallet } from '@app-src/services/api';
 import { RootState } from '@app-src/store/store';
 import {
   HexResponse,
@@ -166,18 +167,7 @@ const fetchWalletData = createAsyncThunk<WalletResponse, string, { state: RootSt
       controller.abort();
     };
 
-    const res = await fetch(`/api/wallet?address=${address}&gt=0`);
-    const data: WalletResponse = await res.json();
-
-    // const data = await Promise.all(
-    //   addresses.map((address) => {
-    //     return Promise.all([
-    //       crypto.fetchEthTokenWalletData(address, controller.signal),
-    //       crypto.fetchTplsTokenWalletData(address, controller.signal),
-    //       crypto.fetchBscTokenWalletData(address, controller.signal)
-    //     ]);
-    //   })
-    // );
+    const data = await getWallet([address]);
 
     return data;
   }
@@ -194,52 +184,9 @@ const fetchHexData = createAsyncThunk<
     controller.abort();
   };
 
-  const responses: HexResponse[] = [];
-  let fetchMore = true;
-  let page = 1;
+  const data = await getHex([address]);
 
-  while (fetchMore) {
-    const res = await fetch(`/api/hex?address=${address}&page=${page}`);
-    const data: HexResponse = await res.json();
-    responses.push(data);
-
-    if (data.next === null) fetchMore = false;
-    else page = data.next;
-  }
-
-  if (responses.length === 1) return responses[0];
-
-  const collatedRes = {
-    data: {
-      ETHEREUM: {
-        data: [],
-        totalValue: 0
-      },
-      TPLS: {
-        data: [],
-        totalValue: 0
-      }
-    },
-    next: null
-  } as HexResponse;
-
-  for (let i = 0; i < responses.length; i++) {
-    collatedRes.data.ETHEREUM.data = collatedRes.data.ETHEREUM.data.concat(
-      responses[i].data.ETHEREUM.data
-    );
-    collatedRes.data.ETHEREUM.totalValue += responses[i].data.ETHEREUM.totalValue;
-
-    collatedRes.data.TPLS.data = collatedRes.data.TPLS.data.concat(responses[i].data.TPLS.data);
-    collatedRes.data.TPLS.totalValue += responses[i].data.TPLS.totalValue;
-  }
-
-  // const data = await Promise.all(
-  //   addresses.map((address) => {
-  //     return crypto.fetchHexStakeData(address, controller.signal);
-  //   })
-  // );
-
-  return collatedRes;
+  return data;
 });
 
 const fetchPhiatData = createAsyncThunk<PhiatResponse, string, { state: RootState }>(
@@ -251,85 +198,9 @@ const fetchPhiatData = createAsyncThunk<PhiatResponse, string, { state: RootStat
       controller.abort();
     };
 
-    // const data = await Promise.all(
-    //   addresses.map((address) => {
-    //     return crypto.fetchPhiatData(address, controller.signal);
-    //   })
-    // );
+    const data = await getPhiat([address]);
 
-    const responses: PhiatResponse[] = [];
-    let fetchMore = true;
-    let page = 1;
-
-    while (fetchMore) {
-      const res = await fetch(`/api/phiat?address=${address}&page=${page}`);
-      const data: PhiatResponse = await res.json();
-      responses.push(data);
-
-      if (data.next === null) fetchMore = false;
-      else page = data.next;
-    }
-
-    if (responses.length === 1) return responses[0];
-
-    const collatedRes = {
-      data: {
-        STABLE_DEBT: {
-          data: [],
-          totalValue: 0
-        },
-        VARIABLE_DEBT: {
-          data: [],
-          totalValue: 0
-        },
-        LENDING: {
-          data: [],
-          totalValue: 0
-        },
-        STAKING: {
-          data: [],
-          totalValue: 0
-        },
-        PH_TOKENS: {
-          data: [],
-          totalValue: 0
-        },
-        STAKING_APY: 0
-      },
-      next: null
-    } as PhiatResponse;
-
-    for (let i = 0; i < responses.length; i++) {
-      collatedRes.data.STABLE_DEBT.data = collatedRes.data.STABLE_DEBT.data.concat(
-        responses[i].data.STABLE_DEBT.data
-      );
-      collatedRes.data.VARIABLE_DEBT.data = collatedRes.data.VARIABLE_DEBT.data.concat(
-        responses[i].data.VARIABLE_DEBT.data
-      );
-      collatedRes.data.LENDING.data = collatedRes.data.LENDING.data.concat(
-        responses[i].data.LENDING.data
-      );
-      collatedRes.data.STAKING.data = collatedRes.data.STAKING.data.concat(
-        responses[i].data.STAKING.data
-      );
-      collatedRes.data.PH_TOKENS.data = collatedRes.data.PH_TOKENS.data.concat(
-        responses[i].data.PH_TOKENS.data
-      );
-
-      collatedRes.data.STABLE_DEBT.totalValue += responses[i].data.STABLE_DEBT.totalValue;
-      collatedRes.data.VARIABLE_DEBT.totalValue += responses[i].data.VARIABLE_DEBT.totalValue;
-      collatedRes.data.LENDING.totalValue += responses[i].data.LENDING.totalValue;
-      collatedRes.data.STAKING.totalValue += responses[i].data.STAKING.totalValue;
-      collatedRes.data.PH_TOKENS.totalValue += responses[i].data.PH_TOKENS.totalValue;
-
-      collatedRes.data.STAKING_APY = responses[i].data.STAKING_APY;
-      // collatedRes.data.ETHEREUM.totalValue += responses[i].data.ETHEREUM.totalValue;
-
-      // collatedRes.data.TPLS.data = collatedRes.data.TPLS.data.concat(responses[i].data.TPLS.data);
-      // collatedRes.data.TPLS.totalValue += responses[i].data.TPLS.totalValue;
-    }
-
-    return collatedRes;
+    return data;
   }
 );
 
@@ -342,16 +213,7 @@ const fetchPulsexData = createAsyncThunk<PulsexResponse, string, { state: RootSt
       controller.abort();
     };
 
-    const res = await fetch(`/api/pulsex?address=${address}`);
-    const data: PulsexResponse = await res.json();
-
-    // const data = await Promise.all(
-    //   addresses.map((address) => {
-    //     return crypto.fetchPulsexData(address, controller.signal);
-    //   })
-    // );
-
-    // const data = await crypto.fetchPulsexData(address, controller.signal);
+    const data = await getPulsex([address]);
 
     return data;
   }
@@ -366,14 +228,7 @@ const fetchPancakeData = createAsyncThunk<PancakeResponse, string, { state: Root
       controller.abort();
     };
 
-    const res = await fetch(`/api/pancake?address=${address}`);
-    const data: PancakeResponse = await res.json();
-
-    // const data = await Promise.all(
-    //   addresses.map((address) => {
-    //     return crypto.fetchPancakeData(address, controller.signal);
-    //   })
-    // );
+    const data = getPancake([address]);
 
     return data;
   }
@@ -411,26 +266,15 @@ export const protocolsSlice = createSlice({
     });
 
     builder.addCase(fetchWalletData.fulfilled, (state, action) => {
-      // const data = action.payload.reduce(
-      //   (prev, cur) => {
-      //     prev[0] = prev[0].concat(cur[0]);
-      //     prev[1] = prev[1].concat(cur[1]);
-      //     prev[2] = prev[2].concat(cur[2]);
+      const res = action.payload;
 
-      //     return prev;
-      //   },
-      //   [[], [], []] as WalletData[]
-      // );
+      state.WALLET.data.ETHEREUM = res.data.ETHEREUM.data;
+      state.WALLET.data.BSC = res.data.BSC.data;
+      state.WALLET.data.TPLS = res.data.TPLS.data;
 
-      const data = action.payload;
-
-      state.WALLET.data.ETHEREUM.push(data.ETHEREUM.data);
-      state.WALLET.data.BSC.push(data.BSC.data);
-      state.WALLET.data.TPLS.push(data.TPLS.data);
-
-      state.WALLET.total.ETHEREUM += data.ETHEREUM.totalValue;
-      state.WALLET.total.BSC += data.BSC.totalValue;
-      state.WALLET.total.TPLS += data.TPLS.totalValue;
+      state.WALLET.total.ETHEREUM = res.data.ETHEREUM.totalValue;
+      state.WALLET.total.BSC = res.data.BSC.totalValue;
+      state.WALLET.total.TPLS = res.data.TPLS.totalValue;
 
       state.WALLET.loading = false;
       state.WALLET.error = false;
@@ -448,28 +292,13 @@ export const protocolsSlice = createSlice({
     });
 
     builder.addCase(fetchHexData.fulfilled, (state, action) => {
-      // if (!action.payload) return;
-
-      // const data = action.payload.reduce(
-      //   (prev, cur) => {
-      //     prev.ETHEREUM = prev.ETHEREUM.concat(cur.ETHEREUM);
-      //     prev.TPLS = prev.TPLS.concat(cur.TPLS);
-
-      //     return prev;
-      //   },
-      //   {
-      //     [HexDataComponentEnum.ETHEREUM]: [],
-      //     [HexDataComponentEnum.TPLS]: []
-      //   } as HexData
-      // );
-
       const res = action.payload;
 
-      state.HEX.data.ETHEREUM.push(res.data.ETHEREUM.data);
-      state.HEX.data.TPLS.push(res.data.TPLS.data);
+      state.HEX.data.ETHEREUM = res.data.ETHEREUM.data;
+      state.HEX.data.TPLS = res.data.TPLS.data;
 
-      state.HEX.total.ETHEREUM += res.data.ETHEREUM.totalValue;
-      state.HEX.total.TPLS += res.data.TPLS.totalValue;
+      state.HEX.total.ETHEREUM = res.data.ETHEREUM.totalValue;
+      state.HEX.total.TPLS = res.data.TPLS.totalValue;
 
       state.HEX.loading = false;
       state.HEX.error = false;
@@ -490,51 +319,19 @@ export const protocolsSlice = createSlice({
 
       const res = action.payload;
 
-      state.PHIAT.data.LENDING.push(res.data.LENDING.data);
-      state.PHIAT.data.STABLE_DEBT.push(res.data.STABLE_DEBT.data);
-      state.PHIAT.data.VARIABLE_DEBT.push(res.data.VARIABLE_DEBT.data);
-      state.PHIAT.data.STAKING.push(res.data.STAKING.data);
-      state.PHIAT.data.PH_TOKENS.push(res.data.PH_TOKENS.data);
+      state.PHIAT.data.LENDING = res.data.LENDING.data;
+      state.PHIAT.data.STABLE_DEBT = res.data.STABLE_DEBT.data;
+      state.PHIAT.data.VARIABLE_DEBT = res.data.VARIABLE_DEBT.data;
+      state.PHIAT.data.STAKING = res.data.STAKING.data;
+      state.PHIAT.data.PH_TOKENS = res.data.PH_TOKENS.data;
 
       state.PHIAT.data.STAKING_APY = res.data.STAKING_APY;
 
       state.PHIAT.total.TPLS =
         res.data.LENDING.totalValue +
-        res.data.PH_TOKENS.totalValue +
-        res.data.STABLE_DEBT.totalValue +
-        res.data.STAKING.totalValue +
-        res.data.VARIABLE_DEBT.totalValue;
-
-      // const data = action.payload.reduce(
-      //   (prev, cur) => {
-      //     prev.PHIAT_LENDING = prev.PHIAT_LENDING.concat(cur.PHIAT_LENDING);
-      //     prev.PHIAT_STAKING = prev.PHIAT_STAKING.concat(cur.PHIAT_STAKING);
-      //     prev.PHIAT_STABLE_DEBT = prev.PHIAT_STABLE_DEBT.concat(cur.PHIAT_STABLE_DEBT);
-      //     prev.PHIAT_VARIABLE_DEBT = prev.PHIAT_VARIABLE_DEBT.concat(cur.PHIAT_VARIABLE_DEBT);
-      //     prev.PHIAT_TOKENS = prev.PHIAT_TOKENS.concat(cur.PHIAT_TOKENS);
-
-      //     return prev;
-      //   },
-      //   {
-      //     [PhiatDataComponentEnum.PHIAT_LENDING]: [],
-      //     [PhiatDataComponentEnum.PHIAT_STAKING]: [],
-      //     [PhiatDataComponentEnum.PHIAT_STABLE_DEBT]: [],
-      //     [PhiatDataComponentEnum.PHIAT_VARIABLE_DEBT]: [],
-      //     [PhiatDataComponentEnum.PHIAT_TOKENS]: []
-      //   } as PhiatData
-      // );
-
-      // state.PHIAT.data.PHIAT_LENDING.push(data.PHIAT_LENDING);
-      // state.PHIAT.data.PHIAT_STAKING.push(data.PHIAT_STAKING);
-      // state.PHIAT.data.PHIAT_STABLE_DEBT.push(data.PHIAT_STABLE_DEBT);
-      // state.PHIAT.data.PHIAT_VARIABLE_DEBT.push(data.PHIAT_VARIABLE_DEBT);
-      // state.PHIAT.data.PHIAT_TOKENS.push(data.PHIAT_TOKENS);
-
-      // state.PHIAT.total.PHIAT +=
-      //   addObjectValue(data.PHIAT_LENDING, 'usdValue') +
-      //   addObjectValue(data.PHIAT_STAKING, 'usdValue') -
-      //   addObjectValue(data.PHIAT_VARIABLE_DEBT, 'usdValue') -
-      //   addObjectValue(data.PHIAT_STABLE_DEBT, 'usdValue');
+        res.data.STAKING.totalValue -
+        res.data.VARIABLE_DEBT.totalValue -
+        res.data.STABLE_DEBT.totalValue;
 
       state.PHIAT.loading = false;
       state.PHIAT.error = false;
@@ -555,16 +352,9 @@ export const protocolsSlice = createSlice({
 
       const res = action.payload;
 
-      state.PULSEX.data.LIQUIDITY_POOL.push(res.data.LIQUIDITY_POOL.data);
+      state.PULSEX.data.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.data;
 
-      state.PULSEX.total.LIQUIDITY_POOL += res.data.LIQUIDITY_POOL.totalValue;
-
-      // const data = action.payload.reduce((prev, cur) => {
-      //   return prev.concat(cur);
-      // }, [] as PulsexData);
-
-      // state.PULSEX.data.PULSEX.push(data);
-      // state.PULSEX.total.PULSEX += addObjectValue(data, 'usdValue');
+      state.PULSEX.total.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.totalValue;
 
       state.PULSEX.loading = false;
       state.PULSEX.error = false;

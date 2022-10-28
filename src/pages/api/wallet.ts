@@ -212,17 +212,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   ]);
 
   const resObj = {
-    ETHEREUM: {
-      data: data[0],
-      totalValue: totalValues.ETHEREUM
-    },
-    BSC: {
-      data: data[1],
-      totalValue: totalValues.BSC
-    },
-    TPLS: {
-      data: data[2],
-      totalValue: totalValues.TPLS
+    data: {
+      ETHEREUM: {
+        data: data[0],
+        totalValue: totalValues.ETHEREUM
+      },
+      BSC: {
+        data: data[1],
+        totalValue: totalValues.BSC
+      },
+      TPLS: {
+        data: data[2],
+        totalValue: totalValues.TPLS
+      }
     }
   };
 
@@ -230,9 +232,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const amount = Number(gt);
     const filteredData = data.map((items) => items.filter((item) => item.usdValue > amount));
 
-    resObj.ETHEREUM.data = filteredData[0];
-    resObj.BSC.data = filteredData[1];
-    resObj.TPLS.data = filteredData[2];
+    resObj.data.ETHEREUM.data = filteredData[0];
+    resObj.data.BSC.data = filteredData[1];
+    resObj.data.TPLS.data = filteredData[2];
   }
 
   res.status(200).json(resObj);

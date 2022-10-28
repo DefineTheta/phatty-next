@@ -101,24 +101,24 @@ type WalletItem = {
 
 interface WalletData extends ProtocolData {
   total: Record<WalletDataComponentEnum, number>;
-  data: Record<WalletDataComponentEnum, WalletTokenItem[][]>;
+  data: Record<WalletDataComponentEnum, WalletTokenItem[]>;
 }
 
 interface HexData extends ProtocolData {
   total: Record<HexDataComponentEnum, number>;
-  data: Record<keyof typeof HexDataComponentEnum, HexTokenItem[][]>;
+  data: Record<keyof typeof HexDataComponentEnum, HexTokenItem[]>;
 }
 
 interface PhiatData extends ProtocolData {
   total: {
     TPLS: number;
   };
-  data: Record<keyof typeof PhiatDataComponentEnum, PhiatTokenItem[][]> & { STAKING_APY: number };
+  data: Record<keyof typeof PhiatDataComponentEnum, PhiatTokenItem[]> & { STAKING_APY: number };
 }
 
 interface PulsexData extends ProtocolData {
   total: Record<PulsexDataComponentEnum, number>;
-  data: Record<keyof typeof PulsexDataComponentEnum, PulsexTokenItem[][]>;
+  data: Record<keyof typeof PulsexDataComponentEnum, PulsexTokenItem[]>;
 }
 
 interface PancakeData extends ProtocolData {

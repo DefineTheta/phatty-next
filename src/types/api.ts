@@ -1,4 +1,9 @@
-export type WalletTokenItem = {
+export interface ApiBaseResponse {
+  error?: string;
+  next: number | null;
+}
+
+export interface WalletTokenItem {
   name: string;
   balance: number;
   chain: string;
@@ -6,77 +11,77 @@ export type WalletTokenItem = {
   chainImg: string;
   tokenImg: string;
   usdValue: number;
-};
+}
 
-export type WalletChainItem = {
+export interface WalletChainItem {
   data: WalletTokenItem[];
   totalValue: number;
-};
+}
 
-export type WalletResponse = {
-  ETHEREUM: WalletChainItem;
-  BSC: WalletChainItem;
-  TPLS: WalletChainItem;
-};
+export interface WalletResponse {
+  data: {
+    ETHEREUM: WalletChainItem;
+    BSC: WalletChainItem;
+    TPLS: WalletChainItem;
+  };
+}
 
 // HEX Types
 
-export type HexTokenItem = {
+export interface HexTokenItem {
   tShares: number;
   tSharesP: number;
   stakingEnd: string;
   totalBalance: number;
   totalInt: number;
   usdValue: number;
-};
+}
 
-export type HexChainItem = {
+export interface HexChainItem {
   data: HexTokenItem[];
   totalValue: number;
-};
+}
 
-export type HexResponse = {
+export interface HexResponse extends ApiBaseResponse {
   data: {
     ETHEREUM: HexChainItem;
     TPLS: HexChainItem;
   };
-  error?: string;
-  next: number | null;
-};
+}
 
 // PHIAT Types
 
-export type PhiatTokenItem = {
+export interface PhiatTokenItem {
   address: string;
   balance: number;
   symbol: string;
   image: string;
   usdValue: number;
-};
+}
 
-export type PhiatComponentItem = {
+export interface PhiatComponentItem {
   data: PhiatTokenItem[];
   totalValue: number;
-};
+}
 
-export type PhiatData = {
+export interface PhiatData {
   STABLE_DEBT: PhiatComponentItem;
   VARIABLE_DEBT: PhiatComponentItem;
   LENDING: PhiatComponentItem;
   STAKING: PhiatComponentItem;
   PH_TOKENS: PhiatComponentItem;
   STAKING_APY: number;
-};
+}
 
-export type PhiatResponse = {
+export interface PhiatResponse {
   data: PhiatData;
   error?: string;
   next: number | null;
-};
+}
 
 // PULSEX Types
 
-export type PulsexTokenItem = {
+export interface PulsexTokenItem {
   tokenOne: {
     address: string;
     balance: number;
@@ -95,23 +100,23 @@ export type PulsexTokenItem = {
   };
   usdValue: number;
   ratio: number;
-};
+}
 
-export type PulsexComponentItem = {
+export interface PulsexComponentItem {
   data: PulsexTokenItem[];
   totalValue: number;
-};
+}
 
-export type PulsexResponse = {
+export interface PulsexResponse {
   data: {
     LIQUIDITY_POOL: PulsexComponentItem;
   };
   error?: string;
-};
+}
 
 // PANCAKE Types
 
-export type PancakeLPTokenItem = {
+export interface PancakeLPTokenItem {
   tokenOne: {
     address: string;
     balance: number;
@@ -136,9 +141,9 @@ export type PancakeLPTokenItem = {
   ratio: number;
   supply: number;
   liquidityPoolAddress: string;
-};
+}
 
-export type PancakeFarmTokenItem = {
+export interface PancakeFarmTokenItem {
   tokenOne: {
     balance: number;
     value: number;
@@ -156,9 +161,9 @@ export type PancakeFarmTokenItem = {
   usdValue: number;
   pendingCakeBalance: number;
   pendingCakeValue: number;
-};
+}
 
-export type PancakeResponse = {
+export interface PancakeResponse {
   data: {
     LIQUIDITY_POOL: {
       data: PancakeLPTokenItem[];
@@ -170,4 +175,4 @@ export type PancakeResponse = {
     };
   };
   error?: string;
-};
+}

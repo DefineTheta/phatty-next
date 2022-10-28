@@ -35,7 +35,7 @@ const PhiatStakeTable = ({ loading }: IPhiatStakeTableProps) => {
         <TableHeaderRow>
           <TableHeaderRowCell className="basis-1/4">Token</TableHeaderRowCell>
           <TableHeaderRowCell className="basis-1/3">Balance</TableHeaderRowCell>
-          <TableHeaderRowCell className="basis-1/3">USD Value</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-3/10">USD Value</TableHeaderRowCell>
           <TableHeaderRowCell className="basis-1/6">APY</TableHeaderRowCell>
         </TableHeaderRow>
         {Array.from({ length: 3 }, (x, i) => i).map((index) => (
@@ -46,7 +46,7 @@ const PhiatStakeTable = ({ loading }: IPhiatStakeTableProps) => {
             <TableRowCell className="pr-20 basis-1/3">
               <SkeletonLoader className="w-full h-30" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/3">
+            <TableRowCell className="pr-20 basis-3/10">
               <SkeletonLoader className="w-full h-30" />
             </TableRowCell>
             <TableRowCell className="pr-20 basis-1/6">
@@ -57,7 +57,7 @@ const PhiatStakeTable = ({ loading }: IPhiatStakeTableProps) => {
         <TableHeaderRow>
           <TableHeaderRowCell className="basis-1/4">Reward</TableHeaderRowCell>
           <TableHeaderRowCell className="basis-1/3">Balance</TableHeaderRowCell>
-          <TableHeaderRowCell className="basis-1/2">USD Value</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-2/5">USD Value</TableHeaderRowCell>
         </TableHeaderRow>
         {Array.from({ length: 3 }, (x, i) => i).map((index) => (
           <TableRow key={index}>
@@ -67,7 +67,7 @@ const PhiatStakeTable = ({ loading }: IPhiatStakeTableProps) => {
             <TableRowCell className="pr-20 basis-1/3">
               <SkeletonLoader className="w-full h-30" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/2">
+            <TableRowCell className="pr-20 basis-2/5">
               <SkeletonLoader className="w-full h-30" />
             </TableRowCell>
           </TableRow>

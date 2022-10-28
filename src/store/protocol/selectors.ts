@@ -16,9 +16,9 @@ export const selectWalletData = memoize((state: RootState): WalletTokenItem[] =>
   return Array.prototype.concat.apply(
     [],
     [
-      Array.prototype.concat.apply([], state.protocols.WALLET.data.ETHEREUM),
-      Array.prototype.concat.apply([], state.protocols.WALLET.data.TPLS),
-      Array.prototype.concat.apply([], state.protocols.WALLET.data.BSC)
+      state.protocols.WALLET.data.ETHEREUM,
+      state.protocols.WALLET.data.TPLS,
+      state.protocols.WALLET.data.BSC
     ]
   );
 });
@@ -34,7 +34,7 @@ export const selectPhiatComponentData = (component: keyof typeof PhiatDataCompon
   memoize((state: RootState): PhiatTokenItem[] => {
     console.log(`SELECT_${component}_PHIAT_DATA`);
 
-    return Array.prototype.concat.apply([], state.protocols.PHIAT.data[component]);
+    return state.protocols.PHIAT.data[component];
   });
 
 export const selectPhiatStakingAPY = memoize((state: RootState) => {
