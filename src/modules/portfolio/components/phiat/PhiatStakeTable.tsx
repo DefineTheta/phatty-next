@@ -4,22 +4,21 @@ import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
-import {
-  selectPhiatComponentData,
-  selectPhiatLoading,
-  selectPhiatStakingAPY
-} from '@app-src/store/protocol/selectors';
+import { selectPhiatComponentData, selectPhiatStakingAPY } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import useSort from '../../hooks/useSort';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
-const PhiatStakeTable = () => {
+type IPhiatStakeTableProps = {
+  loading: boolean;
+};
+
+const PhiatStakeTable = ({ loading }: IPhiatStakeTableProps) => {
   const phiatStakingAPY = useSelector(useCallback(selectPhiatStakingAPY, []));
   const phiatStakingData = useSelector(useCallback(selectPhiatComponentData('STAKING'), []));
   const phiatTokenData = useSelector(useCallback(selectPhiatComponentData('PH_TOKENS'), []));
-  const loading = useSelector(useCallback(selectPhiatLoading, []));
 
   const styledPhiatStakingAPY = useMemo(
     () => styleNumber(phiatStakingAPY, 2) + '%',

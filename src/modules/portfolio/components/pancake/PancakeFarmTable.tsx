@@ -1,4 +1,5 @@
 import Card from '@app-src/common/components/layout/Card';
+import SkeletonLoader from '@app-src/common/components/skeleton/SkeletonLoader';
 import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
@@ -10,12 +11,49 @@ import { useSelector } from 'react-redux';
 import useSort from '../../hooks/useSort';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
-const PancakeFarmTable = () => {
+type IPancakeFarmTable = {
+  loading: boolean;
+};
+
+const PancakeFarmTable = ({ loading }: IPancakeFarmTable) => {
   const pancakeFarmData = useSelector(useCallback(selectPancakeFarmingData, []));
 
   const [sortedPancakeFarmData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof pancakeFarmData[number]
   >(pancakeFarmData, 'usdValue', 'desc');
+
+  if (loading) {
+    return (
+      <Card>
+        <TableHeaderRow>
+          <TableHeaderRowCell className="basis-1/4">Pool</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/4">Balance</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/4">Rewards</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/5">USD Value</TableHeaderRowCell>
+        </TableHeaderRow>
+        {Array.from({ length: 3 }, (x, i) => i).map((index) => (
+          <TableRow key={index}>
+            <TableRowCell className="pr-20 basis-1/4">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/4">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/4">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/5">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+          </TableRow>
+        ))}
+      </Card>
+    );
+  }
+
+  if (sortedPancakeFarmData.length === 0) {
+    return null;
+  }
 
   return (
     <Card>

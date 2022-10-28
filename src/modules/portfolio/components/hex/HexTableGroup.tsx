@@ -19,30 +19,34 @@ const HexTableGroup = () => {
 
   return (
     <div id="#hex" className="w-full max-w-96 flex flex-col gap-y-24">
-      <div className="flex flex-col gap-y-12">
-        <TableHeader
-          tableName="Hex.com"
-          tableLink="https://go.hex.com/stake"
-          totalValue={styledHexEthTotal}
-          tablePrimaryImgSrc="/img/icon/hex.svg"
-          tablePrimaryImgAlt="Hex"
-          tableSecondaryImgSrc="/img/chains/eth.svg"
-          tableSecondaryImgAlt="Ethereum"
-        />
-        <HexStakeTable chain="ETHEREUM" />
-      </div>
-      <div className="flex flex-col gap-y-12">
-        <TableHeader
-          tableName="Hex.com"
-          tableLink="https://go.hex.com/stake"
-          totalValue={styledHexTplsTotal}
-          tablePrimaryImgSrc="/img/icon/hex.svg"
-          tablePrimaryImgAlt="Hex"
-          tableSecondaryImgSrc="/img/chains/tpls.svg"
-          tableSecondaryImgAlt="TPLS"
-        />
-        <HexStakeTable chain="TPLS" />
-      </div>
+      {hexEthTotal !== 0 && (
+        <div className="flex flex-col gap-y-12">
+          <TableHeader
+            tableName="Hex.com"
+            tableLink="https://go.hex.com/stake"
+            totalValue={styledHexEthTotal}
+            tablePrimaryImgSrc="/img/icon/hex.svg"
+            tablePrimaryImgAlt="Hex"
+            tableSecondaryImgSrc="/img/chains/eth.svg"
+            tableSecondaryImgAlt="Ethereum"
+          />
+          <HexStakeTable chain="ETHEREUM" loading={loading} />
+        </div>
+      )}
+      {hexTplsTotal !== 0 && (
+        <div className="flex flex-col gap-y-12">
+          <TableHeader
+            tableName="Hex.com"
+            tableLink="https://go.hex.com/stake"
+            totalValue={styledHexTplsTotal}
+            tablePrimaryImgSrc="/img/icon/hex.svg"
+            tablePrimaryImgAlt="Hex"
+            tableSecondaryImgSrc="/img/chains/tpls.svg"
+            tableSecondaryImgAlt="TPLS"
+          />
+          <HexStakeTable chain="TPLS" loading={loading} />
+        </div>
+      )}
     </div>
   );
 };

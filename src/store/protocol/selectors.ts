@@ -70,13 +70,18 @@ export const selectEthereumTotal = memoize((state: RootState): number => {
 export const selectBscTotal = memoize((state: RootState): number => {
   console.log('SELECT_BSC_TOTAL');
 
-  return state.protocols.WALLET.total.BSC;
+  return state.protocols.WALLET.total.BSC + selectPancakeTotal(state);
 });
 
 export const selectTplsTotal = memoize((state: RootState): number => {
   console.log('SELECT_TPLS_TOTAL');
 
-  return state.protocols.WALLET.total.TPLS + state.protocols.HEX.total.TPLS;
+  return (
+    state.protocols.WALLET.total.TPLS +
+    state.protocols.HEX.total.TPLS +
+    selectPhiatTotal(state) +
+    selectPulsexTotal(state)
+  );
 });
 
 export const selectWalletTotal = memoize((state: RootState): number => {
@@ -123,7 +128,13 @@ export const selectPancakeTotal = memoize((state: RootState): number => {
 export const selectTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
-  return selectWalletTotal(state) + selectHextotal(state);
+  return selectEthereumTotal(state) + selectBscTotal(state) + selectTplsTotal(state);
+});
+
+export const selectWalletLoading = memoize((state: RootState): boolean => {
+  console.log('SELECT_WALLET_LOADING');
+
+  return state.protocols.WALLET.loading;
 });
 
 export const selectHexStakeLoading = memoize((state: RootState): boolean => {
@@ -136,4 +147,16 @@ export const selectPhiatLoading = memoize((state: RootState): boolean => {
   console.log('SELECT_PHIAT_LOADING');
 
   return state.protocols.PHIAT.loading;
+});
+
+export const selectPulsexLoading = memoize((state: RootState): boolean => {
+  console.log('SELECT_PULSEX_LOADING');
+
+  return state.protocols.PULSEX.loading;
+});
+
+export const selectPancakeLoading = memoize((state: RootState): boolean => {
+  console.log('SELECT_PANCAKE_LOADING');
+
+  return state.protocols.PANCAKE.loading;
 });

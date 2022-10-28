@@ -1,5 +1,5 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
-import { selectPancakeTotal } from '@app-src/store/protocol/selectors';
+import { selectPancakeLoading, selectPancakeTotal } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { formatToMoney } from '../../utils/format';
@@ -8,8 +8,13 @@ import PancakeLiquidityPoolTable from './PancakeLiquidityPoolTable';
 
 const PancakeTableGroup = () => {
   const pancakeTotal = useSelector(useCallback(selectPancakeTotal, []));
+  const loading = useSelector(useCallback(selectPancakeLoading, []));
 
   const styledPancakeTotal = useMemo(() => formatToMoney(pancakeTotal), [pancakeTotal]);
+
+  if (!loading && pancakeTotal === 0) {
+    return null;
+  }
 
   return (
     <div id="#pancake" className="w-full max-w-96 flex flex-col gap-y-12">
@@ -21,8 +26,8 @@ const PancakeTableGroup = () => {
         tablePrimaryImgAlt="Pancake"
       />
       <div className="flex flex-col gap-y-24">
-        <PancakeLiquidityPoolTable />
-        <PancakeFarmTable />
+        <PancakeLiquidityPoolTable loading={loading} />
+        <PancakeFarmTable loading={loading} />
       </div>
     </div>
   );

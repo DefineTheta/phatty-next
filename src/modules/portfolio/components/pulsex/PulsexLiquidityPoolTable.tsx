@@ -1,4 +1,5 @@
 import Card from '@app-src/common/components/layout/Card';
+import SkeletonLoader from '@app-src/common/components/skeleton/SkeletonLoader';
 import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
@@ -10,12 +11,49 @@ import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
-const PulsexLiquidityPoolTable = () => {
+type IPulsexLiquidityPoolTableProps = {
+  loading: boolean;
+};
+
+const PulsexLiquidityPoolTable = ({ loading }: IPulsexLiquidityPoolTableProps) => {
   const pulsexLiquidityPoolData = useSelector(useCallback(selectPulsexLiquidityPoolData, []));
 
   const [sortedPulsexLiquidityPoolData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof pulsexLiquidityPoolData[number]
   >(pulsexLiquidityPoolData, 'usdValue', 'desc');
+
+  if (loading) {
+    return (
+      <Card>
+        <TableHeaderRow>
+          <TableHeaderRowCell className="basis-1/5">Pool</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/5">Share of Pool</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-2/5">Balance</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/5">USD Value</TableHeaderRowCell>
+        </TableHeaderRow>
+        {Array.from({ length: 3 }, (x, i) => i).map((index) => (
+          <TableRow key={index}>
+            <TableRowCell className="pr-20 basis-1/5">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/5">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-2/5">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/5">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+          </TableRow>
+        ))}
+      </Card>
+    );
+  }
+
+  if (sortedPulsexLiquidityPoolData.length === 0) {
+    return null;
+  }
 
   return (
     <Card>

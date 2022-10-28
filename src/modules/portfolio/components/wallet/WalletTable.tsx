@@ -1,4 +1,5 @@
 import Card from '@app-src/common/components/layout/Card';
+import SkeletonLoader from '@app-src/common/components/skeleton/SkeletonLoader';
 import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
@@ -10,12 +11,53 @@ import Image from 'next/image';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
-const WalletTable = () => {
+type IWalletTableProps = {
+  loading: boolean;
+};
+
+const WalletTable = ({ loading }: IWalletTableProps) => {
   const walletData = useSelector(useCallback(selectWalletData, []));
 
   const [sortedWalletData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof walletData[number]
   >(walletData, 'usdValue', 'desc');
+
+  if (loading) {
+    return (
+      <Card>
+        <TableHeaderRow>
+          <TableHeaderRowCell className="basis-1/4">Chain</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/4">Token</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/4">Balance</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/6">USD Value</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/12"></TableHeaderRowCell>
+        </TableHeaderRow>
+        {Array.from({ length: 3 }, (x, i) => i).map((index) => (
+          <TableRow key={index}>
+            <TableRowCell className="pr-20 basis-1/4">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/4">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/4">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/6">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/12">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+          </TableRow>
+        ))}
+      </Card>
+    );
+  }
+
+  if (sortedWalletData.length === 0) {
+    return null;
+  }
 
   return (
     <Card>

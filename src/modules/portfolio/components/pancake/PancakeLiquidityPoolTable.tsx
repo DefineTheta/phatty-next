@@ -1,4 +1,5 @@
 import Card from '@app-src/common/components/layout/Card';
+import SkeletonLoader from '@app-src/common/components/skeleton/SkeletonLoader';
 import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
@@ -10,12 +11,45 @@ import { useSelector } from 'react-redux';
 import useSort from '../../hooks/useSort';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
-const PancakeLiquidityPoolTable = () => {
+type IPancakeLiquidityPoolTable = {
+  loading: boolean;
+};
+
+const PancakeLiquidityPoolTable = ({ loading }: IPancakeLiquidityPoolTable) => {
   const pancakeLPData = useSelector(useCallback(selectPancakeLiquidityPoolData, []));
 
   const [sortedPancakeLPData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof pancakeLPData[number]
   >(pancakeLPData, 'usdValue', 'desc');
+
+  if (loading) {
+    return (
+      <Card>
+        <TableHeaderRow>
+          <TableHeaderRowCell className="basis-1/4">Pool</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/2">Balance</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/4">USD Value</TableHeaderRowCell>
+        </TableHeaderRow>
+        {Array.from({ length: 3 }, (x, i) => i).map((index) => (
+          <TableRow key={index}>
+            <TableRowCell className="pr-20 basis-1/4">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/2">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+            <TableRowCell className="pr-20 basis-1/4">
+              <SkeletonLoader className="w-full h-30" />
+            </TableRowCell>
+          </TableRow>
+        ))}
+      </Card>
+    );
+  }
+
+  if (sortedPancakeLPData.length === 0) {
+    return null;
+  }
 
   return (
     <Card>
