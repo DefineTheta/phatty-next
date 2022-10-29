@@ -1,13 +1,25 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import {
+  selectBundlePulsexLoading,
+  selectBundlePulsexTotal
+} from '@app-src/store/bundles/selectors';
 import { selectPulsexLoading, selectPulsexTotal } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { formatToMoney } from '../../utils/format';
 import PulsexLiquidityPoolTable from './PulsexLiquidityPoolTable';
 
-const PulsexTableGroup = () => {
-  const pulsexTotal = useSelector(useCallback(selectPulsexTotal, []));
-  const loading = useSelector(useCallback(selectPulsexLoading, []));
+type IPulsexTableGroupProps = {
+  page: 'profile' | 'bundle';
+};
+
+const PulsexTableGroup = ({ page }: IPulsexTableGroupProps) => {
+  const pulsexTotal = useSelector(
+    useCallback(page === 'profile' ? selectPulsexTotal : selectBundlePulsexTotal, [page])
+  );
+  const loading = useSelector(
+    useCallback(page === 'profile' ? selectPulsexLoading : selectBundlePulsexLoading, [page])
+  );
 
   const styledPulsexTotal = useMemo(() => formatToMoney(pulsexTotal), [pulsexTotal]);
 
@@ -24,7 +36,7 @@ const PulsexTableGroup = () => {
         tablePrimaryImgSrc="/img/tokens/pulsex.jpeg"
         tablePrimaryImgAlt="Pulsex"
       />
-      <PulsexLiquidityPoolTable loading={loading} />
+      <PulsexLiquidityPoolTable page={page} loading={loading} />
     </div>
   );
 };

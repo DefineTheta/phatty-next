@@ -6,20 +6,20 @@ import PulsexTableGroup from '@app-src/modules/portfolio/components/pulsex/Pulse
 import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/WalletTableGroup';
 import ProfileHeader from '@app-src/modules/profile/components/ProfileHeader';
 
-const ProfilePage = () => {
+const BundlePage = () => {
   return (
     <div className="flex flex-col gap-y-24">
       <ProfileHeader />
       <div className="w-full flex flex-col items-center gap-y-30">
         <ChainSummaryCard />
-        <WalletTableGroup page="profile" />
-        <HexTableGroup page="profile" />
-        <PhiatTableGroup page="profile" />
-        <PulsexTableGroup page="profile" />
-        <PancakeTableGroup page="profile" />
+        <WalletTableGroup page="bundle" />
+        <HexTableGroup page="bundle" />
+        <PhiatTableGroup page="bundle" />
+        <PulsexTableGroup page="bundle" />
+        <PancakeTableGroup page="bundle" />
       </div>
     </div>
   );
 };
 
-export default ProfilePage;
+export default BundlePage;

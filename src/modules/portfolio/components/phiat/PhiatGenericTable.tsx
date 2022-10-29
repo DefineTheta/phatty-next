@@ -4,6 +4,7 @@ import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
+import { selectBundlePhiatComponentData } from '@app-src/store/bundles/selectors';
 import { selectPhiatComponentData } from '@app-src/store/protocol/selectors';
 import { PhiatDataComponentEnum } from '@app-src/store/protocol/types';
 import Image from 'next/image';
@@ -14,11 +15,19 @@ import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IPhiatGenericTableProps = {
   component: keyof typeof PhiatDataComponentEnum;
+  page: 'profile' | 'bundle';
   loading: boolean;
 };
 
-const PhiatGenericTable = ({ component, loading }: IPhiatGenericTableProps) => {
-  const phiatComponentData = useSelector(useCallback(selectPhiatComponentData(component), []));
+const PhiatGenericTable = ({ component, page, loading }: IPhiatGenericTableProps) => {
+  const phiatComponentData = useSelector(
+    useCallback(
+      page === 'profile'
+        ? selectPhiatComponentData(component)
+        : selectBundlePhiatComponentData(component),
+      [page]
+    )
+  );
 
   const [sortedPhiatComponentData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof phiatComponentData[number]

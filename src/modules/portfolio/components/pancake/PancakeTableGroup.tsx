@@ -1,4 +1,8 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import {
+  selectBundlePancakeLoading,
+  selectBundlePancakeTotal
+} from '@app-src/store/bundles/selectors';
 import { selectPancakeLoading, selectPancakeTotal } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -6,9 +10,17 @@ import { formatToMoney } from '../../utils/format';
 import PancakeFarmTable from './PancakeFarmTable';
 import PancakeLiquidityPoolTable from './PancakeLiquidityPoolTable';
 
-const PancakeTableGroup = () => {
-  const pancakeTotal = useSelector(useCallback(selectPancakeTotal, []));
-  const loading = useSelector(useCallback(selectPancakeLoading, []));
+type IPancakeTableGroup = {
+  page: 'profile' | 'bundle';
+};
+
+const PancakeTableGroup = ({ page }: IPancakeTableGroup) => {
+  const pancakeTotal = useSelector(
+    useCallback(page === 'profile' ? selectPancakeTotal : selectBundlePancakeTotal, [page])
+  );
+  const loading = useSelector(
+    useCallback(page === 'profile' ? selectPancakeLoading : selectBundlePancakeLoading, [page])
+  );
 
   const styledPancakeTotal = useMemo(() => formatToMoney(pancakeTotal), [pancakeTotal]);
 
@@ -26,8 +38,8 @@ const PancakeTableGroup = () => {
         tablePrimaryImgAlt="Pancake"
       />
       <div className="flex flex-col gap-y-24">
-        <PancakeLiquidityPoolTable loading={loading} />
-        <PancakeFarmTable loading={loading} />
+        <PancakeLiquidityPoolTable page={page} loading={loading} />
+        <PancakeFarmTable page={page} loading={loading} />
       </div>
     </div>
   );

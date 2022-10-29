@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import bundlesReducer from './bundles/bundlesSlice';
+import bundlesReducer from './bundles/bundleSlice';
 // import chainsReducer from './chains/chainsSlice';
 // import historiesReducer from './histories/historiesSlice';
 import protocolsReducer from './protocol/protocolSlice';
@@ -13,9 +13,9 @@ export const store = configureStore({
   reducer: {
     // utility: utilityReducer,
     // histories: historiesReducer,
-    protocols: protocolsReducer
+    protocols: protocolsReducer,
     // chains: chainsReducer,
-    // bundles: bundlesReducer
+    bundles: bundlesReducer
   }
 });
 

@@ -1,4 +1,5 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import { selectBundlePhiatLoading, selectBundlePhiatTotal } from '@app-src/store/bundles/selectors';
 import { selectPhiatLoading, selectPhiatTotal } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -6,9 +7,17 @@ import { formatToMoney } from '../../utils/format';
 import PhiatGenericTable from './PhiatGenericTable';
 import PhiatStakeTable from './PhiatStakeTable';
 
-const PhiatTableGroup = () => {
-  const phiatTotal = useSelector(useCallback(selectPhiatTotal, []));
-  const loading = useSelector(useCallback(selectPhiatLoading, []));
+type IPhiatTableGroupProps = {
+  page: 'profile' | 'bundle';
+};
+
+const PhiatTableGroup = ({ page }: IPhiatTableGroupProps) => {
+  const phiatTotal = useSelector(
+    useCallback(page === 'profile' ? selectPhiatTotal : selectBundlePhiatTotal, [page])
+  );
+  const loading = useSelector(
+    useCallback(page === 'profile' ? selectPhiatLoading : selectBundlePhiatLoading, [page])
+  );
 
   const styledPhiatTotal = useMemo(() => formatToMoney(phiatTotal), [phiatTotal]);
 
@@ -25,10 +34,10 @@ const PhiatTableGroup = () => {
         tablePrimaryImgSrc="/img/tokens/phsac.png"
         tablePrimaryImgAlt="Phiat"
       />
-      <PhiatStakeTable loading={loading} />
-      <PhiatGenericTable component="LENDING" loading={loading} />
-      <PhiatGenericTable component="VARIABLE_DEBT" loading={loading} />
-      <PhiatGenericTable component="STABLE_DEBT" loading={loading} />
+      <PhiatStakeTable page={page} loading={loading} />
+      <PhiatGenericTable page={page} component="LENDING" loading={loading} />
+      <PhiatGenericTable page={page} component="VARIABLE_DEBT" loading={loading} />
+      <PhiatGenericTable page={page} component="STABLE_DEBT" loading={loading} />
     </div>
   );
 };

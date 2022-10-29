@@ -6,18 +6,25 @@ import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import useSort from '@app-src/modules/portfolio/hooks/useSort';
 import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
+import { selectBundleHexStakeData } from '@app-src/store/bundles/selectors';
 import { selectHexStakeData } from '@app-src/store/protocol/selectors';
 import { HexDataComponentEnum } from '@app-src/store/protocol/types';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
 type IHexStakeTableProps = {
+  page: 'profile' | 'bundle';
   chain: keyof typeof HexDataComponentEnum;
   loading: boolean;
 };
 
-const HexStakeTable = ({ chain, loading }: IHexStakeTableProps) => {
-  const hexStakeData = useSelector(useCallback(selectHexStakeData(chain), [chain]));
+const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
+  const hexStakeData = useSelector(
+    useCallback(page === 'profile' ? selectHexStakeData(chain) : selectBundleHexStakeData(chain), [
+      page,
+      chain
+    ])
+  );
 
   const [sortedHexStakeData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof hexStakeData[number]

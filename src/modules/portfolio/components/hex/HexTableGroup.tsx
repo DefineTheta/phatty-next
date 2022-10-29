@@ -1,14 +1,36 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import {
+  selectBundleHexComponentTotal,
+  selectBundleHexStakeLoading
+} from '@app-src/store/bundles/selectors';
 import { selectHexComponentTotal, selectHexStakeLoading } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { formatToMoney } from '../../utils/format';
 import HexStakeTable from './HexStakeTable';
 
-const HexTableGroup = () => {
-  const hexEthTotal = useSelector(useCallback(selectHexComponentTotal('ETHEREUM'), []));
-  const hexTplsTotal = useSelector(useCallback(selectHexComponentTotal('TPLS'), []));
-  const loading = useSelector(useCallback(selectHexStakeLoading, []));
+type IHexTableGroupProps = {
+  page: 'profile' | 'bundle';
+};
+
+const HexTableGroup = ({ page }: IHexTableGroupProps) => {
+  const hexEthTotal = useSelector(
+    useCallback(
+      page === 'profile'
+        ? selectHexComponentTotal('ETHEREUM')
+        : selectBundleHexComponentTotal('ETHEREUM'),
+      [page]
+    )
+  );
+  const hexTplsTotal = useSelector(
+    useCallback(
+      page === 'profile' ? selectHexComponentTotal('TPLS') : selectBundleHexComponentTotal('TPLS'),
+      [page]
+    )
+  );
+  const loading = useSelector(
+    useCallback(page === 'profile' ? selectHexStakeLoading : selectBundleHexStakeLoading, [page])
+  );
 
   const styledHexEthTotal = useMemo(() => formatToMoney(hexEthTotal), [hexEthTotal]);
   const styledHexTplsTotal = useMemo(() => formatToMoney(hexTplsTotal), [hexTplsTotal]);
@@ -19,7 +41,7 @@ const HexTableGroup = () => {
 
   return (
     <div id="#hex" className="w-full max-w-96 flex flex-col gap-y-24">
-      {hexEthTotal !== 0 && (
+      {(loading || hexEthTotal !== 0) && (
         <div className="flex flex-col gap-y-12">
           <TableHeader
             tableName="Hex.com"
@@ -30,10 +52,10 @@ const HexTableGroup = () => {
             tableSecondaryImgSrc="/img/chains/eth.svg"
             tableSecondaryImgAlt="Ethereum"
           />
-          <HexStakeTable chain="ETHEREUM" loading={loading} />
+          <HexStakeTable chain="ETHEREUM" page={page} loading={loading} />
         </div>
       )}
-      {hexTplsTotal !== 0 && (
+      {(loading || hexTplsTotal !== 0) && (
         <div className="flex flex-col gap-y-12">
           <TableHeader
             tableName="Hex.com"
@@ -44,7 +66,7 @@ const HexTableGroup = () => {
             tableSecondaryImgSrc="/img/chains/tpls.svg"
             tableSecondaryImgAlt="TPLS"
           />
-          <HexStakeTable chain="TPLS" loading={loading} />
+          <HexStakeTable chain="TPLS" page={page} loading={loading} />
         </div>
       )}
     </div>

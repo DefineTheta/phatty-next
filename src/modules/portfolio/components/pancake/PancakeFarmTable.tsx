@@ -4,6 +4,7 @@ import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
+import { selectBundlePancakeFarmingData } from '@app-src/store/bundles/selectors';
 import { selectPancakeFarmingData } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
@@ -12,11 +13,16 @@ import useSort from '../../hooks/useSort';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IPancakeFarmTable = {
+  page: 'profile' | 'bundle';
   loading: boolean;
 };
 
-const PancakeFarmTable = ({ loading }: IPancakeFarmTable) => {
-  const pancakeFarmData = useSelector(useCallback(selectPancakeFarmingData, []));
+const PancakeFarmTable = ({ page, loading }: IPancakeFarmTable) => {
+  const pancakeFarmData = useSelector(
+    useCallback(page === 'profile' ? selectPancakeFarmingData : selectBundlePancakeFarmingData, [
+      page
+    ])
+  );
 
   const [sortedPancakeFarmData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof pancakeFarmData[number]

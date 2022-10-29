@@ -4,6 +4,10 @@ import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
+import {
+  selectBundlePhiatComponentData,
+  selectBundlePhiatStakingAPY
+} from '@app-src/store/bundles/selectors';
 import { selectPhiatComponentData, selectPhiatStakingAPY } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback, useMemo } from 'react';
@@ -12,13 +16,30 @@ import useSort from '../../hooks/useSort';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IPhiatStakeTableProps = {
+  page: 'profile' | 'bundle';
   loading: boolean;
 };
 
-const PhiatStakeTable = ({ loading }: IPhiatStakeTableProps) => {
-  const phiatStakingAPY = useSelector(useCallback(selectPhiatStakingAPY, []));
-  const phiatStakingData = useSelector(useCallback(selectPhiatComponentData('STAKING'), []));
-  const phiatTokenData = useSelector(useCallback(selectPhiatComponentData('PH_TOKENS'), []));
+const PhiatStakeTable = ({ page, loading }: IPhiatStakeTableProps) => {
+  const phiatStakingAPY = useSelector(
+    useCallback(page === 'profile' ? selectPhiatStakingAPY : selectBundlePhiatStakingAPY, [page])
+  );
+  const phiatStakingData = useSelector(
+    useCallback(
+      page === 'profile'
+        ? selectPhiatComponentData('STAKING')
+        : selectBundlePhiatComponentData('STAKING'),
+      [page]
+    )
+  );
+  const phiatTokenData = useSelector(
+    useCallback(
+      page === 'profile'
+        ? selectPhiatComponentData('PH_TOKENS')
+        : selectBundlePhiatComponentData('PH_TOKENS'),
+      [page]
+    )
+  );
 
   const styledPhiatStakingAPY = useMemo(
     () => styleNumber(phiatStakingAPY, 2) + '%',

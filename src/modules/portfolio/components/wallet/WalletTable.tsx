@@ -6,17 +6,21 @@ import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import useSort from '@app-src/modules/portfolio/hooks/useSort';
 import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
+import { selectBundleWalletData } from '@app-src/store/bundles/selectors';
 import { selectWalletData } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
 type IWalletTableProps = {
+  page: 'profile' | 'bundle';
   loading: boolean;
 };
 
-const WalletTable = ({ loading }: IWalletTableProps) => {
-  const walletData = useSelector(useCallback(selectWalletData, []));
+const WalletTable = ({ page, loading }: IWalletTableProps) => {
+  const walletData = useSelector(
+    useCallback(page === 'profile' ? selectWalletData : selectBundleWalletData, [page])
+  );
 
   const [sortedWalletData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof walletData[number]

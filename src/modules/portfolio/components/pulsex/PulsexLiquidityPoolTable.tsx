@@ -5,6 +5,7 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import useSort from '@app-src/modules/portfolio/hooks/useSort';
+import { selectBundlePulsexLiquidityPoolData } from '@app-src/store/bundles/selectors';
 import { selectPulsexLiquidityPoolData } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
@@ -12,11 +13,17 @@ import { useSelector } from 'react-redux';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IPulsexLiquidityPoolTableProps = {
+  page: 'profile' | 'bundle';
   loading: boolean;
 };
 
-const PulsexLiquidityPoolTable = ({ loading }: IPulsexLiquidityPoolTableProps) => {
-  const pulsexLiquidityPoolData = useSelector(useCallback(selectPulsexLiquidityPoolData, []));
+const PulsexLiquidityPoolTable = ({ page, loading }: IPulsexLiquidityPoolTableProps) => {
+  const pulsexLiquidityPoolData = useSelector(
+    useCallback(
+      page === 'profile' ? selectPulsexLiquidityPoolData : selectBundlePulsexLiquidityPoolData,
+      [page]
+    )
+  );
 
   const [sortedPulsexLiquidityPoolData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof pulsexLiquidityPoolData[number]

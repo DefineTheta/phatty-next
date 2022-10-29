@@ -4,6 +4,7 @@ import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
+import { selectBundlePancakeLiquidityPoolData } from '@app-src/store/bundles/selectors';
 import { selectPancakeLiquidityPoolData } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
@@ -12,11 +13,17 @@ import useSort from '../../hooks/useSort';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IPancakeLiquidityPoolTable = {
+  page: 'profile' | 'bundle';
   loading: boolean;
 };
 
-const PancakeLiquidityPoolTable = ({ loading }: IPancakeLiquidityPoolTable) => {
-  const pancakeLPData = useSelector(useCallback(selectPancakeLiquidityPoolData, []));
+const PancakeLiquidityPoolTable = ({ page, loading }: IPancakeLiquidityPoolTable) => {
+  const pancakeLPData = useSelector(
+    useCallback(
+      page === 'profile' ? selectPancakeLiquidityPoolData : selectBundlePancakeLiquidityPoolData,
+      [page]
+    )
+  );
 
   const [sortedPancakeLPData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof pancakeLPData[number]
