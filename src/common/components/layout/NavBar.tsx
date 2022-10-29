@@ -1,5 +1,6 @@
 import SearchInput from '@app-src/common/components/input/SearchInput';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
+import { fetchBundleAddresses } from '@app-src/store/bundles/bundleSlice';
 import {
   fetchHexData,
   fetchPancakeData,
@@ -20,6 +21,8 @@ const NavBar = () => {
       dispatch(fetchPhiatData(searchInputRef.current?.value.toLowerCase().trim() || ''));
       dispatch(fetchPulsexData(searchInputRef.current?.value.toLowerCase().trim() || ''));
       dispatch(fetchPancakeData(searchInputRef.current?.value.toLowerCase().trim() || ''));
+
+      dispatch(fetchBundleAddresses());
     }
   }, []);
 

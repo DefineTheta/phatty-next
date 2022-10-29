@@ -23,9 +23,19 @@
 // import { RootState } from '../store';
 // import { ProtocolsState } from './types';
 
-import { getHex, getPancake, getPhiat, getPulsex, getWallet } from '@app-src/services/api';
+import {
+  AuthenticationError,
+  getAccountFromMetamask,
+  getHex,
+  getPancake,
+  getPhiat,
+  getPulsex,
+  getWallet,
+  getWithAuthentication
+} from '@app-src/services/api';
 import { RootState } from '@app-src/store/store';
 import {
+  BundleResponse,
   HexResponse,
   PancakeResponse,
   PhiatResponse,
@@ -44,6 +54,7 @@ import {
 } from './types';
 
 const initialState: BundlesState = {
+  addresses: [],
   [ProtocolEnum.WALLET]: {
     total: {
       [WalletDataComponentEnum.ETHEREUM]: 0,
@@ -109,16 +120,44 @@ const initialState: BundlesState = {
   }
 };
 
-const fetchBundleWalletData = createAsyncThunk<WalletResponse, string, { state: RootState }>(
-  'bundles/fetchBundleWalletData',
-  async (address, thunkAPI) => {
+const fetchBundleAddresses = createAsyncThunk<BundleResponse, void, { state: RootState }>(
+  'bundles/fetchBundleAddresses',
+  async (_, thunkAPI) => {
     const controller = new AbortController();
 
     thunkAPI.signal.onabort = () => {
       controller.abort();
     };
 
-    const data = await getWallet([address]);
+    const data = await getWithAuthentication<BundleResponse>(async (signal: AbortSignal) => {
+      const address = await getAccountFromMetamask();
+      const res = await fetch(`/api/bundle/${address}`, { signal });
+
+      if (res.status === 401) {
+        throw new AuthenticationError('Unauthorized');
+      }
+
+      const data: BundleResponse = await res.json();
+
+      return data;
+    }, controller.signal);
+
+    if (!data) throw new Error('Unable to fetch bundle addresses');
+
+    return data;
+  }
+);
+
+const fetchBundleWalletData = createAsyncThunk<WalletResponse, string[], { state: RootState }>(
+  'bundles/fetchBundleWalletData',
+  async (addresses, thunkAPI) => {
+    const controller = new AbortController();
+
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
+
+    const data = await getWallet(addresses);
 
     return data;
   }
@@ -126,60 +165,60 @@ const fetchBundleWalletData = createAsyncThunk<WalletResponse, string, { state: 
 
 const fetchBundleHexData = createAsyncThunk<
   HexResponse,
-  string,
+  string[],
   { state: RootState; signal: AbortSignal }
->('bundles/fetchBundleHexData', async (address, thunkAPI) => {
+>('bundles/fetchBundleHexData', async (addresses, thunkAPI) => {
   const controller = new AbortController();
 
   thunkAPI.signal.onabort = () => {
     controller.abort();
   };
 
-  const data = await getHex([address]);
+  const data = await getHex(addresses);
 
   return data;
 });
 
-const fetchBundlePhiatData = createAsyncThunk<PhiatResponse, string, { state: RootState }>(
+const fetchBundlePhiatData = createAsyncThunk<PhiatResponse, string[], { state: RootState }>(
   'bundles/fetchBundlePhiatData',
-  async (address, thunkAPI) => {
+  async (addresses, thunkAPI) => {
     const controller = new AbortController();
 
     thunkAPI.signal.onabort = () => {
       controller.abort();
     };
 
-    const data = await getPhiat([address]);
+    const data = await getPhiat(addresses);
 
     return data;
   }
 );
 
-const fetchBundlePulsexData = createAsyncThunk<PulsexResponse, string, { state: RootState }>(
+const fetchBundlePulsexData = createAsyncThunk<PulsexResponse, string[], { state: RootState }>(
   'bundles/fetchBundlePulsexData',
-  async (address, thunkAPI) => {
+  async (addresses, thunkAPI) => {
     const controller = new AbortController();
 
     thunkAPI.signal.onabort = () => {
       controller.abort();
     };
 
-    const data = await getPulsex([address]);
+    const data = await getPulsex(addresses);
 
     return data;
   }
 );
 
-const fetchBundlePancakeData = createAsyncThunk<PancakeResponse, string, { state: RootState }>(
+const fetchBundlePancakeData = createAsyncThunk<PancakeResponse, string[], { state: RootState }>(
   'bundles/fetchPancakeData',
-  async (address, thunkAPI) => {
+  async (addresses, thunkAPI) => {
     const controller = new AbortController();
 
     thunkAPI.signal.onabort = () => {
       controller.abort();
     };
 
-    const data = getPancake([address]);
+    const data = getPancake(addresses);
 
     return data;
   }
@@ -192,6 +231,25 @@ export const bundlesSlice = createSlice({
     reset: () => initialState
   },
   extraReducers: (builder) => {
+    //Bundle address reducer functions
+    builder.addCase(fetchBundleAddresses.pending, (state) => {
+      // state.WALLET.loading = true;
+    });
+
+    builder.addCase(fetchBundleAddresses.fulfilled, (state, action) => {
+      const res = action.payload;
+
+      state.addresses = res.data;
+
+      // state.WALLET.loading = false;
+      // state.WALLET.error = false;
+    });
+
+    builder.addCase(fetchBundleAddresses.rejected, (state) => {
+      // state.WALLET.loading = false;
+      // state.WALLET.error = true;
+    });
+
     //Wallet reducer functions
     builder.addCase(fetchBundleWalletData.pending, (state) => {
       state.WALLET.loading = true;
@@ -327,6 +385,7 @@ export const bundlesSlice = createSlice({
 export const { reset } = bundlesSlice.actions;
 
 export {
+  fetchBundleAddresses,
   fetchBundleWalletData,
   fetchBundleHexData,
   fetchBundlePhiatData,

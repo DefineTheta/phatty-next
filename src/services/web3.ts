@@ -831,6 +831,10 @@ export const fetchPrices = async () => {
   }
 };
 
+export const decryptAddress = (message: string, signature: string) => {
+  return new Web3().eth.accounts.recover(message, signature);
+};
+
 const ethProviderURL = 'https://mainnet.infura.io/v3/91173f1e92dc4107884d2b01a7156bd3';
 export const ethClient = new Web3();
 ethClient.setProvider(new Web3.providers.HttpProvider(ethProviderURL));

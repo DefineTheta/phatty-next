@@ -1,11 +1,84 @@
 import {
   ApiBaseResponse,
+  AuthResponse,
   HexResponse,
   PancakeResponse,
   PhiatResponse,
   PulsexResponse,
   WalletResponse
 } from '@app-src/types/api';
+
+export class AuthenticationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.message = 'AuthenticationError';
+  }
+}
+
+// function getCookie(name: string) {
+//   var match = document.cookie.match(RegExp('(?:^|;\\s*)' + name + '=([^;]*)'));
+//   return match ? match[1] : null;
+// }
+
+export const getAccountFromMetamask = async () => {
+  const accounts = await window.ethereum?.request<string[]>({ method: 'eth_requestAccounts' });
+
+  if (!accounts) throw new Error('Could not get address from metamask');
+
+  return accounts[0] as string;
+};
+
+export const authorize = async (signal: AbortSignal) => {
+  try {
+    signal.onabort = () => {
+      throw new DOMException('Authorization aborted');
+    };
+
+    const address = await getAccountFromMetamask();
+
+    const date = new Date();
+    const dateStr = date.getUTCFullYear() * 10000 + date.getUTCMonth() * 100;
+    const msg = `${dateStr}${address}`;
+
+    const sign = await window.ethereum?.request<string>({
+      method: 'personal_sign',
+      params: [msg, address]
+    });
+
+    const response = await fetch(`/api/auth/verify?address=${address}&sign=${sign}`, { signal });
+    const data: AuthResponse = await response.json();
+
+    if (!data.verified) {
+      alert('Error occured trying to authorize');
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getWithAuthentication = async <T>(
+  apiRequestFn: (signal: AbortSignal) => Promise<T>,
+  signal: AbortSignal
+) => {
+  try {
+    return await apiRequestFn(signal);
+  } catch (err) {
+    if (err instanceof AuthenticationError) {
+      console.warn(
+        'Tried to acced an authenticated API route when not authenticated. Atempting to authenticate.'
+      );
+
+      const isAuthroized = await authorize(signal);
+
+      if (!isAuthroized) return;
+
+      return await apiRequestFn(signal);
+    }
+  }
+};
 
 const getPaginatedData = async <T extends ApiBaseResponse>(URL: string) => {
   const responses: T[] = [];

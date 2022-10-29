@@ -3,6 +3,15 @@ export interface ApiBaseResponse {
   next: number | null;
 }
 
+export interface AuthResponse {
+  verified: boolean;
+}
+
+export interface BundleResponse {
+  data: string[];
+  error?: string;
+}
+
 export interface WalletTokenItem {
   name: string;
   balance: number;

@@ -71,6 +71,7 @@ export enum PancakeDataComponentEnum {
 }
 
 export interface BundlesState {
+  addresses: string[];
   [ProtocolEnum.WALLET]: WalletData;
   [ProtocolEnum.HEX]: HexData;
   [ProtocolEnum.PHIAT]: PhiatData;
