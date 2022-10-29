@@ -6,7 +6,6 @@ export default withIronSessionApiRoute(
   async function handler(req: NextApiRequest, res: NextApiResponse<BundleResponse>) {
     try {
       const address = String(req.query.address);
-      console.log(process.env.COOKIE_SECRET);
       const { decryptedAddress } = req.session;
 
       if (!address) return res.status(400);
