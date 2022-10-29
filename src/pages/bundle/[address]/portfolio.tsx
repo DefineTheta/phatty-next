@@ -1,49 +1,55 @@
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
+import BundleHeader from '@app-src/modules/bundle/components/BundleHeader';
 import ChainSummaryCard from '@app-src/modules/chain/components/ChainSummaryCard';
 import HexTableGroup from '@app-src/modules/portfolio/components/hex/HexTableGroup';
 import PancakeTableGroup from '@app-src/modules/portfolio/components/pancake/PancakeTableGroup';
 import PhiatTableGroup from '@app-src/modules/portfolio/components/phiat/PhiatTableGroup';
 import PulsexTableGroup from '@app-src/modules/portfolio/components/pulsex/PulsexTableGroup';
 import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/WalletTableGroup';
-import ProfileHeader from '@app-src/modules/profile/components/ProfileHeader';
 import {
   fetchBundleAddresses,
   fetchBundleHexData,
   fetchBundlePancakeData,
   fetchBundlePhiatData,
   fetchBundlePulsexData,
-  fetchBundleWalletData
+  fetchBundleWalletData,
+  setBundleFetched
 } from '@app-src/store/bundles/bundleSlice';
-import { selectBundleAddresses } from '@app-src/store/bundles/selectors';
+import { selectBundleAddresses, selectBundleHasFetched } from '@app-src/store/bundles/selectors';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-const BundlePage = () => {
+const BundlePortfolioPage = () => {
   const dispatch = useAppDispatch();
 
   const bundleAddresses = useSelector(useCallback(selectBundleAddresses, []));
+  const hasFetched = useSelector(useCallback(selectBundleHasFetched, []));
 
   useEffect(() => {
-    const bundleAddressPromise = dispatch(fetchBundleAddresses());
+    if (!hasFetched) {
+      const bundleAddressPromise = dispatch(fetchBundleAddresses());
 
-    return () => {
-      bundleAddressPromise.abort();
-    };
-  }, []);
+      return () => {
+        bundleAddressPromise.abort();
+      };
+    }
+  }, [hasFetched]);
 
   useEffect(() => {
-    if (!bundleAddresses || bundleAddresses.length === 0) return;
+    if (hasFetched || !bundleAddresses || bundleAddresses.length === 0) return;
 
-    dispatch(fetchBundleWalletData(bundleAddresses));
-    dispatch(fetchBundleHexData(bundleAddresses));
-    dispatch(fetchBundlePhiatData(bundleAddresses));
-    dispatch(fetchBundlePulsexData(bundleAddresses));
-    dispatch(fetchBundlePancakeData(bundleAddresses));
-  }, [bundleAddresses]);
+    Promise.all([
+      dispatch(fetchBundleWalletData(bundleAddresses)),
+      dispatch(fetchBundleHexData(bundleAddresses)),
+      dispatch(fetchBundlePhiatData(bundleAddresses)),
+      dispatch(fetchBundlePulsexData(bundleAddresses)),
+      dispatch(fetchBundlePancakeData(bundleAddresses))
+    ]).then(() => dispatch(setBundleFetched(true)));
+  }, [bundleAddresses, hasFetched]);
 
   return (
     <div className="flex flex-col gap-y-24">
-      <ProfileHeader />
+      <BundleHeader />
       <div className="w-full flex flex-col items-center gap-y-30">
         <ChainSummaryCard />
         <WalletTableGroup page="bundle" />
@@ -56,4 +62,4 @@ const BundlePage = () => {
   );
 };
 
-export default BundlePage;
+export default BundlePortfolioPage;

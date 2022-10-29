@@ -10,6 +10,12 @@ import {
 import memoize from 'proxy-memoize';
 import { HexDataComponentEnum, PhiatDataComponentEnum } from './types';
 
+export const selectBundleHasFetched = memoize((state: RootState) => {
+  console.log('SELCT_BUNDLE_HAS_FETCHED');
+
+  return state.bundles.hasFetched;
+});
+
 export const selectBundleAddresses = memoize((state: RootState) => {
   console.log('SELECT_BUNDLE_ADDRESSES');
 
@@ -139,7 +145,7 @@ export const selectBundlePancakeTotal = memoize((state: RootState): number => {
   return state.bundles.PANCAKE.total.LIQUIDITY_POOL + state.bundles.PANCAKE.total.FARMING;
 });
 
-export const selectTotal = memoize((state: RootState): number => {
+export const selectBundleTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
   return (

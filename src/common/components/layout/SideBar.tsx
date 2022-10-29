@@ -30,7 +30,7 @@ const SideBar = () => {
         router.push(`/profile`);
         // router.push(`/profile/${cryptoAddress || ''}`);
       } else if (tabName === 'bundle') {
-        router.push(`/bundle`);
+        router.push(`/bundle/asd/portfolio`);
         // router.push(`/bundle/${bundleAddress || ''}`);
       } else if (tabName === 'phiat') {
         window.open('https://phiat.io/', '_blank')?.focus();

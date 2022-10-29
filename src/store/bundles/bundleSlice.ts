@@ -1,28 +1,3 @@
-// import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-// import { addObjectValue } from 'src/helpers/misc';
-// import { crypto } from 'src/helpers/web3';
-// import {
-//   EthereumLPData,
-//   HexData,
-//   PancakeData,
-//   PhiatData,
-//   PulsexData,
-//   WalletData
-// } from 'src/types/api';
-// import {
-//   HexDataComponentEnum,
-//   PancakeDataComponentEnum,
-//   PhiatDataComponentEnum,
-//   ProtocolEnum,
-//   ProtocolImgEnum,
-//   PulsexDataComponentEnum,
-//   UniswapV2DataComponentEnum,
-//   UniswapV3DataComponentEnum,
-//   WalletDataComponentEnum
-// } from 'src/types/crypto';
-// import { RootState } from '../store';
-// import { ProtocolsState } from './types';
-
 import {
   AuthenticationError,
   getAccountFromMetamask,
@@ -42,7 +17,7 @@ import {
   PulsexResponse,
   WalletResponse
 } from '@app-src/types/api';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   BundlesState,
   HexDataComponentEnum,
@@ -55,6 +30,7 @@ import {
 
 const initialState: BundlesState = {
   addresses: [],
+  hasFetched: false,
   [ProtocolEnum.WALLET]: {
     total: {
       [WalletDataComponentEnum.ETHEREUM]: 0,
@@ -228,7 +204,10 @@ export const bundlesSlice = createSlice({
   name: 'bundles',
   initialState,
   reducers: {
-    reset: () => initialState
+    reset: () => initialState,
+    setFetched: (state, action: PayloadAction<boolean>) => {
+      state.hasFetched = action.payload;
+    }
   },
   extraReducers: (builder) => {
     //Bundle address reducer functions
@@ -382,7 +361,7 @@ export const bundlesSlice = createSlice({
   }
 });
 
-export const { reset } = bundlesSlice.actions;
+export const { reset, setFetched: setBundleFetched } = bundlesSlice.actions;
 
 export {
   fetchBundleAddresses,
