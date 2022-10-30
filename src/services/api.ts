@@ -15,11 +15,6 @@ export class AuthenticationError extends Error {
   }
 }
 
-// function getCookie(name: string) {
-//   var match = document.cookie.match(RegExp('(?:^|;\\s*)' + name + '=([^;]*)'));
-//   return match ? match[1] : null;
-// }
-
 export const getAccountFromMetamask = async () => {
   const accounts = await window.ethereum?.request<string[]>({ method: 'eth_requestAccounts' });
 

@@ -29,6 +29,7 @@ import {
 } from './types';
 
 const initialState: BundlesState = {
+  bundleAddress: '',
   addresses: [],
   hasFetched: false,
   [ProtocolEnum.WALLET]: {
@@ -205,6 +206,9 @@ export const bundlesSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
+    setBundleAddress: (state, action: PayloadAction<string>) => {
+      state.bundleAddress = action.payload;
+    },
     setFetched: (state, action: PayloadAction<boolean>) => {
       state.hasFetched = action.payload;
     }
@@ -361,7 +365,7 @@ export const bundlesSlice = createSlice({
   }
 });
 
-export const { reset, setFetched: setBundleFetched } = bundlesSlice.actions;
+export const { reset, setFetched: setBundleFetched, setBundleAddress } = bundlesSlice.actions;
 
 export {
   fetchBundleAddresses,

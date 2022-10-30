@@ -71,6 +71,7 @@ export enum PancakeDataComponentEnum {
 }
 
 export interface BundlesState {
+  bundleAddress: string;
   addresses: string[];
   hasFetched: boolean;
   [ProtocolEnum.WALLET]: WalletData;
