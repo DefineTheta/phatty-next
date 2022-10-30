@@ -11,7 +11,9 @@ export default withIronSessionApiRoute(
       if (!address) return res.status(400);
 
       if (decryptedAddress !== address)
-        return res.status(401).send({ data: [], error: 'Unauthorized' });
+        return res
+          .status(401)
+          .send({ data: [], error: `Unauthorized&${decryptedAddress}&${address}` });
 
       if (req.method === 'GET') {
         const response = await fetch(
