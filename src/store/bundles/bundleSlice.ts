@@ -109,7 +109,7 @@ const fetchBundleAddresses = createAsyncThunk<BundleResponse, void, { state: Roo
 
     const data = await getWithAuthentication<BundleResponse>(async (signal: AbortSignal) => {
       const address = await getAccountFromMetamask();
-      const res = await fetch(`/api/bundle/${address}`, { signal });
+      const res = await fetch(`/api/bundle/${address}`, { signal, cache: 'no-store' });
 
       if (res.status === 401) {
         throw new AuthenticationError('Unauthorized');
@@ -314,6 +314,7 @@ export const bundlesSlice = createSlice({
     builder.addCase(fetchBundleAddresses.fulfilled, (state, action) => {
       const res = action.payload;
 
+      state.bundleAddress = res.data[0];
       state.addresses = res.data;
 
       sessionStorage.setItem('connected', 'true');

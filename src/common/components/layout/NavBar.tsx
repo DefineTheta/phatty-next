@@ -30,13 +30,14 @@ const NavBar = () => {
     [searchInputRef]
   );
 
-  const handleButtonClick = useCallback((type: 'connect' | 'disconnect') => {
+  const handleButtonClick = (type: 'connect' | 'disconnect') => {
+    console.log(type);
     if (type === 'disconnect') {
       dispatch(deleteBundleSession());
     } else if (type === 'connect') {
       dispatch(fetchBundleAddresses());
     }
-  }, []);
+  };
 
   return (
     <div className="w-full py-10 flex flex-row justify-center bg-background-200 border-b border-border-100">
