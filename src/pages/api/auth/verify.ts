@@ -5,24 +5,34 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 export default withIronSessionApiRoute(
   async function handler(req: NextApiRequest, res: NextApiResponse<AuthResponse>) {
-    const { address, sign } = req.query;
+    if (req.method === 'GET') {
+      const { address, sign } = req.query;
 
-    if (!address || !sign) return res.status(400);
+      if (!address || !sign) return res.status(400);
 
-    const date = new Date();
-    const dateStr = date.getUTCFullYear() * 10000 + date.getUTCMonth() * 100;
-    const decryptedAddress = decryptAddress(
-      dateStr + (address as string).toLowerCase(),
-      sign as string
-    ).toLowerCase();
+      const date = new Date();
+      const dateStr = date.getUTCFullYear() * 10000 + date.getUTCMonth() * 100;
+      const decryptedAddress = decryptAddress(
+        dateStr + (address as string).toLowerCase(),
+        sign as string
+      ).toLowerCase();
 
-    if (decryptedAddress === (address as string)) {
-      req.session.decryptedAddress = decryptedAddress;
-      await req.session.save();
+      if (decryptedAddress === (address as string)) {
+        req.session.decryptedAddress = decryptedAddress;
+        await req.session.save();
 
-      res.status(200).json({ verified: true });
-    } else {
-      res.status(200).json({ verified: false });
+        res.status(200).json({ success: true });
+      } else {
+        res.status(200).json({ success: false });
+      }
+    } else if (req.method === 'DELETE') {
+      try {
+        req.session.destroy();
+
+        res.status(200).json({ success: true });
+      } catch (err) {
+        res.status(500).json({ success: false });
+      }
     }
   },
   {

@@ -1,11 +1,12 @@
 import SearchInput from '@app-src/common/components/input/SearchInput';
 import Card from '@app-src/common/components/layout/Card';
 import BundleHeader from '@app-src/modules/bundle/components/BundleHeader';
-import { selectBundleAddresses } from '@app-src/store/bundles/selectors';
+import { selectBundleAddress, selectBundleAddresses } from '@app-src/store/bundles/selectors';
 import { KeyboardEvent, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 const BundleAccountPage = () => {
+  const bundleAddress = useSelector(useCallback(selectBundleAddress, []));
   const bundleAddresses = useSelector(useCallback(selectBundleAddresses, []));
 
   const addressInputRef = useRef<HTMLInputElement>(null);
@@ -18,7 +19,7 @@ const BundleAccountPage = () => {
 
   return (
     <div className="flex flex-col gap-y-24">
-      <BundleHeader />
+      <BundleHeader address={bundleAddress} />
       <div className="w-full flex flex-col items-center gap-y-30">
         <div className="w-full flex flex-row justify-center gap-x-20">
           <SearchInput onKeyDown={handleSearch} inputRef={addressInputRef} />
@@ -26,7 +27,9 @@ const BundleAccountPage = () => {
             <span className="text-base font-semibold text-text-300">Add Wallet</span>
           </button>
           <button className="py-6 px-24 bg-purple-button rounded-full shadow-md cursor-pointer">
-            <span className="text-base font-semibold text-text-300">Connet Wallet</span>
+            <span className="text-base font-semibold text-text-300">
+              {bundleAddress ? 'Disconnect' : 'Connect Wallet'}
+            </span>
           </button>
         </div>
         <Card>

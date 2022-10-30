@@ -1,7 +1,11 @@
 import NavBar from '@app-src/common/components/layout/NavBar';
 import SideBar from '@app-src/common/components/layout/SideBar';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
-import { fetchBundleAddresses, setBundleAddress } from '@app-src/store/bundles/bundleSlice';
+import {
+  clearBundleAddresses,
+  setBundleAddress,
+  setBundleFetched
+} from '@app-src/store/bundles/bundleSlice';
 import { ReactNode, useEffect } from 'react';
 
 type IDefaultLayoutProps = {
@@ -25,10 +29,26 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
         });
       }
 
-      window.ethereum.on('connect', () => {
-        console.log('Metamask connected');
-        dispatch(fetchBundleAddresses());
-      });
+      const handleAccountChange = (accounts: unknown) => {
+        console.log('Metamask accounts change');
+        let acc = accounts as string[];
+        if (acc && acc.length !== 0 && acc[0]) {
+          dispatch(setBundleAddress(acc[0]));
+          dispatch(clearBundleAddresses());
+          dispatch(setBundleFetched(false));
+        }
+      };
+
+      window.ethereum.on('accountsChanged', handleAccountChange);
+
+      return () => {
+        window.ethereum?.removeListener('accountsChanged', handleAccountChange);
+      };
+
+      // window.ethereum.on('connect', () => {
+      //   console.log('Metamask connected');
+      //   dispatch(fetchBundleAddresses());
+      // });
     }
   }, []);
 

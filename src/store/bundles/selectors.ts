@@ -16,6 +16,12 @@ export const selectBundleHasFetched = memoize((state: RootState) => {
   return state.bundles.hasFetched;
 });
 
+export const selectBundleAddress = memoize((state: RootState) => {
+  console.log('SELECT_BUNDLE_ADDRESS');
+
+  return state.bundles.bundleAddress;
+});
+
 export const selectBundleAddresses = memoize((state: RootState) => {
   console.log('SELECT_BUNDLE_ADDRESSES');
 

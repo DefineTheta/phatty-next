@@ -1,5 +1,6 @@
 import useBreakpoint from '@app-src/common/hooks/useBreakpoint';
 import useClickOutside from '@app-src/common/hooks/useClickOutside';
+import { selectBundleAddress } from '@app-src/store/bundles/selectors';
 import { selectProfileAddress } from '@app-src/store/protocol/selectors';
 import {
   BanknotesIcon,
@@ -17,6 +18,7 @@ const SideBar = () => {
   const router = useRouter();
 
   const profileAddress = useSelector(useCallback(selectProfileAddress, []));
+  const bundleAddress = useSelector(useCallback(selectBundleAddress, []));
 
   const currentTab = useMemo(() => router.pathname.split('/').at(1), [router]);
 
@@ -35,7 +37,8 @@ const SideBar = () => {
         router.push(route);
         // router.push(`/profile/${cryptoAddress || ''}`);
       } else if (tabName === 'bundle') {
-        router.push(`/bundle/asd/portfolio`);
+        const route = bundleAddress ? `/bundle/${bundleAddress}/portfolio` : '/bundle';
+        router.push(route);
         // router.push(`/bundle/${bundleAddress || ''}`);
       } else if (tabName === 'phiat') {
         window.open('https://phiat.io/', '_blank')?.focus();
@@ -43,7 +46,7 @@ const SideBar = () => {
         window.open('https://phamous.io/', '_blank')?.focus();
       }
     },
-    [router, profileAddress]
+    [router, profileAddress, bundleAddress]
   );
 
   const sidebarRef = useClickOutside(handleClickOutside);

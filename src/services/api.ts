@@ -29,6 +29,8 @@ export const authorize = async (signal: AbortSignal) => {
       throw new DOMException('Authorization aborted');
     };
 
+    console.log('REAUTHORIZING');
+
     const address = await getAccountFromMetamask();
 
     const date = new Date();
@@ -43,7 +45,7 @@ export const authorize = async (signal: AbortSignal) => {
     const response = await fetch(`/api/auth/verify?address=${address}&sign=${sign}`, { signal });
     const data: AuthResponse = await response.json();
 
-    if (!data.verified) {
+    if (!data.success) {
       alert('Error occured trying to authorize');
       return false;
     }

@@ -4,7 +4,7 @@ export interface ApiBaseResponse {
 }
 
 export interface AuthResponse {
-  verified: boolean;
+  success: boolean;
 }
 
 export interface BundleResponse {

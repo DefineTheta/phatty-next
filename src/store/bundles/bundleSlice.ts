@@ -10,6 +10,7 @@ import {
 } from '@app-src/services/api';
 import { RootState } from '@app-src/store/store';
 import {
+  AuthResponse,
   BundleResponse,
   HexResponse,
   PancakeResponse,
@@ -125,6 +126,22 @@ const fetchBundleAddresses = createAsyncThunk<BundleResponse, void, { state: Roo
   }
 );
 
+const deleteBundleSession = createAsyncThunk<AuthResponse, void, { state: RootState }>(
+  'bundles/deleteBundleSession',
+  async (_, thunkAPI) => {
+    const controller = new AbortController();
+
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
+
+    const res = await fetch('/api/auth/verify', { method: 'DELETE' });
+    const data = await res.json();
+
+    return data;
+  }
+);
+
 const fetchBundleWalletData = createAsyncThunk<WalletResponse, string[], { state: RootState }>(
   'bundles/fetchBundleWalletData',
   async (addresses, thunkAPI) => {
@@ -206,6 +223,9 @@ export const bundlesSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
+    clearBundleAddresses: (state) => {
+      state.addresses = [];
+    },
     setBundleAddress: (state, action: PayloadAction<string>) => {
       state.bundleAddress = action.payload;
     },
@@ -229,6 +249,26 @@ export const bundlesSlice = createSlice({
     });
 
     builder.addCase(fetchBundleAddresses.rejected, (state) => {
+      // state.WALLET.loading = false;
+      // state.WALLET.error = true;
+    });
+
+    //Delete bundle session reducer functions
+    builder.addCase(deleteBundleSession.pending, (state) => {
+      // state.WALLET.loading = true;
+    });
+
+    builder.addCase(deleteBundleSession.fulfilled, (state, action) => {
+      const res = action.payload;
+      console.log('sdafds');
+
+      Object.assign(state, initialState);
+
+      // state.WALLET.loading = false;
+      // state.WALLET.error = false;
+    });
+
+    builder.addCase(deleteBundleSession.rejected, (state) => {
       // state.WALLET.loading = false;
       // state.WALLET.error = true;
     });
@@ -365,10 +405,16 @@ export const bundlesSlice = createSlice({
   }
 });
 
-export const { reset, setFetched: setBundleFetched, setBundleAddress } = bundlesSlice.actions;
+export const {
+  reset,
+  setFetched: setBundleFetched,
+  setBundleAddress,
+  clearBundleAddresses
+} = bundlesSlice.actions;
 
 export {
   fetchBundleAddresses,
+  deleteBundleSession,
   fetchBundleWalletData,
   fetchBundleHexData,
   fetchBundlePhiatData,

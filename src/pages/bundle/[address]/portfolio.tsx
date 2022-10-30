@@ -15,13 +15,18 @@ import {
   fetchBundleWalletData,
   setBundleFetched
 } from '@app-src/store/bundles/bundleSlice';
-import { selectBundleAddresses, selectBundleHasFetched } from '@app-src/store/bundles/selectors';
+import {
+  selectBundleAddress,
+  selectBundleAddresses,
+  selectBundleHasFetched
+} from '@app-src/store/bundles/selectors';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 const BundlePortfolioPage = () => {
   const dispatch = useAppDispatch();
 
+  const bundleAddress = useSelector(useCallback(selectBundleAddress, []));
   const bundleAddresses = useSelector(useCallback(selectBundleAddresses, []));
   const hasFetched = useSelector(useCallback(selectBundleHasFetched, []));
 
@@ -49,7 +54,7 @@ const BundlePortfolioPage = () => {
 
   return (
     <div className="flex flex-col gap-y-24">
-      <BundleHeader />
+      <BundleHeader address={bundleAddress} />
       <div className="w-full flex flex-col items-center gap-y-30">
         <ChainSummaryCard />
         <WalletTableGroup page="bundle" />
