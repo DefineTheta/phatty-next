@@ -1,28 +1,3 @@
-// import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-// import { addObjectValue } from 'src/helpers/misc';
-// import { crypto } from 'src/helpers/web3';
-// import {
-//   EthereumLPData,
-//   HexData,
-//   PancakeData,
-//   PhiatData,
-//   PulsexData,
-//   WalletData
-// } from 'src/types/api';
-// import {
-//   HexDataComponentEnum,
-//   PancakeDataComponentEnum,
-//   PhiatDataComponentEnum,
-//   ProtocolEnum,
-//   ProtocolImgEnum,
-//   PulsexDataComponentEnum,
-//   UniswapV2DataComponentEnum,
-//   UniswapV3DataComponentEnum,
-//   WalletDataComponentEnum
-// } from 'src/types/crypto';
-// import { RootState } from '../store';
-// import { ProtocolsState } from './types';
-
 import { getHex, getPancake, getPhiat, getPulsex, getWallet } from '@app-src/services/api';
 import { RootState } from '@app-src/store/store';
 import {
@@ -32,7 +7,7 @@ import {
   PulsexResponse,
   WalletResponse
 } from '@app-src/types/api';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   HexDataComponentEnum,
   PancakeDataComponentEnum,
@@ -45,6 +20,8 @@ import {
 } from './types';
 
 const initialState: ProtocolsState = {
+  address: '',
+  hasFetched: false,
   [ProtocolEnum.WALLET]: {
     name: ProtocolEnum.WALLET,
     displayName: 'Wallet',
@@ -257,7 +234,13 @@ export const protocolsSlice = createSlice({
   name: 'protocols',
   initialState,
   reducers: {
-    reset: () => initialState
+    reset: () => initialState,
+    setAddress: (state, action: PayloadAction<string>) => {
+      state.address = action.payload;
+    },
+    setHasFetched: (state, action: PayloadAction<boolean>) => {
+      state.hasFetched = action.payload;
+    }
   },
   extraReducers: (builder) => {
     //Wallet reducer functions
@@ -443,7 +426,11 @@ export const protocolsSlice = createSlice({
   }
 });
 
-export const { reset } = protocolsSlice.actions;
+export const {
+  reset,
+  setAddress: setProfileAddress,
+  setHasFetched: setProfileHasFetched
+} = protocolsSlice.actions;
 
 export { fetchWalletData, fetchHexData, fetchPhiatData, fetchPancakeData, fetchPulsexData };
 

@@ -1,30 +1,29 @@
 import SearchInput from '@app-src/common/components/input/SearchInput';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
-import { fetchBundleAddresses } from '@app-src/store/bundles/bundleSlice';
-import {
-  fetchHexData,
-  fetchPancakeData,
-  fetchPhiatData,
-  fetchPulsexData,
-  fetchWalletData
-} from '@app-src/store/protocol/protocolSlice';
+import { setProfileAddress, setProfileHasFetched } from '@app-src/store/protocol/protocolSlice';
+import { useRouter } from 'next/router';
 import { KeyboardEvent, useCallback, useRef } from 'react';
 
 const NavBar = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSearch = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      dispatch(fetchWalletData(searchInputRef.current?.value.toLowerCase().trim() || ''));
-      dispatch(fetchHexData(searchInputRef.current?.value.toLowerCase().trim() || ''));
-      dispatch(fetchPhiatData(searchInputRef.current?.value.toLowerCase().trim() || ''));
-      dispatch(fetchPulsexData(searchInputRef.current?.value.toLowerCase().trim() || ''));
-      dispatch(fetchPancakeData(searchInputRef.current?.value.toLowerCase().trim() || ''));
+  const handleSearch = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        const address = searchInputRef.current?.value.toLowerCase().trim() || '';
+        if (!address) return;
 
-      dispatch(fetchBundleAddresses());
-    }
-  }, []);
+        router.push(`/profile/${address}/portfolio`).then(() => {
+          dispatch(setProfileHasFetched(false));
+          dispatch(setProfileAddress(address));
+        });
+      }
+    },
+    [searchInputRef]
+  );
 
   return (
     <div className="w-full py-10 flex flex-row justify-center bg-background-200 border-b border-border-100">

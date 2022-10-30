@@ -10,6 +10,18 @@ import {
 import memoize from 'proxy-memoize';
 import { HexDataComponentEnum, PhiatDataComponentEnum } from './types';
 
+export const selectProfileHasFetched = memoize((state: RootState) => {
+  console.log('SELECT_PROFILE_HAS_FETCHED');
+
+  return state.protocols.hasFetched;
+});
+
+export const selectProfileAddress = memoize((state: RootState) => {
+  console.log('SELECT_PROFILE_ADDRESS');
+
+  return state.protocols.address;
+});
+
 export const selectWalletData = memoize((state: RootState): WalletTokenItem[] => {
   console.log('SELECT_WALLET_DATA');
 

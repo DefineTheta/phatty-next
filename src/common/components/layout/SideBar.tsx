@@ -1,5 +1,6 @@
 import useBreakpoint from '@app-src/common/hooks/useBreakpoint';
 import useClickOutside from '@app-src/common/hooks/useClickOutside';
+import { selectProfileAddress } from '@app-src/store/protocol/selectors';
 import {
   BanknotesIcon,
   Bars3Icon,
@@ -10,9 +11,12 @@ import {
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const SideBar = () => {
   const router = useRouter();
+
+  const profileAddress = useSelector(useCallback(selectProfileAddress, []));
 
   const currentTab = useMemo(() => router.pathname.split('/').at(1), [router]);
 
@@ -27,7 +31,8 @@ const SideBar = () => {
   const handleNavClick = useCallback(
     (tabName: string) => {
       if (tabName === 'profile') {
-        router.push(`/profile`);
+        const route = profileAddress ? `/profile/${profileAddress}/portfolio` : '/profile';
+        router.push(route);
         // router.push(`/profile/${cryptoAddress || ''}`);
       } else if (tabName === 'bundle') {
         router.push(`/bundle/asd/portfolio`);
@@ -38,7 +43,7 @@ const SideBar = () => {
         window.open('https://phamous.io/', '_blank')?.focus();
       }
     },
-    [router]
+    [router, profileAddress]
   );
 
   const sidebarRef = useClickOutside(handleClickOutside);

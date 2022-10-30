@@ -1,10 +1,15 @@
+import { truncateAddress } from '@app-src/common/utils/format';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { selectTotal } from '@app-src/store/protocol/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-const ProfileHeader = () => {
+type IProfileHeaderProps = {
+  address: string;
+};
+
+const ProfileHeader = ({ address }: IProfileHeaderProps) => {
   const total = useSelector(useCallback(selectTotal, []));
   const styledTotal = useMemo(() => formatToMoney(total), [total]);
 
@@ -35,7 +40,9 @@ const ProfileHeader = () => {
           <div className="flex flex-row justify-between">
             <div className="flex flex-col gap-y-12 items-start">
               <div className="flex flex-row items-center gap-x-6">
-                <span className="text-lg font-semibold text-text-200">test</span>
+                <span className="text-lg font-semibold text-text-200 tracking-wide">
+                  {truncateAddress(address)}
+                </span>
                 <button className="w-20 h-20 flex justify-center items-center cursor-pointer bg-gray-100 rounded-full">
                   <DocumentDuplicateIcon className="w-12 h-12" />
                 </button>
