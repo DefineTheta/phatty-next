@@ -42,7 +42,10 @@ export const authorize = async (signal: AbortSignal) => {
       params: [msg, address]
     });
 
-    const response = await fetch(`/api/auth/verify?address=${address}&sign=${sign}`, { signal });
+    const response = await fetch(`/api/auth/verify?address=${address}&sign=${sign}`, {
+      signal,
+      cache: 'no-store'
+    });
     const data: AuthResponse = await response.json();
 
     if (!data.success) {
