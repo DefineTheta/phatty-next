@@ -21,7 +21,7 @@ export default withIronSessionApiRoute(
 
         res.status(200).send({ data });
       } else if (req.method === 'POST') {
-        const wallet = String(req.body.address);
+        const wallet = String(req.body.wallet);
 
         if (!address || !wallet) return res.status(400);
 
@@ -32,7 +32,7 @@ export default withIronSessionApiRoute(
 
         res.status(200).send({ data });
       } else if (req.method === 'PUT') {
-        const wallet = String(req.body.address);
+        const wallet = String(req.body.wallet);
 
         if (!address || !wallet) return res.status(400);
 

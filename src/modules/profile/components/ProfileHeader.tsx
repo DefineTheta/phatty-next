@@ -2,6 +2,7 @@ import { truncateAddress } from '@app-src/common/utils/format';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { selectTotal } from '@app-src/store/protocol/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -19,18 +20,21 @@ const ProfileHeader = ({ address }: IProfileHeaderProps) => {
     () => [
       {
         displayName: 'Portfolio',
-        name: 'portfolio'
+        name: 'portfolio',
+        href: `/profile/${encodeURIComponent(address)}/portfolio`
       },
       {
         displayName: 'NFT',
-        name: 'nft'
+        name: 'nft',
+        href: `/profile/${encodeURIComponent(address)}/portfolio`
       },
       {
         displayName: 'History',
-        name: 'history'
+        name: 'history',
+        href: `/profile/${encodeURIComponent(address)}/portfolio`
       }
     ],
-    []
+    [address]
   );
 
   return (
@@ -64,16 +68,18 @@ const ProfileHeader = ({ address }: IProfileHeaderProps) => {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row items-center gap-x-30">
             {tabs.map((tab) => (
-              <div
-                key={tab.name}
-                className={`px-10 pb-6 text-base font-bold cursor-pointer ${
-                  tab.name === currentTab
-                    ? 'text-text-900 border-b-4 border-text-900'
-                    : 'text-text-200'
-                }`}
-              >
-                {tab.displayName}
-              </div>
+              <Link key={tab.name} href={address ? tab.href : '/profile'}>
+                <a
+                  key={tab.name}
+                  className={`px-10 pb-6 text-base font-bold cursor-pointer ${
+                    tab.name === currentTab
+                      ? 'text-text-900 border-b-4 border-text-900'
+                      : 'text-text-200'
+                  }`}
+                >
+                  {tab.displayName}
+                </a>
+              </Link>
             ))}
           </div>
           <span className="text-sm text-text-200">Data updated now</span>

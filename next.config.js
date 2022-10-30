@@ -12,6 +12,26 @@ const nextConfig = {
       source: '/profile/:address',
       destination: '/profile/:address/portfolio',
       permanent: true
+    },
+    {
+      source: '/profile/:address/nft',
+      destination: '/profile/:address/portfolio',
+      permanent: true
+    },
+    {
+      source: '/bundle/:address',
+      destination: '/bundle/:address/portfolio',
+      permanent: true
+    },
+    {
+      source: '/bundle/:address/nft',
+      destination: '/bundle/:address/portfolio',
+      permanent: true
+    },
+    {
+      source: '/bundle/:address/history',
+      destination: '/bundle/:address/portfolio',
+      permanent: true
     }
   ]
 };

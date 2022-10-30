@@ -22,22 +22,26 @@ const BundleHeader = ({ address }: IBundleHeaderProps) => {
     () => [
       {
         displayName: 'Portfolio',
-        name: 'portfolio'
+        name: 'portfolio',
+        href: `/bundle/${encodeURIComponent(address)}/portfolio`
       },
       {
         displayName: 'NFT',
-        name: 'nft'
+        name: 'nft',
+        href: `/bundle/${encodeURIComponent(address)}/portfolio`
       },
       {
         displayName: 'History',
-        name: 'history'
+        name: 'history',
+        href: `/bundle/${encodeURIComponent(address)}/portfolio`
       },
       {
         displayName: 'Accounts',
-        name: 'account'
+        name: 'account',
+        href: `/bundle/${encodeURIComponent(address)}/account`
       }
     ],
-    []
+    [address]
   );
 
   return (
@@ -52,10 +56,7 @@ const BundleHeader = ({ address }: IBundleHeaderProps) => {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row items-center gap-x-30">
             {tabs.map((tab) => (
-              <Link
-                key={tab.name}
-                href={address ? `/bundle/${encodeURIComponent(address)}/${tab.name}` : '/bundle'}
-              >
+              <Link key={tab.name} href={address ? tab.href : '/bundle'}>
                 <a
                   className={`px-10 pb-6 text-base font-bold cursor-pointer ${
                     tab.name === currentTab

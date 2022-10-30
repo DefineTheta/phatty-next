@@ -126,6 +126,78 @@ const fetchBundleAddresses = createAsyncThunk<BundleResponse, void, { state: Roo
   }
 );
 
+const addAddressToBundle = createAsyncThunk<BundleResponse, string, { state: RootState }>(
+  'bundles/addAddressToBundle',
+  async (wallet, thunkAPI) => {
+    const controller = new AbortController();
+
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
+
+    const data = await getWithAuthentication<BundleResponse>(async (signal: AbortSignal) => {
+      const address = await getAccountFromMetamask();
+      const res = await fetch(`/api/bundle/${address}`, {
+        signal,
+        method: 'POST',
+        body: JSON.stringify({ wallet }),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        })
+      });
+
+      if (res.status === 401) {
+        throw new AuthenticationError('Unauthorized');
+      }
+
+      const data: BundleResponse = await res.json();
+
+      return data;
+    }, controller.signal);
+
+    if (!data) throw new Error('Unable to fetch bundle addresses');
+
+    return data;
+  }
+);
+
+const removeAddressFromBundle = createAsyncThunk<BundleResponse, string, { state: RootState }>(
+  'bundles/removeAddressFromBundle',
+  async (wallet, thunkAPI) => {
+    const controller = new AbortController();
+
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
+
+    const data = await getWithAuthentication<BundleResponse>(async (signal: AbortSignal) => {
+      const address = await getAccountFromMetamask();
+      const res = await fetch(`/api/bundle/${address}`, {
+        signal,
+        method: 'PUT',
+        body: JSON.stringify({ wallet }),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        })
+      });
+
+      if (res.status === 401) {
+        throw new AuthenticationError('Unauthorized');
+      }
+
+      const data: BundleResponse = await res.json();
+
+      return data;
+    }, controller.signal);
+
+    if (!data) throw new Error('Unable to fetch bundle addresses');
+
+    return data;
+  }
+);
+
 const deleteBundleSession = createAsyncThunk<AuthResponse, void, { state: RootState }>(
   'bundles/deleteBundleSession',
   async (_, thunkAPI) => {
@@ -251,6 +323,46 @@ export const bundlesSlice = createSlice({
     });
 
     builder.addCase(fetchBundleAddresses.rejected, (state) => {
+      // state.WALLET.loading = false;
+      // state.WALLET.error = true;
+    });
+
+    //Add address to bundle reducer functions
+    builder.addCase(addAddressToBundle.pending, (state) => {
+      // state.WALLET.loading = true;
+    });
+
+    builder.addCase(addAddressToBundle.fulfilled, (state, action) => {
+      const res = action.payload;
+
+      state.addresses = res.data;
+      state.hasFetched = false;
+
+      // state.WALLET.loading = false;
+      // state.WALLET.error = false;
+    });
+
+    builder.addCase(addAddressToBundle.rejected, (state) => {
+      // state.WALLET.loading = false;
+      // state.WALLET.error = true;
+    });
+
+    //Remove address from bundle reducer functions
+    builder.addCase(removeAddressFromBundle.pending, (state) => {
+      // state.WALLET.loading = true;
+    });
+
+    builder.addCase(removeAddressFromBundle.fulfilled, (state, action) => {
+      const res = action.payload;
+
+      state.addresses = res.data;
+      state.hasFetched = false;
+
+      // state.WALLET.loading = false;
+      // state.WALLET.error = false;
+    });
+
+    builder.addCase(removeAddressFromBundle.rejected, (state) => {
       // state.WALLET.loading = false;
       // state.WALLET.error = true;
     });
@@ -417,6 +529,8 @@ export const {
 
 export {
   fetchBundleAddresses,
+  addAddressToBundle,
+  removeAddressFromBundle,
   deleteBundleSession,
   fetchBundleWalletData,
   fetchBundleHexData,
