@@ -244,6 +244,8 @@ export const bundlesSlice = createSlice({
 
       state.addresses = res.data;
 
+      sessionStorage.setItem('connected', 'true');
+
       // state.WALLET.loading = false;
       // state.WALLET.error = false;
     });
@@ -260,9 +262,10 @@ export const bundlesSlice = createSlice({
 
     builder.addCase(deleteBundleSession.fulfilled, (state, action) => {
       const res = action.payload;
-      console.log('sdafds');
 
       Object.assign(state, initialState);
+
+      sessionStorage.removeItem('connected');
 
       // state.WALLET.loading = false;
       // state.WALLET.error = false;

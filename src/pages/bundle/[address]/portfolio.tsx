@@ -31,14 +31,14 @@ const BundlePortfolioPage = () => {
   const hasFetched = useSelector(useCallback(selectBundleHasFetched, []));
 
   useEffect(() => {
-    if (!hasFetched) {
+    if (!hasFetched && bundleAddress) {
       const bundleAddressPromise = dispatch(fetchBundleAddresses());
 
       return () => {
         bundleAddressPromise.abort();
       };
     }
-  }, [hasFetched]);
+  }, [hasFetched, bundleAddress]);
 
   useEffect(() => {
     if (hasFetched || !bundleAddresses || bundleAddresses.length === 0) return;

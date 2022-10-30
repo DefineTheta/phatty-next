@@ -21,8 +21,9 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
     if (window.ethereum) {
       console.log('Is metamask connected?', window.ethereum.isConnected());
 
-      if (window.ethereum.isConnected()) {
+      if (sessionStorage.getItem('connected') == 'true') {
         window.ethereum?.request<string[]>({ method: 'eth_requestAccounts' }).then((accounts) => {
+          console.log(accounts);
           if (accounts && accounts.length !== 0 && accounts[0]) {
             dispatch(setBundleAddress(accounts[0]));
           }

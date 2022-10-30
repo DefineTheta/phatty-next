@@ -1,6 +1,6 @@
 import SearchInput from '@app-src/common/components/input/SearchInput';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
-import { deleteBundleSession } from '@app-src/store/bundles/bundleSlice';
+import { deleteBundleSession, fetchBundleAddresses } from '@app-src/store/bundles/bundleSlice';
 import { selectBundleAddress } from '@app-src/store/bundles/selectors';
 import { setProfileAddress, setProfileHasFetched } from '@app-src/store/protocol/protocolSlice';
 import { useRouter } from 'next/router';
@@ -33,6 +33,8 @@ const NavBar = () => {
   const handleButtonClick = useCallback((type: 'connect' | 'disconnect') => {
     if (type === 'disconnect') {
       dispatch(deleteBundleSession());
+    } else if (type === 'connect') {
+      dispatch(fetchBundleAddresses());
     }
   }, []);
 
