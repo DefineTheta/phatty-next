@@ -125,7 +125,7 @@ export const selectBundleHexComponentTotal = (chain: keyof typeof HexDataCompone
     return state.bundles.HEX.total[chain];
   });
 
-export const selectHextotal = memoize((state: RootState): number => {
+export const selectBundleHextotal = memoize((state: RootState): number => {
   console.log('SELECT_HEX_TOTAL');
 
   return (

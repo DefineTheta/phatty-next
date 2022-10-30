@@ -1,5 +1,12 @@
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import {
+  selectBundleHextotal,
+  selectBundlePancakeTotal,
+  selectBundlePhiatTotal,
+  selectBundlePulsexTotal,
+  selectBundleWalletTotal
+} from '@app-src/store/bundles/selectors';
+import {
   selectHextotal,
   selectPancakeTotal,
   selectPhiatTotal,
@@ -11,15 +18,26 @@ import { useSelector } from 'react-redux';
 import ChainProtocolItem from './ChainProtocolItem';
 
 export type IChainProtocolListProps = {
+  page: 'profile' | 'bundle';
   currentAssetChain: string;
 };
 
-const ChainProtocolList = ({ currentAssetChain }: IChainProtocolListProps) => {
-  const walletTotal = useSelector(useCallback(selectWalletTotal, []));
-  const hexTotal = useSelector(useCallback(selectHextotal, []));
-  const phiatTotal = useSelector(useCallback(selectPhiatTotal, []));
-  const pulsexTotal = useSelector(useCallback(selectPulsexTotal, []));
-  const pancakeTotal = useSelector(useCallback(selectPancakeTotal, []));
+const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps) => {
+  const walletTotal = useSelector(
+    useCallback(page === 'profile' ? selectWalletTotal : selectBundleWalletTotal, [page])
+  );
+  const hexTotal = useSelector(
+    useCallback(page === 'profile' ? selectHextotal : selectBundleHextotal, [page])
+  );
+  const phiatTotal = useSelector(
+    useCallback(page === 'profile' ? selectPhiatTotal : selectBundlePhiatTotal, [page])
+  );
+  const pulsexTotal = useSelector(
+    useCallback(page === 'profile' ? selectPulsexTotal : selectBundlePulsexTotal, [page])
+  );
+  const pancakeTotal = useSelector(
+    useCallback(page === 'profile' ? selectPancakeTotal : selectBundlePancakeTotal, [page])
+  );
 
   const protocolData = useMemo(
     () => [

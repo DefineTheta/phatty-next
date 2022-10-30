@@ -26,7 +26,7 @@ const PhiatTableGroup = ({ page }: IPhiatTableGroupProps) => {
   }
 
   return (
-    <div id="#phiat" className="w-full max-w-96 flex flex-col gap-y-24">
+    <div id="phiat" className="w-full max-w-96 flex flex-col gap-y-24">
       <TableHeader
         tableName="Phiat.io"
         tableLink="https://testnet.phiat.io/markets"

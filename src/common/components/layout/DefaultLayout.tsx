@@ -6,6 +6,8 @@ import {
   setBundleAddress,
   setBundleFetched
 } from '@app-src/store/bundles/bundleSlice';
+import { setProfileAddress } from '@app-src/store/protocol/protocolSlice';
+import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
 
 type IDefaultLayoutProps = {
@@ -13,6 +15,7 @@ type IDefaultLayoutProps = {
 };
 
 const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -52,6 +55,14 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
       // });
     }
   }, []);
+
+  useEffect(() => {
+    const arr = router.asPath.split('/');
+
+    if (arr.length > 3) {
+      if (arr[1] === 'profile') dispatch(setProfileAddress(arr[2]));
+    }
+  }, [router.asPath]);
 
   return (
     <div className="w-full flex flex-row bg-background-100">

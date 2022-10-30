@@ -172,3 +172,9 @@ export const selectPancakeLoading = memoize((state: RootState): boolean => {
 
   return state.protocols.PANCAKE.loading;
 });
+
+export const selectWalletError = memoize((state: RootState): boolean => {
+  console.log('SELECT_WALLET_ERROR');
+
+  return state.protocols.WALLET.error;
+});

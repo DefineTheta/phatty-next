@@ -40,7 +40,7 @@ const HexTableGroup = ({ page }: IHexTableGroupProps) => {
   }
 
   return (
-    <div id="#hex" className="w-full max-w-96 flex flex-col gap-y-24">
+    <div id="hex" className="w-full max-w-96 flex flex-col gap-y-24">
       {(loading || hexEthTotal !== 0) && (
         <div className="flex flex-col gap-y-12">
           <TableHeader

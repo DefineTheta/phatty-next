@@ -43,7 +43,7 @@ const ProfilePortfolioPage = () => {
     <div className="flex flex-col gap-y-24">
       <ProfileHeader address={address} />
       <div className="w-full flex flex-col items-center gap-y-30">
-        <ChainSummaryCard />
+        <ChainSummaryCard page="profile" />
         <WalletTableGroup page="profile" />
         <HexTableGroup page="profile" />
         <PhiatTableGroup page="profile" />

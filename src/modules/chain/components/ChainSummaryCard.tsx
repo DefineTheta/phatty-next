@@ -2,6 +2,12 @@ import Card from '@app-src/common/components/layout/Card';
 import ChainSummaryItem from '@app-src/modules/chain/components/ChainSummaryItem';
 import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
 import {
+  selectBundleBscTotal,
+  selectBundleEthereumTotal,
+  selectBundleTotal,
+  selectBundleTplsTotal
+} from '@app-src/store/bundles/selectors';
+import {
   selectBscTotal,
   selectEthereumTotal,
   selectTotal,
@@ -11,11 +17,23 @@ import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import ChainProtocolList from './ChainProtocolList';
 
-const ChainSummaryCard = () => {
-  const total = useSelector(useCallback(selectTotal, []));
-  const ethereumTotal = useSelector(useCallback(selectEthereumTotal, []));
-  const bscTotal = useSelector(useCallback(selectBscTotal, []));
-  const tplsTotal = useSelector(useCallback(selectTplsTotal, []));
+type IChainSummaryCardProps = {
+  page: 'profile' | 'bundle';
+};
+
+const ChainSummaryCard = ({ page }: IChainSummaryCardProps) => {
+  const total = useSelector(
+    useCallback(page === 'profile' ? selectTotal : selectBundleTotal, [page])
+  );
+  const ethereumTotal = useSelector(
+    useCallback(page === 'profile' ? selectEthereumTotal : selectBundleEthereumTotal, [page])
+  );
+  const bscTotal = useSelector(
+    useCallback(page === 'profile' ? selectBscTotal : selectBundleBscTotal, [page])
+  );
+  const tplsTotal = useSelector(
+    useCallback(page === 'profile' ? selectTplsTotal : selectBundleTplsTotal, [page])
+  );
 
   const testData = [
     {
@@ -62,7 +80,7 @@ const ChainSummaryCard = () => {
               )
           )}
         </div>
-        <ChainProtocolList currentAssetChain="eth" />
+        <ChainProtocolList currentAssetChain="eth" page={page} />
       </div>
     </Card>
   );

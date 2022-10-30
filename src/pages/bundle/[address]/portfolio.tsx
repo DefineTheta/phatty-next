@@ -56,7 +56,7 @@ const BundlePortfolioPage = () => {
     <div className="flex flex-col gap-y-24">
       <BundleHeader address={bundleAddress} />
       <div className="w-full flex flex-col items-center gap-y-30">
-        <ChainSummaryCard />
+        <ChainSummaryCard page="bundle" />
         <WalletTableGroup page="bundle" />
         <HexTableGroup page="bundle" />
         <PhiatTableGroup page="bundle" />

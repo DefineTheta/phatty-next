@@ -135,7 +135,7 @@ const initialState: ProtocolsState = {
   // }
 };
 
-const fetchWalletData = createAsyncThunk<WalletResponse, string, { state: RootState }>(
+const fetchWalletData = createAsyncThunk<WalletResponse, string | undefined, { state: RootState }>(
   'protocols/fetchWalletData',
   async (address, thunkAPI) => {
     const controller = new AbortController();
@@ -144,7 +144,11 @@ const fetchWalletData = createAsyncThunk<WalletResponse, string, { state: RootSt
       controller.abort();
     };
 
-    const data = await getWallet([address]);
+    const profileAddress = address || thunkAPI.getState().protocols.address;
+
+    if (!profileAddress || profileAddress == '') thunkAPI.rejectWithValue(null);
+
+    const data = await getWallet([profileAddress]);
 
     return data;
   }
@@ -246,6 +250,7 @@ export const protocolsSlice = createSlice({
     //Wallet reducer functions
     builder.addCase(fetchWalletData.pending, (state) => {
       state.WALLET.loading = true;
+      state.WALLET.error = false;
     });
 
     builder.addCase(fetchWalletData.fulfilled, (state, action) => {
