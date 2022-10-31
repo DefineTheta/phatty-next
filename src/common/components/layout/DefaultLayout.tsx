@@ -59,7 +59,7 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
   useEffect(() => {
     const arr = router.asPath.split('/');
 
-    if (arr.length > 3) {
+    if (arr.length > 3 && arr[2] !== '[address]') {
       if (arr[1] === 'profile') dispatch(setProfileAddress(arr[2]));
     }
   }, [router.asPath]);

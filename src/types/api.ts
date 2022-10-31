@@ -12,6 +12,27 @@ export interface BundleResponse {
   error?: string;
 }
 
+export interface HistoryResponse {
+  data: HistoryItem[];
+  error?: string;
+}
+
+export interface HistoryItem {
+  chain: string;
+  image: string;
+  functionName: string;
+  link: string;
+  timeStamp: number;
+  tokens: HistoryToken[];
+}
+
+export interface HistoryToken {
+  amount: number;
+  image: string;
+  token: string;
+  transaction: string;
+}
+
 export interface WalletTokenItem {
   name: string;
   balance: number;

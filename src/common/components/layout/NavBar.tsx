@@ -2,6 +2,7 @@ import SearchInput from '@app-src/common/components/input/SearchInput';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { deleteBundleSession, fetchBundleAddresses } from '@app-src/store/bundles/bundleSlice';
 import { selectBundleAddress } from '@app-src/store/bundles/selectors';
+import { setHistoryHasFetched } from '@app-src/store/history/historySlice';
 import { setProfileAddress, setProfileHasFetched } from '@app-src/store/protocol/protocolSlice';
 import { useRouter } from 'next/router';
 import { KeyboardEvent, useCallback, useRef } from 'react';
@@ -23,6 +24,7 @@ const NavBar = () => {
 
         router.push(`/profile/${address}/portfolio`).then(() => {
           dispatch(setProfileHasFetched(false));
+          dispatch(setHistoryHasFetched(false));
           dispatch(setProfileAddress(address));
         });
       }

@@ -3,7 +3,8 @@ import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { selectTotal } from '@app-src/store/protocol/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { useCallback, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 type IProfileHeaderProps = {
@@ -11,10 +12,12 @@ type IProfileHeaderProps = {
 };
 
 const ProfileHeader = ({ address }: IProfileHeaderProps) => {
+  const router = useRouter();
+
   const total = useSelector(useCallback(selectTotal, []));
   const styledTotal = useMemo(() => formatToMoney(total), [total]);
 
-  const [currentTab, setCurrentTab] = useState('portfolio');
+  const currentTab = useMemo(() => router.asPath.toLowerCase().split('/').at(-1), [router.asPath]);
 
   const tabs = useMemo(
     () => [
@@ -31,7 +34,7 @@ const ProfileHeader = ({ address }: IProfileHeaderProps) => {
       {
         displayName: 'History',
         name: 'history',
-        href: `/profile/${encodeURIComponent(address)}/portfolio`
+        href: `/profile/${encodeURIComponent(address)}/history`
       }
     ],
     [address]
