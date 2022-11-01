@@ -4,6 +4,7 @@ import HexTableGroup from '@app-src/modules/portfolio/components/hex/HexTableGro
 import PancakeTableGroup from '@app-src/modules/portfolio/components/pancake/PancakeTableGroup';
 import PhiatTableGroup from '@app-src/modules/portfolio/components/phiat/PhiatTableGroup';
 import PulsexTableGroup from '@app-src/modules/portfolio/components/pulsex/PulsexTableGroup';
+import SushiTableGroup from '@app-src/modules/portfolio/components/sushi/SushiTableGroup';
 import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/WalletTableGroup';
 import ProfileHeader from '@app-src/modules/profile/components/ProfileHeader';
 import {
@@ -11,6 +12,7 @@ import {
   fetchPancakeData,
   fetchPhiatData,
   fetchPulsexData,
+  fetchSushiData,
   fetchWalletData,
   setProfileHasFetched
 } from '@app-src/store/protocol/protocolSlice';
@@ -35,7 +37,8 @@ const ProfilePortfolioPage = () => {
       dispatch(fetchHexData(address)),
       dispatch(fetchPhiatData(address)),
       dispatch(fetchPulsexData(address)),
-      dispatch(fetchPancakeData(address))
+      dispatch(fetchPancakeData(address)),
+      dispatch(fetchSushiData(address))
     ]).then(() => dispatch(setProfileHasFetched(true)));
   }, [hasFetched, address]);
 
@@ -49,6 +52,7 @@ const ProfilePortfolioPage = () => {
         <PhiatTableGroup page="profile" />
         <PulsexTableGroup page="profile" />
         <PancakeTableGroup page="profile" />
+        <SushiTableGroup page="profile" />
       </div>
     </div>
   );

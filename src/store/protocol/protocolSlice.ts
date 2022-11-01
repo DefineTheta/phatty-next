@@ -1,10 +1,18 @@
-import { getHex, getPancake, getPhiat, getPulsex, getWallet } from '@app-src/services/api';
+import {
+  getHex,
+  getPancake,
+  getPhiat,
+  getPulsex,
+  getSushi,
+  getWallet
+} from '@app-src/services/api';
 import { RootState } from '@app-src/store/store';
 import {
   HexResponse,
   PancakeResponse,
   PhiatResponse,
   PulsexResponse,
+  SushiResponse,
   WalletResponse
 } from '@app-src/types/api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
@@ -13,9 +21,9 @@ import {
   PancakeDataComponentEnum,
   PhiatDataComponentEnum,
   ProtocolEnum,
-  ProtocolImgEnum,
   ProtocolsState,
   PulsexDataComponentEnum,
+  SushiDataComponentEnum,
   WalletDataComponentEnum
 } from './types';
 
@@ -23,10 +31,6 @@ const initialState: ProtocolsState = {
   address: '',
   hasFetched: false,
   [ProtocolEnum.WALLET]: {
-    name: ProtocolEnum.WALLET,
-    displayName: 'Wallet',
-    id: '#wallet',
-    img: ProtocolImgEnum.WALLET,
     total: {
       [WalletDataComponentEnum.ETHEREUM]: 0,
       [WalletDataComponentEnum.TPLS]: 0,
@@ -41,10 +45,6 @@ const initialState: ProtocolsState = {
     }
   },
   [ProtocolEnum.HEX]: {
-    name: ProtocolEnum.HEX,
-    displayName: 'Hex',
-    id: '#hex',
-    img: ProtocolImgEnum.HEX,
     total: {
       [HexDataComponentEnum.ETHEREUM]: 0,
       [HexDataComponentEnum.TPLS]: 0
@@ -57,10 +57,6 @@ const initialState: ProtocolsState = {
     }
   },
   [ProtocolEnum.PHIAT]: {
-    name: ProtocolEnum.PHIAT,
-    displayName: 'Phiat',
-    id: '#phiat',
-    img: ProtocolImgEnum.PHIAT,
     total: {
       TPLS: 0
     },
@@ -76,10 +72,6 @@ const initialState: ProtocolsState = {
     }
   },
   [ProtocolEnum.PULSEX]: {
-    name: ProtocolEnum.PULSEX,
-    displayName: 'PulseX',
-    id: '#pulsex',
-    img: ProtocolImgEnum.PULSEX,
     total: {
       [PulsexDataComponentEnum.LIQUIDITY_POOL]: 0
     },
@@ -90,10 +82,6 @@ const initialState: ProtocolsState = {
     }
   },
   [ProtocolEnum.PANCAKE]: {
-    name: ProtocolEnum.PANCAKE,
-    displayName: 'Pancake',
-    id: '#pancake',
-    img: ProtocolImgEnum.PANCAKE,
     total: {
       [PancakeDataComponentEnum.FARMING]: 0,
       [PancakeDataComponentEnum.LIQUIDITY_POOL]: 0
@@ -103,6 +91,16 @@ const initialState: ProtocolsState = {
     data: {
       [PancakeDataComponentEnum.FARMING]: [],
       [PancakeDataComponentEnum.LIQUIDITY_POOL]: []
+    }
+  },
+  [ProtocolEnum.SUSHI]: {
+    total: {
+      [SushiDataComponentEnum.LIQUIDITY_POOL]: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [SushiDataComponentEnum.LIQUIDITY_POOL]: []
     }
   }
   // [ProtocolEnum.UNISWAPV2]: {
@@ -209,7 +207,22 @@ const fetchPancakeData = createAsyncThunk<PancakeResponse, string, { state: Root
       controller.abort();
     };
 
-    const data = getPancake([address]);
+    const data = await getPancake([address]);
+
+    return data;
+  }
+);
+
+const fetchSushiData = createAsyncThunk<SushiResponse, string, { state: RootState }>(
+  'protocols/fetchSushiData',
+  async (address, thunkAPI) => {
+    const controller = new AbortController();
+
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
+
+    const data = await getSushi([address]);
 
     return data;
   }
@@ -397,6 +410,30 @@ export const protocolsSlice = createSlice({
       state.PANCAKE.error = true;
     });
 
+    // Sushi reducer functions
+    builder.addCase(fetchSushiData.pending, (state) => {
+      state.SUSHI.loading = true;
+      state.SUSHI.error = false;
+    });
+
+    builder.addCase(fetchSushiData.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      const res = action.payload;
+
+      state.SUSHI.data.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.data;
+
+      state.SUSHI.total.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.totalValue;
+
+      state.SUSHI.loading = false;
+      state.SUSHI.error = false;
+    });
+
+    builder.addCase(fetchSushiData.rejected, (state) => {
+      // state.SUSHI.loading = false;
+      state.SUSHI.error = true;
+    });
+
     // builder.addCase(fetchEthereumLPData.pending, (state) => {
     //   state.UNISWAPV2.loading = true;
     //   state.UNISWAPV3.loading = true;
@@ -437,6 +474,13 @@ export const {
   setHasFetched: setProfileHasFetched
 } = protocolsSlice.actions;
 
-export { fetchWalletData, fetchHexData, fetchPhiatData, fetchPancakeData, fetchPulsexData };
+export {
+  fetchWalletData,
+  fetchHexData,
+  fetchPhiatData,
+  fetchPancakeData,
+  fetchPulsexData,
+  fetchSushiData
+};
 
 export default protocolsSlice.reducer;

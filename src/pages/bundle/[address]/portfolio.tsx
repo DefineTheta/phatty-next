@@ -5,6 +5,7 @@ import HexTableGroup from '@app-src/modules/portfolio/components/hex/HexTableGro
 import PancakeTableGroup from '@app-src/modules/portfolio/components/pancake/PancakeTableGroup';
 import PhiatTableGroup from '@app-src/modules/portfolio/components/phiat/PhiatTableGroup';
 import PulsexTableGroup from '@app-src/modules/portfolio/components/pulsex/PulsexTableGroup';
+import SushiTableGroup from '@app-src/modules/portfolio/components/sushi/SushiTableGroup';
 import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/WalletTableGroup';
 import {
   fetchBundleAddresses,
@@ -12,6 +13,7 @@ import {
   fetchBundlePancakeData,
   fetchBundlePhiatData,
   fetchBundlePulsexData,
+  fetchBundleSushiData,
   fetchBundleWalletData,
   setBundleFetched
 } from '@app-src/store/bundles/bundleSlice';
@@ -48,7 +50,8 @@ const BundlePortfolioPage = () => {
       dispatch(fetchBundleHexData(bundleAddresses)),
       dispatch(fetchBundlePhiatData(bundleAddresses)),
       dispatch(fetchBundlePulsexData(bundleAddresses)),
-      dispatch(fetchBundlePancakeData(bundleAddresses))
+      dispatch(fetchBundlePancakeData(bundleAddresses)),
+      dispatch(fetchBundleSushiData(bundleAddresses))
     ]).then(() => dispatch(setBundleFetched(true)));
   }, [bundleAddresses, hasFetched]);
 
@@ -62,6 +65,7 @@ const BundlePortfolioPage = () => {
         <PhiatTableGroup page="bundle" />
         <PulsexTableGroup page="bundle" />
         <PancakeTableGroup page="bundle" />
+        <SushiTableGroup page="bundle" />
       </div>
     </div>
   );

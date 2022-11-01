@@ -765,7 +765,8 @@ export const tokenImages: Record<string, string> = {
   BAT: '/img/tokens/bat.webp',
   '1INCH': '/img/tokens/1inch.webp',
   GLM: '/img/tokens/glm.webp',
-  SYN: '/img/tokens/syn.webp'
+  SYN: '/img/tokens/syn.webp',
+  BTT: '/img/tokens/btt.webp'
 };
 
 export const chainImages: Record<string, string> = {

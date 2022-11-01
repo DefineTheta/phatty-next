@@ -5,6 +5,7 @@ import {
   PancakeResponse,
   PhiatResponse,
   PulsexResponse,
+  SushiResponse,
   WalletResponse
 } from '@app-src/types/api';
 
@@ -97,6 +98,23 @@ const getPaginatedData = async <T extends ApiBaseResponse>(URL: string) => {
   }
 
   return responses;
+};
+
+const getMultipleAddressData = async <T>(addresses: string[], apiEndpoint: string) => {
+  const fetchPromises: Promise<Response>[] = [];
+  const serializePromises: Promise<T>[] = [];
+
+  addresses.forEach((address) => {
+    fetchPromises.push(fetch(`${apiEndpoint}?address=${address}`));
+  });
+
+  const responses = await Promise.all(fetchPromises);
+
+  responses.forEach((response) => {
+    serializePromises.push(response.json());
+  });
+
+  return Promise.all(serializePromises);
 };
 
 export const getWallet = async (addresses: string[]) => {
@@ -330,6 +348,31 @@ export const getPancake = async (addresses: string[]) => {
 
     collatedRes.data.LIQUIDITY_POOL.totalValue += pancake.data.LIQUIDITY_POOL.totalValue;
     collatedRes.data.FARMING.totalValue += pancake.data.FARMING.totalValue;
+  });
+
+  return collatedRes;
+};
+
+export const getSushi = async (addresses: string[]) => {
+  const sushiData = await getMultipleAddressData<SushiResponse>(addresses, '/api/sushi');
+
+  if (sushiData.length === 1) return sushiData[0];
+
+  const collatedRes = {
+    data: {
+      LIQUIDITY_POOL: {
+        data: [],
+        totalValue: 0
+      }
+    }
+  } as SushiResponse;
+
+  sushiData.forEach((sushi) => {
+    collatedRes.data.LIQUIDITY_POOL.data = collatedRes.data.LIQUIDITY_POOL.data.concat(
+      sushi.data.LIQUIDITY_POOL.data
+    );
+
+    collatedRes.data.LIQUIDITY_POOL.totalValue += sushi.data.LIQUIDITY_POOL.totalValue;
   });
 
   return collatedRes;

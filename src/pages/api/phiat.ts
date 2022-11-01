@@ -1404,7 +1404,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   res.setHeader('Cache-Control', 's-maxage=3600');
   const { address } = req.query;
 
-  if (!address) return res.status(400);
+  if (!address || typeof address === 'object') return res.status(400);
 
   const page: number = Number(req.query.page || 1);
 

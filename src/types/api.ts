@@ -206,3 +206,27 @@ export interface PancakeResponse {
   };
   error?: string;
 }
+
+// SUSHI Types
+
+export type SushiToken = {
+  symbol: string;
+  image: string;
+  balance: number;
+};
+
+export type SushiItem = {
+  tokenOne: SushiToken;
+  tokenTwo: SushiToken;
+  usdValue: number;
+};
+
+export type SushiResponse = {
+  data: {
+    LIQUIDITY_POOL: {
+      data: SushiItem[];
+      totalValue: number;
+    };
+  };
+  error?: string;
+};

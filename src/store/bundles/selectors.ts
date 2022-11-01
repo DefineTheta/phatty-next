@@ -5,6 +5,7 @@ import {
   PancakeLPTokenItem,
   PhiatTokenItem,
   PulsexTokenItem,
+  SushiItem,
   WalletTokenItem
 } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
@@ -85,10 +86,20 @@ export const selectBundlePancakeLiquidityPoolData = memoize(
   }
 );
 
+export const selectBundleSushiLiquidityPoolData = memoize((state: RootState): SushiItem[] => {
+  console.log('SELECT_SUSHI_LIQUIDITY_POOL_DATA');
+
+  return state.bundles.SUSHI.data.LIQUIDITY_POOL;
+});
+
 export const selectBundleEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
 
-  return state.bundles.WALLET.total.ETHEREUM + state.bundles.HEX.total.ETHEREUM;
+  return (
+    state.bundles.WALLET.total.ETHEREUM +
+    state.bundles.HEX.total.ETHEREUM +
+    state.bundles.SUSHI.total.LIQUIDITY_POOL
+  );
 });
 
 export const selectBundleBscTotal = memoize((state: RootState): number => {
@@ -151,6 +162,12 @@ export const selectBundlePancakeTotal = memoize((state: RootState): number => {
   return state.bundles.PANCAKE.total.LIQUIDITY_POOL + state.bundles.PANCAKE.total.FARMING;
 });
 
+export const selectBundleSushiTotal = memoize((state: RootState): number => {
+  console.log('SELECT_SUSHI_TOTAL');
+
+  return state.bundles.SUSHI.total.LIQUIDITY_POOL;
+});
+
 export const selectBundleTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
@@ -187,4 +204,10 @@ export const selectBundlePancakeLoading = memoize((state: RootState): boolean =>
   console.log('SELECT_PANCAKE_LOADING');
 
   return state.bundles.PANCAKE.loading;
+});
+
+export const selectBundleSushiLoading = memoize((state: RootState): boolean => {
+  console.log('SELECT_SUSHI_LOADING');
+
+  return state.bundles.SUSHI.loading;
 });

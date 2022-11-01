@@ -19,6 +19,7 @@ import {
   PancakeLPTokenItem,
   PhiatTokenItem,
   PulsexTokenItem,
+  SushiItem,
   WalletTokenItem
 } from '@app-src/types/api';
 
@@ -38,6 +39,7 @@ export enum ProtocolEnum {
   PHIAT = 'PHIAT',
   PULSEX = 'PULSEX',
   PANCAKE = 'PANCAKE',
+  SUSHI = 'SUSHI',
   UNISWAPV2 = 'UNISWAPV2',
   UNISWAPV3 = 'UNISWAPV3'
 }
@@ -70,6 +72,10 @@ export enum PancakeDataComponentEnum {
   FARMING = 'FARMING'
 }
 
+export enum SushiDataComponentEnum {
+  LIQUIDITY_POOL = 'LIQUIDITY_POOL'
+}
+
 export interface BundlesState {
   bundleAddress: string;
   addresses: string[];
@@ -79,6 +85,7 @@ export interface BundlesState {
   [ProtocolEnum.PHIAT]: PhiatData;
   [ProtocolEnum.PULSEX]: PulsexData;
   [ProtocolEnum.PANCAKE]: PancakeData;
+  [ProtocolEnum.SUSHI]: SushiData;
   // [ProtocolEnum.UNISWAPV2]: UniswapV2Data;
   // [ProtocolEnum.UNISWAPV3]: UniswapV3Data;
 }
@@ -115,5 +122,12 @@ interface PancakeData extends ProtocolData {
   data: {
     LIQUIDITY_POOL: PancakeLPTokenItem[];
     FARMING: PancakeFarmTokenItem[];
+  };
+}
+
+interface SushiData extends ProtocolData {
+  total: Record<SushiDataComponentEnum, number>;
+  data: {
+    LIQUIDITY_POOL: SushiItem[];
   };
 }

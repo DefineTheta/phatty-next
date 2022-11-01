@@ -5,6 +5,7 @@ import {
   getPancake,
   getPhiat,
   getPulsex,
+  getSushi,
   getWallet,
   getWithAuthentication
 } from '@app-src/services/api';
@@ -16,6 +17,7 @@ import {
   PancakeResponse,
   PhiatResponse,
   PulsexResponse,
+  SushiResponse,
   WalletResponse
 } from '@app-src/types/api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
@@ -26,6 +28,7 @@ import {
   PhiatDataComponentEnum,
   ProtocolEnum,
   PulsexDataComponentEnum,
+  SushiDataComponentEnum,
   WalletDataComponentEnum
 } from './types';
 
@@ -94,6 +97,16 @@ const initialState: BundlesState = {
     data: {
       [PancakeDataComponentEnum.FARMING]: [],
       [PancakeDataComponentEnum.LIQUIDITY_POOL]: []
+    }
+  },
+  [ProtocolEnum.SUSHI]: {
+    total: {
+      [SushiDataComponentEnum.LIQUIDITY_POOL]: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [SushiDataComponentEnum.LIQUIDITY_POOL]: []
     }
   }
 };
@@ -284,7 +297,22 @@ const fetchBundlePancakeData = createAsyncThunk<PancakeResponse, string[], { sta
       controller.abort();
     };
 
-    const data = getPancake(addresses);
+    const data = await getPancake(addresses);
+
+    return data;
+  }
+);
+
+const fetchBundleSushiData = createAsyncThunk<SushiResponse, string[], { state: RootState }>(
+  'bundles/fetchSushiData',
+  async (addresses, thunkAPI) => {
+    const controller = new AbortController();
+
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
+
+    const data = await getSushi(addresses);
 
     return data;
   }
@@ -518,6 +546,29 @@ export const bundlesSlice = createSlice({
       // state.PANCAKE.loading = false;
       state.PANCAKE.error = true;
     });
+    // Sushi reducer functions
+    builder.addCase(fetchBundleSushiData.pending, (state) => {
+      state.SUSHI.loading = true;
+      state.SUSHI.error = false;
+    });
+
+    builder.addCase(fetchBundleSushiData.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      const res = action.payload;
+
+      state.SUSHI.data.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.data;
+
+      state.SUSHI.total.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.totalValue;
+
+      state.SUSHI.loading = false;
+      state.SUSHI.error = false;
+    });
+
+    builder.addCase(fetchBundleSushiData.rejected, (state) => {
+      // state.SUSHI.loading = false;
+      state.SUSHI.error = true;
+    });
   }
 });
 
@@ -537,7 +588,8 @@ export {
   fetchBundleHexData,
   fetchBundlePhiatData,
   fetchBundlePancakeData,
-  fetchBundlePulsexData
+  fetchBundlePulsexData,
+  fetchBundleSushiData
 };
 
 export default bundlesSlice.reducer;
