@@ -16,6 +16,8 @@
     "@heroicons/react": "^2.0.12",
     "@metamask/providers": "^10.0.0",
     "@reduxjs/toolkit": "^1.8.6",
+    "@uniswap/sdk-core": "^3.1.0",
+    "@uniswap/v3-sdk": "^3.9.0",
     "graphql": "^16.6.0",
     "iron-session": "^6.3.1",
     "luxon": "^3.0.4",
