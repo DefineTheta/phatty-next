@@ -231,6 +231,30 @@ export type SushiResponse = {
   error?: string;
 };
 
+// UNIV2 Types
+
+export type UniV2Token = {
+  symbol: string;
+  image: string;
+  balance: number;
+};
+
+export type UniV2Item = {
+  tokenOne: UniV2Token;
+  tokenTwo: UniV2Token;
+  usdValue: number;
+};
+
+export type UniV2Response = {
+  data: {
+    LIQUIDITY_POOL: {
+      data: UniV2Item[];
+      totalValue: number;
+    };
+  };
+  error?: string;
+};
+
 // UNIV3 Types
 
 export type UniV3Token = {
