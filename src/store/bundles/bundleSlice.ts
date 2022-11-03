@@ -6,6 +6,8 @@ import {
   getPhiat,
   getPulsex,
   getSushi,
+  getUniV2,
+  getUniV3,
   getWallet,
   getWithAuthentication
 } from '@app-src/services/api';
@@ -18,6 +20,8 @@ import {
   PhiatResponse,
   PulsexResponse,
   SushiResponse,
+  UniV2Response,
+  UniV3Response,
   WalletResponse
 } from '@app-src/types/api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
@@ -29,6 +33,8 @@ import {
   ProtocolEnum,
   PulsexDataComponentEnum,
   SushiDataComponentEnum,
+  UniswapV2DataComponentEnum,
+  UniswapV3DataComponentEnum,
   WalletDataComponentEnum
 } from './types';
 
@@ -107,6 +113,26 @@ const initialState: BundlesState = {
     error: false,
     data: {
       [SushiDataComponentEnum.LIQUIDITY_POOL]: []
+    }
+  },
+  [ProtocolEnum.UNISWAPV2]: {
+    total: {
+      [UniswapV2DataComponentEnum.LIQUIDITY_POOL]: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [UniswapV2DataComponentEnum.LIQUIDITY_POOL]: []
+    }
+  },
+  [ProtocolEnum.UNISWAPV3]: {
+    total: {
+      [UniswapV3DataComponentEnum.LIQUIDITY_POOL]: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [UniswapV3DataComponentEnum.LIQUIDITY_POOL]: []
     }
   }
 };
@@ -313,6 +339,36 @@ const fetchBundleSushiData = createAsyncThunk<SushiResponse, string[], { state: 
     };
 
     const data = await getSushi(addresses);
+
+    return data;
+  }
+);
+
+const fetchBundleUniV2Data = createAsyncThunk<UniV2Response, string[], { state: RootState }>(
+  'bundles/fetchUniV2Data',
+  async (addresses, thunkAPI) => {
+    const controller = new AbortController();
+
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
+
+    const data = await getUniV2(addresses);
+
+    return data;
+  }
+);
+
+const fetchBundleUniV3Data = createAsyncThunk<UniV3Response, string[], { state: RootState }>(
+  'bundles/fetchUniV3Data',
+  async (addresses, thunkAPI) => {
+    const controller = new AbortController();
+
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
+
+    const data = await getUniV3(addresses);
 
     return data;
   }
@@ -569,6 +625,54 @@ export const bundlesSlice = createSlice({
       // state.SUSHI.loading = false;
       state.SUSHI.error = true;
     });
+
+    // UniV2 reducer functions
+    builder.addCase(fetchBundleUniV2Data.pending, (state) => {
+      state.UNISWAPV2.loading = true;
+      state.UNISWAPV2.error = false;
+    });
+
+    builder.addCase(fetchBundleUniV2Data.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      const res = action.payload;
+
+      state.UNISWAPV2.data.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.data;
+
+      state.UNISWAPV2.total.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.totalValue;
+
+      state.UNISWAPV2.loading = false;
+      state.UNISWAPV2.error = false;
+    });
+
+    builder.addCase(fetchBundleUniV2Data.rejected, (state) => {
+      // state.UNISWAPV2.loading = false;
+      state.UNISWAPV2.error = true;
+    });
+
+    // UniV3 reducer functions
+    builder.addCase(fetchBundleUniV3Data.pending, (state) => {
+      state.UNISWAPV3.loading = true;
+      state.UNISWAPV3.error = false;
+    });
+
+    builder.addCase(fetchBundleUniV3Data.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      const res = action.payload;
+
+      state.UNISWAPV3.data.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.data;
+
+      state.UNISWAPV3.total.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.totalValue;
+
+      state.UNISWAPV3.loading = false;
+      state.UNISWAPV3.error = false;
+    });
+
+    builder.addCase(fetchBundleUniV3Data.rejected, (state) => {
+      // state.UNISWAPV3.loading = false;
+      state.UNISWAPV3.error = true;
+    });
   }
 });
 
@@ -589,7 +693,9 @@ export {
   fetchBundlePhiatData,
   fetchBundlePancakeData,
   fetchBundlePulsexData,
-  fetchBundleSushiData
+  fetchBundleSushiData,
+  fetchBundleUniV2Data,
+  fetchBundleUniV3Data
 };
 
 export default bundlesSlice.reducer;

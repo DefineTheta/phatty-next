@@ -6,6 +6,8 @@ import {
   PhiatTokenItem,
   PulsexTokenItem,
   SushiItem,
+  UniV2Item,
+  UniV3Item,
   WalletTokenItem
 } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
@@ -80,13 +82,27 @@ export const selectSushiLiquidityPoolData = memoize((state: RootState): SushiIte
   return state.protocols.SUSHI.data.LIQUIDITY_POOL;
 });
 
+export const selectUniV2LiquidityPoolData = memoize((state: RootState): UniV2Item[] => {
+  console.log('SELECT_UNIV2_LIQUIDITY_POOL_DATA');
+
+  return state.protocols.UNISWAPV2.data.LIQUIDITY_POOL;
+});
+
+export const selectUniV3LiquidityPoolData = memoize((state: RootState): UniV3Item[] => {
+  console.log('SELECT_UNIV3_LIQUIDITY_POOL_DATA');
+
+  return state.protocols.UNISWAPV3.data.LIQUIDITY_POOL;
+});
+
 export const selectEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
 
   return (
     state.protocols.WALLET.total.ETHEREUM +
     state.protocols.HEX.total.ETHEREUM +
-    state.protocols.SUSHI.total.LIQUIDITY_POOL
+    state.protocols.SUSHI.total.LIQUIDITY_POOL +
+    state.protocols.UNISWAPV2.total.LIQUIDITY_POOL +
+    state.protocols.UNISWAPV3.total.LIQUIDITY_POOL
   );
 });
 
@@ -154,6 +170,18 @@ export const selectSushiTotal = memoize((state: RootState): number => {
   return state.protocols.SUSHI.total.LIQUIDITY_POOL;
 });
 
+export const selectUniV2Total = memoize((state: RootState): number => {
+  console.log('SELECT_UNIV2_TOTAL');
+
+  return state.protocols.UNISWAPV2.total.LIQUIDITY_POOL;
+});
+
+export const selectUniV3Total = memoize((state: RootState): number => {
+  console.log('SELECT_UNIV3_TOTAL');
+
+  return state.protocols.UNISWAPV3.total.LIQUIDITY_POOL;
+});
+
 export const selectTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
@@ -194,6 +222,18 @@ export const selectSushiLoading = memoize((state: RootState): boolean => {
   console.log('SELECT_SUSHI_LOADING');
 
   return state.protocols.SUSHI.loading;
+});
+
+export const selectUniV2Loading = memoize((state: RootState): boolean => {
+  console.log('SELECT_UNIV2_LOADING');
+
+  return state.protocols.UNISWAPV2.loading;
+});
+
+export const selectUniV3Loading = memoize((state: RootState): boolean => {
+  console.log('SELECT_UNIV3_LOADING');
+
+  return state.protocols.UNISWAPV3.loading;
 });
 
 export const selectWalletError = memoize((state: RootState): boolean => {

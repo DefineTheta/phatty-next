@@ -5,29 +5,29 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { selectBundleSushiLiquidityPoolData } from '@app-src/store/bundles/selectors';
-import { selectSushiLiquidityPoolData } from '@app-src/store/protocol/selectors';
+import { selectBundleUniV3LiquidityPoolData } from '@app-src/store/bundles/selectors';
+import { selectUniV3LiquidityPoolData } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import useSort from '../../hooks/useSort';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
-type ISushiLiquidityPoolTableProps = {
+type IUniV3LiquidityPoolTableProps = {
   page: 'profile' | 'bundle';
   loading: boolean;
 };
 
-const SushiLiquidityPoolTable = ({ page, loading }: ISushiLiquidityPoolTableProps) => {
-  const sushiLPData = useAppSelector(
+const UniV3LiquidityPoolTable = ({ page, loading }: IUniV3LiquidityPoolTableProps) => {
+  const uniV3LPData = useAppSelector(
     useCallback(
-      page === 'profile' ? selectSushiLiquidityPoolData : selectBundleSushiLiquidityPoolData,
+      page === 'profile' ? selectUniV3LiquidityPoolData : selectBundleUniV3LiquidityPoolData,
       [page]
     )
   );
 
-  const [sortedSushiLPData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
-    typeof sushiLPData[number]
-  >(sushiLPData, 'usdValue', 'desc');
+  const [sortedUniV3LPData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
+    typeof uniV3LPData[number]
+  >(uniV3LPData, 'usdValue', 'desc');
 
   if (loading) {
     return (
@@ -54,7 +54,7 @@ const SushiLiquidityPoolTable = ({ page, loading }: ISushiLiquidityPoolTableProp
     );
   }
 
-  if (sortedSushiLPData.length === 0) {
+  if (sortedUniV3LPData.length === 0) {
     return null;
   }
 
@@ -72,7 +72,7 @@ const SushiLiquidityPoolTable = ({ page, loading }: ISushiLiquidityPoolTableProp
           USD Value
         </TableHeaderRowCell>
       </TableHeaderRow>
-      {sortedSushiLPData.map((item, index) => (
+      {sortedUniV3LPData.map((item, index) => (
         <TableRow key={index}>
           <TableRowCell className="basis-1/4">
             <div className="flex flex-row gap-x-8">
@@ -108,4 +108,4 @@ const SushiLiquidityPoolTable = ({ page, loading }: ISushiLiquidityPoolTableProp
   );
 };
 
-export default SushiLiquidityPoolTable;
+export default UniV3LiquidityPoolTable;

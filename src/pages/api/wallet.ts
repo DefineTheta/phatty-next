@@ -130,7 +130,7 @@ const calculateWalletTokenData = async (
 
   const value = balance * price;
 
-  totalValueObj[chain] += value;
+  totalValueObj[chain === 'ETH' ? 'ETHEREUM' : chain] += value;
 
   return {
     name,

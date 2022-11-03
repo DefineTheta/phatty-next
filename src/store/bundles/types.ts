@@ -20,6 +20,8 @@ import {
   PhiatTokenItem,
   PulsexTokenItem,
   SushiItem,
+  UniV2Item,
+  UniV3Item,
   WalletTokenItem
 } from '@app-src/types/api';
 
@@ -76,6 +78,14 @@ export enum SushiDataComponentEnum {
   LIQUIDITY_POOL = 'LIQUIDITY_POOL'
 }
 
+export enum UniswapV2DataComponentEnum {
+  LIQUIDITY_POOL = 'LIQUIDITY_POOL'
+}
+
+export enum UniswapV3DataComponentEnum {
+  LIQUIDITY_POOL = 'LIQUIDITY_POOL'
+}
+
 export interface BundlesState {
   bundleAddress: string;
   addresses: string[];
@@ -86,8 +96,8 @@ export interface BundlesState {
   [ProtocolEnum.PULSEX]: PulsexData;
   [ProtocolEnum.PANCAKE]: PancakeData;
   [ProtocolEnum.SUSHI]: SushiData;
-  // [ProtocolEnum.UNISWAPV2]: UniswapV2Data;
-  // [ProtocolEnum.UNISWAPV3]: UniswapV3Data;
+  [ProtocolEnum.UNISWAPV2]: UniswapV2Data;
+  [ProtocolEnum.UNISWAPV3]: UniswapV3Data;
 }
 
 export interface ProtocolData {
@@ -130,4 +140,14 @@ interface SushiData extends ProtocolData {
   data: {
     LIQUIDITY_POOL: SushiItem[];
   };
+}
+
+interface UniswapV2Data extends ProtocolData {
+  total: Record<UniswapV2DataComponentEnum, number>;
+  data: Record<keyof typeof UniswapV2DataComponentEnum, UniV2Item[]>;
+}
+
+interface UniswapV3Data extends ProtocolData {
+  total: Record<UniswapV3DataComponentEnum, number>;
+  data: Record<keyof typeof UniswapV3DataComponentEnum, UniV3Item[]>;
 }

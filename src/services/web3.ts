@@ -766,7 +766,9 @@ export const tokenImages: Record<string, string> = {
   '1INCH': '/img/tokens/1inch.webp',
   GLM: '/img/tokens/glm.webp',
   SYN: '/img/tokens/syn.webp',
-  BTT: '/img/tokens/btt.webp'
+  BTT: '/img/tokens/btt.webp',
+  USDD: '/img/tokens/usdd.jpg',
+  MIM: '/img/tokens/mim.webp'
 };
 
 export const chainImages: Record<string, string> = {

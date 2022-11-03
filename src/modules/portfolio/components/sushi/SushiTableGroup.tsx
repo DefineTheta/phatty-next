@@ -1,8 +1,8 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { selectBundleSushiLoading, selectBundleSushiTotal } from '@app-src/store/bundles/selectors';
 import { selectSushiLoading, selectSushiTotal } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { formatToMoney } from '../../utils/format';
 import SushiLiquidityPoolTable from './SushiLiquidityPoolTable';
 
@@ -11,10 +11,10 @@ type ISushiTableGroup = {
 };
 
 const SushiTableGroup = ({ page }: ISushiTableGroup) => {
-  const sushiTotal = useSelector(
+  const sushiTotal = useAppSelector(
     useCallback(page === 'profile' ? selectSushiTotal : selectBundleSushiTotal, [page])
   );
-  const loading = useSelector(
+  const loading = useAppSelector(
     useCallback(page === 'profile' ? selectSushiLoading : selectBundleSushiLoading, [page])
   );
 

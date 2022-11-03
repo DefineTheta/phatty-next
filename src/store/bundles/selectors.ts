@@ -6,6 +6,8 @@ import {
   PhiatTokenItem,
   PulsexTokenItem,
   SushiItem,
+  UniV2Item,
+  UniV3Item,
   WalletTokenItem
 } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
@@ -92,13 +94,27 @@ export const selectBundleSushiLiquidityPoolData = memoize((state: RootState): Su
   return state.bundles.SUSHI.data.LIQUIDITY_POOL;
 });
 
+export const selectBundleUniV2LiquidityPoolData = memoize((state: RootState): UniV2Item[] => {
+  console.log('SELECT_UNIV2_LIQUIDITY_POOL_DATA');
+
+  return state.bundles.UNISWAPV2.data.LIQUIDITY_POOL;
+});
+
+export const selectBundleUniV3LiquidityPoolData = memoize((state: RootState): UniV3Item[] => {
+  console.log('SELECT_UNIV3_LIQUIDITY_POOL_DATA');
+
+  return state.bundles.UNISWAPV3.data.LIQUIDITY_POOL;
+});
+
 export const selectBundleEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
 
   return (
     state.bundles.WALLET.total.ETHEREUM +
     state.bundles.HEX.total.ETHEREUM +
-    state.bundles.SUSHI.total.LIQUIDITY_POOL
+    state.bundles.SUSHI.total.LIQUIDITY_POOL +
+    state.bundles.UNISWAPV2.total.LIQUIDITY_POOL +
+    state.bundles.UNISWAPV3.total.LIQUIDITY_POOL
   );
 });
 
@@ -168,6 +184,18 @@ export const selectBundleSushiTotal = memoize((state: RootState): number => {
   return state.bundles.SUSHI.total.LIQUIDITY_POOL;
 });
 
+export const selectBundleUniV2Total = memoize((state: RootState): number => {
+  console.log('SELECT_UNIV2_TOTAL');
+
+  return state.bundles.UNISWAPV2.total.LIQUIDITY_POOL;
+});
+
+export const selectBundleUniV3Total = memoize((state: RootState): number => {
+  console.log('SELECT_UNIV3_TOTAL');
+
+  return state.bundles.UNISWAPV3.total.LIQUIDITY_POOL;
+});
+
 export const selectBundleTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
@@ -210,4 +238,16 @@ export const selectBundleSushiLoading = memoize((state: RootState): boolean => {
   console.log('SELECT_SUSHI_LOADING');
 
   return state.bundles.SUSHI.loading;
+});
+
+export const selectBundleUniV2Loading = memoize((state: RootState): boolean => {
+  console.log('SELECT_UNIV2_LOADING');
+
+  return state.bundles.UNISWAPV2.loading;
+});
+
+export const selectBundleUniV3Loading = memoize((state: RootState): boolean => {
+  console.log('SELECT_UNIV3_LOADING');
+
+  return state.bundles.UNISWAPV3.loading;
 });

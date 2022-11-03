@@ -4,6 +4,8 @@ import {
   getPhiat,
   getPulsex,
   getSushi,
+  getUniV2,
+  getUniV3,
   getWallet
 } from '@app-src/services/api';
 import { RootState } from '@app-src/store/store';
@@ -13,6 +15,8 @@ import {
   PhiatResponse,
   PulsexResponse,
   SushiResponse,
+  UniV2Response,
+  UniV3Response,
   WalletResponse
 } from '@app-src/types/api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
@@ -24,6 +28,8 @@ import {
   ProtocolsState,
   PulsexDataComponentEnum,
   SushiDataComponentEnum,
+  UniswapV2DataComponentEnum,
+  UniswapV3DataComponentEnum,
   WalletDataComponentEnum
 } from './types';
 
@@ -102,35 +108,27 @@ const initialState: ProtocolsState = {
     data: {
       [SushiDataComponentEnum.LIQUIDITY_POOL]: []
     }
+  },
+  [ProtocolEnum.UNISWAPV2]: {
+    total: {
+      [UniswapV2DataComponentEnum.LIQUIDITY_POOL]: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [UniswapV2DataComponentEnum.LIQUIDITY_POOL]: []
+    }
+  },
+  [ProtocolEnum.UNISWAPV3]: {
+    total: {
+      [UniswapV3DataComponentEnum.LIQUIDITY_POOL]: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [UniswapV3DataComponentEnum.LIQUIDITY_POOL]: []
+    }
   }
-  // [ProtocolEnum.UNISWAPV2]: {
-  //   name: ProtocolEnum.UNISWAPV2,
-  //   displayName: 'Uniswap V2',
-  //   id: '#uniswapv2',
-  //   img: ProtocolImgEnum.UNISWAPV2,
-  //   total: {
-  //     [UniswapV2DataComponentEnum.LIQUIDITY_POOL]: 0
-  //   },
-  //   loading: false,
-  //   error: false,
-  //   data: {
-  //     [UniswapV2DataComponentEnum.LIQUIDITY_POOL]: []
-  //   }
-  // },
-  // [ProtocolEnum.UNISWAPV3]: {
-  //   name: ProtocolEnum.UNISWAPV3,
-  //   displayName: 'Uniswap V3',
-  //   id: '#uniswapv3',
-  //   img: ProtocolImgEnum.UNISWAPV3,
-  //   total: {
-  //     [UniswapV3DataComponentEnum.LIQUIDITY_POOL]: 0
-  //   },
-  //   loading: false,
-  //   error: false,
-  //   data: {
-  //     [UniswapV3DataComponentEnum.LIQUIDITY_POOL]: []
-  //   }
-  // }
 };
 
 const fetchWalletData = createAsyncThunk<WalletResponse, string | undefined, { state: RootState }>(
@@ -228,24 +226,35 @@ const fetchSushiData = createAsyncThunk<SushiResponse, string, { state: RootStat
   }
 );
 
-// const fetchEthereumLPData = createAsyncThunk<EthereumLPData[], string[], { state: RootState }>(
-//   'protocols/fetchEthereumLPData',
-//   async (addresses, thunkAPI) => {
-//     const controller = new AbortController();
+const fetchUniV2Data = createAsyncThunk<UniV2Response, string, { state: RootState }>(
+  'protocols/fetchUniV2Data',
+  async (address, thunkAPI) => {
+    const controller = new AbortController();
 
-//     thunkAPI.signal.onabort = () => {
-//       controller.abort();
-//     };
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
 
-//     const data = await Promise.all(
-//       addresses.map((address) => {
-//         return crypto.fetchEthereumLP(address, controller.signal);
-//       })
-//     );
+    const data = await getUniV2([address]);
 
-//     return data;
-//   }
-// );
+    return data;
+  }
+);
+
+const fetchUniV3Data = createAsyncThunk<UniV3Response, string, { state: RootState }>(
+  'protocols/fetchUniV3Data',
+  async (address, thunkAPI) => {
+    const controller = new AbortController();
+
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
+
+    const data = await getUniV3([address]);
+
+    return data;
+  }
+);
 
 export const protocolsSlice = createSlice({
   name: 'protocols',
@@ -434,37 +443,53 @@ export const protocolsSlice = createSlice({
       state.SUSHI.error = true;
     });
 
-    // builder.addCase(fetchEthereumLPData.pending, (state) => {
-    //   state.UNISWAPV2.loading = true;
-    //   state.UNISWAPV3.loading = true;
-    // });
+    // UniV2 reducer functions
+    builder.addCase(fetchUniV2Data.pending, (state) => {
+      state.UNISWAPV2.loading = true;
+      state.UNISWAPV2.error = false;
+    });
 
-    // builder.addCase(fetchEthereumLPData.fulfilled, (state, action) => {
-    //   const data = action.payload.reduce(
-    //     (prev, cur) => {
-    //       prev[ProtocolEnum.UNISWAPV2] = prev[ProtocolEnum.UNISWAPV2].concat(
-    //         cur[ProtocolEnum.UNISWAPV2]
-    //       );
-    //       prev.UNISWAPV3 = prev.UNISWAPV3.concat(cur.UNISWAPV3);
+    builder.addCase(fetchUniV2Data.fulfilled, (state, action) => {
+      if (!action.payload) return;
 
-    //       return prev;
-    //     },
-    //     {
-    //       [ProtocolEnum.UNISWAPV2]: [],
-    //       [ProtocolEnum.UNISWAPV3]: []
-    //     } as EthereumLPData
-    //   );
+      const res = action.payload;
 
-    //   // console.log(data);
+      state.UNISWAPV2.data.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.data;
 
-    //   // state.UNISWAPV2.data.LIQUIDITY_POOL.push(data.UNISWAPV2);
-    //   // state.UNISWAPV3.data.LIQUIDITY_POOL.push(data[ProtocolEnum.UNISWAPV3]);
-    // });
+      state.UNISWAPV2.total.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.totalValue;
 
-    // builder.addCase(fetchEthereumLPData.rejected, (state) => {
-    //   state.UNISWAPV2.error = true;
-    //   state.UNISWAPV3.error = true;
-    // });
+      state.UNISWAPV2.loading = false;
+      state.UNISWAPV2.error = false;
+    });
+
+    builder.addCase(fetchUniV2Data.rejected, (state) => {
+      // state.UNISWAPV2.loading = false;
+      state.UNISWAPV2.error = true;
+    });
+
+    // UniV3 reducer functions
+    builder.addCase(fetchUniV3Data.pending, (state) => {
+      state.UNISWAPV3.loading = true;
+      state.UNISWAPV3.error = false;
+    });
+
+    builder.addCase(fetchUniV3Data.fulfilled, (state, action) => {
+      if (!action.payload) return;
+
+      const res = action.payload;
+
+      state.UNISWAPV3.data.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.data;
+
+      state.UNISWAPV3.total.LIQUIDITY_POOL = res.data.LIQUIDITY_POOL.totalValue;
+
+      state.UNISWAPV3.loading = false;
+      state.UNISWAPV3.error = false;
+    });
+
+    builder.addCase(fetchUniV3Data.rejected, (state) => {
+      // state.UNISWAPV3.loading = false;
+      state.UNISWAPV3.error = true;
+    });
   }
 });
 
@@ -480,7 +505,9 @@ export {
   fetchPhiatData,
   fetchPancakeData,
   fetchPulsexData,
-  fetchSushiData
+  fetchSushiData,
+  fetchUniV2Data,
+  fetchUniV3Data
 };
 
 export default protocolsSlice.reducer;

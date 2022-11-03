@@ -6,6 +6,8 @@ import {
   PhiatResponse,
   PulsexResponse,
   SushiResponse,
+  UniV2Response,
+  UniV3Response,
   WalletResponse
 } from '@app-src/types/api';
 
@@ -373,6 +375,65 @@ export const getSushi = async (addresses: string[]) => {
     );
 
     collatedRes.data.LIQUIDITY_POOL.totalValue += sushi.data.LIQUIDITY_POOL.totalValue;
+  });
+
+  return collatedRes;
+};
+
+export const getUniV2 = async (addresses: string[]) => {
+  const uniV2Data = await getMultipleAddressData<UniV2Response>(addresses, '/api/univ2');
+
+  if (uniV2Data.length === 1) return uniV2Data[0];
+
+  const collatedRes = {
+    data: {
+      LIQUIDITY_POOL: {
+        data: [],
+        totalValue: 0
+      }
+    }
+  } as UniV2Response;
+
+  uniV2Data.forEach((uniV2) => {
+    collatedRes.data.LIQUIDITY_POOL.data = collatedRes.data.LIQUIDITY_POOL.data.concat(
+      uniV2.data.LIQUIDITY_POOL.data
+    );
+
+    collatedRes.data.LIQUIDITY_POOL.totalValue += uniV2.data.LIQUIDITY_POOL.totalValue;
+  });
+
+  return collatedRes;
+};
+
+export const getUniV3 = async (addresses: string[]) => {
+  const fetchPromises: Promise<UniV3Response[]>[] = [];
+
+  addresses.forEach((address) => {
+    fetchPromises.push(getPaginatedData(`/api/univ3?address=${address}`));
+  });
+
+  const uniV3DataArr = await Promise.all(fetchPromises);
+
+  if (uniV3DataArr.length === 1 && uniV3DataArr[0].length === 1) return uniV3DataArr[0][0];
+
+  const collatedRes = {
+    data: {
+      LIQUIDITY_POOL: {
+        data: [],
+        totalValue: 0
+      }
+    },
+    next: null
+  } as UniV3Response;
+
+  uniV3DataArr.forEach((arr) => {
+    arr.forEach((uniV3) => {
+      collatedRes.data.LIQUIDITY_POOL.data = collatedRes.data.LIQUIDITY_POOL.data.concat(
+        uniV3.data.LIQUIDITY_POOL.data
+      );
+
+      collatedRes.data.LIQUIDITY_POOL.totalValue += uniV3.data.LIQUIDITY_POOL.totalValue;
+    });
   });
 
   return collatedRes;
