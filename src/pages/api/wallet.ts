@@ -198,7 +198,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         token.address,
         address as string,
         token.name,
-        price[token.name],
+        price[token.name === 'HEX' ? 'TPLS_HEX' : token.name],
         'TPLS',
         totalValues
       )

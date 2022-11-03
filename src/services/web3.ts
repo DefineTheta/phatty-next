@@ -826,7 +826,9 @@ export const fetchPrices = async () => {
       prices[item.symbol] = item.price;
     });
 
-    prices = { ...prices, ...tplsPriceData.chain_tpls };
+    const { HEX: TPLS_HEX, ...tplsTokenPrices } = tplsPriceData.chain_tpls;
+
+    prices = { ...prices, TPLS_HEX, ...tplsTokenPrices };
 
     return prices as Record<string, number>;
   } catch (e) {

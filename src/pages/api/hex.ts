@@ -183,7 +183,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         startDate,
         today,
         globalPLSShares,
-        price['HEX'],
+        price['TPLS_HEX'],
         totalValues
       )
     );
