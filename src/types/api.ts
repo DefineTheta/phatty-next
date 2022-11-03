@@ -230,3 +230,27 @@ export type SushiResponse = {
   };
   error?: string;
 };
+
+// UNIV3 Types
+
+export type UniV3Token = {
+  symbol: string;
+  image: string;
+  balance: number;
+  fee: number;
+};
+
+export type UniV3Item = {
+  tokenOne: UniV3Token;
+  tokenTwo: UniV3Token;
+  usdValue: number;
+};
+
+export type UniV3Response = ApiBaseResponse & {
+  data: {
+    LIQUIDITY_POOL: {
+      data: UniV3Item[];
+      totalValue: number;
+    };
+  };
+};
