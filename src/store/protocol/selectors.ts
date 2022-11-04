@@ -1,3 +1,4 @@
+import { getPositiveOrZero } from '@app-src/common/utils/query';
 import { getSeaCreature } from '@app-src/services/api';
 import { RootState } from '@app-src/store/store';
 import {
@@ -99,28 +100,31 @@ export const selectEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
 
   return (
-    state.protocols.WALLET.total.ETHEREUM +
-    state.protocols.HEX.total.ETHEREUM +
-    state.protocols.SUSHI.total.LIQUIDITY_POOL +
-    state.protocols.UNISWAPV2.total.LIQUIDITY_POOL +
-    state.protocols.UNISWAPV3.total.LIQUIDITY_POOL
+    getPositiveOrZero(state.protocols.WALLET.total.ETHEREUM) +
+    getPositiveOrZero(state.protocols.HEX.total.ETHEREUM) +
+    getPositiveOrZero(state.protocols.SUSHI.total.LIQUIDITY_POOL) +
+    getPositiveOrZero(state.protocols.UNISWAPV2.total.LIQUIDITY_POOL) +
+    getPositiveOrZero(state.protocols.UNISWAPV3.total.LIQUIDITY_POOL)
   );
 });
 
 export const selectBscTotal = memoize((state: RootState): number => {
   console.log('SELECT_BSC_TOTAL');
 
-  return state.protocols.WALLET.total.BSC + selectPancakeTotal(state);
+  return (
+    getPositiveOrZero(state.protocols.WALLET.total.BSC) +
+    getPositiveOrZero(selectPancakeTotal(state))
+  );
 });
 
 export const selectTplsTotal = memoize((state: RootState): number => {
   console.log('SELECT_TPLS_TOTAL');
 
   return (
-    state.protocols.WALLET.total.TPLS +
-    state.protocols.HEX.total.TPLS +
-    selectPhiatTotal(state) +
-    selectPulsexTotal(state)
+    getPositiveOrZero(state.protocols.WALLET.total.TPLS) +
+    getPositiveOrZero(state.protocols.HEX.total.TPLS) +
+    getPositiveOrZero(selectPhiatTotal(state)) +
+    getPositiveOrZero(selectPulsexTotal(state))
   );
 });
 

@@ -1,3 +1,4 @@
+import { getPositiveOrZero } from '@app-src/common/utils/query';
 import { RootState } from '@app-src/store/store';
 import {
   HexTokenItem,
@@ -110,28 +111,31 @@ export const selectBundleEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
 
   return (
-    state.bundles.WALLET.total.ETHEREUM +
-    state.bundles.HEX.total.ETHEREUM +
-    state.bundles.SUSHI.total.LIQUIDITY_POOL +
-    state.bundles.UNISWAPV2.total.LIQUIDITY_POOL +
-    state.bundles.UNISWAPV3.total.LIQUIDITY_POOL
+    getPositiveOrZero(state.bundles.WALLET.total.ETHEREUM) +
+    getPositiveOrZero(state.bundles.HEX.total.ETHEREUM) +
+    getPositiveOrZero(state.bundles.SUSHI.total.LIQUIDITY_POOL) +
+    getPositiveOrZero(state.bundles.UNISWAPV2.total.LIQUIDITY_POOL) +
+    getPositiveOrZero(state.bundles.UNISWAPV3.total.LIQUIDITY_POOL)
   );
 });
 
 export const selectBundleBscTotal = memoize((state: RootState): number => {
   console.log('SELECT_BSC_TOTAL');
 
-  return state.bundles.WALLET.total.BSC + selectBundlePancakeTotal(state);
+  return (
+    getPositiveOrZero(state.bundles.WALLET.total.BSC) +
+    getPositiveOrZero(selectBundlePancakeTotal(state))
+  );
 });
 
 export const selectBundleTplsTotal = memoize((state: RootState): number => {
   console.log('SELECT_TPLS_TOTAL');
 
   return (
-    state.bundles.WALLET.total.TPLS +
-    state.bundles.HEX.total.TPLS +
-    selectBundlePhiatTotal(state) +
-    selectBundlePulsexTotal(state)
+    getPositiveOrZero(state.bundles.WALLET.total.TPLS) +
+    getPositiveOrZero(state.bundles.HEX.total.TPLS) +
+    getPositiveOrZero(selectBundlePhiatTotal(state)) +
+    getPositiveOrZero(selectBundlePulsexTotal(state))
   );
 });
 
