@@ -140,7 +140,7 @@ const initialState: ProtocolsState = {
 
 const fetchWalletData = createAsyncThunk<
   WalletResponse,
-  { address: string | undefined; refresh: boolean },
+  { address: string | undefined; refresh: boolean } | undefined,
   { state: RootState }
 >('protocols/fetchWalletData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -149,11 +149,11 @@ const fetchWalletData = createAsyncThunk<
     controller.abort();
   };
 
-  const profileAddress = input.address || thunkAPI.getState().protocols.address;
+  const profileAddress = input?.address || thunkAPI.getState().protocols.address;
 
   if (!profileAddress || profileAddress == '') thunkAPI.rejectWithValue(null);
 
-  const data = await getWallet([profileAddress], input.refresh);
+  const data = await getWallet([profileAddress], input?.refresh || false);
 
   return data;
 });
