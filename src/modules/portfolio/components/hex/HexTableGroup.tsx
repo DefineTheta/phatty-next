@@ -3,7 +3,8 @@ import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import {
   selectBundleHexComponentTotal,
-  selectBundleHexStakeLoading
+  selectBundleHexStakeLoading,
+  selectBundleHexToatlTSharesPercentage
 } from '@app-src/store/bundles/selectors';
 import {
   selectHexComponentTotal,
@@ -36,9 +37,21 @@ const HexTableGroup = ({ page, chain }: IHexTableGroupProps) => {
   const loading = useAppSelector(
     useCallback(page === 'profile' ? selectHexStakeLoading : selectBundleHexStakeLoading, [page])
   );
-  const hexEthSeaCreature = useAppSelector(useCallback(selectHexToatlTSharesPercentage('ETH'), []));
+  const hexEthSeaCreature = useAppSelector(
+    useCallback(
+      page === 'profile'
+        ? selectHexToatlTSharesPercentage('ETH')
+        : selectBundleHexToatlTSharesPercentage('ETH'),
+      []
+    )
+  );
   const hexTplsSeaCreature = useAppSelector(
-    useCallback(selectHexToatlTSharesPercentage('TPLS'), [])
+    useCallback(
+      page === 'profile'
+        ? selectHexToatlTSharesPercentage('TPLS')
+        : selectBundleHexToatlTSharesPercentage('TPLS'),
+      []
+    )
   );
 
   const styledHexEthTotal = useMemo(

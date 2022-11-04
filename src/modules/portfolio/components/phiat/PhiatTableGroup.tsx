@@ -1,6 +1,10 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { selectBundlePhiatLoading, selectBundlePhiatTotal } from '@app-src/store/bundles/selectors';
+import {
+  selectBundlePhiatLoading,
+  selectBundlePhiatTotal,
+  selectBundlePhiatTotalTSharesPercentage
+} from '@app-src/store/bundles/selectors';
 import {
   selectPhiatLoading,
   selectPhiatTotal,
@@ -25,7 +29,14 @@ const PhiatTableGroup = ({ page, chain }: IPhiatTableGroupProps) => {
   const loading = useAppSelector(
     useCallback(page === 'profile' ? selectPhiatLoading : selectBundlePhiatLoading, [page])
   );
-  const phiatSeaCreature = useAppSelector(useCallback(selectPhiatTotalTSharesPercentage, []));
+  const phiatSeaCreature = useAppSelector(
+    useCallback(
+      page === 'profile'
+        ? selectPhiatTotalTSharesPercentage
+        : selectBundlePhiatTotalTSharesPercentage,
+      []
+    )
+  );
 
   const styledPhiatTotal = useMemo(
     () =>

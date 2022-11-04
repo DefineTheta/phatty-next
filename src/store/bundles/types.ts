@@ -112,12 +112,16 @@ interface WalletData extends ProtocolData {
 
 interface HexData extends ProtocolData {
   total: Record<HexDataComponentEnum, number>;
+  totalTSharesPercentage: Record<HexDataComponentEnum, number>;
   data: Record<keyof typeof HexDataComponentEnum, HexTokenItem[]>;
 }
 
 interface PhiatData extends ProtocolData {
   total: {
     TPLS: number;
+  };
+  balance: {
+    STAKING: number;
   };
   data: Record<keyof typeof PhiatDataComponentEnum, PhiatTokenItem[]> & { STAKING_APY: number };
 }

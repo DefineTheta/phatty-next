@@ -32,7 +32,7 @@ const UniV3TableGroup = ({ page, chain }: IUniV3TableGroup) => {
       <TableHeader
         tableName="Uniswap V3"
         totalValue={styledUniV3Total}
-        tablePrimaryImgSrc="/img/icon/uniV2.svg"
+        tablePrimaryImgSrc="/img/icon/univ2.svg"
         tablePrimaryImgAlt="Uniswap V3"
       />
       <UniV3LiquidityPoolTable page={page} loading={loading} />
