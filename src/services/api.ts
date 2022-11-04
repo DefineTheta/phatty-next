@@ -188,7 +188,7 @@ export const getWallet = async (addresses: string[], refresh: boolean) => {
 
   addresses.forEach((address) => {
     fetchPromises.push(
-      fetch(`/api/wallet?address=${address}&gt=0`, { cache: refresh ? 'reload' : 'default' })
+      fetch(`/api/wallet?address=${address}&gt=0`, { cache: refresh ? 'no-cache' : 'default' })
     );
   });
 
@@ -237,7 +237,7 @@ export const getHex = async (addresses: string[], refresh: boolean) => {
 
   addresses.forEach((address) => {
     fetchPromises.push(
-      getPaginatedData(`/api/hex?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+      getPaginatedData(`/api/hex?address=${address}`, { cache: refresh ? 'no-cache' : 'default' })
     );
   });
 
@@ -283,7 +283,7 @@ export const getPhiat = async (addresses: string[], refresh: boolean) => {
 
   addresses.forEach((address) => {
     fetchPromises.push(
-      getPaginatedData(`/api/phiat?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+      getPaginatedData(`/api/phiat?address=${address}`, { cache: refresh ? 'no-cache' : 'default' })
     );
   });
 
@@ -351,7 +351,7 @@ export const getPulsex = async (addresses: string[], refresh: boolean) => {
 
   addresses.forEach((address) => {
     fetchPromises.push(
-      fetch(`/api/pulsex?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+      fetch(`/api/pulsex?address=${address}`, { cache: refresh ? 'no-cache' : 'default' })
     );
   });
 
@@ -390,7 +390,7 @@ export const getPancake = async (addresses: string[], refresh: boolean) => {
 
   addresses.forEach((address) => {
     fetchPromises.push(
-      fetch(`/api/pancake?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+      fetch(`/api/pancake?address=${address}`, { cache: refresh ? 'no-cache' : 'default' })
     );
   });
 
@@ -432,7 +432,7 @@ export const getPancake = async (addresses: string[], refresh: boolean) => {
 
 export const getSushi = async (addresses: string[], refresh: boolean) => {
   const sushiData = await getMultipleAddressData<SushiResponse>(addresses, '/api/sushi', {
-    cache: refresh ? 'reload' : 'default'
+    cache: refresh ? 'no-cache' : 'default'
   });
 
   if (sushiData.length === 1) return sushiData[0];
@@ -459,7 +459,7 @@ export const getSushi = async (addresses: string[], refresh: boolean) => {
 
 export const getUniV2 = async (addresses: string[], refresh: boolean) => {
   const uniV2Data = await getMultipleAddressData<UniV2Response>(addresses, '/api/univ2', {
-    cache: refresh ? 'reload' : 'default'
+    cache: refresh ? 'no-cache' : 'default'
   });
 
   if (uniV2Data.length === 1) return uniV2Data[0];
@@ -489,7 +489,7 @@ export const getUniV3 = async (addresses: string[], refresh: boolean) => {
 
   addresses.forEach((address) => {
     fetchPromises.push(
-      getPaginatedData(`/api/univ3?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+      getPaginatedData(`/api/univ3?address=${address}`, { cache: refresh ? 'no-cache' : 'default' })
     );
   });
 
