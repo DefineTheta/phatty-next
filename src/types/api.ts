@@ -33,6 +33,8 @@ export interface HistoryToken {
   transaction: string;
 }
 
+// WALLET Types
+
 export interface WalletTokenItem {
   name: string;
   balance: number;
@@ -50,7 +52,7 @@ export interface WalletChainItem {
 
 export interface WalletResponse {
   data: {
-    ETHEREUM: WalletChainItem;
+    ETH: WalletChainItem;
     BSC: WalletChainItem;
     TPLS: WalletChainItem;
   };

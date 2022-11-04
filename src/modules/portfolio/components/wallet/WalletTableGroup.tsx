@@ -13,14 +13,16 @@ import {
 } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
 import WalletTable from './WalletTable';
 
 type IWalletTableGroupProps = {
   page: 'profile' | 'bundle';
+  chain: PortfolioChain;
 };
 
-const WalletTableGroup = ({ page }: IWalletTableGroupProps) => {
+const WalletTableGroup = ({ page, chain }: IWalletTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const walletTotal = useSelector(
@@ -52,7 +54,7 @@ const WalletTableGroup = ({ page }: IWalletTableGroupProps) => {
       {error ? (
         <TableError retry={fetchTableData} />
       ) : (
-        <WalletTable page={page} loading={loading} />
+        <WalletTable page={page} chain={chain} loading={loading} />
       )}
     </div>
   );

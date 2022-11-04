@@ -10,6 +10,7 @@ import SushiTableGroup from '@app-src/modules/portfolio/components/sushi/SushiTa
 import UniV2TableGroup from '@app-src/modules/portfolio/components/univ2/UniV2TableGroup';
 import UniV3TableGroup from '@app-src/modules/portfolio/components/univ3/UniV3TableGroup';
 import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/WalletTableGroup';
+import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import {
   fetchBundleAddresses,
   fetchBundleHexData,
@@ -27,14 +28,18 @@ import {
   selectBundleAddresses,
   selectBundleHasFetched
 } from '@app-src/store/bundles/selectors';
-import { useCallback, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
 
 const BundlePortfolioPage = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const bundleAddress = useAppSelector(useCallback(selectBundleAddress, []));
   const bundleAddresses = useAppSelector(useCallback(selectBundleAddresses, []));
   const hasFetched = useAppSelector(useCallback(selectBundleHasFetched, []));
+
+  const [currentChain, setCurrentChain] = useState<PortfolioChain>('');
 
   useEffect(() => {
     if (!hasFetched && bundleAddress) {
@@ -61,19 +66,26 @@ const BundlePortfolioPage = () => {
     ]).then(() => dispatch(setBundleFetched(true)));
   }, [bundleAddresses, hasFetched]);
 
+  useEffect(() => {
+    const chain = String(router.query.chain || '');
+
+    if (['ETH', 'BSC', 'TPLS'].includes(chain)) setCurrentChain(chain as PortfolioChain);
+    else setCurrentChain('');
+  }, [router.query.chain]);
+
   return (
     <div className="flex flex-col gap-y-24">
       <BundleHeader address={bundleAddress} />
       <div className="w-full flex flex-col items-center gap-y-30">
-        <ChainSummaryCard page="bundle" />
-        <WalletTableGroup page="bundle" />
-        <HexTableGroup page="bundle" />
-        <PhiatTableGroup page="bundle" />
-        <PulsexTableGroup page="bundle" />
-        <PancakeTableGroup page="bundle" />
-        <SushiTableGroup page="bundle" />
-        <UniV2TableGroup page="bundle" />
-        <UniV3TableGroup page="bundle" />
+        <ChainSummaryCard page="bundle" chain={currentChain} />
+        <WalletTableGroup page="bundle" chain={currentChain} />
+        <HexTableGroup page="bundle" chain={currentChain} />
+        <PhiatTableGroup page="bundle" chain={currentChain} />
+        <PulsexTableGroup page="bundle" chain={currentChain} />
+        <PancakeTableGroup page="bundle" chain={currentChain} />
+        <SushiTableGroup page="bundle" chain={currentChain} />
+        <UniV2TableGroup page="bundle" chain={currentChain} />
+        <UniV3TableGroup page="bundle" chain={currentChain} />
       </div>
     </div>
   );

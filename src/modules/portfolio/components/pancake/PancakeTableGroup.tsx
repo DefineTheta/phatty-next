@@ -6,15 +6,18 @@ import {
 import { selectPancakeLoading, selectPancakeTotal } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
+import { isCurrentChain } from '../../utils/misc';
 import PancakeFarmTable from './PancakeFarmTable';
 import PancakeLiquidityPoolTable from './PancakeLiquidityPoolTable';
 
 type IPancakeTableGroup = {
   page: 'profile' | 'bundle';
+  chain: PortfolioChain;
 };
 
-const PancakeTableGroup = ({ page }: IPancakeTableGroup) => {
+const PancakeTableGroup = ({ page, chain }: IPancakeTableGroup) => {
   const pancakeTotal = useSelector(
     useCallback(page === 'profile' ? selectPancakeTotal : selectBundlePancakeTotal, [page])
   );
@@ -24,7 +27,7 @@ const PancakeTableGroup = ({ page }: IPancakeTableGroup) => {
 
   const styledPancakeTotal = useMemo(() => formatToMoney(pancakeTotal), [pancakeTotal]);
 
-  if (!loading && pancakeTotal === 0) {
+  if ((!loading && pancakeTotal === 0) || !isCurrentChain('BSC', chain)) {
     return null;
   }
 

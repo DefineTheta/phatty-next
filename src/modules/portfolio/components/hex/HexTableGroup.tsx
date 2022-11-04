@@ -1,5 +1,6 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
+import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import {
   selectBundleHexComponentTotal,
   selectBundleHexStakeLoading
@@ -11,18 +12,18 @@ import {
 } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { formatToMoney } from '../../utils/format';
+import { isCurrentChain, isCurrentChainIn } from '../../utils/misc';
 import HexStakeTable from './HexStakeTable';
 
 type IHexTableGroupProps = {
   page: 'profile' | 'bundle';
+  chain: PortfolioChain;
 };
 
-const HexTableGroup = ({ page }: IHexTableGroupProps) => {
+const HexTableGroup = ({ page, chain }: IHexTableGroupProps) => {
   const hexEthTotal = useAppSelector(
     useCallback(
-      page === 'profile'
-        ? selectHexComponentTotal('ETHEREUM')
-        : selectBundleHexComponentTotal('ETHEREUM'),
+      page === 'profile' ? selectHexComponentTotal('ETH') : selectBundleHexComponentTotal('ETH'),
       [page]
     )
   );
@@ -35,9 +36,7 @@ const HexTableGroup = ({ page }: IHexTableGroupProps) => {
   const loading = useAppSelector(
     useCallback(page === 'profile' ? selectHexStakeLoading : selectBundleHexStakeLoading, [page])
   );
-  const hexEthSeaCreature = useAppSelector(
-    useCallback(selectHexToatlTSharesPercentage('ETHEREUM'), [])
-  );
+  const hexEthSeaCreature = useAppSelector(useCallback(selectHexToatlTSharesPercentage('ETH'), []));
   const hexTplsSeaCreature = useAppSelector(
     useCallback(selectHexToatlTSharesPercentage('TPLS'), [])
   );
@@ -57,13 +56,13 @@ const HexTableGroup = ({ page }: IHexTableGroupProps) => {
     [hexTplsTotal, hexTplsSeaCreature]
   );
 
-  if (hexEthTotal + hexTplsTotal === 0 && !loading) {
+  if ((hexEthTotal + hexTplsTotal === 0 && !loading) || !isCurrentChainIn(['ETH', 'TPLS'], chain)) {
     return null;
   }
 
   return (
     <div id="hex" className="w-full max-w-96 flex flex-col gap-y-24">
-      {(loading || hexEthTotal !== 0) && (
+      {(loading || hexEthTotal !== 0) && isCurrentChain('ETH', chain) && (
         <div className="flex flex-col gap-y-12">
           <TableHeader
             tableName="Hex.com"
@@ -74,10 +73,10 @@ const HexTableGroup = ({ page }: IHexTableGroupProps) => {
             tableSecondaryImgSrc="/img/chains/eth.svg"
             tableSecondaryImgAlt="Ethereum"
           />
-          <HexStakeTable chain="ETHEREUM" page={page} loading={loading} />
+          <HexStakeTable chain="ETH" page={page} loading={loading} />
         </div>
       )}
-      {(loading || hexTplsTotal !== 0) && (
+      {(loading || hexTplsTotal !== 0) && isCurrentChain('TPLS', chain) && (
         <div className="flex flex-col gap-y-12">
           <TableHeader
             tableName="Hex.com"

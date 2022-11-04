@@ -44,27 +44,27 @@ const initialState: BundlesState = {
   hasFetched: false,
   [ProtocolEnum.WALLET]: {
     total: {
-      [WalletDataComponentEnum.ETHEREUM]: 0,
+      [WalletDataComponentEnum.ETH]: 0,
       [WalletDataComponentEnum.TPLS]: 0,
       [WalletDataComponentEnum.BSC]: 0
     },
     loading: false,
     error: false,
     data: {
-      [WalletDataComponentEnum.ETHEREUM]: [],
+      [WalletDataComponentEnum.ETH]: [],
       [WalletDataComponentEnum.TPLS]: [],
       [WalletDataComponentEnum.BSC]: []
     }
   },
   [ProtocolEnum.HEX]: {
     total: {
-      [HexDataComponentEnum.ETHEREUM]: 0,
+      [HexDataComponentEnum.ETH]: 0,
       [HexDataComponentEnum.TPLS]: 0
     },
     loading: false,
     error: false,
     data: {
-      [HexDataComponentEnum.ETHEREUM]: [],
+      [HexDataComponentEnum.ETH]: [],
       [HexDataComponentEnum.TPLS]: []
     }
   },
@@ -481,11 +481,11 @@ export const bundlesSlice = createSlice({
     builder.addCase(fetchBundleWalletData.fulfilled, (state, action) => {
       const res = action.payload;
 
-      state.WALLET.data.ETHEREUM = res.data.ETHEREUM.data;
+      state.WALLET.data.ETH = res.data.ETH.data;
       state.WALLET.data.BSC = res.data.BSC.data;
       state.WALLET.data.TPLS = res.data.TPLS.data;
 
-      state.WALLET.total.ETHEREUM = res.data.ETHEREUM.totalValue;
+      state.WALLET.total.ETH = res.data.ETH.totalValue;
       state.WALLET.total.BSC = res.data.BSC.totalValue;
       state.WALLET.total.TPLS = res.data.TPLS.totalValue;
 
@@ -507,10 +507,10 @@ export const bundlesSlice = createSlice({
     builder.addCase(fetchBundleHexData.fulfilled, (state, action) => {
       const res = action.payload;
 
-      state.HEX.data.ETHEREUM = res.data.ETHEREUM.data;
+      state.HEX.data.ETH = res.data.ETHEREUM.data;
       state.HEX.data.TPLS = res.data.TPLS.data;
 
-      state.HEX.total.ETHEREUM = res.data.ETHEREUM.totalValue;
+      state.HEX.total.ETH = res.data.ETHEREUM.totalValue;
       state.HEX.total.TPLS = res.data.TPLS.totalValue;
 
       state.HEX.loading = false;

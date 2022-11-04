@@ -3,14 +3,17 @@ import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { selectBundleUniV3Loading, selectBundleUniV3Total } from '@app-src/store/bundles/selectors';
 import { selectUniV3Loading, selectUniV3Total } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
+import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
+import { isCurrentChain } from '../../utils/misc';
 import UniV3LiquidityPoolTable from './UniV3LiquidityPoolTable';
 
 type IUniV3TableGroup = {
   page: 'profile' | 'bundle';
+  chain: PortfolioChain;
 };
 
-const UniV3TableGroup = ({ page }: IUniV3TableGroup) => {
+const UniV3TableGroup = ({ page, chain }: IUniV3TableGroup) => {
   const uniV3Total = useAppSelector(
     useCallback(page === 'profile' ? selectUniV3Total : selectBundleUniV3Total, [page])
   );
@@ -20,7 +23,7 @@ const UniV3TableGroup = ({ page }: IUniV3TableGroup) => {
 
   const styledUniV3Total = useMemo(() => formatToMoney(uniV3Total), [uniV3Total]);
 
-  if (!loading && uniV3Total === 0) {
+  if ((!loading && uniV3Total === 0) || !isCurrentChain('ETH', chain)) {
     return null;
   }
 

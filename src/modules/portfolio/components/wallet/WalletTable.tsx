@@ -11,15 +11,20 @@ import { selectWalletData } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { PortfolioChain } from '../../types/portfolio';
 
 type IWalletTableProps = {
   page: 'profile' | 'bundle';
+  chain: PortfolioChain;
   loading: boolean;
 };
 
-const WalletTable = ({ page, loading }: IWalletTableProps) => {
+const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
   const walletData = useSelector(
-    useCallback(page === 'profile' ? selectWalletData : selectBundleWalletData, [page])
+    useCallback(page === 'profile' ? selectWalletData(chain) : selectBundleWalletData(chain), [
+      page,
+      chain
+    ])
   );
 
   const [sortedWalletData, sortKey, sortOrder, handleTableHeaderClick] = useSort<

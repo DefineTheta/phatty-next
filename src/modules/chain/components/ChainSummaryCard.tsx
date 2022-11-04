@@ -1,5 +1,7 @@
 import Card from '@app-src/common/components/layout/Card';
+import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import ChainSummaryItem from '@app-src/modules/chain/components/ChainSummaryItem';
+import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
 import {
   selectBundleBscTotal,
@@ -13,25 +15,28 @@ import {
   selectTotal,
   selectTplsTotal
 } from '@app-src/store/protocol/selectors';
+import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import ChainProtocolList from './ChainProtocolList';
 
 type IChainSummaryCardProps = {
   page: 'profile' | 'bundle';
+  chain: PortfolioChain;
 };
 
-const ChainSummaryCard = ({ page }: IChainSummaryCardProps) => {
-  const total = useSelector(
+const ChainSummaryCard = ({ page, chain: currentChain }: IChainSummaryCardProps) => {
+  const router = useRouter();
+
+  const total = useAppSelector(
     useCallback(page === 'profile' ? selectTotal : selectBundleTotal, [page])
   );
-  const ethereumTotal = useSelector(
+  const ethereumTotal = useAppSelector(
     useCallback(page === 'profile' ? selectEthereumTotal : selectBundleEthereumTotal, [page])
   );
-  const bscTotal = useSelector(
+  const bscTotal = useAppSelector(
     useCallback(page === 'profile' ? selectBscTotal : selectBundleBscTotal, [page])
   );
-  const tplsTotal = useSelector(
+  const tplsTotal = useAppSelector(
     useCallback(page === 'profile' ? selectTplsTotal : selectBundleTplsTotal, [page])
   );
 
@@ -40,6 +45,7 @@ const ChainSummaryCard = ({ page }: IChainSummaryCardProps) => {
       imgSrc: '/img/chains/eth.svg',
       imgAlt: 'Ethereum logo',
       displayName: 'Ethereum',
+      chainId: 'ETH',
       total: ethereumTotal,
       displayTotal: formatToMoney(ethereumTotal),
       percentage: styleNumber((ethereumTotal / total) * 100, 2) + '%'
@@ -48,6 +54,7 @@ const ChainSummaryCard = ({ page }: IChainSummaryCardProps) => {
       imgSrc: '/img/chains/bsc.svg',
       imgAlt: 'Binance logo',
       displayName: 'BSC',
+      chainId: 'BSC',
       total: bscTotal,
       displayTotal: formatToMoney(bscTotal),
       percentage: styleNumber((bscTotal / total) * 100, 2) + '%'
@@ -56,11 +63,25 @@ const ChainSummaryCard = ({ page }: IChainSummaryCardProps) => {
       imgSrc: '/img/chains/tpls.svg',
       imgAlt: 'Pulsechain logo',
       displayName: 'TPLS',
+      chainId: 'TPLS',
       total: tplsTotal,
       displayTotal: formatToMoney(tplsTotal),
       percentage: styleNumber((tplsTotal / total) * 100, 2) + '%'
     }
   ];
+
+  const handleChainClick = (chain: PortfolioChain) => {
+    router.push(
+      {
+        pathname: router.asPath.split('?')[0],
+        query: currentChain !== chain ? { chain } : undefined
+      },
+      undefined,
+      {
+        shallow: true
+      }
+    );
+  };
 
   return (
     <Card>
@@ -69,14 +90,19 @@ const ChainSummaryCard = ({ page }: IChainSummaryCardProps) => {
           {testData.map(
             (chain, index) =>
               chain.total > 0 && (
-                <ChainSummaryItem
+                <button
                   key={index}
-                  imgSrc={chain.imgSrc}
-                  imgAlt={chain.imgAlt}
-                  chainDisplayName={chain.displayName}
-                  chainTotal={chain.displayTotal}
-                  chainPercentage={chain.percentage}
-                />
+                  onClick={() => handleChainClick(chain.chainId as PortfolioChain)}
+                >
+                  <ChainSummaryItem
+                    imgSrc={chain.imgSrc}
+                    imgAlt={chain.imgAlt}
+                    chainDisplayName={chain.displayName}
+                    chainTotal={chain.displayTotal}
+                    chainPercentage={chain.percentage}
+                    selected={currentChain === '' || currentChain === chain.chainId}
+                  />
+                </button>
               )
           )}
         </div>

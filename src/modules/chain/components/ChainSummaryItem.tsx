@@ -6,6 +6,7 @@ export type IChainSummaryItem = {
   chainDisplayName: string;
   chainTotal: string;
   chainPercentage: string;
+  selected: boolean;
 };
 
 const ChainSummaryItem = ({
@@ -13,10 +14,15 @@ const ChainSummaryItem = ({
   imgAlt,
   chainDisplayName,
   chainTotal,
-  chainPercentage
+  chainPercentage,
+  selected
 }: IChainSummaryItem) => {
   return (
-    <div className="w-fit min-w-12 text-text-100 cursor-pointer transition-all ease-in-out duration-100 hover:opacity-60 hover:text-text-900">
+    <div
+      className={`w-fit min-w-12 text-text-100 cursor-pointer transition-all ease-in-out duration-100 hover:opacity-60 hover:text-text-900 ${
+        !selected && 'opacity-40'
+      }`}
+    >
       <div className="flex flex-row gap-x-10 items-center">
         <Image src={imgSrc} width="32px" height="32px" alt={imgAlt} />
         <div className="flex flex-col items-start">

@@ -47,13 +47,13 @@ export enum ProtocolEnum {
 }
 
 export enum WalletDataComponentEnum {
-  ETHEREUM = 'ETHEREUM',
+  ETH = 'ETH',
   TPLS = 'TPLS',
   BSC = 'BSC'
 }
 
 export enum HexDataComponentEnum {
-  ETHEREUM = 'ETHEREUM',
+  ETH = 'ETH',
   TPLS = 'TPLS'
 }
 

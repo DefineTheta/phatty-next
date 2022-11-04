@@ -17,7 +17,10 @@ const ProfileHeader = ({ address }: IProfileHeaderProps) => {
   const total = useSelector(useCallback(selectTotal, []));
   const styledTotal = useMemo(() => formatToMoney(total), [total]);
 
-  const currentTab = useMemo(() => router.asPath.toLowerCase().split('/').at(-1), [router.asPath]);
+  const currentTab = useMemo(
+    () => router.asPath.toLowerCase().split('/').at(-1)?.split('?')[0],
+    [router.asPath]
+  );
 
   const tabs = useMemo(
     () => [

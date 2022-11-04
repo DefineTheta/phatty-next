@@ -47,13 +47,13 @@ export enum ProtocolEnum {
 }
 
 export enum WalletDataComponentEnum {
-  ETHEREUM = 'ETHEREUM',
+  ETH = 'ETH',
   TPLS = 'TPLS',
   BSC = 'BSC'
 }
 
 export enum HexDataComponentEnum {
-  ETHEREUM = 'ETHEREUM',
+  ETH = 'ETH',
   TPLS = 'TPLS'
 }
 
@@ -122,7 +122,7 @@ interface WalletData extends ProtocolData {
 interface HexData extends ProtocolData {
   total: Record<HexDataComponentEnum, number>;
   totalTSharesPercentage: Record<HexDataComponentEnum, number>;
-  data: Record<keyof typeof HexDataComponentEnum, HexTokenItem[]>;
+  data: Record<HexDataComponentEnum, HexTokenItem[]>;
 }
 
 interface PhiatData extends ProtocolData {

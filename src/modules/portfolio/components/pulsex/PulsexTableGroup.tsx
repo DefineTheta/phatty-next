@@ -6,14 +6,17 @@ import {
 import { selectPulsexLoading, selectPulsexTotal } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
+import { isCurrentChain } from '../../utils/misc';
 import PulsexLiquidityPoolTable from './PulsexLiquidityPoolTable';
 
 type IPulsexTableGroupProps = {
   page: 'profile' | 'bundle';
+  chain: PortfolioChain;
 };
 
-const PulsexTableGroup = ({ page }: IPulsexTableGroupProps) => {
+const PulsexTableGroup = ({ page, chain }: IPulsexTableGroupProps) => {
   const pulsexTotal = useSelector(
     useCallback(page === 'profile' ? selectPulsexTotal : selectBundlePulsexTotal, [page])
   );
@@ -23,7 +26,7 @@ const PulsexTableGroup = ({ page }: IPulsexTableGroupProps) => {
 
   const styledPulsexTotal = useMemo(() => formatToMoney(pulsexTotal), [pulsexTotal]);
 
-  if (!loading && pulsexTotal === 0) {
+  if ((!loading && pulsexTotal === 0) || !isCurrentChain('TPLS', chain)) {
     return null;
   }
 

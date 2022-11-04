@@ -198,7 +198,7 @@ export const getWallet = async (addresses: string[]) => {
 
   const collatedRes = {
     data: {
-      ETHEREUM: {
+      ETH: {
         data: [],
         totalValue: 0
       },
@@ -214,13 +214,11 @@ export const getWallet = async (addresses: string[]) => {
   } as WalletResponse;
 
   walletData.forEach((wallet) => {
-    collatedRes.data.ETHEREUM.data = collatedRes.data.ETHEREUM.data.concat(
-      wallet.data.ETHEREUM.data
-    );
+    collatedRes.data.ETH.data = collatedRes.data.ETH.data.concat(wallet.data.ETH.data);
     collatedRes.data.BSC.data = collatedRes.data.BSC.data.concat(wallet.data.BSC.data);
     collatedRes.data.TPLS.data = collatedRes.data.TPLS.data.concat(wallet.data.TPLS.data);
 
-    collatedRes.data.ETHEREUM.totalValue += wallet.data.ETHEREUM.totalValue;
+    collatedRes.data.ETH.totalValue += wallet.data.ETH.totalValue;
     collatedRes.data.BSC.totalValue += wallet.data.BSC.totalValue;
     collatedRes.data.TPLS.totalValue += wallet.data.TPLS.totalValue;
   });

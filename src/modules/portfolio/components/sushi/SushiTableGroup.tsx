@@ -3,14 +3,17 @@ import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { selectBundleSushiLoading, selectBundleSushiTotal } from '@app-src/store/bundles/selectors';
 import { selectSushiLoading, selectSushiTotal } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
+import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
+import { isCurrentChain } from '../../utils/misc';
 import SushiLiquidityPoolTable from './SushiLiquidityPoolTable';
 
 type ISushiTableGroup = {
   page: 'profile' | 'bundle';
+  chain: PortfolioChain;
 };
 
-const SushiTableGroup = ({ page }: ISushiTableGroup) => {
+const SushiTableGroup = ({ page, chain }: ISushiTableGroup) => {
   const sushiTotal = useAppSelector(
     useCallback(page === 'profile' ? selectSushiTotal : selectBundleSushiTotal, [page])
   );
@@ -20,7 +23,7 @@ const SushiTableGroup = ({ page }: ISushiTableGroup) => {
 
   const styledSushiTotal = useMemo(() => formatToMoney(sushiTotal), [sushiTotal]);
 
-  if (!loading && sushiTotal === 0) {
+  if ((!loading && sushiTotal === 0) || !isCurrentChain('ETH', chain)) {
     return null;
   }
 

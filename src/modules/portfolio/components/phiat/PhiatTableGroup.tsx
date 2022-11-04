@@ -7,15 +7,18 @@ import {
   selectPhiatTotalTSharesPercentage
 } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
+import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
+import { isCurrentChain } from '../../utils/misc';
 import PhiatGenericTable from './PhiatGenericTable';
 import PhiatStakeTable from './PhiatStakeTable';
 
 type IPhiatTableGroupProps = {
   page: 'profile' | 'bundle';
+  chain: PortfolioChain;
 };
 
-const PhiatTableGroup = ({ page }: IPhiatTableGroupProps) => {
+const PhiatTableGroup = ({ page, chain }: IPhiatTableGroupProps) => {
   const phiatTotal = useAppSelector(
     useCallback(page === 'profile' ? selectPhiatTotal : selectBundlePhiatTotal, [page])
   );
@@ -32,7 +35,7 @@ const PhiatTableGroup = ({ page }: IPhiatTableGroupProps) => {
     [phiatTotal, phiatSeaCreature]
   );
 
-  if (!loading && phiatTotal === 0) {
+  if ((!loading && phiatTotal === 0) || !isCurrentChain('TPLS', chain)) {
     return null;
   }
 

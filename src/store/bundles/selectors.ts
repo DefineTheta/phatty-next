@@ -12,7 +12,7 @@ import {
   WalletTokenItem
 } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
-import { HexDataComponentEnum, PhiatDataComponentEnum } from './types';
+import { HexDataComponentEnum, PhiatDataComponentEnum, WalletDataComponentEnum } from './types';
 
 export const selectBundleHasFetched = memoize((state: RootState) => {
   console.log('SELCT_BUNDLE_HAS_FETCHED');
@@ -32,18 +32,21 @@ export const selectBundleAddresses = memoize((state: RootState) => {
   return state.bundles.addresses;
 });
 
-export const selectBundleWalletData = memoize((state: RootState): WalletTokenItem[] => {
-  console.log('SELECT_WALLET_DATA');
+export const selectBundleWalletData = (chain: '' | keyof typeof WalletDataComponentEnum) =>
+  memoize((state: RootState): WalletTokenItem[] => {
+    console.log('SELECT_WALLET_DATA');
 
-  return Array.prototype.concat.apply(
-    [],
-    [
-      state.bundles.WALLET.data.ETHEREUM,
-      state.bundles.WALLET.data.TPLS,
-      state.bundles.WALLET.data.BSC
-    ]
-  );
-});
+    if (!chain)
+      return Array.prototype.concat.apply(
+        [],
+        [
+          state.bundles.WALLET.data.ETH,
+          state.bundles.WALLET.data.TPLS,
+          state.bundles.WALLET.data.BSC
+        ]
+      );
+    else return state.bundles.WALLET.data[chain];
+  });
 
 export const selectBundleHexStakeData = (chain: keyof typeof HexDataComponentEnum) =>
   memoize((state: RootState): HexTokenItem[] => {
@@ -111,8 +114,8 @@ export const selectBundleEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
 
   return (
-    getPositiveOrZero(state.bundles.WALLET.total.ETHEREUM) +
-    getPositiveOrZero(state.bundles.HEX.total.ETHEREUM) +
+    getPositiveOrZero(state.bundles.WALLET.total.ETH) +
+    getPositiveOrZero(state.bundles.HEX.total.ETH) +
     getPositiveOrZero(state.bundles.SUSHI.total.LIQUIDITY_POOL) +
     getPositiveOrZero(state.bundles.UNISWAPV2.total.LIQUIDITY_POOL) +
     getPositiveOrZero(state.bundles.UNISWAPV3.total.LIQUIDITY_POOL)
@@ -143,7 +146,7 @@ export const selectBundleWalletTotal = memoize((state: RootState): number => {
   console.log('SELECT_WALLET_TOTAL');
 
   return (
-    state.bundles.WALLET.total.ETHEREUM +
+    state.bundles.WALLET.total.ETH +
     state.bundles.WALLET.total.BSC +
     state.bundles.WALLET.total.TPLS
   );
@@ -159,9 +162,7 @@ export const selectBundleHexComponentTotal = (chain: keyof typeof HexDataCompone
 export const selectBundleHextotal = memoize((state: RootState): number => {
   console.log('SELECT_HEX_TOTAL');
 
-  return (
-    selectBundleHexComponentTotal('ETHEREUM')(state) + selectBundleHexComponentTotal('TPLS')(state)
-  );
+  return selectBundleHexComponentTotal('ETH')(state) + selectBundleHexComponentTotal('TPLS')(state);
 });
 
 export const selectBundlePhiatTotal = memoize((state: RootState): number => {
