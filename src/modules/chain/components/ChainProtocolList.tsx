@@ -4,6 +4,9 @@ import {
   selectBundlePancakeTotal,
   selectBundlePhiatTotal,
   selectBundlePulsexTotal,
+  selectBundleSushiTotal,
+  selectBundleUniV2Total,
+  selectBundleUniV3Total,
   selectBundleWalletTotal
 } from '@app-src/store/bundles/selectors';
 import {
@@ -11,6 +14,9 @@ import {
   selectPancakeTotal,
   selectPhiatTotal,
   selectPulsexTotal,
+  selectSushiTotal,
+  selectUniV2Total,
+  selectUniV3Total,
   selectWalletTotal
 } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
@@ -37,6 +43,15 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
   );
   const pancakeTotal = useSelector(
     useCallback(page === 'profile' ? selectPancakeTotal : selectBundlePancakeTotal, [page])
+  );
+  const sushiTotal = useSelector(
+    useCallback(page === 'profile' ? selectSushiTotal : selectBundleSushiTotal, [page])
+  );
+  const uniV2Total = useSelector(
+    useCallback(page === 'profile' ? selectUniV2Total : selectBundleUniV2Total, [page])
+  );
+  const uniV3Total = useSelector(
+    useCallback(page === 'profile' ? selectUniV3Total : selectBundleUniV3Total, [page])
   );
 
   const protocolData = useMemo(
@@ -80,9 +95,42 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
         imgSrc: '/img/icon/pancake.svg',
         imgAlt: 'Pancake',
         linkHref: '#pancake'
+      },
+      {
+        protocolName: 'Sushi',
+        totalAmount: sushiTotal,
+        displayTotalAmount: formatToMoney(sushiTotal),
+        imgSrc: '/img/icon/sushi.svg',
+        imgAlt: 'Sushi',
+        linkHref: '#sushi'
+      },
+      {
+        protocolName: 'Uniswap V2',
+        totalAmount: uniV2Total,
+        displayTotalAmount: formatToMoney(uniV2Total),
+        imgSrc: '/img/icon/univ2.svg',
+        imgAlt: 'Uniswap version 2',
+        linkHref: '#univ2'
+      },
+      {
+        protocolName: 'Uniswap V3',
+        totalAmount: uniV3Total,
+        displayTotalAmount: formatToMoney(uniV3Total),
+        imgSrc: '/img/icon/univ2.svg',
+        imgAlt: 'Uniswap version 3',
+        linkHref: '#univ3'
       }
     ],
-    [walletTotal, hexTotal, phiatTotal, pulsexTotal, pancakeTotal]
+    [
+      walletTotal,
+      hexTotal,
+      phiatTotal,
+      pulsexTotal,
+      pancakeTotal,
+      sushiTotal,
+      uniV2Total,
+      uniV3Total
+    ]
   );
 
   return (

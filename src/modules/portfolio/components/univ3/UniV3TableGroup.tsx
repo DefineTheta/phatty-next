@@ -28,7 +28,7 @@ const UniV3TableGroup = ({ page, chain }: IUniV3TableGroup) => {
   }
 
   return (
-    <div id="uniV3" className="w-full max-w-96 flex flex-col gap-y-12">
+    <div id="univ3" className="w-full max-w-96 flex flex-col gap-y-12">
       <TableHeader
         tableName="Uniswap V3"
         totalValue={styledUniV3Total}
