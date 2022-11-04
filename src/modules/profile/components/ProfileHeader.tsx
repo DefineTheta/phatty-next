@@ -1,5 +1,7 @@
+import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { truncateAddress } from '@app-src/common/utils/format';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
+import { fetchPortfolioData } from '@app-src/store/protocol/protocolSlice';
 import { selectTotal } from '@app-src/store/protocol/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -13,6 +15,7 @@ type IProfileHeaderProps = {
 
 const ProfileHeader = ({ address }: IProfileHeaderProps) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const total = useSelector(useCallback(selectTotal, []));
   const styledTotal = useMemo(() => formatToMoney(total), [total]);
@@ -43,6 +46,10 @@ const ProfileHeader = ({ address }: IProfileHeaderProps) => {
     [address]
   );
 
+  const handleRefreshDataClick = useCallback(() => {
+    fetchPortfolioData(dispatch, address, true);
+  }, [dispatch, address]);
+
   return (
     <div className="pt-36 flex flex-row justify-center bg-background-200">
       <div className="w-full max-w-96 flex flex-col gap-y-30">
@@ -62,7 +69,10 @@ const ProfileHeader = ({ address }: IProfileHeaderProps) => {
                   <TrophyIcon className="w-14 h-14 text-white" />
                   <span className="text-sm text-white">Early Supporter</span>
                 </button>
-                <button className="py-6 px-12 flex flex-row items-center gap-x-6 bg-bluegray-button rounded-full cursor-pointer drop-shadow-md">
+                <button
+                  className="py-6 px-12 flex flex-row items-center gap-x-6 bg-bluegray-button rounded-full cursor-pointer drop-shadow-md"
+                  onClick={handleRefreshDataClick}
+                >
                   <CalendarIcon className="w-14 h-14 text-white" />
                   <span className="text-sm text-white">Refresh Data</span>
                 </button>

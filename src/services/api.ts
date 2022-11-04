@@ -84,14 +84,14 @@ export const getWithAuthentication = async <T>(
   }
 };
 
-const getPaginatedData = async <T extends ApiBaseResponse>(URL: string) => {
+const getPaginatedData = async <T extends ApiBaseResponse>(URL: string, options?: RequestInit) => {
   const responses: T[] = [];
 
   let keepFetching = true;
   let page = 1;
 
   while (keepFetching) {
-    const res = await fetch(`${URL}&page=${page}`);
+    const res = await fetch(`${URL}&page=${page}`, options);
     const data: T = await res.json();
 
     responses.push(data);
@@ -103,12 +103,16 @@ const getPaginatedData = async <T extends ApiBaseResponse>(URL: string) => {
   return responses;
 };
 
-const getMultipleAddressData = async <T>(addresses: string[], apiEndpoint: string) => {
+const getMultipleAddressData = async <T>(
+  addresses: string[],
+  apiEndpoint: string,
+  options?: RequestInit
+) => {
   const fetchPromises: Promise<Response>[] = [];
   const serializePromises: Promise<T>[] = [];
 
   addresses.forEach((address) => {
-    fetchPromises.push(fetch(`${apiEndpoint}?address=${address}`));
+    fetchPromises.push(fetch(`${apiEndpoint}?address=${address}`, options));
   });
 
   const responses = await Promise.all(fetchPromises);
@@ -178,12 +182,14 @@ export const getSeaCreature = (p: number) => {
   }
 };
 
-export const getWallet = async (addresses: string[]) => {
+export const getWallet = async (addresses: string[], refresh: boolean) => {
   const fetchPromises: Promise<Response>[] = [];
   const serializePromises: Promise<WalletResponse>[] = [];
 
   addresses.forEach((address) => {
-    fetchPromises.push(fetch(`/api/wallet?address=${address}&gt=0`));
+    fetchPromises.push(
+      fetch(`/api/wallet?address=${address}&gt=0`, { cache: refresh ? 'reload' : 'default' })
+    );
   });
 
   const responses = await Promise.all(fetchPromises);
@@ -226,11 +232,13 @@ export const getWallet = async (addresses: string[]) => {
   return collatedRes;
 };
 
-export const getHex = async (addresses: string[]) => {
+export const getHex = async (addresses: string[], refresh: boolean) => {
   const fetchPromises: Promise<HexResponse[]>[] = [];
 
   addresses.forEach((address) => {
-    fetchPromises.push(getPaginatedData(`/api/hex?address=${address}`));
+    fetchPromises.push(
+      getPaginatedData(`/api/hex?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+    );
   });
 
   const hexDataArr = await Promise.all(fetchPromises);
@@ -270,11 +278,13 @@ export const getHex = async (addresses: string[]) => {
   return collatedRes;
 };
 
-export const getPhiat = async (addresses: string[]) => {
+export const getPhiat = async (addresses: string[], refresh: boolean) => {
   const fetchPromises: Promise<PhiatResponse[]>[] = [];
 
   addresses.forEach((address) => {
-    fetchPromises.push(getPaginatedData(`/api/phiat?address=${address}`));
+    fetchPromises.push(
+      getPaginatedData(`/api/phiat?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+    );
   });
 
   const phiatDataArr = await Promise.all(fetchPromises);
@@ -335,12 +345,14 @@ export const getPhiat = async (addresses: string[]) => {
   return collatedRes;
 };
 
-export const getPulsex = async (addresses: string[]) => {
+export const getPulsex = async (addresses: string[], refresh: boolean) => {
   const fetchPromises: Promise<Response>[] = [];
   const serializePromises: Promise<PulsexResponse>[] = [];
 
   addresses.forEach((address) => {
-    fetchPromises.push(fetch(`/api/pulsex?address=${address}`));
+    fetchPromises.push(
+      fetch(`/api/pulsex?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+    );
   });
 
   const responses = await Promise.all(fetchPromises);
@@ -372,12 +384,14 @@ export const getPulsex = async (addresses: string[]) => {
   return collatedRes;
 };
 
-export const getPancake = async (addresses: string[]) => {
+export const getPancake = async (addresses: string[], refresh: boolean) => {
   const fetchPromises: Promise<Response>[] = [];
   const serializePromises: Promise<PancakeResponse>[] = [];
 
   addresses.forEach((address) => {
-    fetchPromises.push(fetch(`/api/pancake?address=${address}`));
+    fetchPromises.push(
+      fetch(`/api/pancake?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+    );
   });
 
   const responses = await Promise.all(fetchPromises);
@@ -416,8 +430,10 @@ export const getPancake = async (addresses: string[]) => {
   return collatedRes;
 };
 
-export const getSushi = async (addresses: string[]) => {
-  const sushiData = await getMultipleAddressData<SushiResponse>(addresses, '/api/sushi');
+export const getSushi = async (addresses: string[], refresh: boolean) => {
+  const sushiData = await getMultipleAddressData<SushiResponse>(addresses, '/api/sushi', {
+    cache: refresh ? 'reload' : 'default'
+  });
 
   if (sushiData.length === 1) return sushiData[0];
 
@@ -441,8 +457,10 @@ export const getSushi = async (addresses: string[]) => {
   return collatedRes;
 };
 
-export const getUniV2 = async (addresses: string[]) => {
-  const uniV2Data = await getMultipleAddressData<UniV2Response>(addresses, '/api/univ2');
+export const getUniV2 = async (addresses: string[], refresh: boolean) => {
+  const uniV2Data = await getMultipleAddressData<UniV2Response>(addresses, '/api/univ2', {
+    cache: refresh ? 'reload' : 'default'
+  });
 
   if (uniV2Data.length === 1) return uniV2Data[0];
 
@@ -466,11 +484,13 @@ export const getUniV2 = async (addresses: string[]) => {
   return collatedRes;
 };
 
-export const getUniV3 = async (addresses: string[]) => {
+export const getUniV3 = async (addresses: string[], refresh: boolean) => {
   const fetchPromises: Promise<UniV3Response[]>[] = [];
 
   addresses.forEach((address) => {
-    fetchPromises.push(getPaginatedData(`/api/univ3?address=${address}`));
+    fetchPromises.push(
+      getPaginatedData(`/api/univ3?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+    );
   });
 
   const uniV3DataArr = await Promise.all(fetchPromises);

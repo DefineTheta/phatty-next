@@ -11,7 +11,7 @@ import {
   getWallet,
   getWithAuthentication
 } from '@app-src/services/api';
-import { RootState } from '@app-src/store/store';
+import { AppDispatch, RootState } from '@app-src/store/store';
 import {
   AuthResponse,
   BundleResponse,
@@ -260,126 +260,146 @@ const deleteBundleSession = createAsyncThunk<AuthResponse, void, { state: RootSt
   }
 );
 
-const fetchBundleWalletData = createAsyncThunk<WalletResponse, string[], { state: RootState }>(
-  'bundles/fetchBundleWalletData',
-  async (addresses, thunkAPI) => {
-    const controller = new AbortController();
-
-    thunkAPI.signal.onabort = () => {
-      controller.abort();
-    };
-
-    const data = await getWallet(addresses);
-
-    return data;
-  }
-);
-
-const fetchBundleHexData = createAsyncThunk<
-  HexResponse,
-  string[],
-  { state: RootState; signal: AbortSignal }
->('bundles/fetchBundleHexData', async (addresses, thunkAPI) => {
+const fetchBundleWalletData = createAsyncThunk<
+  WalletResponse,
+  { addresses: string[]; refresh: boolean },
+  { state: RootState }
+>('bundles/fetchBundleWalletData', async (input, thunkAPI) => {
   const controller = new AbortController();
 
   thunkAPI.signal.onabort = () => {
     controller.abort();
   };
 
-  const data = await getHex(addresses);
+  const data = await getWallet(input.addresses, input.refresh);
 
   return data;
 });
 
-const fetchBundlePhiatData = createAsyncThunk<PhiatResponse, string[], { state: RootState }>(
-  'bundles/fetchBundlePhiatData',
-  async (addresses, thunkAPI) => {
-    const controller = new AbortController();
+const fetchBundleHexData = createAsyncThunk<
+  HexResponse,
+  { addresses: string[]; refresh: boolean },
+  { state: RootState; signal: AbortSignal }
+>('bundles/fetchBundleHexData', async (input, thunkAPI) => {
+  const controller = new AbortController();
 
-    thunkAPI.signal.onabort = () => {
-      controller.abort();
-    };
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
 
-    const data = await getPhiat(addresses);
+  const data = await getHex(input.addresses, input.refresh);
 
-    return data;
-  }
-);
+  return data;
+});
 
-const fetchBundlePulsexData = createAsyncThunk<PulsexResponse, string[], { state: RootState }>(
-  'bundles/fetchBundlePulsexData',
-  async (addresses, thunkAPI) => {
-    const controller = new AbortController();
+const fetchBundlePhiatData = createAsyncThunk<
+  PhiatResponse,
+  { addresses: string[]; refresh: boolean },
+  { state: RootState }
+>('bundles/fetchBundlePhiatData', async (input, thunkAPI) => {
+  const controller = new AbortController();
 
-    thunkAPI.signal.onabort = () => {
-      controller.abort();
-    };
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
 
-    const data = await getPulsex(addresses);
+  const data = await getPhiat(input.addresses, input.refresh);
 
-    return data;
-  }
-);
+  return data;
+});
 
-const fetchBundlePancakeData = createAsyncThunk<PancakeResponse, string[], { state: RootState }>(
-  'bundles/fetchPancakeData',
-  async (addresses, thunkAPI) => {
-    const controller = new AbortController();
+const fetchBundlePulsexData = createAsyncThunk<
+  PulsexResponse,
+  { addresses: string[]; refresh: boolean },
+  { state: RootState }
+>('bundles/fetchBundlePulsexData', async (input, thunkAPI) => {
+  const controller = new AbortController();
 
-    thunkAPI.signal.onabort = () => {
-      controller.abort();
-    };
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
 
-    const data = await getPancake(addresses);
+  const data = await getPulsex(input.addresses, input.refresh);
 
-    return data;
-  }
-);
+  return data;
+});
 
-const fetchBundleSushiData = createAsyncThunk<SushiResponse, string[], { state: RootState }>(
-  'bundles/fetchSushiData',
-  async (addresses, thunkAPI) => {
-    const controller = new AbortController();
+const fetchBundlePancakeData = createAsyncThunk<
+  PancakeResponse,
+  { addresses: string[]; refresh: boolean },
+  { state: RootState }
+>('bundles/fetchPancakeData', async (input, thunkAPI) => {
+  const controller = new AbortController();
 
-    thunkAPI.signal.onabort = () => {
-      controller.abort();
-    };
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
 
-    const data = await getSushi(addresses);
+  const data = await getPancake(input.addresses, input.refresh);
 
-    return data;
-  }
-);
+  return data;
+});
 
-const fetchBundleUniV2Data = createAsyncThunk<UniV2Response, string[], { state: RootState }>(
-  'bundles/fetchUniV2Data',
-  async (addresses, thunkAPI) => {
-    const controller = new AbortController();
+const fetchBundleSushiData = createAsyncThunk<
+  SushiResponse,
+  { addresses: string[]; refresh: boolean },
+  { state: RootState }
+>('bundles/fetchSushiData', async (input, thunkAPI) => {
+  const controller = new AbortController();
 
-    thunkAPI.signal.onabort = () => {
-      controller.abort();
-    };
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
 
-    const data = await getUniV2(addresses);
+  const data = await getSushi(input.addresses, input.refresh);
 
-    return data;
-  }
-);
+  return data;
+});
 
-const fetchBundleUniV3Data = createAsyncThunk<UniV3Response, string[], { state: RootState }>(
-  'bundles/fetchUniV3Data',
-  async (addresses, thunkAPI) => {
-    const controller = new AbortController();
+const fetchBundleUniV2Data = createAsyncThunk<
+  UniV2Response,
+  { addresses: string[]; refresh: boolean },
+  { state: RootState }
+>('bundles/fetchUniV2Data', async (input, thunkAPI) => {
+  const controller = new AbortController();
 
-    thunkAPI.signal.onabort = () => {
-      controller.abort();
-    };
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
 
-    const data = await getUniV3(addresses);
+  const data = await getUniV2(input.addresses, input.refresh);
 
-    return data;
-  }
-);
+  return data;
+});
+
+const fetchBundleUniV3Data = createAsyncThunk<
+  UniV3Response,
+  { addresses: string[]; refresh: boolean },
+  { state: RootState }
+>('bundles/fetchUniV3Data', async (input, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  const data = await getUniV3(input.addresses, input.refresh);
+
+  return data;
+});
+
+const fetchBundlePortfolioData = (dispatch: AppDispatch, addresses: string[], refresh = false) => {
+  return Promise.all([
+    dispatch(fetchBundleWalletData({ addresses, refresh })),
+    dispatch(fetchBundleHexData({ addresses, refresh })),
+    dispatch(fetchBundlePhiatData({ addresses, refresh })),
+    dispatch(fetchBundlePulsexData({ addresses, refresh })),
+    dispatch(fetchBundlePancakeData({ addresses, refresh })),
+    dispatch(fetchBundleSushiData({ addresses, refresh })),
+    dispatch(fetchBundleUniV2Data({ addresses, refresh })),
+    dispatch(fetchBundleUniV3Data({ addresses, refresh }))
+  ]);
+};
 
 export const bundlesSlice = createSlice({
   name: 'bundles',
@@ -710,7 +730,8 @@ export {
   fetchBundlePulsexData,
   fetchBundleSushiData,
   fetchBundleUniV2Data,
-  fetchBundleUniV3Data
+  fetchBundleUniV3Data,
+  fetchBundlePortfolioData
 };
 
 export default bundlesSlice.reducer;

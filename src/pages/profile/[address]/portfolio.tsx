@@ -11,17 +11,7 @@ import UniV3TableGroup from '@app-src/modules/portfolio/components/univ3/UniV3Ta
 import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/WalletTableGroup';
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import ProfileHeader from '@app-src/modules/profile/components/ProfileHeader';
-import {
-  fetchHexData,
-  fetchPancakeData,
-  fetchPhiatData,
-  fetchPulsexData,
-  fetchSushiData,
-  fetchUniV2Data,
-  fetchUniV3Data,
-  fetchWalletData,
-  setProfileHasFetched
-} from '@app-src/store/protocol/protocolSlice';
+import { fetchPortfolioData, setProfileHasFetched } from '@app-src/store/protocol/protocolSlice';
 import { selectProfileHasFetched } from '@app-src/store/protocol/selectors';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
@@ -39,16 +29,7 @@ const ProfilePortfolioPage = () => {
     if (hasFetched || !address) return;
     console.log('Address', address);
 
-    Promise.all([
-      dispatch(fetchWalletData(address)),
-      dispatch(fetchHexData(address)),
-      dispatch(fetchPhiatData(address)),
-      dispatch(fetchPulsexData(address)),
-      dispatch(fetchPancakeData(address)),
-      dispatch(fetchSushiData(address)),
-      dispatch(fetchUniV2Data(address)),
-      dispatch(fetchUniV3Data(address))
-    ]).then(() => dispatch(setProfileHasFetched(true)));
+    fetchPortfolioData(dispatch, address).then(() => dispatch(setProfileHasFetched(true)));
   }, [hasFetched, address]);
 
   useEffect(() => {

@@ -1,10 +1,13 @@
+import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
+import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { truncateAddress } from '@app-src/common/utils/format';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
-import { selectBundleTotal } from '@app-src/store/bundles/selectors';
+import { fetchBundlePortfolioData } from '@app-src/store/bundles/bundleSlice';
+import { selectBundleAddresses, selectBundleTotal } from '@app-src/store/bundles/selectors';
+import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 type IBundleHeaderProps = {
   address: string;
@@ -12,8 +15,11 @@ type IBundleHeaderProps = {
 
 const BundleHeader = ({ address }: IBundleHeaderProps) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
-  const total = useSelector(useCallback(selectBundleTotal, []));
+  const total = useAppSelector(useCallback(selectBundleTotal, []));
+  const bundleAddresses = useAppSelector(useCallback(selectBundleAddresses, []));
+
   const styledTotal = useMemo(() => formatToMoney(total), [total]);
 
   const currentTab = useMemo(
@@ -47,12 +53,39 @@ const BundleHeader = ({ address }: IBundleHeaderProps) => {
     [address]
   );
 
+  const handleRefreshDataClick = useCallback(() => {
+    fetchBundlePortfolioData(dispatch, bundleAddresses, true);
+  }, [dispatch, bundleAddresses]);
+
   return (
     <div className="pt-36 flex flex-row justify-center bg-background-200">
       <div className="w-full max-w-96 flex flex-col gap-y-30">
         <div className="flex flex-col gap-y-30">
           <div className="flex flex-row justify-between">
-            <span className="text-lg font-semibold text-text-200">{truncateAddress(address)}</span>
+            <div className="flex flex-col gap-y-12 items-start">
+              <div className="flex flex-row items-center gap-x-6">
+                <span className="text-lg font-semibold text-text-200 tracking-wide">
+                  {truncateAddress(address)}
+                </span>
+                <button className="w-20 h-20 flex justify-center items-center cursor-pointer bg-gray-100 rounded-full">
+                  <DocumentDuplicateIcon className="w-12 h-12" />
+                </button>
+              </div>
+              <div className="flex flex-row gap-x-18 items-center">
+                <button className="py-6 px-12 flex flex-row items-center gap-x-6 bg-purple-button rounded-full cursor-pointer drop-shadow-md">
+                  <TrophyIcon className="w-14 h-14 text-white" />
+                  <span className="text-sm text-white">Early Supporter</span>
+                </button>
+                <button
+                  className="py-6 px-12 flex flex-row items-center gap-x-6 bg-bluegray-button rounded-full cursor-pointer drop-shadow-md"
+                  onClick={handleRefreshDataClick}
+                >
+                  <CalendarIcon className="w-14 h-14 text-white" />
+                  <span className="text-sm text-white">Refresh Data</span>
+                </button>
+              </div>
+            </div>
+            {/* <span className="text-lg font-semibold text-text-200">{truncateAddress(address)}</span> */}
             <span className="text-2xl font-black text-text-100">{styledTotal}</span>
           </div>
         </div>

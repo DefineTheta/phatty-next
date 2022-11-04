@@ -13,14 +13,7 @@ import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/Walle
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import {
   fetchBundleAddresses,
-  fetchBundleHexData,
-  fetchBundlePancakeData,
-  fetchBundlePhiatData,
-  fetchBundlePulsexData,
-  fetchBundleSushiData,
-  fetchBundleUniV2Data,
-  fetchBundleUniV3Data,
-  fetchBundleWalletData,
+  fetchBundlePortfolioData,
   setBundleFetched
 } from '@app-src/store/bundles/bundleSlice';
 import {
@@ -54,16 +47,9 @@ const BundlePortfolioPage = () => {
   useEffect(() => {
     if (hasFetched || !bundleAddresses || bundleAddresses.length === 0) return;
 
-    Promise.all([
-      dispatch(fetchBundleWalletData(bundleAddresses)),
-      dispatch(fetchBundleHexData(bundleAddresses)),
-      dispatch(fetchBundlePhiatData(bundleAddresses)),
-      dispatch(fetchBundlePulsexData(bundleAddresses)),
-      dispatch(fetchBundlePancakeData(bundleAddresses)),
-      dispatch(fetchBundleSushiData(bundleAddresses)),
-      dispatch(fetchBundleUniV2Data(bundleAddresses)),
-      dispatch(fetchBundleUniV3Data(bundleAddresses))
-    ]).then(() => dispatch(setBundleFetched(true)));
+    fetchBundlePortfolioData(dispatch, bundleAddresses).then(() =>
+      dispatch(setBundleFetched(true))
+    );
   }, [bundleAddresses, hasFetched]);
 
   useEffect(() => {
