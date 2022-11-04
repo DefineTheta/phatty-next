@@ -1,3 +1,4 @@
+import { roundToPrecision } from '@app-src/common/utils/format';
 import {
   ApiBaseResponse,
   AuthResponse,
@@ -119,6 +120,64 @@ const getMultipleAddressData = async <T>(addresses: string[], apiEndpoint: strin
   return Promise.all(serializePromises);
 };
 
+export const getSeaCreature = (p: number) => {
+  if (p <= 0.000001) {
+    return {
+      icon: '🐚',
+      name: 'Shell',
+      sum: `${roundToPrecision(p, 7)}%`
+    };
+  } else if (p <= 0.00001) {
+    return {
+      icon: '🦐',
+      name: 'Shrimp',
+      sum: `${roundToPrecision(p, 6)}%`
+    };
+  } else if (p <= 0.0001) {
+    return {
+      icon: '🦀',
+      name: 'Crab',
+      sum: `${roundToPrecision(p, 5)}%`
+    };
+  } else if (p <= 0.001) {
+    return {
+      icon: '🐢',
+      name: 'Turtle',
+      sum: `${roundToPrecision(p, 4)}%`
+    };
+  } else if (p <= 0.01) {
+    return {
+      icon: '🦑',
+      name: 'Squid',
+      sum: `${roundToPrecision(p, 3)}%`
+    };
+  } else if (p <= 0.1) {
+    return {
+      icon: '🐬',
+      name: 'Dolphin',
+      sum: `${roundToPrecision(p, 2)}%`
+    };
+  } else if (p <= 1) {
+    return {
+      icon: '🦈',
+      name: 'Shark',
+      sum: `${roundToPrecision(p, 2)}%`
+    };
+  } else if (p <= 10) {
+    return {
+      icon: '🐋',
+      name: 'Whale',
+      sum: `${roundToPrecision(p, 2)}%`
+    };
+  } else {
+    return {
+      icon: '🔱',
+      name: 'Poseidon',
+      sum: `${roundToPrecision(p, 2)}%`
+    };
+  }
+};
+
 export const getWallet = async (addresses: string[]) => {
   const fetchPromises: Promise<Response>[] = [];
   const serializePromises: Promise<WalletResponse>[] = [];
@@ -184,11 +243,13 @@ export const getHex = async (addresses: string[]) => {
     data: {
       ETHEREUM: {
         data: [],
-        totalValue: 0
+        totalValue: 0,
+        totalTSharesPercentage: 0
       },
       TPLS: {
         data: [],
-        totalValue: 0
+        totalValue: 0,
+        totalTSharesPercentage: 0
       }
     },
     next: null
@@ -200,9 +261,11 @@ export const getHex = async (addresses: string[]) => {
         hex.data.ETHEREUM.data
       );
       collatedRes.data.ETHEREUM.totalValue += hex.data.ETHEREUM.totalValue;
+      collatedRes.data.ETHEREUM.totalTSharesPercentage += hex.data.ETHEREUM.totalTSharesPercentage;
 
       collatedRes.data.TPLS.data = collatedRes.data.TPLS.data.concat(hex.data.TPLS.data);
       collatedRes.data.TPLS.totalValue += hex.data.TPLS.totalValue;
+      collatedRes.data.TPLS.totalTSharesPercentage += hex.data.TPLS.totalTSharesPercentage;
     });
   });
 

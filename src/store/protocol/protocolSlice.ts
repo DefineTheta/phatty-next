@@ -55,6 +55,10 @@ const initialState: ProtocolsState = {
       [HexDataComponentEnum.ETHEREUM]: 0,
       [HexDataComponentEnum.TPLS]: 0
     },
+    totalTSharesPercentage: {
+      [HexDataComponentEnum.ETHEREUM]: 0,
+      [HexDataComponentEnum.TPLS]: 0
+    },
     loading: false,
     error: false,
     data: {
@@ -65,6 +69,9 @@ const initialState: ProtocolsState = {
   [ProtocolEnum.PHIAT]: {
     total: {
       TPLS: 0
+    },
+    balance: {
+      STAKING: 0
     },
     loading: false,
     error: false,
@@ -310,6 +317,9 @@ export const protocolsSlice = createSlice({
       state.HEX.total.ETHEREUM = res.data.ETHEREUM.totalValue;
       state.HEX.total.TPLS = res.data.TPLS.totalValue;
 
+      state.HEX.totalTSharesPercentage.ETHEREUM = res.data.ETHEREUM.totalTSharesPercentage;
+      state.HEX.totalTSharesPercentage.TPLS = res.data.TPLS.totalTSharesPercentage;
+
       state.HEX.loading = false;
       state.HEX.error = false;
     });
@@ -336,6 +346,11 @@ export const protocolsSlice = createSlice({
       state.PHIAT.data.PH_TOKENS = res.data.PH_TOKENS.data;
 
       state.PHIAT.data.STAKING_APY = res.data.STAKING_APY;
+
+      state.PHIAT.balance.STAKING = res.data.STAKING.data.reduce(
+        (prev, cur) => prev + cur.balance,
+        0
+      );
 
       state.PHIAT.total.TPLS =
         res.data.LENDING.totalValue +

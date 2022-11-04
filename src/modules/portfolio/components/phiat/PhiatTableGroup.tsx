@@ -1,8 +1,12 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { selectBundlePhiatLoading, selectBundlePhiatTotal } from '@app-src/store/bundles/selectors';
-import { selectPhiatLoading, selectPhiatTotal } from '@app-src/store/protocol/selectors';
+import {
+  selectPhiatLoading,
+  selectPhiatTotal,
+  selectPhiatTotalTSharesPercentage
+} from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { formatToMoney } from '../../utils/format';
 import PhiatGenericTable from './PhiatGenericTable';
 import PhiatStakeTable from './PhiatStakeTable';
@@ -12,14 +16,21 @@ type IPhiatTableGroupProps = {
 };
 
 const PhiatTableGroup = ({ page }: IPhiatTableGroupProps) => {
-  const phiatTotal = useSelector(
+  const phiatTotal = useAppSelector(
     useCallback(page === 'profile' ? selectPhiatTotal : selectBundlePhiatTotal, [page])
   );
-  const loading = useSelector(
+  const loading = useAppSelector(
     useCallback(page === 'profile' ? selectPhiatLoading : selectBundlePhiatLoading, [page])
   );
+  const phiatSeaCreature = useAppSelector(useCallback(selectPhiatTotalTSharesPercentage, []));
 
-  const styledPhiatTotal = useMemo(() => formatToMoney(phiatTotal), [phiatTotal]);
+  const styledPhiatTotal = useMemo(
+    () =>
+      `${phiatSeaCreature.sum} ${phiatSeaCreature.name} ${phiatSeaCreature.icon} ${formatToMoney(
+        phiatTotal
+      )}`,
+    [phiatTotal, phiatSeaCreature]
+  );
 
   if (!loading && phiatTotal === 0) {
     return null;

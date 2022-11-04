@@ -1,3 +1,4 @@
+import { getSeaCreature } from '@app-src/services/api';
 import { RootState } from '@app-src/store/store';
 import {
   HexTokenItem,
@@ -186,6 +187,21 @@ export const selectTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
   return selectEthereumTotal(state) + selectBscTotal(state) + selectTplsTotal(state);
+});
+
+export const selectHexToatlTSharesPercentage = (chain: keyof typeof HexDataComponentEnum) =>
+  memoize((state: RootState) => {
+    console.log('SELECT_HEX_TOTAL_T_SHARES_PERCENTAGE');
+
+    return getSeaCreature(state.protocols.HEX.totalTSharesPercentage[chain]);
+  });
+
+export const selectPhiatTotalTSharesPercentage = memoize((state: RootState) => {
+  console.log('SELECT_PHAT_TOTAL_T_SHARES_PERCENTAGE');
+
+  const TOTAL_NUM_OF_PHIAT_STAKES = 55555000;
+
+  return getSeaCreature((state.protocols.PHIAT.balance.STAKING / TOTAL_NUM_OF_PHIAT_STAKES) * 100);
 });
 
 export const selectWalletLoading = memoize((state: RootState): boolean => {

@@ -60,7 +60,7 @@ export interface WalletResponse {
 
 export interface HexTokenItem {
   tShares: number;
-  tSharesP: number;
+  tSharesPercentage: number;
   stakingEnd: string;
   totalBalance: number;
   totalInt: number;
@@ -70,6 +70,7 @@ export interface HexTokenItem {
 export interface HexChainItem {
   data: HexTokenItem[];
   totalValue: number;
+  totalTSharesPercentage: number;
 }
 
 export interface HexResponse extends ApiBaseResponse {
