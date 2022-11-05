@@ -259,8 +259,50 @@ export const selectUniV3Loading = memoize((state: RootState): boolean => {
   return state.protocols.UNISWAPV3.loading;
 });
 
-export const selectWalletError = memoize((state: RootState): boolean => {
-  console.log('SELECT_WALLET_ERROR');
+export const selectProfileWalletError = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_WALLET_ERROR');
 
   return state.protocols.WALLET.error;
+});
+
+export const selectProfileHexError = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_HEX_ERROR');
+
+  return state.protocols.HEX.error;
+});
+
+export const selectProfilePhiatError = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_PHIAT_ERROR');
+
+  return state.protocols.PHIAT.error;
+});
+
+export const selectProfilePulsexError = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_PULSEX_ERROR');
+
+  return state.protocols.PULSEX.error;
+});
+
+export const selectProfilePancakeError = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_PANCAKE_ERROR');
+
+  return state.protocols.PANCAKE.error;
+});
+
+export const selectProfileSushiError = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_SUSHI_ERROR');
+
+  return state.protocols.SUSHI.error;
+});
+
+export const selectProfileUniV2Error = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_UNISWAPV2_ERROR');
+
+  return state.protocols.UNISWAPV2.error;
+});
+
+export const selectProfileUniV3Error = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_UNISWAPV3_ERROR');
+
+  return state.protocols.UNISWAPV3.error;
 });

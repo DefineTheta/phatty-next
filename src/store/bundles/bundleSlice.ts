@@ -262,7 +262,7 @@ const deleteBundleSession = createAsyncThunk<AuthResponse, void, { state: RootSt
 
 const fetchBundleWalletData = createAsyncThunk<
   WalletResponse,
-  { addresses: string[]; refresh: boolean },
+  { addresses: string[]; refresh: boolean } | undefined,
   { state: RootState }
 >('bundles/fetchBundleWalletData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -271,14 +271,18 @@ const fetchBundleWalletData = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getWallet(input.addresses, input.refresh);
+  if (input) return await getWallet(input.addresses, input.refresh);
 
-  return data;
+  const bundleAddresses = thunkAPI.getState().bundles.addresses;
+
+  if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return await getWallet(bundleAddresses, false);
 });
 
 const fetchBundleHexData = createAsyncThunk<
   HexResponse,
-  { addresses: string[]; refresh: boolean },
+  { addresses: string[]; refresh: boolean } | undefined,
   { state: RootState; signal: AbortSignal }
 >('bundles/fetchBundleHexData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -287,14 +291,18 @@ const fetchBundleHexData = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getHex(input.addresses, input.refresh);
+  if (input) return await getHex(input.addresses, input.refresh);
 
-  return data;
+  const bundleAddresses = thunkAPI.getState().bundles.addresses;
+
+  if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return await getHex(bundleAddresses, false);
 });
 
 const fetchBundlePhiatData = createAsyncThunk<
   PhiatResponse,
-  { addresses: string[]; refresh: boolean },
+  { addresses: string[]; refresh: boolean } | undefined,
   { state: RootState }
 >('bundles/fetchBundlePhiatData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -303,14 +311,18 @@ const fetchBundlePhiatData = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getPhiat(input.addresses, input.refresh);
+  if (input) return await getPhiat(input.addresses, input.refresh);
 
-  return data;
+  const bundleAddresses = thunkAPI.getState().bundles.addresses;
+
+  if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return await getPhiat(bundleAddresses, false);
 });
 
 const fetchBundlePulsexData = createAsyncThunk<
   PulsexResponse,
-  { addresses: string[]; refresh: boolean },
+  { addresses: string[]; refresh: boolean } | undefined,
   { state: RootState }
 >('bundles/fetchBundlePulsexData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -319,14 +331,18 @@ const fetchBundlePulsexData = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getPulsex(input.addresses, input.refresh);
+  if (input) return await getPulsex(input.addresses, input.refresh);
 
-  return data;
+  const bundleAddresses = thunkAPI.getState().bundles.addresses;
+
+  if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return await getPulsex(bundleAddresses, false);
 });
 
 const fetchBundlePancakeData = createAsyncThunk<
   PancakeResponse,
-  { addresses: string[]; refresh: boolean },
+  { addresses: string[]; refresh: boolean } | undefined,
   { state: RootState }
 >('bundles/fetchPancakeData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -335,14 +351,18 @@ const fetchBundlePancakeData = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getPancake(input.addresses, input.refresh);
+  if (input) return await getPancake(input.addresses, input.refresh);
 
-  return data;
+  const bundleAddresses = thunkAPI.getState().bundles.addresses;
+
+  if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return await getPancake(bundleAddresses, false);
 });
 
 const fetchBundleSushiData = createAsyncThunk<
   SushiResponse,
-  { addresses: string[]; refresh: boolean },
+  { addresses: string[]; refresh: boolean } | undefined,
   { state: RootState }
 >('bundles/fetchSushiData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -351,14 +371,18 @@ const fetchBundleSushiData = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getSushi(input.addresses, input.refresh);
+  if (input) return await getSushi(input.addresses, input.refresh);
 
-  return data;
+  const bundleAddresses = thunkAPI.getState().bundles.addresses;
+
+  if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return await getSushi(bundleAddresses, false);
 });
 
 const fetchBundleUniV2Data = createAsyncThunk<
   UniV2Response,
-  { addresses: string[]; refresh: boolean },
+  { addresses: string[]; refresh: boolean } | undefined,
   { state: RootState }
 >('bundles/fetchUniV2Data', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -367,14 +391,18 @@ const fetchBundleUniV2Data = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getUniV2(input.addresses, input.refresh);
+  if (input) return await getUniV2(input.addresses, input.refresh);
 
-  return data;
+  const bundleAddresses = thunkAPI.getState().bundles.addresses;
+
+  if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return await getUniV2(bundleAddresses, false);
 });
 
 const fetchBundleUniV3Data = createAsyncThunk<
   UniV3Response,
-  { addresses: string[]; refresh: boolean },
+  { addresses: string[]; refresh: boolean } | undefined,
   { state: RootState }
 >('bundles/fetchUniV3Data', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -383,9 +411,13 @@ const fetchBundleUniV3Data = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getUniV3(input.addresses, input.refresh);
+  if (input) return await getUniV3(input.addresses, input.refresh);
 
-  return data;
+  const bundleAddresses = thunkAPI.getState().bundles.addresses;
+
+  if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return await getUniV3(bundleAddresses, false);
 });
 
 const fetchBundlePortfolioData = (dispatch: AppDispatch, addresses: string[], refresh = false) => {

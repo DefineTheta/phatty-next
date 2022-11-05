@@ -1,14 +1,20 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import TableWrapper from '@app-src/common/components/table/TableWrapper';
+import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
+import { fetchBundlePhiatData } from '@app-src/store/bundles/bundleSlice';
 import {
+  selectBundlePhiatError,
   selectBundlePhiatLoading,
   selectBundlePhiatTotal,
   selectBundlePhiatTotalTSharesPercentage
 } from '@app-src/store/bundles/selectors';
+import { fetchPhiatData } from '@app-src/store/protocol/protocolSlice';
 import {
   selectPhiatLoading,
   selectPhiatTotal,
-  selectPhiatTotalTSharesPercentage
+  selectPhiatTotalTSharesPercentage,
+  selectProfilePhiatError
 } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { PortfolioChain } from '../../types/portfolio';
@@ -23,11 +29,16 @@ type IPhiatTableGroupProps = {
 };
 
 const PhiatTableGroup = ({ page, chain }: IPhiatTableGroupProps) => {
+  const dispatch = useAppDispatch();
+
   const phiatTotal = useAppSelector(
     useCallback(page === 'profile' ? selectPhiatTotal : selectBundlePhiatTotal, [page])
   );
   const loading = useAppSelector(
     useCallback(page === 'profile' ? selectPhiatLoading : selectBundlePhiatLoading, [page])
+  );
+  const error = useAppSelector(
+    useCallback(page === 'profile' ? selectProfilePhiatError : selectBundlePhiatError, [page])
   );
   const phiatSeaCreature = useAppSelector(
     useCallback(
@@ -46,7 +57,12 @@ const PhiatTableGroup = ({ page, chain }: IPhiatTableGroupProps) => {
     [phiatTotal, phiatSeaCreature]
   );
 
-  if ((!loading && phiatTotal === 0) || !isCurrentChain('TPLS', chain)) {
+  const fetchTableData = useCallback(() => {
+    if (page === 'profile') dispatch(fetchPhiatData());
+    else dispatch(fetchBundlePhiatData());
+  }, [page, dispatch]);
+
+  if ((!loading && !error && phiatTotal === 0) || !isCurrentChain('TPLS', chain)) {
     return null;
   }
 
@@ -59,10 +75,18 @@ const PhiatTableGroup = ({ page, chain }: IPhiatTableGroupProps) => {
         tablePrimaryImgSrc="/img/tokens/phsac.png"
         tablePrimaryImgAlt="Phiat"
       />
-      <PhiatStakeTable page={page} loading={loading} />
-      <PhiatGenericTable page={page} component="LENDING" loading={loading} />
-      <PhiatGenericTable page={page} component="VARIABLE_DEBT" loading={loading} />
-      <PhiatGenericTable page={page} component="STABLE_DEBT" loading={loading} />
+      <TableWrapper error={error} handleRetry={fetchTableData}>
+        <PhiatStakeTable page={page} loading={loading} />
+      </TableWrapper>
+      <TableWrapper error={error} handleRetry={fetchTableData}>
+        <PhiatGenericTable page={page} component="LENDING" loading={loading} />
+      </TableWrapper>
+      <TableWrapper error={error} handleRetry={fetchTableData}>
+        <PhiatGenericTable page={page} component="VARIABLE_DEBT" loading={loading} />
+      </TableWrapper>
+      <TableWrapper error={error} handleRetry={fetchTableData}>
+        <PhiatGenericTable page={page} component="STABLE_DEBT" loading={loading} />
+      </TableWrapper>
     </div>
   );
 };

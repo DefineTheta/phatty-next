@@ -1,7 +1,19 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import TableWrapper from '@app-src/common/components/table/TableWrapper';
+import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { selectBundleSushiLoading, selectBundleSushiTotal } from '@app-src/store/bundles/selectors';
-import { selectSushiLoading, selectSushiTotal } from '@app-src/store/protocol/selectors';
+import { fetchBundleSushiData } from '@app-src/store/bundles/bundleSlice';
+import {
+  selectBundleSushiError,
+  selectBundleSushiLoading,
+  selectBundleSushiTotal
+} from '@app-src/store/bundles/selectors';
+import { fetchSushiData } from '@app-src/store/protocol/protocolSlice';
+import {
+  selectProfileSushiError,
+  selectSushiLoading,
+  selectSushiTotal
+} from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
@@ -14,14 +26,24 @@ type ISushiTableGroup = {
 };
 
 const SushiTableGroup = ({ page, chain }: ISushiTableGroup) => {
+  const dispatch = useAppDispatch();
+
   const sushiTotal = useAppSelector(
     useCallback(page === 'profile' ? selectSushiTotal : selectBundleSushiTotal, [page])
   );
   const loading = useAppSelector(
     useCallback(page === 'profile' ? selectSushiLoading : selectBundleSushiLoading, [page])
   );
+  const error = useAppSelector(
+    useCallback(page === 'profile' ? selectProfileSushiError : selectBundleSushiError, [page])
+  );
 
   const styledSushiTotal = useMemo(() => formatToMoney(sushiTotal), [sushiTotal]);
+
+  const fetchTableData = useCallback(() => {
+    if (page === 'profile') dispatch(fetchSushiData());
+    else dispatch(fetchBundleSushiData());
+  }, [page, dispatch]);
 
   if ((!loading && sushiTotal === 0) || !isCurrentChain('ETH', chain)) {
     return null;
@@ -35,7 +57,9 @@ const SushiTableGroup = ({ page, chain }: ISushiTableGroup) => {
         tablePrimaryImgSrc="/img/icon/sushi.svg"
         tablePrimaryImgAlt="Sushi"
       />
-      <SushiLiquidityPoolTable page={page} loading={loading} />
+      <TableWrapper error={error} handleRetry={fetchTableData}>
+        <SushiLiquidityPoolTable page={page} loading={loading} />
+      </TableWrapper>
     </div>
   );
 };

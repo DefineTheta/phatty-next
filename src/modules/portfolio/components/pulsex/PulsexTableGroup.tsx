@@ -1,11 +1,20 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import TableWrapper from '@app-src/common/components/table/TableWrapper';
+import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
+import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
+import { fetchBundlePulsexData } from '@app-src/store/bundles/bundleSlice';
 import {
+  selectBundlePulsexError,
   selectBundlePulsexLoading,
   selectBundlePulsexTotal
 } from '@app-src/store/bundles/selectors';
-import { selectPulsexLoading, selectPulsexTotal } from '@app-src/store/protocol/selectors';
+import { fetchPulsexData } from '@app-src/store/protocol/protocolSlice';
+import {
+  selectProfilePulsexError,
+  selectPulsexLoading,
+  selectPulsexTotal
+} from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
 import { isCurrentChain } from '../../utils/misc';
@@ -17,16 +26,26 @@ type IPulsexTableGroupProps = {
 };
 
 const PulsexTableGroup = ({ page, chain }: IPulsexTableGroupProps) => {
-  const pulsexTotal = useSelector(
+  const dispatch = useAppDispatch();
+
+  const pulsexTotal = useAppSelector(
     useCallback(page === 'profile' ? selectPulsexTotal : selectBundlePulsexTotal, [page])
   );
-  const loading = useSelector(
+  const loading = useAppSelector(
     useCallback(page === 'profile' ? selectPulsexLoading : selectBundlePulsexLoading, [page])
+  );
+  const error = useAppSelector(
+    useCallback(page === 'profile' ? selectProfilePulsexError : selectBundlePulsexError, [page])
   );
 
   const styledPulsexTotal = useMemo(() => formatToMoney(pulsexTotal), [pulsexTotal]);
 
-  if ((!loading && pulsexTotal === 0) || !isCurrentChain('TPLS', chain)) {
+  const fetchTableData = useCallback(() => {
+    if (page === 'profile') dispatch(fetchPulsexData());
+    else dispatch(fetchBundlePulsexData());
+  }, [page, dispatch]);
+
+  if ((!loading && !error && pulsexTotal === 0) || !isCurrentChain('TPLS', chain)) {
     return null;
   }
 
@@ -39,7 +58,9 @@ const PulsexTableGroup = ({ page, chain }: IPulsexTableGroupProps) => {
         tablePrimaryImgSrc="/img/tokens/pulsex.jpeg"
         tablePrimaryImgAlt="Pulsex"
       />
-      <PulsexLiquidityPoolTable page={page} loading={loading} />
+      <TableWrapper error={error} handleRetry={fetchTableData}>
+        <PulsexLiquidityPoolTable page={page} loading={loading} />
+      </TableWrapper>
     </div>
   );
 };

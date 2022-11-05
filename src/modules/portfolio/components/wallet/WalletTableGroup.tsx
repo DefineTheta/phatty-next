@@ -1,18 +1,20 @@
-import TableError from '@app-src/common/components/table/TableError';
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import TableWrapper from '@app-src/common/components/table/TableWrapper';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
+import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
+import { fetchBundleWalletData } from '@app-src/store/bundles/bundleSlice';
 import {
+  selectBundleWalletError,
   selectBundleWalletLoading,
   selectBundleWalletTotal
 } from '@app-src/store/bundles/selectors';
 import { fetchWalletData } from '@app-src/store/protocol/protocolSlice';
 import {
-  selectWalletError,
+  selectProfileWalletError,
   selectWalletLoading,
   selectWalletTotal
 } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
 import WalletTable from './WalletTable';
@@ -25,19 +27,22 @@ type IWalletTableGroupProps = {
 const WalletTableGroup = ({ page, chain }: IWalletTableGroupProps) => {
   const dispatch = useAppDispatch();
 
-  const walletTotal = useSelector(
+  const walletTotal = useAppSelector(
     useCallback(page === 'profile' ? selectWalletTotal : selectBundleWalletTotal, [page])
   );
-  const loading = useSelector(
+  const loading = useAppSelector(
     useCallback(page === 'profile' ? selectWalletLoading : selectBundleWalletLoading, [page])
   );
-  const error = useSelector(useCallback(selectWalletError, []));
+  const error = useAppSelector(
+    useCallback(page === 'profile' ? selectProfileWalletError : selectBundleWalletError, [page])
+  );
 
   const styledWalletTotal = useMemo(() => formatToMoney(walletTotal), [walletTotal]);
 
   const fetchTableData = useCallback(() => {
-    dispatch(fetchWalletData());
-  }, []);
+    if (page === 'profile') dispatch(fetchWalletData());
+    else dispatch(fetchBundleWalletData());
+  }, [page, dispatch]);
 
   if (!loading && !error && walletTotal === 0) {
     return null;
@@ -51,11 +56,9 @@ const WalletTableGroup = ({ page, chain }: IWalletTableGroupProps) => {
         tablePrimaryImgSrc="/img/icon/wallet.svg"
         tablePrimaryImgAlt="Wallet"
       />
-      {error ? (
-        <TableError retry={fetchTableData} />
-      ) : (
+      <TableWrapper error={error} handleRetry={fetchTableData}>
         <WalletTable page={page} chain={chain} loading={loading} />
-      )}
+      </TableWrapper>
     </div>
   );
 };

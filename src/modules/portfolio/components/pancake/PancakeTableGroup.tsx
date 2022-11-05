@@ -1,11 +1,20 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import TableWrapper from '@app-src/common/components/table/TableWrapper';
+import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
+import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
+import { fetchBundlePancakeData } from '@app-src/store/bundles/bundleSlice';
 import {
+  selectBundlePancakeError,
   selectBundlePancakeLoading,
   selectBundlePancakeTotal
 } from '@app-src/store/bundles/selectors';
-import { selectPancakeLoading, selectPancakeTotal } from '@app-src/store/protocol/selectors';
+import { fetchPancakeData } from '@app-src/store/protocol/protocolSlice';
+import {
+  selectPancakeLoading,
+  selectPancakeTotal,
+  selectProfilePancakeError
+} from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
 import { isCurrentChain } from '../../utils/misc';
@@ -18,14 +27,24 @@ type IPancakeTableGroup = {
 };
 
 const PancakeTableGroup = ({ page, chain }: IPancakeTableGroup) => {
-  const pancakeTotal = useSelector(
+  const dispatch = useAppDispatch();
+
+  const pancakeTotal = useAppSelector(
     useCallback(page === 'profile' ? selectPancakeTotal : selectBundlePancakeTotal, [page])
   );
-  const loading = useSelector(
+  const loading = useAppSelector(
     useCallback(page === 'profile' ? selectPancakeLoading : selectBundlePancakeLoading, [page])
+  );
+  const error = useAppSelector(
+    useCallback(page === 'profile' ? selectProfilePancakeError : selectBundlePancakeError, [page])
   );
 
   const styledPancakeTotal = useMemo(() => formatToMoney(pancakeTotal), [pancakeTotal]);
+
+  const fetchTableData = useCallback(() => {
+    if (page === 'profile') dispatch(fetchPancakeData());
+    else dispatch(fetchBundlePancakeData());
+  }, [page, dispatch]);
 
   if ((!loading && pancakeTotal === 0) || !isCurrentChain('BSC', chain)) {
     return null;
@@ -41,8 +60,12 @@ const PancakeTableGroup = ({ page, chain }: IPancakeTableGroup) => {
         tablePrimaryImgAlt="Pancake"
       />
       <div className="flex flex-col gap-y-24">
-        <PancakeLiquidityPoolTable page={page} loading={loading} />
-        <PancakeFarmTable page={page} loading={loading} />
+        <TableWrapper error={error} handleRetry={fetchTableData}>
+          <PancakeLiquidityPoolTable page={page} loading={loading} />
+        </TableWrapper>
+        <TableWrapper error={error} handleRetry={fetchTableData}>
+          <PancakeFarmTable page={page} loading={loading} />
+        </TableWrapper>
       </div>
     </div>
   );

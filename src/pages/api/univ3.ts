@@ -115,7 +115,7 @@ const calculateLiquidity = async (positions: UniNftPosition, nftId: string) => {
     tickUpper: Number(positions.tickUpper)
   });
 
-  const tokeOnePrice = Number(pool.token0Price.toSignificant(8));
+  const tokenOnePrice = Number(pool.token0Price.toSignificant(8));
   const tokenOneBalance = Number(userPosition.amount0.toSignificant(8));
   const tokenTwoPrice = Number(pool.token1Price.toSignificant(8));
   const tokenTwoBalance = Number(userPosition.amount1.toSignificant(8));
@@ -158,9 +158,20 @@ const calculateLiquidity = async (positions: UniNftPosition, nftId: string) => {
       Number(positions.liquidity)) /
     (1 * 10 ** Number(tokenTwoDecimals));
 
+  // console.log('tokensOneSymbol', pool.token0.symbol);
+  // console.log('tokensOwedOne', tokensOwedOne);
+  // console.log('tokenOneBalance', tokenOneBalance);
+  // console.log('tokenOnePrice', pool.token0Price.asFraction);
+  // console.log('tokensTwoSymbol', pool.token1.symbol);
+  // console.log('tokensOwedTwo', tokensOwedTwo);
+  // console.log('tokenTwoBalance', tokenTwoBalance);
+  // console.log('tokenTwoPrice', pool.token0Price);
+
   const value =
-    (tokenOneBalance + tokensOwedOne) * tokeOnePrice +
+    (tokenOneBalance + tokensOwedOne) * tokenOnePrice +
     (tokenTwoBalance + tokensOwedTwo) * tokenTwoPrice;
+
+  // console.log('value', value);
 
   const liquidityPoolObj = {
     tokenOne: {

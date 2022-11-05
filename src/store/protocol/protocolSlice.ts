@@ -140,7 +140,7 @@ const initialState: ProtocolsState = {
 
 const fetchWalletData = createAsyncThunk<
   WalletResponse,
-  { address: string | undefined; refresh: boolean } | undefined,
+  { address: string; refresh: boolean } | undefined,
   { state: RootState }
 >('protocols/fetchWalletData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -149,18 +149,18 @@ const fetchWalletData = createAsyncThunk<
     controller.abort();
   };
 
-  const profileAddress = input?.address || thunkAPI.getState().protocols.address;
+  if (input) return await getWallet([input.address], input.refresh);
 
-  if (!profileAddress || profileAddress == '') thunkAPI.rejectWithValue(null);
+  const profileAddress = thunkAPI.getState().protocols.address;
 
-  const data = await getWallet([profileAddress], input?.refresh || false);
+  if (!profileAddress) thunkAPI.rejectWithValue(null);
 
-  return data;
+  return await getWallet([profileAddress], false);
 });
 
 const fetchHexData = createAsyncThunk<
   HexResponse,
-  { address: string; refresh: boolean },
+  { address: string; refresh: boolean } | undefined,
   { state: RootState; signal: AbortSignal }
 >('protocols/fetchHexData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -169,14 +169,18 @@ const fetchHexData = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getHex([input.address], input.refresh);
+  if (input) return await getHex([input.address], input.refresh);
 
-  return data;
+  const profileAddress = thunkAPI.getState().protocols.address;
+
+  if (!profileAddress) thunkAPI.rejectWithValue(null);
+
+  return await getHex([profileAddress], false);
 });
 
 const fetchPhiatData = createAsyncThunk<
   PhiatResponse,
-  { address: string; refresh: boolean },
+  { address: string; refresh: boolean } | undefined,
   { state: RootState }
 >('protocols/fetchPhiatData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -185,14 +189,18 @@ const fetchPhiatData = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getPhiat([input.address], input.refresh);
+  if (input) return await getPhiat([input.address], input.refresh);
 
-  return data;
+  const profileAddress = thunkAPI.getState().protocols.address;
+
+  if (!profileAddress) thunkAPI.rejectWithValue(null);
+
+  return await getPhiat([profileAddress], false);
 });
 
 const fetchPulsexData = createAsyncThunk<
   PulsexResponse,
-  { address: string; refresh: boolean },
+  { address: string; refresh: boolean } | undefined,
   { state: RootState }
 >('protocols/fetchPulsexData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -201,14 +209,18 @@ const fetchPulsexData = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getPulsex([input.address], input.refresh);
+  if (input) return await getPulsex([input.address], input.refresh);
 
-  return data;
+  const profileAddress = thunkAPI.getState().protocols.address;
+
+  if (!profileAddress) thunkAPI.rejectWithValue(null);
+
+  return await getPulsex([profileAddress], false);
 });
 
 const fetchPancakeData = createAsyncThunk<
   PancakeResponse,
-  { address: string; refresh: boolean },
+  { address: string; refresh: boolean } | undefined,
   { state: RootState }
 >('protocols/fetchPancakeData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -217,14 +229,18 @@ const fetchPancakeData = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getPancake([input.address], input.refresh);
+  if (input) return await getPancake([input.address], input.refresh);
 
-  return data;
+  const profileAddress = thunkAPI.getState().protocols.address;
+
+  if (!profileAddress) thunkAPI.rejectWithValue(null);
+
+  return await getPancake([profileAddress], false);
 });
 
 const fetchSushiData = createAsyncThunk<
   SushiResponse,
-  { address: string; refresh: boolean },
+  { address: string; refresh: boolean } | undefined,
   { state: RootState }
 >('protocols/fetchSushiData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -233,14 +249,18 @@ const fetchSushiData = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getSushi([input.address], input.refresh);
+  if (input) return await getSushi([input.address], input.refresh);
 
-  return data;
+  const profileAddress = thunkAPI.getState().protocols.address;
+
+  if (!profileAddress) thunkAPI.rejectWithValue(null);
+
+  return await getSushi([profileAddress], false);
 });
 
 const fetchUniV2Data = createAsyncThunk<
   UniV2Response,
-  { address: string; refresh: boolean },
+  { address: string; refresh: boolean } | undefined,
   { state: RootState }
 >('protocols/fetchUniV2Data', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -249,14 +269,18 @@ const fetchUniV2Data = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getUniV2([input.address], input.refresh);
+  if (input) return await getUniV2([input.address], input.refresh);
 
-  return data;
+  const profileAddress = thunkAPI.getState().protocols.address;
+
+  if (!profileAddress) thunkAPI.rejectWithValue(null);
+
+  return await getUniV2([profileAddress], false);
 });
 
 const fetchUniV3Data = createAsyncThunk<
   UniV3Response,
-  { address: string; refresh: boolean },
+  { address: string; refresh: boolean } | undefined,
   { state: RootState }
 >('protocols/fetchUniV3Data', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -265,9 +289,13 @@ const fetchUniV3Data = createAsyncThunk<
     controller.abort();
   };
 
-  const data = await getUniV3([input.address], input.refresh);
+  if (input) return await getUniV3([input.address], input.refresh);
 
-  return data;
+  const profileAddress = thunkAPI.getState().protocols.address;
+
+  if (!profileAddress) thunkAPI.rejectWithValue(null);
+
+  return await getUniV3([profileAddress], false);
 });
 
 const fetchPortfolioData = (dispatch: AppDispatch, address: string, refresh = false) => {

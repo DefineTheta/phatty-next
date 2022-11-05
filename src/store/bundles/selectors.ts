@@ -272,3 +272,51 @@ export const selectBundleUniV3Loading = memoize((state: RootState): boolean => {
 
   return state.bundles.UNISWAPV3.loading;
 });
+
+export const selectBundleWalletError = memoize((state: RootState): boolean => {
+  console.log('SELECT_BUNDLE_WALLET_ERROR');
+
+  return state.bundles.WALLET.error;
+});
+
+export const selectBundleHexError = memoize((state: RootState): boolean => {
+  console.log('SELECT_BUNDLE_HEX_ERROR');
+
+  return state.bundles.HEX.error;
+});
+
+export const selectBundlePhiatError = memoize((state: RootState): boolean => {
+  console.log('SELECT_BUNDLE_PHIAT_ERROR');
+
+  return state.bundles.PHIAT.error;
+});
+
+export const selectBundlePulsexError = memoize((state: RootState): boolean => {
+  console.log('SELECT_BUNDLE_PULSEX_ERROR');
+
+  return state.bundles.PULSEX.error;
+});
+
+export const selectBundlePancakeError = memoize((state: RootState): boolean => {
+  console.log('SELECT_BUNDLE_PANCAKE_ERROR');
+
+  return state.bundles.PANCAKE.error;
+});
+
+export const selectBundleSushiError = memoize((state: RootState): boolean => {
+  console.log('SELECT_BUNDLE_SUSHI_ERROR');
+
+  return state.bundles.SUSHI.error;
+});
+
+export const selectBundleUniV2Error = memoize((state: RootState): boolean => {
+  console.log('SELECT_BUNDLE_UNISWAPV2_ERROR');
+
+  return state.bundles.UNISWAPV2.error;
+});
+
+export const selectBundleUniV3Error = memoize((state: RootState): boolean => {
+  console.log('SELECT_BUNDLE_UNISWAPV3_ERROR');
+
+  return state.bundles.UNISWAPV3.error;
+});

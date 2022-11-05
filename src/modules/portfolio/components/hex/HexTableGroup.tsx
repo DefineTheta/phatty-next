@@ -1,15 +1,21 @@
 import TableHeader from '@app-src/common/components/table/TableHeader';
+import TableWrapper from '@app-src/common/components/table/TableWrapper';
+import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
+import { fetchBundleHexData } from '@app-src/store/bundles/bundleSlice';
 import {
   selectBundleHexComponentTotal,
+  selectBundleHexError,
   selectBundleHexStakeLoading,
   selectBundleHexToatlTSharesPercentage
 } from '@app-src/store/bundles/selectors';
+import { fetchHexData } from '@app-src/store/protocol/protocolSlice';
 import {
   selectHexComponentTotal,
   selectHexStakeLoading,
-  selectHexToatlTSharesPercentage
+  selectHexToatlTSharesPercentage,
+  selectProfileHexError
 } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { formatToMoney } from '../../utils/format';
@@ -22,6 +28,8 @@ type IHexTableGroupProps = {
 };
 
 const HexTableGroup = ({ page, chain }: IHexTableGroupProps) => {
+  const dispatch = useAppDispatch();
+
   const hexEthTotal = useAppSelector(
     useCallback(
       page === 'profile' ? selectHexComponentTotal('ETH') : selectBundleHexComponentTotal('ETH'),
@@ -36,6 +44,9 @@ const HexTableGroup = ({ page, chain }: IHexTableGroupProps) => {
   );
   const loading = useAppSelector(
     useCallback(page === 'profile' ? selectHexStakeLoading : selectBundleHexStakeLoading, [page])
+  );
+  const error = useAppSelector(
+    useCallback(page === 'profile' ? selectProfileHexError : selectBundleHexError, [page])
   );
   const hexEthSeaCreature = useAppSelector(
     useCallback(
@@ -69,7 +80,15 @@ const HexTableGroup = ({ page, chain }: IHexTableGroupProps) => {
     [hexTplsTotal, hexTplsSeaCreature]
   );
 
-  if ((hexEthTotal + hexTplsTotal === 0 && !loading) || !isCurrentChainIn(['ETH', 'TPLS'], chain)) {
+  const fetchTableData = useCallback(() => {
+    if (page === 'profile') dispatch(fetchHexData());
+    else dispatch(fetchBundleHexData());
+  }, [page, dispatch]);
+
+  if (
+    (!loading && !error && hexEthTotal + hexTplsTotal === 0) ||
+    !isCurrentChainIn(['ETH', 'TPLS'], chain)
+  ) {
     return null;
   }
 
@@ -86,7 +105,9 @@ const HexTableGroup = ({ page, chain }: IHexTableGroupProps) => {
             tableSecondaryImgSrc="/img/chains/eth.svg"
             tableSecondaryImgAlt="Ethereum"
           />
-          <HexStakeTable chain="ETH" page={page} loading={loading} />
+          <TableWrapper error={error} handleRetry={fetchTableData}>
+            <HexStakeTable chain="ETH" page={page} loading={loading} />
+          </TableWrapper>
         </div>
       )}
       {(loading || hexTplsTotal !== 0) && isCurrentChain('TPLS', chain) && (
@@ -100,7 +121,9 @@ const HexTableGroup = ({ page, chain }: IHexTableGroupProps) => {
             tableSecondaryImgSrc="/img/chains/tpls.svg"
             tableSecondaryImgAlt="TPLS"
           />
-          <HexStakeTable chain="TPLS" page={page} loading={loading} />
+          <TableWrapper error={error} handleRetry={fetchTableData}>
+            <HexStakeTable chain="TPLS" page={page} loading={loading} />
+          </TableWrapper>
         </div>
       )}
     </div>
