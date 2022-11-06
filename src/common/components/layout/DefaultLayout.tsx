@@ -9,6 +9,7 @@ import {
 import { setProfileAddress } from '@app-src/store/protocol/protocolSlice';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 import Footer from './Footer';
 
 type IDefaultLayoutProps = {
@@ -67,6 +68,7 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
 
   return (
     <div className="w-full flex flex-row bg-background-100">
+      <Toaster />
       <SideBar />
       <div className="w-full h-screen flex flex-col justify-between overflow-y-auto">
         <div>
