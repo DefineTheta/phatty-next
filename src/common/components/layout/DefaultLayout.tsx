@@ -9,6 +9,7 @@ import {
 import { setProfileAddress } from '@app-src/store/protocol/protocolSlice';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
+import Footer from './Footer';
 
 type IDefaultLayoutProps = {
   children: ReactNode;
@@ -67,9 +68,12 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
   return (
     <div className="w-full flex flex-row bg-background-100">
       <SideBar />
-      <div className="w-full h-screen flex flex-col overflow-y-auto">
-        <NavBar />
-        {children}
+      <div className="w-full h-screen flex flex-col justify-between overflow-y-auto">
+        <div>
+          <NavBar />
+          {children}
+        </div>
+        <Footer />
       </div>
     </div>
   );

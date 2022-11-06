@@ -64,7 +64,7 @@ const BundleHeader = ({ address }: IBundleHeaderProps) => {
           <div className="flex flex-row justify-between">
             <div className="flex flex-col gap-y-12 items-start">
               <div className="flex flex-row items-center gap-x-6">
-                <span className="text-lg font-semibold text-text-200 tracking-wide">
+                <span className="text-lg font-semibold text-text-200 tracking-wide" title={address}>
                   {truncateAddress(address)}
                 </span>
                 <button className="w-20 h-20 flex justify-center items-center cursor-pointer bg-gray-100 rounded-full">
