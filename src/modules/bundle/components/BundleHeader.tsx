@@ -8,6 +8,7 @@ import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/reac
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
+import { toast } from 'react-hot-toast';
 
 type IBundleHeaderProps = {
   address: string;
@@ -53,6 +54,11 @@ const BundleHeader = ({ address }: IBundleHeaderProps) => {
     [address]
   );
 
+  const handleAddressCopyClick = useCallback(() => {
+    navigator.clipboard.writeText(address);
+    toast.success(<span className="text-md font-bold">Address copied!</span>);
+  }, [address]);
+
   const handleRefreshDataClick = useCallback(() => {
     fetchBundlePortfolioData(dispatch, bundleAddresses, true);
   }, [dispatch, bundleAddresses]);
@@ -67,7 +73,11 @@ const BundleHeader = ({ address }: IBundleHeaderProps) => {
                 <span className="text-lg font-semibold text-text-200 tracking-wide" title={address}>
                   {truncateAddress(address)}
                 </span>
-                <button className="w-20 h-20 flex justify-center items-center cursor-pointer bg-gray-100 rounded-full">
+                <button
+                  className="w-20 h-20 flex justify-center items-center cursor-pointer bg-gray-100 rounded-full"
+                  data-tip="Copy wallet address"
+                  onClick={handleAddressCopyClick}
+                >
                   <DocumentDuplicateIcon className="w-12 h-12" />
                 </button>
               </div>
