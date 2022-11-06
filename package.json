@@ -27,6 +27,7 @@
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
     "react-redux": "^8.0.4",
+    "react-tooltip": "^4.4.3",
     "urql": "^3.0.3",
     "web3": "^1.8.0"
   },

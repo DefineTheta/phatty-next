@@ -68,6 +68,7 @@ const ProfileHeader = ({ address }: IProfileHeaderProps) => {
                 </span>
                 <button
                   className="w-20 h-20 flex justify-center items-center cursor-pointer bg-gray-100 rounded-full"
+                  data-tip="Copy wallet address"
                   onClick={handleAddressCopyClick}
                 >
                   <DocumentDuplicateIcon className="w-12 h-12" />
