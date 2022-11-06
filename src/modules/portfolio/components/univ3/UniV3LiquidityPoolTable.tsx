@@ -62,7 +62,8 @@ const UniV3LiquidityPoolTable = ({ page, loading }: IUniV3LiquidityPoolTableProp
     <Card>
       <TableHeaderRow>
         <TableHeaderRowCell className="basis-1/4">Pool</TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/2">Balance</TableHeaderRowCell>
+        <TableHeaderRowCell className="basis-1/4">Balance</TableHeaderRowCell>
+        <TableHeaderRowCell className="basis-1/4">Rewards</TableHeaderRowCell>
         <TableHeaderRowCell
           className="basis-1/4"
           onClick={() => handleTableHeaderClick('usdValue')}
@@ -95,10 +96,16 @@ const UniV3LiquidityPoolTable = ({ page, loading }: IUniV3LiquidityPoolTableProp
               <span>{`${item.tokenOne.symbol} + ${item.tokenTwo.symbol}`}</span>
             </div>
           </TableRowCell>
-          <TableRowCell className="basis-1/2">
-            <div className="flex flex-row gap-y-2">
+          <TableRowCell className="basis-1/4">
+            <div className="flex flex-col gap-y-2">
               <span>{`${styleNumber(item.tokenOne.balance, 2)} ${item.tokenOne.symbol}`}</span>
               <span>{`${styleNumber(item.tokenTwo.balance, 2)} ${item.tokenTwo.symbol}`}</span>
+            </div>
+          </TableRowCell>
+          <TableRowCell className="basis-1/4">
+            <div className="flex flex-col gap-y-2">
+              <span>{`${styleNumber(item.tokenOne.fee, 2)} ${item.tokenOne.symbol}`}</span>
+              <span>{`${styleNumber(item.tokenTwo.fee, 2)} ${item.tokenTwo.symbol}`}</span>
             </div>
           </TableRowCell>
           <TableRowCell className="basis-1/4">{formatToMoney(item.usdValue)}</TableRowCell>

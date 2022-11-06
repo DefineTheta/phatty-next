@@ -96,7 +96,7 @@ const UniV2LiquidityPoolTable = ({ page, loading }: IUniV2LiquidityPoolTableProp
             </div>
           </TableRowCell>
           <TableRowCell className="basis-1/2">
-            <div className="flex flex-row gap-y-2">
+            <div className="flex flex-col gap-y-1">
               <span>{`${styleNumber(item.tokenOne.balance, 2)} ${item.tokenOne.symbol}`}</span>
               <span>{`${styleNumber(item.tokenTwo.balance, 2)} ${item.tokenTwo.symbol}`}</span>
             </div>
