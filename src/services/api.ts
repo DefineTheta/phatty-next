@@ -91,7 +91,10 @@ const getPaginatedData = async <T extends ApiBaseResponse>(URL: string, options?
   let page = 1;
 
   while (keepFetching) {
-    const res = await fetch(`${URL}&page=${page}`, options);
+    const res = await fetch(
+      `${URL}&page=${page}${options?.cache === 'reload' ? '&_vercel_no_cache=1' : ''}`,
+      options
+    );
     const data: T = await res.json();
 
     responses.push(data);
@@ -190,24 +193,9 @@ export const getSeaCreature = (p: number) => {
 };
 
 export const getWallet = async (addresses: string[], refresh: boolean) => {
-  const fetchPromises: Promise<Response>[] = [];
-  const serializePromises: Promise<WalletResponse>[] = [];
-
-  addresses.forEach((address) => {
-    fetchPromises.push(
-      fetch(`/api/wallet?address=${address}&gt=0${refresh ? '&_vercel_no_cache=1' : ''}`, {
-        cache: refresh ? 'reload' : 'default'
-      })
-    );
+  const walletData = await getMultipleAddressData<WalletResponse>(addresses, '/api/wallet', {
+    cache: refresh ? 'reload' : 'default'
   });
-
-  const responses = await Promise.all(fetchPromises);
-
-  responses.forEach((response) => {
-    serializePromises.push(response.json());
-  });
-
-  const walletData = await Promise.all(serializePromises);
 
   if (walletData.length === 1) return walletData[0];
 
@@ -246,7 +234,7 @@ export const getHex = async (addresses: string[], refresh: boolean) => {
 
   addresses.forEach((address) => {
     fetchPromises.push(
-      getPaginatedData(`/api/hex?address=${address}${refresh ? '&_vercel_no_cache=1' : ''}`, {
+      getPaginatedData(`/api/hex?address=${address}`, {
         cache: refresh ? 'reload' : 'default'
       })
     );
@@ -294,7 +282,7 @@ export const getPhiat = async (addresses: string[], refresh: boolean) => {
 
   addresses.forEach((address) => {
     fetchPromises.push(
-      getPaginatedData(`/api/phiat?address=${address}${refresh ? '&_vercel_no_cache=1' : ''}`, {
+      getPaginatedData(`/api/phiat?address=${address}`, {
         cache: refresh ? 'reload' : 'default'
       })
     );
@@ -359,24 +347,9 @@ export const getPhiat = async (addresses: string[], refresh: boolean) => {
 };
 
 export const getPulsex = async (addresses: string[], refresh: boolean) => {
-  const fetchPromises: Promise<Response>[] = [];
-  const serializePromises: Promise<PulsexResponse>[] = [];
-
-  addresses.forEach((address) => {
-    fetchPromises.push(
-      fetch(`/api/pulsex?address=${address}${refresh ? '&_vercel_no_cache=1' : ''}`, {
-        cache: refresh ? 'reload' : 'default'
-      })
-    );
+  const pulsexData = await getMultipleAddressData<PulsexResponse>(addresses, '/api/pulsex', {
+    cache: refresh ? 'reload' : 'default'
   });
-
-  const responses = await Promise.all(fetchPromises);
-
-  responses.forEach((response) => {
-    serializePromises.push(response.json());
-  });
-
-  const pulsexData = await Promise.all(serializePromises);
 
   if (pulsexData.length === 1) return pulsexData[0];
 
@@ -400,24 +373,9 @@ export const getPulsex = async (addresses: string[], refresh: boolean) => {
 };
 
 export const getPancake = async (addresses: string[], refresh: boolean) => {
-  const fetchPromises: Promise<Response>[] = [];
-  const serializePromises: Promise<PancakeResponse>[] = [];
-
-  addresses.forEach((address) => {
-    fetchPromises.push(
-      fetch(`/api/pancake?address=${address}${refresh ? '&_vercel_no_cache=1' : ''}`, {
-        cache: refresh ? 'reload' : 'default'
-      })
-    );
+  const pancakeData = await getMultipleAddressData<PancakeResponse>(addresses, '/api/pancake', {
+    cache: refresh ? 'reload' : 'default'
   });
-
-  const responses = await Promise.all(fetchPromises);
-
-  responses.forEach((response) => {
-    serializePromises.push(response.json());
-  });
-
-  const pancakeData = await Promise.all(serializePromises);
 
   if (pancakeData.length === 1) return pancakeData[0];
 

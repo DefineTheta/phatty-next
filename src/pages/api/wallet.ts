@@ -145,13 +145,13 @@ const calculateWalletTokenData = async (
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<WalletResponse>) {
   res.setHeader('Cache-Control', 's-maxage=3600');
-  const { address, gt } = req.query;
+  const { address } = req.query;
 
-  if (!address) return res.status(400);
+  if (!address) return res.status(400).end();
 
   const price = await fetchPrices();
 
-  if (!price) return res.status(500);
+  if (!price) return res.status(500).end();
 
   const totalValues = {
     ETH: 0,
@@ -211,31 +211,51 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     Promise.all(tplsPromises)
   ]);
 
+  const filteredEthData: WalletTokenItem[] = [];
+  const filteredBscData: WalletTokenItem[] = [];
+  const filtereTplsData: WalletTokenItem[] = [];
+
+  let ethTotal = 0;
+  let bscTotal = 0;
+  let tplsTotal = 0;
+
+  data[0].map((item) => {
+    if (item.usdValue > 0) {
+      filteredEthData.push(item);
+      ethTotal += item.usdValue;
+    }
+  });
+
+  data[1].map((item) => {
+    if (item.usdValue > 0) {
+      filteredBscData.push(item);
+      bscTotal += item.usdValue;
+    }
+  });
+
+  data[2].map((item) => {
+    if (item.usdValue > 0) {
+      filtereTplsData.push(item);
+      tplsTotal += item.usdValue;
+    }
+  });
+
   const resObj = {
     data: {
       ETH: {
-        data: data[0],
-        totalValue: totalValues.ETH
+        data: filteredEthData,
+        totalValue: ethTotal
       },
       BSC: {
-        data: data[1],
-        totalValue: totalValues.BSC
+        data: filteredBscData,
+        totalValue: bscTotal
       },
       TPLS: {
-        data: data[2],
-        totalValue: totalValues.TPLS
+        data: filtereTplsData,
+        totalValue: tplsTotal
       }
     }
   } as WalletResponse;
-
-  if (gt) {
-    const amount = Number(gt);
-    const filteredData = data.map((items) => items.filter((item) => item.usdValue > amount));
-
-    resObj.data.ETH.data = filteredData[0];
-    resObj.data.BSC.data = filteredData[1];
-    resObj.data.TPLS.data = filteredData[2];
-  }
 
   res.status(200).json(resObj);
 }
