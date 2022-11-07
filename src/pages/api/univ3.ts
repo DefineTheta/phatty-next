@@ -1,5 +1,5 @@
-import { uniFactoryABI, unIMinABI, uniNftABI, uniPoolABI } from '@app-src/services/abi';
-import { tokenImages } from '@app-src/services/web3';
+import { uniFactoryABI, uniNftABI, uniPoolABI } from '@app-src/services/abi';
+import { DEFI_LLAMA_URL, tokenImages } from '@app-src/services/web3';
 import { UniV3Item, UniV3Response } from '@app-src/types/api';
 import { Token } from '@uniswap/sdk-core';
 import { Pool, Position } from '@uniswap/v3-sdk';
@@ -43,6 +43,18 @@ type UniPositionTick = {
   feeGrowthOutside1X128: string;
 };
 
+type DefiLlamaPriceItem = {
+  confidence: number;
+  decimals: number;
+  price: number;
+  symbol: string;
+  timestamp: number;
+};
+
+type DefiLlamaPriceRespnse = {
+  coins: Record<string, DefiLlamaPriceItem>;
+};
+
 const UNI_NFT_ADDRESS = '0xC36442b4a4522E871399CD717aBDD847Ab11FE88';
 const UNI_FACTORY_ADDRESS = '0x1F98431c8aD98523631AE4a59f267346ea31F984';
 
@@ -60,45 +72,39 @@ const calculateLiquidity = async (positions: UniNftPosition, nftId: string) => {
   positions.feeGrowthInside0LastX128 = Number(positions.feeGrowthInside0LastX128);
   positions.feeGrowthInside1LastX128 = Number(positions.feeGrowthInside1LastX128);
 
-  const tokenOneContract = new web3.eth.Contract(unIMinABI, positions.token0);
-  const tokenTwoContract = new web3.eth.Contract(unIMinABI, positions.token1);
-
   const poolAddress: string = await factoryContract.methods
     .getPool(positions.token0, positions.token1, positions.fee)
     .call();
   const poolContract = new web3.eth.Contract(uniPoolABI, poolAddress);
 
-  const tokenOneSymbolPromise = await tokenOneContract.methods.symbol().call();
-  const tokenTwoSymbolPromise = await tokenTwoContract.methods.symbol().call();
-  const tokenOneDecimalsPromise = await tokenOneContract.methods.decimals().call();
-  const tokenTwoDecimalsPromise = await tokenTwoContract.methods.decimals().call();
+  const tokenOneDefiKey = `ethereum:${positions.token0}`;
+  const tokenTwoDefiKey = `ethereum:${positions.token1}`;
+
+  const tokenPricePromise = await fetch(`${DEFI_LLAMA_URL}/${tokenOneDefiKey},${tokenTwoDefiKey}`);
   const slotPromise = await poolContract.methods.slot0().call();
   const poolLiquidityPromise = await poolContract.methods.liquidity().call();
   const feeGrowthGlobalOneX128Promise = await poolContract.methods.feeGrowthGlobal0X128().call();
   const feeGrowthGlobalTwoX128Promise = await poolContract.methods.feeGrowthGlobal1X128().call();
 
-  const [
-    tokenOneSymbol,
-    tokenTwoSymbol,
-    tokenOneDecimals,
-    tokenTwoDecimals,
-    slot,
-    poolLiquidity,
-    feeGrowthGlobalOneX128,
-    feeGrowthGlobalTwoX128
-  ] = await Promise.all<[string, string, string, string, UniPoolSlot, string, string, string]>([
-    tokenOneSymbolPromise,
-    tokenTwoSymbolPromise,
-    tokenOneDecimalsPromise,
-    tokenTwoDecimalsPromise,
-    slotPromise,
-    poolLiquidityPromise,
-    feeGrowthGlobalOneX128Promise,
-    feeGrowthGlobalTwoX128Promise
-  ]);
+  const [tokenPriceResponse, slot, poolLiquidity, feeGrowthGlobalOneX128, feeGrowthGlobalTwoX128] =
+    await Promise.all<[Response, UniPoolSlot, string, string, string]>([
+      tokenPricePromise,
+      slotPromise,
+      poolLiquidityPromise,
+      feeGrowthGlobalOneX128Promise,
+      feeGrowthGlobalTwoX128Promise
+    ]);
 
-  const tokenOne = new Token(1, positions.token0, Number(tokenOneDecimals), tokenOneSymbol, '');
-  const tokenTwo = new Token(1, positions.token1, Number(tokenTwoDecimals), tokenTwoSymbol, '');
+  const tokenPriceData: DefiLlamaPriceRespnse = await tokenPriceResponse.json();
+
+  const tokenOneSymbol = tokenPriceData.coins[tokenOneDefiKey].symbol;
+  const tokenTwoSymbol = tokenPriceData.coins[tokenTwoDefiKey].symbol;
+  const tokenOneDecimals = tokenPriceData.coins[tokenOneDefiKey].decimals;
+  const tokenTwoDecimals = tokenPriceData.coins[tokenTwoDefiKey].decimals;
+
+  const tokenOne = new Token(1, positions.token0, tokenOneDecimals, tokenOneSymbol, '');
+  const tokenTwo = new Token(1, positions.token1, tokenTwoDecimals, tokenTwoSymbol, '');
+
   // Possible error not converting to BigInt
   const pool = new Pool(
     tokenOne,
@@ -115,9 +121,9 @@ const calculateLiquidity = async (positions: UniNftPosition, nftId: string) => {
     tickUpper: Number(positions.tickUpper)
   });
 
-  const tokenOnePrice = Number(pool.token0Price.toSignificant(8));
+  const tokenOnePrice = tokenPriceData.coins[`ethereum:${positions.token0}`].price;
   const tokenOneBalance = Number(userPosition.amount0.toSignificant(8));
-  const tokenTwoPrice = Number(pool.token1Price.toSignificant(8));
+  const tokenTwoPrice = tokenPriceData.coins[`ethereum:${positions.token1}`].price;
   const tokenTwoBalance = Number(userPosition.amount1.toSignificant(8));
 
   const data = await graphClient
@@ -148,7 +154,7 @@ const calculateLiquidity = async (positions: UniNftPosition, nftId: string) => {
       Number(position.tickUpper.feeGrowthOutside0X128)) /
       2 ** 128) *
       Number(positions.liquidity)) /
-    (1 * 10 ** Number(tokenOneDecimals));
+    (1 * 10 ** tokenOneDecimals);
   const tokensOwedTwo =
     (((Number(feeGrowthGlobalTwoX128) -
       positions.feeGrowthInside1LastX128 -
@@ -156,22 +162,11 @@ const calculateLiquidity = async (positions: UniNftPosition, nftId: string) => {
       Number(position.tickUpper.feeGrowthOutside1X128)) /
       2 ** 128) *
       Number(positions.liquidity)) /
-    (1 * 10 ** Number(tokenTwoDecimals));
-
-  // console.log('tokensOneSymbol', pool.token0.symbol);
-  // console.log('tokensOwedOne', tokensOwedOne);
-  // console.log('tokenOneBalance', tokenOneBalance);
-  // console.log('tokenOnePrice', pool.token0Price.asFraction);
-  // console.log('tokensTwoSymbol', pool.token1.symbol);
-  // console.log('tokensOwedTwo', tokensOwedTwo);
-  // console.log('tokenTwoBalance', tokenTwoBalance);
-  // console.log('tokenTwoPrice', pool.token0Price);
+    (1 * 10 ** tokenTwoDecimals);
 
   const value =
     (tokenOneBalance + tokensOwedOne) * tokenOnePrice +
     (tokenTwoBalance + tokensOwedTwo) * tokenTwoPrice;
-
-  // console.log('value', value);
 
   const liquidityPoolObj = {
     tokenOne: {
