@@ -826,14 +826,18 @@ export const fetchPrices = async () => {
       prices[item.symbol] = item.price;
     });
 
-    const { HEX: TPLS_HEX, ...tplsTokenPrices } = tplsPriceData.chain_tpls;
+    const { HEX: TPLS_HEX, HDRN: TPLS_HDRN, ...tplsTokenPrices } = tplsPriceData.chain_tpls;
 
-    prices = { ...prices, TPLS_HEX, ...tplsTokenPrices };
+    prices = { ...prices, TPLS_HEX, TPLS_HDRN, ...tplsTokenPrices };
 
     return prices as Record<string, number>;
   } catch (e) {
     console.error('Could not fetch live prices');
   }
+};
+
+export const roundToPrecision = (amount: number, precision: number) => {
+  return Math.round((amount + Number.EPSILON) * Math.pow(10, precision)) / Math.pow(10, precision);
 };
 
 export const decryptAddress = (message: string, signature: string) => {

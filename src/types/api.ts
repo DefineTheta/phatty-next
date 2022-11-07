@@ -281,3 +281,14 @@ export type UniV3Response = ApiBaseResponse & {
     };
   };
 };
+
+// HEDRON Types
+
+export type HedronItem = {
+  stakeType: 'Tokenized' | 'Instanced';
+  hexStaked: number;
+  tShares: number;
+  hedronMintable: number;
+  servedDays: number;
+  usdValue: number;
+};
