@@ -39,7 +39,7 @@ const BundleAccountPage = () => {
 
   return (
     <div className="flex flex-col gap-y-24">
-      <BundleHeader address={bundleAddress} />
+      <BundleHeader address={bundleAddress} chain="" />
       <div className="w-full flex flex-col items-center gap-y-30">
         <div className="w-full flex flex-row justify-center gap-x-20">
           <SearchInput onKeyDown={handleSearch} inputRef={addressInputRef} />
