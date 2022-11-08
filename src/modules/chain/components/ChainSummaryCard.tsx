@@ -28,7 +28,10 @@ const ChainSummaryCard = ({ page, chain: currentChain }: IChainSummaryCardProps)
   const router = useRouter();
 
   const total = useAppSelector(
-    useCallback(page === 'profile' ? selectTotal : selectBundleTotal, [page])
+    useCallback(page === 'profile' ? selectTotal(currentChain) : selectBundleTotal(currentChain), [
+      page,
+      currentChain
+    ])
   );
   const ethereumTotal = useAppSelector(
     useCallback(page === 'profile' ? selectEthereumTotal : selectBundleEthereumTotal, [page])

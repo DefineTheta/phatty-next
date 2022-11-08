@@ -18,6 +18,7 @@ import {
   HedronDataComponentEnum,
   HexDataComponentEnum,
   PhiatDataComponentEnum,
+  ProfileChains,
   WalletDataComponentEnum
 } from './types';
 
@@ -218,11 +219,21 @@ export const selectProfileHedronTotal = memoize((state: RootState): number => {
   return state.protocols.HEDRON.total.ETH + state.protocols.HEDRON.total.TPLS;
 });
 
-export const selectTotal = memoize((state: RootState): number => {
-  console.log('SELECT_TOTAL');
+export const selectTotal = (chain: keyof typeof ProfileChains) =>
+  memoize((state: RootState): number => {
+    console.log('SELECT_TOTAL');
 
-  return selectEthereumTotal(state) + selectBscTotal(state) + selectTplsTotal(state);
-});
+    switch (chain) {
+      case ProfileChains.ETH:
+        return selectEthereumTotal(state);
+      case ProfileChains.BSC:
+        return selectBscTotal(state);
+      case ProfileChains.TPLS:
+        return selectTplsTotal(state);
+      default:
+        return selectEthereumTotal(state) + selectBscTotal(state) + selectTplsTotal(state);
+    }
+  });
 
 export const selectHexToatlTSharesPercentage = (chain: keyof typeof HexDataComponentEnum) =>
   memoize((state: RootState) => {

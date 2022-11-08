@@ -1,6 +1,7 @@
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { truncateAddress } from '@app-src/common/utils/format';
+import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { fetchBundlePortfolioData } from '@app-src/store/bundles/bundleSlice';
 import { selectBundleAddresses, selectBundleTotal } from '@app-src/store/bundles/selectors';
@@ -12,13 +13,14 @@ import { toast } from 'react-hot-toast';
 
 type IBundleHeaderProps = {
   address: string;
+  chain: PortfolioChain;
 };
 
-const BundleHeader = ({ address }: IBundleHeaderProps) => {
+const BundleHeader = ({ address, chain }: IBundleHeaderProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const total = useAppSelector(useCallback(selectBundleTotal, []));
+  const total = useAppSelector(useCallback(selectBundleTotal(chain), [chain]));
   const bundleAddresses = useAppSelector(useCallback(selectBundleAddresses, []));
 
   const styledTotal = useMemo(() => formatToMoney(total), [total]);

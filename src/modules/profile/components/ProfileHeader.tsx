@@ -1,5 +1,6 @@
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { truncateAddress } from '@app-src/common/utils/format';
+import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { fetchPortfolioData } from '@app-src/store/protocol/protocolSlice';
 import { selectTotal } from '@app-src/store/protocol/selectors';
@@ -12,13 +13,14 @@ import { useSelector } from 'react-redux';
 
 type IProfileHeaderProps = {
   address: string;
+  chain: PortfolioChain;
 };
 
-const ProfileHeader = ({ address }: IProfileHeaderProps) => {
+const ProfileHeader = ({ address, chain }: IProfileHeaderProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const total = useSelector(useCallback(selectTotal, []));
+  const total = useSelector(useCallback(selectTotal(chain), [chain]));
   const styledTotal = useMemo(() => formatToMoney(total), [total]);
 
   const currentTab = useMemo(

@@ -62,7 +62,7 @@ const BundlePortfolioPage = () => {
 
   return (
     <div className="flex flex-col gap-y-24">
-      <BundleHeader address={bundleAddress} />
+      <BundleHeader address={bundleAddress} chain={currentChain} />
       <div className="w-full flex flex-col items-center gap-y-30">
         <ChainSummaryCard page="bundle" chain={currentChain} />
         <WalletTableGroup page="bundle" chain={currentChain} />
