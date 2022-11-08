@@ -116,8 +116,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!price) return res.status(500).end();
 
-    const ethHedronStakePromise = calculateHedronStake(address, 'ETH', price['HDRN']);
-    const tplsHedronStakePromise = calculateHedronStake(address, 'TPLS', price['TPLS_HDRN']);
+    const ethHedronStakePromise = calculateHedronStake(address, 'ETH', price['HEX']);
+    const tplsHedronStakePromise = calculateHedronStake(address, 'TPLS', price['TPLS_HEX']);
 
     const stakeData = await Promise.all([ethHedronStakePromise, tplsHedronStakePromise]);
 
