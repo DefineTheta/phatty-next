@@ -2,6 +2,7 @@ import { roundToPrecision } from '@app-src/common/utils/format';
 import {
   ApiBaseResponse,
   AuthResponse,
+  HedronResponse,
   HexResponse,
   PancakeResponse,
   PhiatResponse,
@@ -490,6 +491,37 @@ export const getUniV3 = async (addresses: string[], refresh: boolean) => {
 
       collatedRes.data.LIQUIDITY_POOL.totalValue += uniV3.data.LIQUIDITY_POOL.totalValue;
     });
+  });
+
+  return collatedRes;
+};
+
+export const getHedron = async (addresses: string[], refresh: boolean) => {
+  const hedronData = await getMultipleAddressData<HedronResponse>(addresses, '/api/hedron', {
+    cache: refresh ? 'reload' : 'default'
+  });
+
+  if (hedronData.length === 1) return hedronData[0];
+
+  const collatedRes = {
+    data: {
+      ETH: {
+        data: [],
+        totalValue: 0
+      },
+      TPLS: {
+        data: [],
+        totalValue: 0
+      }
+    }
+  } as HedronResponse;
+
+  hedronData.forEach((hedron) => {
+    collatedRes.data.ETH.data = collatedRes.data.ETH.data.concat(hedron.data.ETH.data);
+    collatedRes.data.ETH.totalValue += hedron.data.ETH.totalValue;
+
+    collatedRes.data.TPLS.data = collatedRes.data.TPLS.data.concat(hedron.data.TPLS.data);
+    collatedRes.data.TPLS.totalValue += hedron.data.TPLS.totalValue;
   });
 
   return collatedRes;

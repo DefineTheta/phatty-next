@@ -1,4 +1,5 @@
 import {
+  getHedron,
   getHex,
   getPancake,
   getPhiat,
@@ -10,6 +11,7 @@ import {
 } from '@app-src/services/api';
 import { AppDispatch, RootState } from '@app-src/store/store';
 import {
+  HedronResponse,
   HexResponse,
   PancakeResponse,
   PhiatResponse,
@@ -21,6 +23,7 @@ import {
 } from '@app-src/types/api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
+  HedronDataComponentEnum,
   HexDataComponentEnum,
   PancakeDataComponentEnum,
   PhiatDataComponentEnum,
@@ -134,6 +137,18 @@ const initialState: ProtocolsState = {
     error: false,
     data: {
       [UniswapV3DataComponentEnum.LIQUIDITY_POOL]: []
+    }
+  },
+  [ProtocolEnum.HEDRON]: {
+    total: {
+      [HedronDataComponentEnum.ETH]: 0,
+      [HedronDataComponentEnum.TPLS]: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [HedronDataComponentEnum.ETH]: [],
+      [HedronDataComponentEnum.TPLS]: []
     }
   }
 };
@@ -296,6 +311,26 @@ const fetchUniV3Data = createAsyncThunk<
   if (!profileAddress) thunkAPI.rejectWithValue(null);
 
   return await getUniV3([profileAddress], false);
+});
+
+const fetchHedronData = createAsyncThunk<
+  HedronResponse,
+  { address: string; refresh: boolean } | undefined,
+  { state: RootState }
+>('protocols/fetchHedronData', async (input, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  if (input) return await getHedron([input.address], input.refresh);
+
+  const profileAddress = thunkAPI.getState().protocols.address;
+
+  if (!profileAddress) thunkAPI.rejectWithValue(null);
+
+  return await getHedron([profileAddress], false);
 });
 
 const fetchPortfolioData = (dispatch: AppDispatch, address: string, refresh = false) => {
@@ -553,6 +588,30 @@ export const protocolsSlice = createSlice({
       // state.UNISWAPV3.loading = false;
       state.UNISWAPV3.error = true;
     });
+
+    //Hedron reducer functions
+    builder.addCase(fetchHedronData.pending, (state) => {
+      state.HEDRON.loading = true;
+      state.HEDRON.error = false;
+    });
+
+    builder.addCase(fetchHedronData.fulfilled, (state, action) => {
+      const res = action.payload;
+
+      state.HEDRON.data.ETH = res.data.ETH.data;
+      state.HEDRON.data.TPLS = res.data.TPLS.data;
+
+      state.HEDRON.total.ETH = res.data.ETH.totalValue;
+      state.HEDRON.total.TPLS = res.data.TPLS.totalValue;
+
+      state.HEDRON.loading = false;
+      state.HEDRON.error = false;
+    });
+
+    builder.addCase(fetchHedronData.rejected, (state) => {
+      // state.HEDRON.loading = false;
+      state.HEDRON.error = true;
+    });
   }
 });
 
@@ -571,6 +630,7 @@ export {
   fetchSushiData,
   fetchUniV2Data,
   fetchUniV3Data,
+  fetchHedronData,
   fetchPortfolioData
 };
 
