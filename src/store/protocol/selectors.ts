@@ -2,6 +2,7 @@ import { getPositiveOrZero } from '@app-src/common/utils/query';
 import { getSeaCreature } from '@app-src/services/api';
 import { RootState } from '@app-src/store/store';
 import {
+  HedronItem,
   HexTokenItem,
   PancakeFarmTokenItem,
   PancakeLPTokenItem,
@@ -13,7 +14,12 @@ import {
   WalletTokenItem
 } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
-import { HexDataComponentEnum, PhiatDataComponentEnum, WalletDataComponentEnum } from './types';
+import {
+  HedronDataComponentEnum,
+  HexDataComponentEnum,
+  PhiatDataComponentEnum,
+  WalletDataComponentEnum
+} from './types';
 
 export const selectProfileHasFetched = memoize((state: RootState) => {
   console.log('SELECT_PROFILE_HAS_FETCHED');
@@ -99,6 +105,13 @@ export const selectUniV3LiquidityPoolData = memoize((state: RootState): UniV3Ite
   return state.protocols.UNISWAPV3.data.LIQUIDITY_POOL;
 });
 
+export const selectProfileHedronStakeData = (chain: keyof typeof HedronDataComponentEnum) =>
+  memoize((state: RootState): HedronItem[] => {
+    console.log(`SELECT_${chain}_HEDRON_STAKE_DATA`);
+
+    return state.protocols.HEDRON.data[chain];
+  });
+
 export const selectEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
 
@@ -107,7 +120,8 @@ export const selectEthereumTotal = memoize((state: RootState): number => {
     getPositiveOrZero(state.protocols.HEX.total.ETH) +
     getPositiveOrZero(state.protocols.SUSHI.total.LIQUIDITY_POOL) +
     getPositiveOrZero(state.protocols.UNISWAPV2.total.LIQUIDITY_POOL) +
-    getPositiveOrZero(state.protocols.UNISWAPV3.total.LIQUIDITY_POOL)
+    getPositiveOrZero(state.protocols.UNISWAPV3.total.LIQUIDITY_POOL) +
+    getPositiveOrZero(state.protocols.HEDRON.total.ETH)
   );
 });
 
@@ -127,7 +141,8 @@ export const selectTplsTotal = memoize((state: RootState): number => {
     getPositiveOrZero(state.protocols.WALLET.total.TPLS) +
     getPositiveOrZero(state.protocols.HEX.total.TPLS) +
     getPositiveOrZero(selectPhiatTotal(state)) +
-    getPositiveOrZero(selectPulsexTotal(state))
+    getPositiveOrZero(selectPulsexTotal(state)) +
+    getPositiveOrZero(state.protocols.HEDRON.total.TPLS)
   );
 });
 
@@ -188,6 +203,19 @@ export const selectUniV3Total = memoize((state: RootState): number => {
   console.log('SELECT_UNIV3_TOTAL');
 
   return state.protocols.UNISWAPV3.total.LIQUIDITY_POOL;
+});
+
+export const selectProfileHedronComponentTotal = (chain: keyof typeof HedronDataComponentEnum) =>
+  memoize((state: RootState): number => {
+    console.log(`SELECT_${chain}_HEDRON_STAKE_TOTAL`);
+
+    return state.protocols.HEDRON.total[chain];
+  });
+
+export const selectProfileHedronTotal = memoize((state: RootState): number => {
+  console.log('SELECT_PROFILE_HEDRON_TOTAL');
+
+  return state.protocols.HEDRON.total.ETH + state.protocols.HEDRON.total.TPLS;
 });
 
 export const selectTotal = memoize((state: RootState): number => {
@@ -259,6 +287,12 @@ export const selectUniV3Loading = memoize((state: RootState): boolean => {
   return state.protocols.UNISWAPV3.loading;
 });
 
+export const selectProfileHedronLoading = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_HEDRON_LOADING');
+
+  return state.protocols.HEDRON.loading;
+});
+
 export const selectProfileWalletError = memoize((state: RootState): boolean => {
   console.log('SELECT_PROFILE_WALLET_ERROR');
 
@@ -305,4 +339,10 @@ export const selectProfileUniV3Error = memoize((state: RootState): boolean => {
   console.log('SELECT_PROFILE_UNISWAPV3_ERROR');
 
   return state.protocols.UNISWAPV3.error;
+});
+
+export const selectProfileHedronError = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_HEDRON_ERROR');
+
+  return state.protocols.HEDRON.error;
 });

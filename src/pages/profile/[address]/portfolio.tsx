@@ -1,6 +1,7 @@
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import ChainSummaryCard from '@app-src/modules/chain/components/ChainSummaryCard';
+import HedronTableGroup from '@app-src/modules/portfolio/components/hedron/HedronTableGroup';
 import HexTableGroup from '@app-src/modules/portfolio/components/hex/HexTableGroup';
 import PancakeTableGroup from '@app-src/modules/portfolio/components/pancake/PancakeTableGroup';
 import PhiatTableGroup from '@app-src/modules/portfolio/components/phiat/PhiatTableGroup';
@@ -52,6 +53,7 @@ const ProfilePortfolioPage = () => {
         <SushiTableGroup page="profile" chain={currentChain} />
         <UniV2TableGroup page="profile" chain={currentChain} />
         <UniV3TableGroup page="profile" chain={currentChain} />
+        <HedronTableGroup page="profile" chain={currentChain} />
       </div>
     </div>
   );

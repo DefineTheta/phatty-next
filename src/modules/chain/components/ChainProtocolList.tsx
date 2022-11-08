@@ -1,5 +1,6 @@
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import {
+  selectBundleHedrontotal,
   selectBundleHextotal,
   selectBundlePancakeTotal,
   selectBundlePhiatTotal,
@@ -13,6 +14,7 @@ import {
   selectHextotal,
   selectPancakeTotal,
   selectPhiatTotal,
+  selectProfileHedronTotal,
   selectPulsexTotal,
   selectSushiTotal,
   selectUniV2Total,
@@ -52,6 +54,9 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
   );
   const uniV3Total = useSelector(
     useCallback(page === 'profile' ? selectUniV3Total : selectBundleUniV3Total, [page])
+  );
+  const hedronTotal = useSelector(
+    useCallback(page === 'profile' ? selectProfileHedronTotal : selectBundleHedrontotal, [page])
   );
 
   const protocolData = useMemo(
@@ -119,6 +124,14 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
         imgSrc: '/img/icon/univ2.svg',
         imgAlt: 'Uniswap version 3',
         linkHref: '#univ3'
+      },
+      {
+        protocolName: 'Hedron',
+        totalAmount: hedronTotal,
+        displayTotalAmount: formatToMoney(hedronTotal),
+        imgSrc: '/img/icon/hedron.webp',
+        imgAlt: 'Hedron',
+        linkHref: '#hedron'
       }
     ],
     [
@@ -129,12 +142,13 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
       pancakeTotal,
       sushiTotal,
       uniV2Total,
-      uniV3Total
+      uniV3Total,
+      hedronTotal
     ]
   );
 
   return (
-    <div className="flex flex-row flex-wrap gap-x-10">
+    <div className="flex flex-row flex-wrap gap-x-10 gap-y-10">
       {protocolData.map((protocol, index) => {
         if (protocol.totalAmount !== 0) {
           return (

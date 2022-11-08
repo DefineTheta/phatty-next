@@ -1,6 +1,7 @@
 import {
   AuthenticationError,
   getAccountFromMetamask,
+  getHedron,
   getHex,
   getPancake,
   getPhiat,
@@ -15,6 +16,7 @@ import { AppDispatch, RootState } from '@app-src/store/store';
 import {
   AuthResponse,
   BundleResponse,
+  HedronResponse,
   HexResponse,
   PancakeResponse,
   PhiatResponse,
@@ -27,6 +29,7 @@ import {
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   BundlesState,
+  HedronDataComponentEnum,
   HexDataComponentEnum,
   PancakeDataComponentEnum,
   PhiatDataComponentEnum,
@@ -140,6 +143,18 @@ const initialState: BundlesState = {
     error: false,
     data: {
       [UniswapV3DataComponentEnum.LIQUIDITY_POOL]: []
+    }
+  },
+  [ProtocolEnum.HEDRON]: {
+    total: {
+      [HedronDataComponentEnum.ETH]: 0,
+      [HedronDataComponentEnum.TPLS]: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [HedronDataComponentEnum.ETH]: [],
+      [HedronDataComponentEnum.TPLS]: []
     }
   }
 };
@@ -420,6 +435,26 @@ const fetchBundleUniV3Data = createAsyncThunk<
   return await getUniV3(bundleAddresses, false);
 });
 
+const fetchBundleHedronData = createAsyncThunk<
+  HedronResponse,
+  { addresses: string[]; refresh: boolean } | undefined,
+  { state: RootState }
+>('bundles/fetchHedronData', async (input, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  if (input) return await getHedron(input.addresses, input.refresh);
+
+  const bundleAddresses = thunkAPI.getState().bundles.addresses;
+
+  if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return await getHedron(bundleAddresses, false);
+});
+
 const fetchBundlePortfolioData = (dispatch: AppDispatch, addresses: string[], refresh = false) => {
   return Promise.all([
     dispatch(fetchBundleWalletData({ addresses, refresh })),
@@ -429,7 +464,8 @@ const fetchBundlePortfolioData = (dispatch: AppDispatch, addresses: string[], re
     dispatch(fetchBundlePancakeData({ addresses, refresh })),
     dispatch(fetchBundleSushiData({ addresses, refresh })),
     dispatch(fetchBundleUniV2Data({ addresses, refresh })),
-    dispatch(fetchBundleUniV3Data({ addresses, refresh }))
+    dispatch(fetchBundleUniV3Data({ addresses, refresh })),
+    dispatch(fetchBundleHedronData({ addresses, refresh }))
   ]);
 };
 
@@ -740,6 +776,30 @@ export const bundlesSlice = createSlice({
       // state.UNISWAPV3.loading = false;
       state.UNISWAPV3.error = true;
     });
+
+    //Hedron reducer functions
+    builder.addCase(fetchBundleHedronData.pending, (state) => {
+      state.HEDRON.loading = true;
+      state.HEDRON.error = false;
+    });
+
+    builder.addCase(fetchBundleHedronData.fulfilled, (state, action) => {
+      const res = action.payload;
+
+      state.HEDRON.data.ETH = res.data.ETH.data;
+      state.HEDRON.data.TPLS = res.data.TPLS.data;
+
+      state.HEDRON.total.ETH = res.data.ETH.totalValue;
+      state.HEDRON.total.TPLS = res.data.TPLS.totalValue;
+
+      state.HEDRON.loading = false;
+      state.HEDRON.error = false;
+    });
+
+    builder.addCase(fetchBundleHedronData.rejected, (state) => {
+      // state.HEDRON.loading = false;
+      state.HEDRON.error = true;
+    });
   }
 });
 
@@ -763,6 +823,7 @@ export {
   fetchBundleSushiData,
   fetchBundleUniV2Data,
   fetchBundleUniV3Data,
+  fetchBundleHedronData,
   fetchBundlePortfolioData
 };
 

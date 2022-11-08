@@ -2,6 +2,7 @@ import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import BundleHeader from '@app-src/modules/bundle/components/BundleHeader';
 import ChainSummaryCard from '@app-src/modules/chain/components/ChainSummaryCard';
+import HedronTableGroup from '@app-src/modules/portfolio/components/hedron/HedronTableGroup';
 import HexTableGroup from '@app-src/modules/portfolio/components/hex/HexTableGroup';
 import PancakeTableGroup from '@app-src/modules/portfolio/components/pancake/PancakeTableGroup';
 import PhiatTableGroup from '@app-src/modules/portfolio/components/phiat/PhiatTableGroup';
@@ -72,6 +73,7 @@ const BundlePortfolioPage = () => {
         <SushiTableGroup page="bundle" chain={currentChain} />
         <UniV2TableGroup page="bundle" chain={currentChain} />
         <UniV3TableGroup page="bundle" chain={currentChain} />
+        <HedronTableGroup page="bundle" chain={currentChain} />
       </div>
     </div>
   );

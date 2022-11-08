@@ -1,19 +1,5 @@
-// import {
-//   MappedHexResponse,
-//   UniV2Data,
-//   UniV3Data,
-//   WalletData as WalletAPIData
-// } from 'src/types/api';
-// import {
-//   HexDataComponentEnum,
-//   PancakeDataComponentEnum,
-//   PhiatDataComponentEnum,
-//   PulsexDataComponentEnum,
-//   UniswapV2DataComponentEnum,
-//   UniswapV3DataComponentEnum
-// } from 'src/types/crypto';
-
 import {
+  HedronItem,
   HexTokenItem,
   PancakeFarmTokenItem,
   PancakeLPTokenItem,
@@ -43,7 +29,8 @@ export enum ProtocolEnum {
   PANCAKE = 'PANCAKE',
   SUSHI = 'SUSHI',
   UNISWAPV2 = 'UNISWAPV2',
-  UNISWAPV3 = 'UNISWAPV3'
+  UNISWAPV3 = 'UNISWAPV3',
+  HEDRON = 'HEDRON'
 }
 
 export enum WalletDataComponentEnum {
@@ -86,6 +73,11 @@ export enum UniswapV3DataComponentEnum {
   LIQUIDITY_POOL = 'LIQUIDITY_POOL'
 }
 
+export enum HedronDataComponentEnum {
+  ETH = 'ETH',
+  TPLS = 'TPLS'
+}
+
 export interface BundlesState {
   bundleAddress: string;
   addresses: string[];
@@ -98,6 +90,7 @@ export interface BundlesState {
   [ProtocolEnum.SUSHI]: SushiData;
   [ProtocolEnum.UNISWAPV2]: UniswapV2Data;
   [ProtocolEnum.UNISWAPV3]: UniswapV3Data;
+  [ProtocolEnum.HEDRON]: HedronData;
 }
 
 export interface ProtocolData {
@@ -154,4 +147,9 @@ interface UniswapV2Data extends ProtocolData {
 interface UniswapV3Data extends ProtocolData {
   total: Record<UniswapV3DataComponentEnum, number>;
   data: Record<keyof typeof UniswapV3DataComponentEnum, UniV3Item[]>;
+}
+
+interface HedronData extends ProtocolData {
+  total: Record<HedronDataComponentEnum, number>;
+  data: Record<HedronDataComponentEnum, HedronItem[]>;
 }

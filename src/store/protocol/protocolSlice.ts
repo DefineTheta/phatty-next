@@ -342,7 +342,8 @@ const fetchPortfolioData = (dispatch: AppDispatch, address: string, refresh = fa
     dispatch(fetchPancakeData({ address, refresh })),
     dispatch(fetchSushiData({ address, refresh })),
     dispatch(fetchUniV2Data({ address, refresh })),
-    dispatch(fetchUniV3Data({ address, refresh }))
+    dispatch(fetchUniV3Data({ address, refresh })),
+    dispatch(fetchHedronData({ address, refresh }))
   ]);
 };
 
