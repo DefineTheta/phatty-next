@@ -4,6 +4,8 @@ export default function Document() {
   return (
     <Html>
       <Head>
+        <title>Phatty</title>
+        <link rel="icon" type="image/png" href="/favicon.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
