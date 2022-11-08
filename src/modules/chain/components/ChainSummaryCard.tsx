@@ -106,7 +106,7 @@ const ChainSummaryCard = ({ page, chain: currentChain }: IChainSummaryCardProps)
               )
           )}
         </div>
-        <ChainProtocolList currentAssetChain="eth" page={page} />
+        <ChainProtocolList currentAssetChain={currentChain} page={page} />
       </div>
     </Card>
   );

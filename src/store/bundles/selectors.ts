@@ -158,15 +158,25 @@ export const selectBundleTplsTotal = memoize((state: RootState): number => {
   );
 });
 
-export const selectBundleWalletTotal = memoize((state: RootState): number => {
-  console.log('SELECT_WALLET_TOTAL');
+export const selectBundleWalletTotal = (chain: '' | keyof typeof WalletDataComponentEnum) =>
+  memoize((state: RootState): number => {
+    console.log('SELECT_BUNDLE_WALLET_TOTAL');
 
-  return (
-    state.bundles.WALLET.total.ETH +
-    state.bundles.WALLET.total.BSC +
-    state.bundles.WALLET.total.TPLS
-  );
-});
+    switch (chain) {
+      case WalletDataComponentEnum.ETH:
+        return state.bundles.WALLET.total.ETH;
+      case WalletDataComponentEnum.BSC:
+        return state.bundles.WALLET.total.BSC;
+      case WalletDataComponentEnum.TPLS:
+        return state.bundles.WALLET.total.TPLS;
+      default:
+        return (
+          state.bundles.WALLET.total.ETH +
+          state.bundles.WALLET.total.BSC +
+          state.bundles.WALLET.total.TPLS
+        );
+    }
+  });
 
 export const selectBundleHexComponentTotal = (chain: keyof typeof HexDataComponentEnum) =>
   memoize((state: RootState): number => {

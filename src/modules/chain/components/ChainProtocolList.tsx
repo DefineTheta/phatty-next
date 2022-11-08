@@ -1,3 +1,4 @@
+import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import {
   selectBundleHedrontotal,
@@ -27,12 +28,17 @@ import ChainProtocolItem from './ChainProtocolItem';
 
 export type IChainProtocolListProps = {
   page: 'profile' | 'bundle';
-  currentAssetChain: string;
+  currentAssetChain: PortfolioChain;
 };
 
 const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps) => {
   const walletTotal = useSelector(
-    useCallback(page === 'profile' ? selectWalletTotal : selectBundleWalletTotal, [page])
+    useCallback(
+      page === 'profile'
+        ? selectWalletTotal(currentAssetChain)
+        : selectBundleWalletTotal(currentAssetChain),
+      [page, currentAssetChain]
+    )
   );
   const hexTotal = useSelector(
     useCallback(page === 'profile' ? selectHextotal : selectBundleHextotal, [page])

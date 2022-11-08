@@ -28,7 +28,10 @@ const WalletTableGroup = ({ page, chain }: IWalletTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const walletTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectWalletTotal : selectBundleWalletTotal, [page])
+    useCallback(page === 'profile' ? selectWalletTotal(chain) : selectBundleWalletTotal(chain), [
+      page,
+      chain
+    ])
   );
   const loading = useAppSelector(
     useCallback(page === 'profile' ? selectWalletLoading : selectBundleWalletLoading, [page])
