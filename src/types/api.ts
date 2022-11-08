@@ -292,3 +292,15 @@ export type HedronItem = {
   servedDays: number;
   usdValue: number;
 };
+
+export type HedronChainItem = {
+  data: HedronItem[];
+  totalValue: number;
+};
+
+export type HedronResponse = {
+  data: {
+    ETH: HedronChainItem;
+    TPLS: HedronChainItem;
+  };
+};

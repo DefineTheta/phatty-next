@@ -1,6 +1,6 @@
 import { hedronABI } from '@app-src/services/abi';
 import { fetchPrices, roundToPrecision, tplsClient } from '@app-src/services/web3';
-import { HedronItem } from '@app-src/types/api';
+import { HedronItem, HedronResponse } from '@app-src/types/api';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Web3 from 'web3';
 import type { Contract } from 'web3-eth-contract';
@@ -73,6 +73,8 @@ const calculateHedronInstancedStake = async (
 };
 
 const calculateHedronStake = async (address: string, type: 'ETH' | 'TPLS', hedronPrice: number) => {
+  let stakes: HedronItem[] = [];
+
   const contract = type === 'ETH' ? hsiEthContract : hsiTplsContract;
   const hedronBalance = Number((await contract.methods.balanceOf(address).call()) || 0);
   const hedronStakeCount = Number((await contract.methods.hsiCount(address).call()) || 0);
@@ -86,8 +88,7 @@ const calculateHedronStake = async (address: string, type: 'ETH' | 'TPLS', hedro
       );
     }
 
-    const hedronTokenizedStakeData = await Promise.all(hedronTokenizedPromises);
-    console.log(hedronTokenizedStakeData);
+    stakes = stakes.concat(await Promise.all(hedronTokenizedPromises));
   }
 
   if (hedronStakeCount !== 0) {
@@ -99,9 +100,10 @@ const calculateHedronStake = async (address: string, type: 'ETH' | 'TPLS', hedro
       );
     }
 
-    const hedronInstancedStakeData = await Promise.all(hedronInstancedPromises);
-    console.log(hedronInstancedStakeData);
+    stakes = stakes.concat(await Promise.all(hedronInstancedPromises));
   }
+
+  return stakes;
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -114,13 +116,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!price) return res.status(500).end();
 
-    const ethHedronPrice = price['HDRN'];
-    const tplsHedronPrice = price['TPLS_HDRN'];
+    const ethHedronStakePromise = calculateHedronStake(address, 'ETH', price['HDRN']);
+    const tplsHedronStakePromise = calculateHedronStake(address, 'TPLS', price['TPLS_HDRN']);
 
-    await calculateHedronStake(address, 'ETH', ethHedronPrice);
-    await calculateHedronStake(address, 'TPLS', tplsHedronPrice);
+    const stakeData = await Promise.all([ethHedronStakePromise, tplsHedronStakePromise]);
 
-    res.status(200).end();
+    const filteredStakes: HedronItem[][] = [[], []];
+    const stakesTotal = [0, 0];
+
+    for (let i = 0; i < filteredStakes.length; i++) {
+      for (let j = 0; j < stakeData[i].length; j++) {
+        if (stakeData[i][j].usdValue > 0) {
+          filteredStakes[i].push(stakeData[i][j]);
+          stakesTotal[i] += stakeData[i][j].usdValue;
+        }
+      }
+    }
+
+    const resObj = {
+      data: {
+        ETH: {
+          data: filteredStakes[0],
+          totalValue: stakesTotal[0]
+        },
+        TPLS: {
+          data: filteredStakes[1],
+          totalValue: stakesTotal[1]
+        }
+      }
+    } as HedronResponse;
+
+    res.status(200).send(resObj);
   } catch (err) {
     res.status(500).end();
   }
