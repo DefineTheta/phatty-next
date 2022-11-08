@@ -15,7 +15,6 @@ import {
 } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
 import {
-  BundleChains,
   HedronDataComponentEnum,
   HexDataComponentEnum,
   PhiatDataComponentEnum,
@@ -233,25 +232,13 @@ export const selectBundleHedrontotal = memoize((state: RootState): number => {
   );
 });
 
-export const selectBundleTotal = (chain: keyof typeof BundleChains) =>
-  memoize((state: RootState): number => {
-    console.log('SELECT_TOTAL');
+export const selectBundleTotal = memoize((state: RootState): number => {
+  console.log('SELECT_TOTAL');
 
-    switch (chain) {
-      case BundleChains.ETH:
-        return selectBundleEthereumTotal(state);
-      case BundleChains.BSC:
-        return selectBundleBscTotal(state);
-      case BundleChains.TPLS:
-        return selectBundleTplsTotal(state);
-      default:
-        return (
-          selectBundleEthereumTotal(state) +
-          selectBundleBscTotal(state) +
-          selectBundleTplsTotal(state)
-        );
-    }
-  });
+  return (
+    selectBundleEthereumTotal(state) + selectBundleBscTotal(state) + selectBundleTplsTotal(state)
+  );
+});
 
 export const selectBundleHexToatlTSharesPercentage = (chain: keyof typeof HexDataComponentEnum) =>
   memoize((state: RootState) => {

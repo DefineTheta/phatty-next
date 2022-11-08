@@ -4,7 +4,13 @@ import { truncateAddress } from '@app-src/common/utils/format';
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { fetchBundlePortfolioData } from '@app-src/store/bundles/bundleSlice';
-import { selectBundleAddresses, selectBundleTotal } from '@app-src/store/bundles/selectors';
+import {
+  selectBundleAddresses,
+  selectBundleBscTotal,
+  selectBundleEthereumTotal,
+  selectBundleTotal,
+  selectBundleTplsTotal
+} from '@app-src/store/bundles/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -20,7 +26,18 @@ const BundleHeader = ({ address, chain }: IBundleHeaderProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const total = useAppSelector(useCallback(selectBundleTotal(chain), [chain]));
+  const total = useAppSelector(
+    useCallback(
+      chain === 'ETH'
+        ? selectBundleEthereumTotal
+        : chain === 'BSC'
+        ? selectBundleBscTotal
+        : chain === 'TPLS'
+        ? selectBundleTplsTotal
+        : selectBundleTotal,
+      [chain]
+    )
+  );
   const bundleAddresses = useAppSelector(useCallback(selectBundleAddresses, []));
 
   const styledTotal = useMemo(() => formatToMoney(total), [total]);

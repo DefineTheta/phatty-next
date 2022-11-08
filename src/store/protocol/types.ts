@@ -36,13 +36,6 @@ export enum ProtocolImgEnum {
   UNISWAPV3 = 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/1348.png'
 }
 
-export enum ProfileChains {
-  '' = '',
-  'ETH' = 'ETH',
-  'BSC' = 'BSC',
-  'TPLS' = 'TPLS'
-}
-
 export enum ProtocolEnum {
   WALLET = 'WALLET',
   HEX = 'HEX',
