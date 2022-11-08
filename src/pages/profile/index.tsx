@@ -9,7 +9,7 @@ const ProfilePage = () => {
 
   return (
     <div className="flex flex-col gap-y-24">
-      <ProfileHeader address={profileAddress} />
+      <ProfileHeader address={profileAddress} chain="" />
       <div className="w-full flex flex-col items-center gap-y-30">
         <Card>
           <div className="flex flex-row justify-center">

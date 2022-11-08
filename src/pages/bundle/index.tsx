@@ -17,7 +17,7 @@ const BundlePage = () => {
 
   return (
     <div className="flex flex-col gap-y-24">
-      <BundleHeader address={bundleAddress} />
+      <BundleHeader address={bundleAddress} chain="" />
       <div className="w-full flex flex-col items-center">
         <Card>
           <div className="flex flex-row justify-center">
