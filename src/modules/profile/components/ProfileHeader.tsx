@@ -1,3 +1,4 @@
+import Container from '@app-src/common/components/layout/Container';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { truncateAddress } from '@app-src/common/utils/format';
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
@@ -76,7 +77,7 @@ const ProfileHeader = ({ address, chain }: IProfileHeaderProps) => {
 
   return (
     <div className="flex flex-row justify-center bg-background-200 pt-36">
-      <div className="flex w-full max-w-96 flex-col gap-y-30">
+      <Container>
         <div className="flex flex-col gap-y-30">
           <div className="flex flex-row justify-between">
             <div className="flex flex-col items-start gap-y-12">
@@ -108,27 +109,27 @@ const ProfileHeader = ({ address, chain }: IProfileHeaderProps) => {
             </div>
             <span className="text-2xl font-black text-text-100">{styledTotal}</span>
           </div>
-        </div>
-        <div className="flex flex-row items-center justify-between">
-          <div className="flex flex-row items-center gap-x-30">
-            {tabs.map((tab) => (
-              <Link key={tab.name} href={address ? tab.href : '/profile'}>
-                <a
-                  key={tab.name}
-                  className={`cursor-pointer px-10 pb-6 text-base font-bold ${
-                    tab.name === currentTab
-                      ? 'border-b-4 border-text-900 text-text-900'
-                      : 'text-text-200'
-                  }`}
-                >
-                  {tab.displayName}
-                </a>
-              </Link>
-            ))}
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-x-30">
+              {tabs.map((tab) => (
+                <Link key={tab.name} href={address ? tab.href : '/profile'}>
+                  <a
+                    key={tab.name}
+                    className={`cursor-pointer px-10 pb-6 text-base font-bold ${
+                      tab.name === currentTab
+                        ? 'border-b-4 border-text-900 text-text-900'
+                        : 'text-text-200'
+                    }`}
+                  >
+                    {tab.displayName}
+                  </a>
+                </Link>
+              ))}
+            </div>
+            <span className="text-sm text-text-200">Data updated now</span>
           </div>
-          <span className="text-sm text-text-200">Data updated now</span>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };

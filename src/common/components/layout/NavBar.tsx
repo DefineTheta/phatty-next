@@ -7,6 +7,7 @@ import { setProfileAddress, setProfileHasFetched } from '@app-src/store/protocol
 import { useRouter } from 'next/router';
 import { KeyboardEvent, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import Container from './Container';
 
 const NavBar = () => {
   const dispatch = useAppDispatch();
@@ -43,7 +44,7 @@ const NavBar = () => {
 
   return (
     <div className="flex w-full flex-row justify-center border-b border-border-100 bg-background-200 py-10">
-      <div className="w-full max-w-96 px-10">
+      <Container>
         <div className="ml-36 flex h-full flex-row items-center justify-end gap-x-24 md:ml-0">
           <SearchInput onKeyDown={handleSearch} inputRef={searchInputRef} />
           <button
@@ -55,7 +56,7 @@ const NavBar = () => {
             </span>
           </button>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };

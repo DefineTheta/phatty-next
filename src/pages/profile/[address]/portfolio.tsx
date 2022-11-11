@@ -1,3 +1,4 @@
+import Container from '@app-src/common/components/layout/Container';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import ChainSummaryCard from '@app-src/modules/chain/components/ChainSummaryCard';
@@ -43,17 +44,21 @@ const ProfilePortfolioPage = () => {
   return (
     <div className="flex flex-col gap-y-24">
       <ProfileHeader address={address} chain={currentChain} />
-      <div className="flex w-full flex-col items-center gap-y-30">
-        <ChainSummaryCard page="profile" chain={currentChain} />
-        <WalletTableGroup page="profile" chain={currentChain} />
-        <HexTableGroup page="profile" chain={currentChain} />
-        <PhiatTableGroup page="profile" chain={currentChain} />
-        <PulsexTableGroup page="profile" chain={currentChain} />
-        <PancakeTableGroup page="profile" chain={currentChain} />
-        <SushiTableGroup page="profile" chain={currentChain} />
-        <UniV2TableGroup page="profile" chain={currentChain} />
-        <UniV3TableGroup page="profile" chain={currentChain} />
-        <HedronTableGroup page="profile" chain={currentChain} />
+      <div className="flex w-full justify-center">
+        <Container>
+          <div className="flex flex-col items-center gap-y-30">
+            <ChainSummaryCard page="profile" chain={currentChain} />
+            <WalletTableGroup page="profile" chain={currentChain} />
+            <HexTableGroup page="profile" chain={currentChain} />
+            <PhiatTableGroup page="profile" chain={currentChain} />
+            <PulsexTableGroup page="profile" chain={currentChain} />
+            <PancakeTableGroup page="profile" chain={currentChain} />
+            <SushiTableGroup page="profile" chain={currentChain} />
+            <UniV2TableGroup page="profile" chain={currentChain} />
+            <UniV3TableGroup page="profile" chain={currentChain} />
+            <HedronTableGroup page="profile" chain={currentChain} />
+          </div>
+        </Container>
       </div>
     </div>
   );
