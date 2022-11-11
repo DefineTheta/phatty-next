@@ -52,7 +52,7 @@ const WalletTableGroup = ({ page, chain }: IWalletTableGroupProps) => {
   }
 
   return (
-    <div id="wallet" className="w-full max-w-96 flex flex-col gap-y-12">
+    <div id="wallet" className="flex w-full max-w-96 flex-col gap-y-12">
       <TableHeader
         tableName="Wallet"
         totalValue={styledWalletTotal}

@@ -4,8 +4,8 @@ type ISkeletonLoaderProps = {
 
 const SkeletonLoader = ({ className }: ISkeletonLoaderProps) => {
   return (
-    <div className={`${className} bg-background-100 rounded-lg overflow-hidden`}>
-      <div className="w-full h-full bg-skeleton animate-skeleton" />
+    <div className={`${className} overflow-hidden rounded-lg bg-background-100`}>
+      <div className="h-full w-full animate-skeleton bg-skeleton" />
     </div>
   );
 };

@@ -43,20 +43,20 @@ const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
         </TableHeaderRow>
         {Array.from({ length: 3 }, (x, i) => i).map((index) => (
           <TableRow key={index}>
-            <TableRowCell className="pr-20 basis-1/4">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/4 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/4">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/4 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/4">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/4 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/6">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/6 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/12">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/12 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
           </TableRow>
         ))}
@@ -115,7 +115,7 @@ const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
           <TableRowCell className="basis-1/12">
             {item.chain === 'TPLS' && (
               <a
-                className="px-10 py-1 bg-purple-a text-md font-bold underline underline-offset-2 text-text-200 rounded-full cursor-pointer"
+                className="bg-purple-a cursor-pointer rounded-full px-10 py-1 text-md font-bold text-text-200 underline underline-offset-2"
                 target="_blank"
                 href="https://testnet.phiat.io/markets"
                 rel="noreferrer"

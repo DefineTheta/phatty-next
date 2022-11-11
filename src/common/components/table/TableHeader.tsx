@@ -20,8 +20,8 @@ const TableHeader = ({
   tableSecondaryImgAlt
 }: ITableHeaderProps) => {
   return (
-    <div id="table-header" className="flex flex-row justify-between items-center">
-      <div className="flex flex-row gap-x-14 items-center">
+    <div id="table-header" className="flex flex-row items-center justify-between">
+      <div className="flex flex-row items-center gap-x-14">
         <div className="relative">
           <Image width="20px" height="20px" src={tablePrimaryImgSrc} alt={tablePrimaryImgAlt} />
           {tableSecondaryImgSrc && (
@@ -37,7 +37,7 @@ const TableHeader = ({
         </div>
         {tableLink ? (
           <a
-            className="no-underline text-lg text-text-800"
+            className="text-lg text-text-800 no-underline"
             href={tableLink}
             target="_blank"
             rel="noreferrer"
@@ -48,7 +48,7 @@ const TableHeader = ({
           <span className="text-lg font-bold text-text-300">{tableName}</span>
         )}
       </div>
-      <span className="text-base font-bold text-text-300 text-right">{totalValue}</span>
+      <span className="text-right text-base font-bold text-text-300">{totalValue}</span>
     </div>
   );
 };

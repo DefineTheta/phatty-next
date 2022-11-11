@@ -42,12 +42,12 @@ const NavBar = () => {
   };
 
   return (
-    <div className="w-full py-10 flex flex-row justify-center bg-background-200 border-b border-border-100">
-      <div className="w-full max-w-96">
-        <div className="h-full flex flex-row justify-end items-center gap-x-24">
+    <div className="flex w-full flex-row justify-center border-b border-border-100 bg-background-200 py-10">
+      <div className="w-full max-w-96 px-10">
+        <div className="ml-36 flex h-full flex-row items-center justify-end gap-x-24 md:ml-0">
           <SearchInput onKeyDown={handleSearch} inputRef={searchInputRef} />
           <button
-            className="py-6 px-24 bg-purple-button rounded-full shadow-md cursor-pointer"
+            className="hidden cursor-pointer rounded-full bg-purple-button py-6 px-24 shadow-md md:flex"
             onClick={() => handleButtonClick(bundleAddress ? 'disconnect' : 'connect')}
           >
             <span className="text-base font-semibold text-text-300">

@@ -2,12 +2,12 @@ import Image from 'next/image';
 
 const Footer = () => {
   return (
-    <div className="w-full mt-60 py-24 flex flex-row justify-center bg-background-200">
-      <div className="w-960 flex flex-row justify-between items-center">
+    <div className="mt-60 flex w-full flex-row justify-center bg-background-200 py-24">
+      <div className="flex w-960 flex-row items-center justify-between">
         <a>
           <Image src="/img/logo-light.png" alt="Logo" width="140px" height="36px" />
         </a>
-        <div className="flex flex-row gap-x-8 items-cente">
+        <div className="items-cente flex flex-row gap-x-8">
           <a href="" target="_blank" rel="noopener nofollow noreferrer">
             <svg width="24px" height="24px" viewBox="0 0 24 24" className="fill-text-100">
               <title>icon/twitter</title>

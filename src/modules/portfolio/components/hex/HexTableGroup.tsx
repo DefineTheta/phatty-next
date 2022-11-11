@@ -93,7 +93,7 @@ const HexTableGroup = ({ page, chain }: IHexTableGroupProps) => {
   }
 
   return (
-    <div id="hex" className="w-full max-w-96 flex flex-col gap-y-24">
+    <div id="hex" className="flex w-full max-w-96 flex-col gap-y-24">
       {(loading || hexEthTotal !== 0) && isCurrentChain('ETH', chain) && (
         <div className="flex flex-col gap-y-12">
           <TableHeader

@@ -50,7 +50,7 @@ const PulsexTableGroup = ({ page, chain }: IPulsexTableGroupProps) => {
   }
 
   return (
-    <div id="pulsex" className="w-full max-w-96 flex flex-col gap-y-12">
+    <div id="pulsex" className="flex w-full max-w-96 flex-col gap-y-12">
       <TableHeader
         tableName="Pulsex"
         tableLink="https://app.v2b.testnet.pulsex.com/swap"

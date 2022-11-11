@@ -10,7 +10,7 @@ const ProfileHistoryPage = () => {
   return (
     <div className="flex flex-col gap-y-24">
       <ProfileHeader address={address} chain="" />
-      <div className="w-full flex flex-col items-center gap-y-30">
+      <div className="flex w-full flex-col items-center gap-y-30">
         <HistoryTable />
       </div>
     </div>

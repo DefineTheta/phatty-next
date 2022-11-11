@@ -42,20 +42,20 @@ const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
         </TableHeaderRow>
         {Array.from({ length: 3 }, (x, i) => i).map((index) => (
           <TableRow key={index}>
-            <TableRowCell className="pr-20 basis-1/5">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/5 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/5">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/5 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/5">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/5 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/5">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/5 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/5">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/5 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
           </TableRow>
         ))}

@@ -39,14 +39,14 @@ const UniV2LiquidityPoolTable = ({ page, loading }: IUniV2LiquidityPoolTableProp
         </TableHeaderRow>
         {Array.from({ length: 3 }, (x, i) => i).map((index) => (
           <TableRow key={index}>
-            <TableRowCell className="pr-20 basis-1/4">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/4 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/2">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/2 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/4">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/4 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
           </TableRow>
         ))}
@@ -83,7 +83,7 @@ const UniV2LiquidityPoolTable = ({ page, loading }: IUniV2LiquidityPoolTableProp
                 src={item.tokenOne.image}
                 alt={item.tokenOne.symbol}
               />
-              <div className="w-20 h-20 -ml-16">
+              <div className="-ml-16 h-20 w-20">
                 <Image
                   className="rounded-full"
                   width="20px"

@@ -40,16 +40,16 @@ const BundleAccountPage = () => {
   return (
     <div className="flex flex-col gap-y-24">
       <BundleHeader address={bundleAddress} chain="" />
-      <div className="w-full flex flex-col items-center gap-y-30">
-        <div className="w-full flex flex-row justify-center gap-x-20">
+      <div className="flex w-full flex-col items-center gap-y-30">
+        <div className="flex w-full flex-row justify-center gap-x-20">
           <SearchInput onKeyDown={handleSearch} inputRef={addressInputRef} />
           <button
-            className="py-6 px-24 bg-purple-button rounded-full shadow-md cursor-pointer"
+            className="cursor-pointer rounded-full bg-purple-button py-6 px-24 shadow-md"
             onClick={handleAddButton}
           >
             <span className="text-base font-semibold text-text-300">Add Wallet</span>
           </button>
-          <button className="py-6 px-24 bg-purple-button rounded-full shadow-md cursor-pointer">
+          <button className="cursor-pointer rounded-full bg-purple-button py-6 px-24 shadow-md">
             <span className="text-base font-semibold text-text-300">
               {bundleAddress ? 'Disconnect' : 'Connect Wallet'}
             </span>
@@ -59,11 +59,11 @@ const BundleAccountPage = () => {
           {bundleAddresses.slice(1).map((address, index) => (
             <div
               key={index}
-              className="py-10 flex flex-row justify-between items-center text-text-200"
+              className="flex flex-row items-center justify-between py-10 text-text-200"
             >
               <span className="text-base font-medium tracking-wide">{address}</span>
               <a
-                className="px-10 py-1 text-md font-bold underline underline-offset-2 rounded-full cursor-pointer"
+                className="cursor-pointer rounded-full px-10 py-1 text-md font-bold underline underline-offset-2"
                 onClick={() => handleRemoveButton(address)}
               >
                 Remove

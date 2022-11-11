@@ -50,7 +50,7 @@ const SushiTableGroup = ({ page, chain }: ISushiTableGroup) => {
   }
 
   return (
-    <div id="sushi" className="w-full max-w-96 flex flex-col gap-y-12">
+    <div id="sushi" className="flex w-full max-w-96 flex-col gap-y-12">
       <TableHeader
         tableName="Sushi"
         totalValue={styledSushiTotal}

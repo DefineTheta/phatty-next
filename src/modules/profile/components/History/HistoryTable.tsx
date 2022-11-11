@@ -45,17 +45,17 @@ const HistoryTable = () => {
         </TableHeaderRow>
         {Array.from({ length: 3 }, (x, i) => i).map((index) => (
           <TableRow key={index}>
-            <TableRowCell className="pr-20 basis-1/4">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/4 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/6">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/6 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/4">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/4 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
-            <TableRowCell className="pr-20 basis-1/3">
-              <SkeletonLoader className="w-full h-30" />
+            <TableRowCell className="basis-1/3 pr-20">
+              <SkeletonLoader className="h-30 w-full" />
             </TableRowCell>
           </TableRow>
         ))}
@@ -88,7 +88,7 @@ const HistoryTable = () => {
           </TableRowCell>
           <TableRowCell className="basis-1/4">
             <a
-              className="px-10 py-1 bg-purple-a text-md font-bold underline underline-offset-2 text-white rounded-full cursor-pointer"
+              className="bg-purple-a cursor-pointer rounded-full px-10 py-1 text-md font-bold text-white underline underline-offset-2"
               target="_blank"
               href={item.link}
               rel="noreferrer"

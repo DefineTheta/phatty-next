@@ -67,7 +67,7 @@ const HedronTableGroup = ({ page, chain }: IHedronTableGroupProps) => {
   }
 
   return (
-    <div id="hedron" className="w-full max-w-96 flex flex-col gap-y-24">
+    <div id="hedron" className="flex w-full max-w-96 flex-col gap-y-24">
       {(loading || hedronEthTotal !== 0) && isCurrentChain('ETH', chain) && (
         <div className="flex flex-col gap-y-12">
           <TableHeader

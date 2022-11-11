@@ -51,7 +51,7 @@ const PancakeTableGroup = ({ page, chain }: IPancakeTableGroup) => {
   }
 
   return (
-    <div id="pancake" className="w-full max-w-96 flex flex-col gap-y-12">
+    <div id="pancake" className="flex w-full max-w-96 flex-col gap-y-12">
       <TableHeader
         tableName="Pancake"
         tableLink="https://pancakeswap.finance"

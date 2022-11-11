@@ -18,9 +18,9 @@ const ChainProtocolItem = ({
   return (
     <a
       href={linkHref}
-      className="w-150 p-10 bg-background-100 rounded-lg cursor-pointer transition-colors ease-in-out duration-150 hover:bg-background-900 hover:backdrop-opacity-25"
+      className="w-150 cursor-pointer rounded-lg bg-background-100 p-10 transition-colors duration-150 ease-in-out hover:bg-background-900 hover:backdrop-opacity-25"
     >
-      <div className="flex flex-row gap-x-10 items-center">
+      <div className="flex flex-row items-center gap-x-10">
         <Image width="20px" height="20px" src={imgSrc} alt={imgAlt} />
         <div className="flex flex-col items-start">
           <span className="text-sm font-bold text-text-100">{protocolName}</span>

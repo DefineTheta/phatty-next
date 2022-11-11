@@ -75,33 +75,33 @@ const ProfileHeader = ({ address, chain }: IProfileHeaderProps) => {
   }, [dispatch, address]);
 
   return (
-    <div className="pt-36 flex flex-row justify-center bg-background-200">
-      <div className="w-full max-w-96 flex flex-col gap-y-30">
+    <div className="flex flex-row justify-center bg-background-200 pt-36">
+      <div className="flex w-full max-w-96 flex-col gap-y-30">
         <div className="flex flex-col gap-y-30">
           <div className="flex flex-row justify-between">
-            <div className="flex flex-col gap-y-12 items-start">
+            <div className="flex flex-col items-start gap-y-12">
               <div className="flex flex-row items-center gap-x-6">
-                <span className="text-lg font-semibold text-text-200 tracking-wide" title={address}>
+                <span className="text-lg font-semibold tracking-wide text-text-200" title={address}>
                   {truncateAddress(address)}
                 </span>
                 <button
-                  className="w-20 h-20 flex justify-center items-center cursor-pointer bg-gray-100 rounded-full"
+                  className="flex h-20 w-20 cursor-pointer items-center justify-center rounded-full bg-gray-100"
                   data-tip="Copy wallet address"
                   onClick={handleAddressCopyClick}
                 >
-                  <DocumentDuplicateIcon className="w-12 h-12" />
+                  <DocumentDuplicateIcon className="h-12 w-12" />
                 </button>
               </div>
-              <div className="flex flex-row gap-x-18 items-center">
-                <button className="py-6 px-12 flex flex-row items-center gap-x-6 bg-purple-button rounded-full cursor-pointer drop-shadow-md">
-                  <TrophyIcon className="w-14 h-14 text-white" />
+              <div className="flex flex-row items-center gap-x-18">
+                <button className="flex cursor-pointer flex-row items-center gap-x-6 rounded-full bg-purple-button py-6 px-12 drop-shadow-md">
+                  <TrophyIcon className="h-14 w-14 text-white" />
                   <span className="text-sm text-white">Early Supporter</span>
                 </button>
                 <button
-                  className="py-6 px-12 flex flex-row items-center gap-x-6 bg-bluegray-button rounded-full cursor-pointer drop-shadow-md"
+                  className="flex cursor-pointer flex-row items-center gap-x-6 rounded-full bg-bluegray-button py-6 px-12 drop-shadow-md"
                   onClick={handleRefreshDataClick}
                 >
-                  <CalendarIcon className="w-14 h-14 text-white" />
+                  <CalendarIcon className="h-14 w-14 text-white" />
                   <span className="text-sm text-white">Refresh Data</span>
                 </button>
               </div>
@@ -109,15 +109,15 @@ const ProfileHeader = ({ address, chain }: IProfileHeaderProps) => {
             <span className="text-2xl font-black text-text-100">{styledTotal}</span>
           </div>
         </div>
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-center gap-x-30">
             {tabs.map((tab) => (
               <Link key={tab.name} href={address ? tab.href : '/profile'}>
                 <a
                   key={tab.name}
-                  className={`px-10 pb-6 text-base font-bold cursor-pointer ${
+                  className={`cursor-pointer px-10 pb-6 text-base font-bold ${
                     tab.name === currentTab
-                      ? 'text-text-900 border-b-4 border-text-900'
+                      ? 'border-b-4 border-text-900 text-text-900'
                       : 'text-text-200'
                   }`}
                 >

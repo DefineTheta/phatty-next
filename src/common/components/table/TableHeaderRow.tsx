@@ -5,7 +5,7 @@ export type ITableHeaderRowProps = {
 };
 
 const TableHeaderRow = ({ children }: ITableHeaderRowProps) => {
-  return <div className="px-16 flex flex-row bg-background-100 rounded">{children}</div>;
+  return <div className="flex flex-row rounded bg-background-100 px-16">{children}</div>;
 };
 
 export default TableHeaderRow;

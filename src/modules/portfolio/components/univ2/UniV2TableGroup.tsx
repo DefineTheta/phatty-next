@@ -50,7 +50,7 @@ const UniV2TableGroup = ({ page, chain }: IUniV2TableGroup) => {
   }
 
   return (
-    <div id="univ2" className="w-full max-w-96 flex flex-col gap-y-12">
+    <div id="univ2" className="flex w-full max-w-96 flex-col gap-y-12">
       <TableHeader
         tableName="Uniswap V2"
         totalValue={styledUniV2Total}

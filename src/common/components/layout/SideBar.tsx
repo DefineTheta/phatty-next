@@ -1,4 +1,4 @@
-import useBreakpoint from '@app-src/common/hooks/useBreakpoint';
+import useBreakpoint, { Breakpoint } from '@app-src/common/hooks/useBreakpoint';
 import useClickOutside from '@app-src/common/hooks/useClickOutside';
 import { selectBundleAddress } from '@app-src/store/bundles/selectors';
 import { selectProfileAddress } from '@app-src/store/protocol/selectors';
@@ -24,11 +24,11 @@ const SideBar = () => {
 
   const [isVisible, setIsVisible] = useState(false);
 
-  const breakpoint = useBreakpoint();
+  const { breakpoint, isScreenSizeLargerThan, isScreenSizeSmallerThan } = useBreakpoint();
 
   const handleClickOutside = useCallback(() => {
-    if (breakpoint === 'xs') setIsVisible(false);
-  }, [breakpoint]);
+    if (isScreenSizeSmallerThan(Breakpoint.md)) setIsVisible(false);
+  }, [isScreenSizeSmallerThan]);
 
   const handleNavClick = useCallback(
     (tabName: string) => {
@@ -54,17 +54,17 @@ const SideBar = () => {
   const navItems = useMemo(
     () => [
       {
-        icon: <UserIcon className="w-24 h-24" />,
+        icon: <UserIcon className="h-24 w-24" />,
         name: 'profile',
         displayName: 'Profile'
       },
       {
-        icon: <Squares2X2Icon className="w-24 h-24" />,
+        icon: <Squares2X2Icon className="h-24 w-24" />,
         name: 'bundle',
         displayName: 'Bundles'
       },
       {
-        icon: <BanknotesIcon className="w-24 h-24" />,
+        icon: <BanknotesIcon className="h-24 w-24" />,
         name: 'staking',
         displayName: 'Staking'
       },
@@ -87,20 +87,20 @@ const SideBar = () => {
       <div
         ref={sidebarRef}
         className={`${
-          breakpoint !== 'xs'
-            ? 'translate-x-0 w-240 p-0 sticky'
+          isScreenSizeLargerThan(Breakpoint.md)
+            ? 'sticky w-240 translate-x-0 p-0'
             : isVisible
-            ? 'translate-x-0 w-220 pt-5 pb-7 pl-7 fixed'
-            : '-translate-x-full w-0 p-0 fixed'
-        } h-screen bg-background-300 ease-in-out duration-300 transition-transform overflow-hidden z-20`}
+            ? 'fixed w-220 translate-x-0 pt-5 pb-7 pl-7'
+            : 'fixed w-0 -translate-x-full p-0'
+        } z-20 h-screen overflow-hidden bg-background-300 transition-transform duration-300 ease-in-out`}
       >
         <button
           onClick={() => setIsVisible(false)}
-          className="w-20 h-20 absolute top-10 right-10 text-white sm:hidden"
+          className="absolute top-10 right-10 h-20 w-20 text-white sm:hidden"
         >
           <XMarkIcon />
         </button>
-        <div className="h-full pt-20 pb-30 pl-20 sm:pl-30 flex flex-col justify-between">
+        <div className="flex h-full flex-col justify-between pt-20 pb-30 pl-20 sm:pl-30">
           <div className="flex flex-col gap-y-50">
             <a>
               <Image src="/img/logo-light.png" alt="Logo" width="140px" height="36px" />
@@ -109,7 +109,7 @@ const SideBar = () => {
               {navItems.map((item) => (
                 <a
                   key={item.name}
-                  className={`flex items-center gap-x-12 cursor-pointer hover:text-gray-200 ease-in-out duration-150 ${
+                  className={`flex cursor-pointer items-center gap-x-12 duration-150 ease-in-out hover:text-gray-200 ${
                     currentTab === item.name
                       ? 'border-r-4 border-secondary text-gray-200'
                       : 'text-gray-400'
@@ -124,8 +124,8 @@ const SideBar = () => {
           </div>
         </div>
       </div>
-      <button className="absolute top-6 left-4 block sm:hidden" onClick={() => setIsVisible(true)}>
-        <Bars3Icon className="w-24 h-24 text-white" />
+      <button className="absolute top-16 left-4 block md:hidden" onClick={() => setIsVisible(true)}>
+        <Bars3Icon className="h-24 w-24 text-white" />
       </button>
     </>
   );

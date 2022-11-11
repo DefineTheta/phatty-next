@@ -41,6 +41,10 @@ module.exports = {
         xl: '2.4rem',
         '2xl': '3rem'
       },
+      screens: {
+        sm: '375px',
+        md: '768px'
+      },
       spacing: {
         1: '0.1rem',
         2: '0.2rem',

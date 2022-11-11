@@ -68,11 +68,11 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
   }, [router.asPath]);
 
   return (
-    <div className="w-full flex flex-row bg-background-100">
+    <div className="flex w-full flex-row bg-background-100">
       <Toaster />
       <ReactTooltip effect="solid" />
       <SideBar />
-      <div className="w-full h-screen flex flex-col justify-between overflow-y-auto">
+      <div className="flex h-screen w-full flex-col justify-between overflow-y-auto">
         <div>
           <NavBar />
           {children}
