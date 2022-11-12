@@ -1,3 +1,4 @@
+import Bookmark from '@app-src/common/components/Bookmark';
 import Card from '@app-src/common/components/layout/Card';
 import SkeletonLoader from '@app-src/common/components/skeleton/SkeletonLoader';
 import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
@@ -32,6 +33,7 @@ const SushiLiquidityPoolTable = ({ page, loading }: ISushiLiquidityPoolTableProp
   if (loading) {
     return (
       <Card>
+        <Bookmark>Liquidity Pool</Bookmark>
         <TableHeaderRow>
           <TableHeaderRowCell className="basis-1/4">Pool</TableHeaderRowCell>
           <TableHeaderRowCell className="basis-1/2">Balance</TableHeaderRowCell>
@@ -60,6 +62,7 @@ const SushiLiquidityPoolTable = ({ page, loading }: ISushiLiquidityPoolTableProp
 
   return (
     <Card>
+      <Bookmark>Liquidity Pool</Bookmark>
       <TableHeaderRow>
         <TableHeaderRowCell className="basis-1/4">Pool</TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/2">Balance</TableHeaderRowCell>

@@ -1,3 +1,4 @@
+import Bookmark from '@app-src/common/components/Bookmark';
 import Card from '@app-src/common/components/layout/Card';
 import SkeletonLoader from '@app-src/common/components/skeleton/SkeletonLoader';
 import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
@@ -33,6 +34,7 @@ const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
   if (loading) {
     return (
       <Card>
+        <Bookmark>Staked</Bookmark>
         <TableHeaderRow>
           <TableHeaderRowCell className="basis-1/5">Staking End</TableHeaderRowCell>
           <TableHeaderRowCell className="basis-1/5">Total Balance</TableHeaderRowCell>
@@ -69,6 +71,7 @@ const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
 
   return (
     <Card>
+      <Bookmark>Staked</Bookmark>
       <TableHeaderRow>
         <TableHeaderRowCell
           className="basis-1/5"

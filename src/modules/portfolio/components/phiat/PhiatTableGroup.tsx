@@ -79,13 +79,23 @@ const PhiatTableGroup = ({ page, chain }: IPhiatTableGroupProps) => {
         <PhiatStakeTable page={page} loading={loading} />
       </TableWrapper>
       <TableWrapper error={error} handleRetry={fetchTableData}>
-        <PhiatGenericTable page={page} component="LENDING" loading={loading} />
+        <PhiatGenericTable bookmark="Lending" page={page} component="LENDING" loading={loading} />
       </TableWrapper>
       <TableWrapper error={error} handleRetry={fetchTableData}>
-        <PhiatGenericTable page={page} component="VARIABLE_DEBT" loading={loading} />
+        <PhiatGenericTable
+          bookmark="Variable Debt"
+          page={page}
+          component="VARIABLE_DEBT"
+          loading={loading}
+        />
       </TableWrapper>
       <TableWrapper error={error} handleRetry={fetchTableData}>
-        <PhiatGenericTable page={page} component="STABLE_DEBT" loading={loading} />
+        <PhiatGenericTable
+          bookmark="Stable Debt"
+          page={page}
+          component="STABLE_DEBT"
+          loading={loading}
+        />
       </TableWrapper>
     </div>
   );

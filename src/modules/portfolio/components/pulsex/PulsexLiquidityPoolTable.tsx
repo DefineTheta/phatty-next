@@ -1,3 +1,4 @@
+import Bookmark from '@app-src/common/components/Bookmark';
 import Card from '@app-src/common/components/layout/Card';
 import SkeletonLoader from '@app-src/common/components/skeleton/SkeletonLoader';
 import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
@@ -32,6 +33,7 @@ const PulsexLiquidityPoolTable = ({ page, loading }: IPulsexLiquidityPoolTablePr
   if (loading) {
     return (
       <Card>
+        <Bookmark>Liquidity Pool</Bookmark>
         <TableHeaderRow>
           <TableHeaderRowCell className="basis-1/5">Pool</TableHeaderRowCell>
           <TableHeaderRowCell className="basis-1/5">Share of Pool</TableHeaderRowCell>
@@ -64,6 +66,7 @@ const PulsexLiquidityPoolTable = ({ page, loading }: IPulsexLiquidityPoolTablePr
 
   return (
     <Card>
+      <Bookmark>Liquidity Pool</Bookmark>
       <TableHeaderRow>
         <TableHeaderRowCell className="basis-1/5">Pool</TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/5">Share of Pool</TableHeaderRowCell>

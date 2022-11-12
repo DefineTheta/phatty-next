@@ -1,3 +1,4 @@
+import Bookmark from '@app-src/common/components/Bookmark';
 import Card from '@app-src/common/components/layout/Card';
 import SkeletonLoader from '@app-src/common/components/skeleton/SkeletonLoader';
 import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
@@ -53,6 +54,7 @@ const PhiatStakeTable = ({ page, loading }: IPhiatStakeTableProps) => {
   if (loading) {
     return (
       <Card>
+        <Bookmark>Staking</Bookmark>
         <TableHeaderRow>
           <TableHeaderRowCell className="basis-1/4">Token</TableHeaderRowCell>
           <TableHeaderRowCell className="basis-1/3">Balance</TableHeaderRowCell>
@@ -103,6 +105,7 @@ const PhiatStakeTable = ({ page, loading }: IPhiatStakeTableProps) => {
 
   return (
     <Card>
+      <Bookmark>Staking</Bookmark>
       {phiatStakingData.length > 0 && (
         <>
           <TableHeaderRow>

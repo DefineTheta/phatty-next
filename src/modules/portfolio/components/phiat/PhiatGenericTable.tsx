@@ -1,3 +1,4 @@
+import Bookmark from '@app-src/common/components/Bookmark';
 import Card from '@app-src/common/components/layout/Card';
 import SkeletonLoader from '@app-src/common/components/skeleton/SkeletonLoader';
 import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
@@ -17,9 +18,10 @@ type IPhiatGenericTableProps = {
   component: keyof typeof PhiatDataComponentEnum;
   page: 'profile' | 'bundle';
   loading: boolean;
+  bookmark: string;
 };
 
-const PhiatGenericTable = ({ component, page, loading }: IPhiatGenericTableProps) => {
+const PhiatGenericTable = ({ component, page, loading, bookmark }: IPhiatGenericTableProps) => {
   const phiatComponentData = useSelector(
     useCallback(
       page === 'profile'
@@ -36,6 +38,7 @@ const PhiatGenericTable = ({ component, page, loading }: IPhiatGenericTableProps
   if (loading) {
     return (
       <Card>
+        <Bookmark>{bookmark}</Bookmark>
         <TableHeaderRow>
           <TableHeaderRowCell className="basis-1/3">Token</TableHeaderRowCell>
           <TableHeaderRowCell className="basis-1/3">Balance</TableHeaderRowCell>
@@ -64,6 +67,7 @@ const PhiatGenericTable = ({ component, page, loading }: IPhiatGenericTableProps
 
   return (
     <Card>
+      <Bookmark>{bookmark}</Bookmark>
       <TableHeaderRow>
         <TableHeaderRowCell className="basis-1/3">Token</TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/3">Balance</TableHeaderRowCell>
