@@ -2,13 +2,7 @@ import useBreakpoint, { Breakpoint } from '@app-src/common/hooks/useBreakpoint';
 import useClickOutside from '@app-src/common/hooks/useClickOutside';
 import { selectBundleAddress } from '@app-src/store/bundles/selectors';
 import { selectProfileAddress } from '@app-src/store/protocol/selectors';
-import {
-  BanknotesIcon,
-  Bars3Icon,
-  Squares2X2Icon,
-  UserIcon,
-  XMarkIcon
-} from '@heroicons/react/24/outline';
+import { Bars3Icon, Squares2X2Icon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';
@@ -44,6 +38,16 @@ const SideBar = () => {
         window.open('https://phiat.io/', '_blank')?.focus();
       } else if (tabName === 'phamous') {
         window.open('https://phamous.io/', '_blank')?.focus();
+      } else if (tabName === 'hex') {
+        window.open('https://hex.com/', '_blank')?.focus();
+      } else if (tabName === 'hedron') {
+        window.open('https://hedron.pro/#/', '_blank')?.focus();
+      } else if (tabName === 'pulsex') {
+        window.open('https://pulsex.com/', '_blank')?.focus();
+      } else if (tabName === 'liquidloans') {
+        window.open('http://liquidloans.io/', '_blank')?.focus();
+      } else if (tabName === 'powercity') {
+        window.open('https://powercity.io/', '_blank')?.focus();
       }
     },
     [router, profileAddress, bundleAddress]
@@ -63,11 +67,11 @@ const SideBar = () => {
         name: 'bundle',
         displayName: 'Bundles'
       },
-      {
-        icon: <BanknotesIcon className="h-24 w-24" />,
-        name: 'staking',
-        displayName: 'Staking'
-      },
+      // {
+      //   icon: <BanknotesIcon className="h-24 w-24" />,
+      //   name: 'staking',
+      //   displayName: 'Staking'
+      // },
       {
         icon: <Image src="/img/icon/phiat.svg" alt="Phiat icon" width="24px" height="24px" />,
         name: 'phiat',
@@ -77,6 +81,71 @@ const SideBar = () => {
         icon: <Image src="/img/icon/phamous.svg" alt="Phamous icon" width="24px" height="24px" />,
         name: 'phamous',
         displayName: 'Phamous'
+      },
+      {
+        icon: (
+          <Image
+            src="/img/icon/hex.svg"
+            alt="Hex icon"
+            width="24px"
+            height="24px"
+            className="grayscale"
+          />
+        ),
+        name: 'hex',
+        displayName: 'Hex'
+      },
+      {
+        icon: (
+          <Image
+            src="/img/icon/hedron.webp"
+            alt="Hedron icon"
+            width="24px"
+            height="24px"
+            className="grayscale"
+          />
+        ),
+        name: 'hedron',
+        displayName: 'Hedron'
+      },
+      {
+        icon: (
+          <Image
+            src="/img/tokens/pulsex.jpeg"
+            alt="PulseX icon"
+            width="24px"
+            height="24px"
+            className="rounded-full grayscale"
+          />
+        ),
+        name: 'pulsex',
+        displayName: 'PulseX'
+      },
+      {
+        icon: (
+          <Image
+            src="/img/icon/liquidloans.svg"
+            alt="Liquid loans icon"
+            width="24px"
+            height="24px"
+            className="grayscale"
+          />
+        ),
+        name: 'liquidloans',
+        displayName: 'Liquid Loans'
+      },
+      {
+        icon: (
+          <Image
+            src="/img/icon/powercity.jpg"
+            alt="Power city icon"
+            width="24px"
+            height="24px"
+            className="rounded-full grayscale"
+          />
+        ),
+        name: 'powercity',
+        displayName: 'Power City'
       }
     ],
     []

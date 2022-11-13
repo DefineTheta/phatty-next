@@ -72,6 +72,7 @@ const HedronTableGroup = ({ page, chain }: IHedronTableGroupProps) => {
         <div className="flex flex-col gap-y-12">
           <TableHeader
             tableName="Hedron"
+            tableLink="https://hedron.pro/#/dapp"
             totalValue={styledHedronEthTotal}
             tablePrimaryImgSrc="/img/icon/hedron.webp"
             tablePrimaryImgAlt="Hedron"
@@ -87,6 +88,7 @@ const HedronTableGroup = ({ page, chain }: IHedronTableGroupProps) => {
         <div className="flex flex-col gap-y-12">
           <TableHeader
             tableName="Hedron"
+            tableLink="https://hedron.pro/#/dapp"
             totalValue={styledHedronTplsTotal}
             tablePrimaryImgSrc="/img/icon/hedron.webp"
             tablePrimaryImgAlt="Hedron"

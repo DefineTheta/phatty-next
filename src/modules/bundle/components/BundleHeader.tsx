@@ -102,10 +102,12 @@ const BundleHeader = ({ address, chain }: IBundleHeaderProps) => {
                 </button>
               </div>
               <div className="flex flex-row items-center gap-x-18">
-                <button className="flex cursor-pointer flex-row items-center gap-x-6 rounded-full bg-purple-button py-6 px-12 drop-shadow-md">
-                  <TrophyIcon className="h-14 w-14 text-white" />
-                  <span className="text-sm text-white">Early Supporter</span>
-                </button>
+                {address && (
+                  <button className="flex cursor-pointer flex-row items-center gap-x-6 rounded-full bg-purple-button py-6 px-12 drop-shadow-md">
+                    <TrophyIcon className="h-14 w-14 text-white" />
+                    <span className="text-sm text-white">Early Supporter</span>
+                  </button>
+                )}
                 <button
                   className="flex cursor-pointer flex-row items-center gap-x-6 rounded-full bg-bluegray-button py-6 px-12 drop-shadow-md"
                   onClick={handleRefreshDataClick}
@@ -118,24 +120,21 @@ const BundleHeader = ({ address, chain }: IBundleHeaderProps) => {
             {/* <span className="text-lg font-semibold text-text-200">{truncateAddress(address)}</span> */}
             <span className="text-2xl font-black text-text-100">{styledTotal}</span>
           </div>
-          <div className="flex flex-row items-center justify-between">
-            <div className="flex flex-row items-center gap-x-30">
-              {tabs.map((tab) => (
-                <Link key={tab.name} href={address ? tab.href : '/bundle'}>
-                  <a
-                    className={`cursor-pointer px-10 pb-6 text-base font-bold ${
-                      tab.name === currentTab
-                        ? 'border-b-4 border-text-900 text-text-900'
-                        : 'text-text-200'
-                    }`}
-                    // onClick={() => router.push(`/${router.pathname}/${tab.name}`)}
-                  >
-                    {tab.displayName}
-                  </a>
-                </Link>
-              ))}
-            </div>
-            <span className="text-sm text-text-200">Data updated now</span>
+          <div className="flex flex-row items-center gap-x-30">
+            {tabs.map((tab) => (
+              <Link key={tab.name} href={address ? tab.href : '/bundle'}>
+                <a
+                  className={`cursor-pointer px-10 pb-6 text-base font-bold ${
+                    tab.name === currentTab
+                      ? 'border-b-4 border-text-900 text-text-900'
+                      : 'text-text-200'
+                  }`}
+                  // onClick={() => router.push(`/${router.pathname}/${tab.name}`)}
+                >
+                  {tab.displayName}
+                </a>
+              </Link>
+            ))}
           </div>
         </div>
       </Container>

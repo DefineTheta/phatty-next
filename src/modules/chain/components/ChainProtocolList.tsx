@@ -87,7 +87,7 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
         protocolName: 'Phiat',
         totalAmount: phiatTotal,
         displayTotalAmount: formatToMoney(phiatTotal),
-        imgSrc: '/img/tokens/phsac.png',
+        imgSrc: '/img/icon/phiat.png',
         imgAlt: 'Phiat',
         linkHref: '#phiat'
       },

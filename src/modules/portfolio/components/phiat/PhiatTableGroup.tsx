@@ -72,7 +72,7 @@ const PhiatTableGroup = ({ page, chain }: IPhiatTableGroupProps) => {
         tableName="Phiat.io"
         tableLink="https://testnet.phiat.io/markets"
         totalValue={styledPhiatTotal}
-        tablePrimaryImgSrc="/img/tokens/phsac.png"
+        tablePrimaryImgSrc="/img/icon/phiat.png"
         tablePrimaryImgAlt="Phiat"
       />
       <TableWrapper error={error} handleRetry={fetchTableData}>

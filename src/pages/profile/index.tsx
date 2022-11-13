@@ -11,15 +11,15 @@ const ProfilePage = () => {
   return (
     <div className="flex flex-col gap-y-24">
       <ProfileHeader address={profileAddress} chain="" />
-      <Container>
-        <div className="flex w-full flex-col items-center gap-y-30">
+      <div className="flex w-full flex-col items-center gap-y-30">
+        <Container>
           <Card>
             <div className="flex flex-row justify-center">
               <span className="text-xl font-bold text-text-200">Search for an address</span>
             </div>
           </Card>
-        </div>
-      </Container>
+        </Container>
+      </div>
     </div>
   );
 };

@@ -19,15 +19,15 @@ const BundlePage = () => {
   return (
     <div className="flex flex-col gap-y-24">
       <BundleHeader address={bundleAddress} chain="" />
-      <Container>
-        <div className="flex w-full flex-col items-center">
+      <div className="flex w-full flex-col items-center">
+        <Container>
           <Card>
             <div className="flex flex-row justify-center">
               <span className="text-xl font-bold text-text-200">Connect your wallet</span>
             </div>
           </Card>
-        </div>
-      </Container>
+        </Container>
+      </div>
     </div>
   );
 };

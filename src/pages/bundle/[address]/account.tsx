@@ -24,7 +24,9 @@ const BundleAccountPage = () => {
 
   const handleAddButton = useCallback(() => {
     const address = addressInputRef.current?.value.toLowerCase().trim() || '';
-    if (!address) return;
+    if (!address || !addressInputRef.current) return;
+
+    addressInputRef.current.value = '';
 
     dispatch(addAddressToBundle(address));
   }, [addressInputRef]);

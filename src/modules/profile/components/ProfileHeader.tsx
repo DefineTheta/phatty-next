@@ -1,8 +1,10 @@
 import Container from '@app-src/common/components/layout/Container';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
+import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { truncateAddress } from '@app-src/common/utils/format';
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
+import { selectBundleAddress } from '@app-src/store/bundles/selectors';
 import { fetchPortfolioData } from '@app-src/store/protocol/protocolSlice';
 import {
   selectBscTotal,
@@ -15,7 +17,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
-import { useSelector } from 'react-redux';
 
 type IProfileHeaderProps = {
   address: string;
@@ -25,8 +26,9 @@ type IProfileHeaderProps = {
 const ProfileHeader = ({ address, chain }: IProfileHeaderProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const bundleAddress = useAppSelector(useCallback(selectBundleAddress, []));
 
-  const total = useSelector(
+  const total = useAppSelector(
     useCallback(
       chain === 'ETH'
         ? selectEthereumTotal
@@ -94,10 +96,12 @@ const ProfileHeader = ({ address, chain }: IProfileHeaderProps) => {
                 </button>
               </div>
               <div className="flex flex-row items-center gap-x-18">
-                <button className="flex cursor-pointer flex-row items-center gap-x-6 rounded-full bg-purple-button py-6 px-12 drop-shadow-md">
-                  <TrophyIcon className="h-14 w-14 text-white" />
-                  <span className="text-sm text-white">Early Supporter</span>
-                </button>
+                {bundleAddress && (
+                  <button className="flex cursor-pointer flex-row items-center gap-x-6 rounded-full bg-purple-button py-6 px-12 drop-shadow-md">
+                    <TrophyIcon className="h-14 w-14 text-white" />
+                    <span className="text-sm text-white">Early Supporter</span>
+                  </button>
+                )}
                 <button
                   className="flex cursor-pointer flex-row items-center gap-x-6 rounded-full bg-bluegray-button py-6 px-12 drop-shadow-md"
                   onClick={handleRefreshDataClick}
@@ -109,24 +113,21 @@ const ProfileHeader = ({ address, chain }: IProfileHeaderProps) => {
             </div>
             <span className="text-2xl font-black text-text-100">{styledTotal}</span>
           </div>
-          <div className="flex flex-row items-center justify-between">
-            <div className="flex flex-row items-center gap-x-30">
-              {tabs.map((tab) => (
-                <Link key={tab.name} href={address ? tab.href : '/profile'}>
-                  <a
-                    key={tab.name}
-                    className={`cursor-pointer px-10 pb-6 text-base font-bold ${
-                      tab.name === currentTab
-                        ? 'border-b-4 border-text-900 text-text-900'
-                        : 'text-text-200'
-                    }`}
-                  >
-                    {tab.displayName}
-                  </a>
-                </Link>
-              ))}
-            </div>
-            <span className="text-sm text-text-200">Data updated now</span>
+          <div className="flex flex-row items-center gap-x-30">
+            {tabs.map((tab) => (
+              <Link key={tab.name} href={address ? tab.href : '/profile'}>
+                <a
+                  key={tab.name}
+                  className={`cursor-pointer px-10 pb-6 text-base font-bold ${
+                    tab.name === currentTab
+                      ? 'border-b-4 border-text-900 text-text-900'
+                      : 'text-text-200'
+                  }`}
+                >
+                  {tab.displayName}
+                </a>
+              </Link>
+            ))}
           </div>
         </div>
       </Container>
