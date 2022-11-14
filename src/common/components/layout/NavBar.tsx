@@ -43,7 +43,7 @@ const NavBar = () => {
   };
 
   return (
-    <div className="flex w-full flex-row justify-center border-b border-border-100 bg-background-200 py-10">
+    <div className="sticky top-0 z-20 flex w-full flex-row justify-center border-b border-border-100 bg-background-200 py-10 md:relative">
       <Container>
         <div className="ml-36 flex h-full flex-row items-center justify-end gap-x-24 md:ml-0">
           <SearchInput onKeyDown={handleSearch} inputRef={searchInputRef} />

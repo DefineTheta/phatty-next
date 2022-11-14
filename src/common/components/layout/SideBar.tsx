@@ -161,7 +161,7 @@ const SideBar = () => {
             : isVisible
             ? 'fixed w-220 translate-x-0 pt-5 pb-7 pl-7'
             : 'fixed w-0 -translate-x-full p-0'
-        } z-20 h-screen overflow-hidden bg-background-300 transition-transform duration-300 ease-in-out`}
+        } z-40 h-screen overflow-hidden bg-background-300 transition-transform duration-300 ease-in-out`}
       >
         <button
           onClick={() => setIsVisible(false)}
@@ -193,7 +193,10 @@ const SideBar = () => {
           </div>
         </div>
       </div>
-      <button className="absolute top-16 left-4 block md:hidden" onClick={() => setIsVisible(true)}>
+      <button
+        className="absolute top-16 left-4 z-30 block md:hidden"
+        onClick={() => setIsVisible(true)}
+      >
         <Bars3Icon className="h-24 w-24 text-white" />
       </button>
     </>
