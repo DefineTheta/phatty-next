@@ -12,6 +12,8 @@ import { selectBundleHexStakeData } from '@app-src/store/bundles/selectors';
 import { selectHexStakeData } from '@app-src/store/protocol/selectors';
 import { HexDataComponentEnum } from '@app-src/store/protocol/types';
 import { useCallback } from 'react';
+import { PORTFOLIO_DATA_LIMIT } from '../../constants/data';
+import useLimit from '../../hooks/useLimit';
 
 type IHexStakeTableProps = {
   page: 'profile' | 'bundle';
@@ -30,6 +32,10 @@ const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
   const [sortedHexStakeData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof hexStakeData[number]
   >(hexStakeData, 'usdValue', 'desc');
+
+  const [limitedHexStakeData, isLimited, setIsLimited] = useLimit<
+    typeof sortedHexStakeData[number]
+  >(sortedHexStakeData, PORTFOLIO_DATA_LIMIT);
 
   if (loading) {
     return (
@@ -65,7 +71,7 @@ const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
     );
   }
 
-  if (sortedHexStakeData.length === 0) {
+  if (hexStakeData.length === 0) {
     return null;
   }
 
@@ -93,7 +99,7 @@ const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
         </TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/5">TShares</TableHeaderRowCell>
       </TableHeaderRow>
-      {sortedHexStakeData.map((item, index) => (
+      {limitedHexStakeData.map((item, index) => (
         <TableRow key={index}>
           <TableRowCell className="basis-1/5">{`In ${item.stakingEnd} days`}</TableRowCell>
           <TableRowCell className="basis-1/5">{styleNumber(item.totalBalance, 3)}</TableRowCell>
@@ -102,6 +108,21 @@ const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
           <TableRowCell className="basis-1/5">{styleNumber(item.tShares, 2)}</TableRowCell>
         </TableRow>
       ))}
+      {hexStakeData.length > PORTFOLIO_DATA_LIMIT && (
+        <div className="mt-4 w-full text-center">
+          <span className="text-md tracking-wide text-text-100">
+            {isLimited
+              ? `Only showing top ${PORTFOLIO_DATA_LIMIT} results.`
+              : 'Showing all results.'}
+            <a
+              className="ml-4 cursor-pointer font-bold underline underline-offset-2"
+              onClick={() => setIsLimited((current) => !current)}
+            >
+              {isLimited ? 'Show all?' : 'Show less?'}
+            </a>
+          </span>
+        </div>
+      )}
     </Card>
   );
 };

@@ -1,0 +1,2 @@
+export const PORTFOLIO_WALLET_FILTER_AMOUNT = 50;
+export const PORTFOLIO_DATA_LIMIT = 20;

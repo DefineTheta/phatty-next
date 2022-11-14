@@ -11,6 +11,8 @@ import { selectWalletData } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { PORTFOLIO_WALLET_FILTER_AMOUNT } from '../../constants/data';
+import useFilter from '../../hooks/useFilter';
 import { PortfolioChain } from '../../types/portfolio';
 
 type IWalletTableProps = {
@@ -27,9 +29,15 @@ const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
     ])
   );
 
+  const [filteredWalletData, isFiltered, setIsFiltered] = useFilter<typeof walletData[number]>(
+    walletData,
+    'usdValue',
+    PORTFOLIO_WALLET_FILTER_AMOUNT
+  );
+
   const [sortedWalletData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
-    typeof walletData[number]
-  >(walletData, 'usdValue', 'desc');
+    typeof filteredWalletData[number]
+  >(filteredWalletData, 'usdValue', 'desc');
 
   if (loading) {
     return (
@@ -64,7 +72,7 @@ const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
     );
   }
 
-  if (sortedWalletData.length === 0) {
+  if (walletData.length === 0) {
     return null;
   }
 
@@ -126,6 +134,19 @@ const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
           </TableRowCell>
         </TableRow>
       ))}
+      <div className="mt-4 w-full text-center">
+        <span className="text-md tracking-wide text-text-100">
+          {isFiltered
+            ? `Only showing results with value > $${PORTFOLIO_WALLET_FILTER_AMOUNT}.`
+            : 'Showing all results.'}
+          <a
+            className="ml-4 cursor-pointer font-bold underline underline-offset-2"
+            onClick={() => setIsFiltered((current) => !current)}
+          >
+            {isFiltered ? 'Show all?' : 'Show less?'}
+          </a>
+        </span>
+      </div>
     </Card>
   );
 };
