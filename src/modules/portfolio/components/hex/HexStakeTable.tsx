@@ -80,32 +80,46 @@ const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
       <Bookmark>Staked</Bookmark>
       <TableHeaderRow>
         <TableHeaderRowCell
-          className="basis-1/5"
+          className="basis-4/12 md:basis-1/5"
           onClick={() => handleTableHeaderClick('stakingEnd')}
           sorted={sortKey === 'stakingEnd' ? sortOrder : undefined}
           sortable
         >
           Staking End
         </TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/5">Total Balance</TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/5">Interest To Date</TableHeaderRowCell>
+        <TableHeaderRowCell className="hidden md:block md:basis-1/5">
+          Total Balance
+        </TableHeaderRowCell>
+        <TableHeaderRowCell className="hidden md:block md:basis-1/5">
+          Interest To Date
+        </TableHeaderRowCell>
         <TableHeaderRowCell
-          className="basis-1/5"
+          className="basis-6/12 md:basis-1/5"
           onClick={() => handleTableHeaderClick('usdValue')}
           sorted={sortKey === 'usdValue' ? sortOrder : undefined}
           sortable
         >
           USD Value
         </TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/5">TShares</TableHeaderRowCell>
+        <TableHeaderRowCell className="basis-2/12 md:block md:basis-1/5">
+          TShares
+        </TableHeaderRowCell>
       </TableHeaderRow>
       {limitedHexStakeData.map((item, index) => (
         <TableRow key={index}>
-          <TableRowCell className="basis-1/5">{`In ${item.stakingEnd} days`}</TableRowCell>
-          <TableRowCell className="basis-1/5">{styleNumber(item.totalBalance, 3)}</TableRowCell>
-          <TableRowCell className="basis-1/5">{formatToMoney(item.totalInt)}</TableRowCell>
-          <TableRowCell className="basis-1/5">{formatToMoney(item.usdValue)}</TableRowCell>
-          <TableRowCell className="basis-1/5">{styleNumber(item.tShares, 2)}</TableRowCell>
+          <TableRowCell className="basis-4/12 md:basis-1/5">{`In ${item.stakingEnd} days`}</TableRowCell>
+          <TableRowCell className="hidden md:block md:basis-1/5">
+            {styleNumber(item.totalBalance, 3)}
+          </TableRowCell>
+          <TableRowCell className="hidden md:block md:basis-1/5">
+            {formatToMoney(item.totalInt)}
+          </TableRowCell>
+          <TableRowCell className="basis-6/12 md:basis-1/5">
+            {formatToMoney(item.usdValue)}
+          </TableRowCell>
+          <TableRowCell className="basis-2/12 md:block md:basis-1/5">
+            {styleNumber(item.tShares, 2)}
+          </TableRowCell>
         </TableRow>
       ))}
       {hexStakeData.length > PORTFOLIO_DATA_LIMIT && (
