@@ -79,11 +79,11 @@ const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
   return (
     <Card>
       <TableHeaderRow>
-        <TableHeaderRowCell className="basis-1/4">Chain</TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/4">Token</TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/4">Balance</TableHeaderRowCell>
+        <TableHeaderRowCell className="basis-1/12 md:basis-1/4">Chain</TableHeaderRowCell>
+        <TableHeaderRowCell className="basis-3/12 md:block md:basis-1/4">Token</TableHeaderRowCell>
+        <TableHeaderRowCell className="hidden md:block md:basis-1/4">Balance</TableHeaderRowCell>
         <TableHeaderRowCell
-          className="basis-1/6"
+          className="basis-4/12 md:basis-1/6"
           onClick={() => handleTableHeaderClick('usdValue')}
           sorted={sortOrder}
           sortable
@@ -94,7 +94,7 @@ const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
       </TableHeaderRow>
       {sortedWalletData.map((item, index) => (
         <TableRow key={index}>
-          <TableRowCell className="basis-1/4">
+          <TableRowCell className="basis-1/12 md:basis-1/4">
             <div className="flex flex-row gap-x-8">
               <Image
                 className="rounded-full"
@@ -103,10 +103,10 @@ const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
                 src={item.chainImg}
                 alt={item.chain}
               />
-              <span>{item.chain}</span>
+              <span className="hidden md:block">{item.chain}</span>
             </div>
           </TableRowCell>
-          <TableRowCell className="basis-1/4">
+          <TableRowCell className="basis-3/12 md:block md:basis-1/4">
             <div className="flex flex-row gap-x-8">
               <Image
                 className="rounded-full"
@@ -118,8 +118,12 @@ const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
               <span>{item.name}</span>
             </div>
           </TableRowCell>
-          <TableRowCell className="basis-1/4">{styleNumber(item.balance, 3)}</TableRowCell>
-          <TableRowCell className="basis-1/6">{formatToMoney(item.usdValue)}</TableRowCell>
+          <TableRowCell className="hidden md:block md:basis-1/4">
+            {styleNumber(item.balance, 3)}
+          </TableRowCell>
+          <TableRowCell className="basis-4/12 md:basis-1/6">
+            {formatToMoney(item.usdValue)}
+          </TableRowCell>
           <TableRowCell className="basis-1/12">
             {item.chain === 'TPLS' && (
               <a
@@ -134,7 +138,7 @@ const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
           </TableRowCell>
         </TableRow>
       ))}
-      <div className="mt-4 w-full text-center">
+      <div className="mt-6 w-full text-center md:mt-4">
         <span className="text-md tracking-wide text-text-100">
           {isFiltered
             ? `Only showing results with value > $${PORTFOLIO_WALLET_FILTER_AMOUNT}.`
