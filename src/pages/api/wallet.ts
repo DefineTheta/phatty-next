@@ -259,13 +259,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   });
 
   avaxTokens.forEach((token) => {
+    const tokenName = token.name.endsWith('.e') ? token.name.slice(0, -2) : token.name;
+
     avaxPromises.push(
       calculateWalletTokenData(
         avaxClient,
         token.address,
         address as string,
-        token.name,
-        price[token.name],
+        tokenName,
+        price[tokenName],
         'AVAX',
         totalValues
       )
