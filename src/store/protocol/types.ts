@@ -51,7 +51,9 @@ export enum ProtocolEnum {
 export enum WalletDataComponentEnum {
   ETH = 'ETH',
   TPLS = 'TPLS',
-  BSC = 'BSC'
+  BSC = 'BSC',
+  MATIC = 'MATIC',
+  AVAX = 'AVAX'
 }
 
 export enum HexDataComponentEnum {
@@ -111,16 +113,6 @@ export interface ProtocolData {
   loading: boolean;
   error: boolean;
 }
-
-type WalletItem = {
-  name: string;
-  price: number;
-  balance: number;
-  usdValue: number;
-  img: string;
-  chain: string;
-  chainImg: string;
-};
 
 interface WalletData extends ProtocolData {
   total: Record<WalletDataComponentEnum, number>;

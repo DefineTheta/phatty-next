@@ -43,7 +43,9 @@ export enum ProtocolEnum {
 export enum WalletDataComponentEnum {
   ETH = 'ETH',
   TPLS = 'TPLS',
-  BSC = 'BSC'
+  BSC = 'BSC',
+  MATIC = 'MATIC',
+  AVAX = 'AVAX'
 }
 
 export enum HexDataComponentEnum {

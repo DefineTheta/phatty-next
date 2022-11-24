@@ -43,14 +43,18 @@ const initialState: ProtocolsState = {
     total: {
       [WalletDataComponentEnum.ETH]: 0,
       [WalletDataComponentEnum.TPLS]: 0,
-      [WalletDataComponentEnum.BSC]: 0
+      [WalletDataComponentEnum.BSC]: 0,
+      [WalletDataComponentEnum.MATIC]: 0,
+      [WalletDataComponentEnum.AVAX]: 0
     },
     loading: false,
     error: false,
     data: {
       [WalletDataComponentEnum.ETH]: [],
       [WalletDataComponentEnum.TPLS]: [],
-      [WalletDataComponentEnum.BSC]: []
+      [WalletDataComponentEnum.BSC]: [],
+      [WalletDataComponentEnum.MATIC]: [],
+      [WalletDataComponentEnum.AVAX]: []
     }
   },
   [ProtocolEnum.HEX]: {
@@ -372,10 +376,14 @@ export const protocolsSlice = createSlice({
       state.WALLET.data.ETH = res.data.ETH.data;
       state.WALLET.data.BSC = res.data.BSC.data;
       state.WALLET.data.TPLS = res.data.TPLS.data;
+      state.WALLET.data.MATIC = res.data.MATIC.data;
+      state.WALLET.data.AVAX = res.data.AVAX.data;
 
       state.WALLET.total.ETH = res.data.ETH.totalValue;
       state.WALLET.total.BSC = res.data.BSC.totalValue;
       state.WALLET.total.TPLS = res.data.TPLS.totalValue;
+      state.WALLET.total.MATIC = res.data.MATIC.totalValue;
+      state.WALLET.total.AVAX = res.data.AVAX.totalValue;
 
       state.WALLET.loading = false;
       state.WALLET.error = false;

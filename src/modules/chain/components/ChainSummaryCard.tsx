@@ -4,14 +4,18 @@ import ChainSummaryItem from '@app-src/modules/chain/components/ChainSummaryItem
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
 import {
+  selectBundleAvaxTotal,
   selectBundleBscTotal,
   selectBundleEthereumTotal,
+  selectBundleMaticTotal,
   selectBundleTotal,
   selectBundleTplsTotal
 } from '@app-src/store/bundles/selectors';
 import {
+  selectAvaxTotal,
   selectBscTotal,
   selectEthereumTotal,
+  selectMaticTotal,
   selectTotal,
   selectTplsTotal
 } from '@app-src/store/protocol/selectors';
@@ -38,6 +42,14 @@ const ChainSummaryCard = ({ page, chain: currentChain }: IChainSummaryCardProps)
   );
   const tplsTotal = useAppSelector(
     useCallback(page === 'profile' ? selectTplsTotal : selectBundleTplsTotal, [page])
+  );
+
+  const maticTotal = useAppSelector(
+    useCallback(page === 'profile' ? selectMaticTotal : selectBundleMaticTotal, [page])
+  );
+
+  const avaxTotal = useAppSelector(
+    useCallback(page === 'profile' ? selectAvaxTotal : selectBundleAvaxTotal, [page])
   );
 
   const testData = [
@@ -67,6 +79,24 @@ const ChainSummaryCard = ({ page, chain: currentChain }: IChainSummaryCardProps)
       total: tplsTotal,
       displayTotal: formatToMoney(tplsTotal),
       percentage: styleNumber((tplsTotal / total) * 100, 2) + '%'
+    },
+    {
+      imgSrc: '/img/chains/matic.svg',
+      imgAlt: 'Polygon logo',
+      displayName: 'Polygon',
+      chainId: 'MATIC',
+      total: maticTotal,
+      displayTotal: formatToMoney(maticTotal),
+      percentage: styleNumber((maticTotal / total) * 100, 2) + '%'
+    },
+    {
+      imgSrc: '/img/chains/avax.svg',
+      imgAlt: 'Avalanche logo',
+      displayName: 'Avalanche',
+      chainId: 'AVAX',
+      total: avaxTotal,
+      displayTotal: formatToMoney(avaxTotal),
+      percentage: styleNumber((avaxTotal / total) * 100, 2) + '%'
     }
   ];
 

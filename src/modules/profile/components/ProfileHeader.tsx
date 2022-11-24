@@ -7,8 +7,10 @@ import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { selectBundleAddress } from '@app-src/store/bundles/selectors';
 import { fetchPortfolioData } from '@app-src/store/protocol/protocolSlice';
 import {
+  selectAvaxTotal,
   selectBscTotal,
   selectEthereumTotal,
+  selectMaticTotal,
   selectTotal,
   selectTplsTotal
 } from '@app-src/store/protocol/selectors';
@@ -36,6 +38,10 @@ const ProfileHeader = ({ address, chain }: IProfileHeaderProps) => {
         ? selectBscTotal
         : chain === 'TPLS'
         ? selectTplsTotal
+        : chain === 'MATIC'
+        ? selectMaticTotal
+        : chain === 'AVAX'
+        ? selectAvaxTotal
         : selectTotal,
       [chain]
     )

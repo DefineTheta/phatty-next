@@ -3,11 +3,13 @@ export enum PortfolioPageEnum {
   BUNDLE = 'BUNDLE'
 }
 
-export enum PortfolioChainEnum {
-  '' = '',
-  ETH = 'ETH',
-  BSC = 'BSC',
-  TPLS = 'TPLS'
-}
+const PortfolioChainEnum = {
+  '': '',
+  ETH: 'ETH',
+  BSC: 'BSC',
+  TPLS: 'TPLS',
+  MATIC: 'MATIC',
+  AVAX: 'AVAX'
+} as const;
 
-export type PortfolioChain = keyof typeof PortfolioChainEnum;
+export type PortfolioChain = typeof PortfolioChainEnum[keyof typeof PortfolioChainEnum];

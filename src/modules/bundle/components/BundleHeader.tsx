@@ -7,8 +7,10 @@ import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { fetchBundlePortfolioData } from '@app-src/store/bundles/bundleSlice';
 import {
   selectBundleAddresses,
+  selectBundleAvaxTotal,
   selectBundleBscTotal,
   selectBundleEthereumTotal,
+  selectBundleMaticTotal,
   selectBundleTotal,
   selectBundleTplsTotal
 } from '@app-src/store/bundles/selectors';
@@ -35,6 +37,10 @@ const BundleHeader = ({ address, chain }: IBundleHeaderProps) => {
         ? selectBundleBscTotal
         : chain === 'TPLS'
         ? selectBundleTplsTotal
+        : chain === 'MATIC'
+        ? selectBundleMaticTotal
+        : chain === 'AVAX'
+        ? selectBundleAvaxTotal
         : selectBundleTotal,
       [chain]
     )

@@ -49,7 +49,9 @@ export const selectBundleWalletData = (chain: '' | keyof typeof WalletDataCompon
         [
           state.bundles.WALLET.data.ETH,
           state.bundles.WALLET.data.TPLS,
-          state.bundles.WALLET.data.BSC
+          state.bundles.WALLET.data.BSC,
+          state.bundles.WALLET.data.MATIC,
+          state.bundles.WALLET.data.AVAX
         ]
       );
     else return state.bundles.WALLET.data[chain];
@@ -158,6 +160,18 @@ export const selectBundleTplsTotal = memoize((state: RootState): number => {
   );
 });
 
+export const selectBundleMaticTotal = memoize((state: RootState): number => {
+  console.log('SELECT_BUNDLE_MATIC_TOTAL');
+
+  return getPositiveOrZero(state.bundles.WALLET.total.MATIC);
+});
+
+export const selectBundleAvaxTotal = memoize((state: RootState): number => {
+  console.log('SELECT_BUNDLE_AVAX_TOTAL');
+
+  return getPositiveOrZero(state.bundles.WALLET.total.AVAX);
+});
+
 export const selectBundleWalletTotal = (chain: '' | keyof typeof WalletDataComponentEnum) =>
   memoize((state: RootState): number => {
     console.log('SELECT_BUNDLE_WALLET_TOTAL');
@@ -169,11 +183,17 @@ export const selectBundleWalletTotal = (chain: '' | keyof typeof WalletDataCompo
         return state.bundles.WALLET.total.BSC;
       case WalletDataComponentEnum.TPLS:
         return state.bundles.WALLET.total.TPLS;
+      case WalletDataComponentEnum.MATIC:
+        return state.bundles.WALLET.total.MATIC;
+      case WalletDataComponentEnum.AVAX:
+        return state.bundles.WALLET.total.AVAX;
       default:
         return (
           state.bundles.WALLET.total.ETH +
           state.bundles.WALLET.total.BSC +
-          state.bundles.WALLET.total.TPLS
+          state.bundles.WALLET.total.TPLS +
+          state.bundles.WALLET.total.MATIC +
+          state.bundles.WALLET.total.AVAX
         );
     }
   });
@@ -246,7 +266,11 @@ export const selectBundleTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
   return (
-    selectBundleEthereumTotal(state) + selectBundleBscTotal(state) + selectBundleTplsTotal(state)
+    selectBundleEthereumTotal(state) +
+    selectBundleBscTotal(state) +
+    selectBundleTplsTotal(state) +
+    selectBundleMaticTotal(state) +
+    selectBundleAvaxTotal(state)
   );
 });
 

@@ -768,13 +768,20 @@ export const tokenImages: Record<string, string> = {
   SYN: '/img/tokens/syn.webp',
   BTT: '/img/tokens/btt.webp',
   USDD: '/img/tokens/usdd.jpg',
-  MIM: '/img/tokens/mim.webp'
+  MIM: '/img/tokens/mim.webp',
+  UNI: '/img/tokens/uni.webp',
+  AVAX: '/img/tokens/avax.webp',
+  WAVAX: '/img/tokens/avax.webp',
+  FRAX: '/img/tokens/frax.webp',
+  AAVE: '/img/tokens/aave.webp'
 };
 
 export const chainImages: Record<string, string> = {
   ETH: '/img/chains/eth.svg',
   BSC: '/img/chains/bsc.svg',
-  TPLS: '/img/chains/tpls.svg'
+  TPLS: '/img/chains/tpls.svg',
+  MATIC: '/img/chains/matic.svg',
+  AVAX: '/img/chains/avax.svg'
 };
 
 export const phiatTokensLookupMap = {
@@ -814,7 +821,7 @@ const phiatPriceURL = 'https://phiat.exchange/px';
 export const fetchPrices = async () => {
   try {
     const response = await fetch(
-      `${DEFI_LLAMA_URL}/coingecko:ethereum,coingecko:pancakeswap-token,coingecko:hex,coingecko:hedron,coingecko:usd-coin,coingecko:tether,coingecko:binance-usd,coingecko:matic-network,coingecko:shiba-inu,coingecko:weth,coingecko:chainlink,coingecko:dai,coingecko:genesis-mana,coingecko:binancecoin,coingecko:fantom,coingecko:wise-token11,coingecko:wrapped-bitcoin,coingecko:staked-ether,coingecko:near,coingecko:apecoin,coingecko:wrapped-filecoin,coingecko:stp-network,coingecko:the-sandbox,coingecko:chiliz,coingecko:theta-token,coingecko:zilliqa,coingecko:gala,coingecko:amber,coingecko:gmt-token,coingecko:true-usd,coingecko:the-graph,coingecko:status,coingecko:aergo,coingecko:ethereum-name-service,coingecko:lido-dao,coingecko:bitdao,coingecko:vendetta-finance,coingecko:enjincoin,coingecko:dydx,coingecko:harmony,coingecko:marlin,coingecko:polymath,coingecko:stargate-finance,coingecko:havven,coingecko:omisego,coingecko:power-ledger,coingecko:sushi,coingecko:basic-attention-token,coingecko:1inch,coingecko:yearn-finance,coingecko:golem,coingecko:wbnb,coingecko:synapse-2`
+      `${DEFI_LLAMA_URL}/coingecko:ethereum,coingecko:pancakeswap-token,coingecko:hex,coingecko:hedron,coingecko:usd-coin,coingecko:tether,coingecko:binance-usd,coingecko:matic-network,coingecko:shiba-inu,coingecko:weth,coingecko:chainlink,coingecko:dai,coingecko:genesis-mana,coingecko:binancecoin,coingecko:fantom,coingecko:wise-token11,coingecko:wrapped-bitcoin,coingecko:staked-ether,coingecko:near,coingecko:apecoin,coingecko:wrapped-filecoin,coingecko:stp-network,coingecko:the-sandbox,coingecko:chiliz,coingecko:theta-token,coingecko:zilliqa,coingecko:gala,coingecko:amber,coingecko:gmt-token,coingecko:true-usd,coingecko:the-graph,coingecko:status,coingecko:aergo,coingecko:ethereum-name-service,coingecko:lido-dao,coingecko:bitdao,coingecko:vendetta-finance,coingecko:enjincoin,coingecko:dydx,coingecko:harmony,coingecko:marlin,coingecko:polymath,coingecko:stargate-finance,coingecko:havven,coingecko:omisego,coingecko:power-ledger,coingecko:sushi,coingecko:basic-attention-token,coingecko:1inch,coingecko:yearn-finance,coingecko:golem,coingecko:wbnb,coingecko:synapse-2,coingecko:uniswap,coingecko:avalanche-2,coingecko:wrapped-avax,coingecko:frax,coingecko:aave`
     );
     const defiPriceData = (await response.json()) as any;
 
@@ -855,6 +862,14 @@ bscClient.setProvider(new Web3.providers.HttpProvider(bscProviderURL));
 const tplsProviderURL = 'https://rpc.v2b.testnet.pulsechain.com';
 export const tplsClient = new Web3();
 tplsClient.setProvider(new Web3.providers.HttpProvider(tplsProviderURL));
+
+const MATIC_CONTRACT_URL = 'https://polygon-rpc.com';
+export const maticClient = new Web3();
+maticClient.setProvider(new Web3.providers.HttpProvider(MATIC_CONTRACT_URL));
+
+const AVAX_CONTRACT_URL = 'https://api.avax.network/ext/bc/C/rpc';
+export const avaxClient = new Web3();
+avaxClient.setProvider(new Web3.providers.HttpProvider(AVAX_CONTRACT_URL));
 
 export const hexETHContract = new ethClient.eth.Contract(
   hexABI as AbiItem[],

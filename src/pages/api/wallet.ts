@@ -1,8 +1,10 @@
 import {
+  avaxClient,
   bscClient,
   chainImages,
   ethClient,
   fetchPrices,
+  maticClient,
   tokenImages,
   tplsClient
 } from '@app-src/services/web3';
@@ -108,6 +110,41 @@ const tplsTokens = [
   { name: 'PHSAC', address: '0x609BFD40359B3656858D83dc4c4E40D4fD34737F' }
 ];
 
+const maticTokens = [
+  { name: 'MATIC', address: '0x' },
+  { name: 'WETH', address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619' },
+  { name: 'USDT', address: '0xc2132d05d31c914a87c6611c10748aeb04b58e8f' },
+  { name: 'USDC', address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174' },
+  { name: 'BUSD', address: '0x9C9e5fD8bbc25984B178FdCE6117Defa39d2db39' },
+  { name: 'BUSD', address: '0xdab529f40e671a1d4bf91361c21bf9f0c9712ab7' },
+  { name: 'DAI', address: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063' },
+  { name: 'UNI', address: '0xb33eaad8d922b1083446dc23f610c2567fb5180f' },
+  { name: 'AVAX', address: '0x2C89bbc92BD86F8075d1DEcc58C7F4E0107f286b' },
+  { name: 'WBTC', address: '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6' },
+  { name: 'LINK', address: '0xb0897686c545045afc77cf20ec7a532e3120e0f1' },
+  { name: 'LINK', address: '0x53e0bca35ec356bd5dddfebbd1fc0fd03fabad39' },
+  { name: 'FRAX', address: '0x45c32fa6df82ead1e2ef74d17b76547eddfaff89' },
+  { name: 'LDO', address: '0xc3c7d422809852031b44ab29eec9f1eff2a58756' },
+  { name: 'SAND', address: '0xBbba073C31bF03b8ACf7c28EF0738DeCF3695683' },
+  { name: 'AAVE', address: '0xd6df932a45c0f255f85145f286ea0b292b21c90b' }
+];
+
+const avaxTokens = [
+  { name: 'AVAX', address: '0x' },
+  { name: 'USDT', address: '0xc7198437980c041c805a1edcba50c1ce5db95118' },
+  { name: 'USDT.e', address: '0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7' },
+  { name: 'USDC.e', address: '0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664' },
+  { name: 'USDC', address: '0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e' },
+  { name: 'BUSD.e', address: '0x19860ccb0a68fd4213ab9d8266f7bbf05a8dde98' },
+  { name: 'BUSD', address: '0x9C9e5fD8bbc25984B178FdCE6117Defa39d2db39' },
+  { name: 'DAI.e', address: '0xd586e7f844cea2f87f50152665bcbc2c279d8d70' },
+  { name: 'WAVAX', address: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7' },
+  { name: 'WBTC.e', address: '0x50b7545627a5162f82a992c33b87adc75187b218' },
+  { name: 'LINK.e', address: '0x5947bb275c521040051d82396192181b413227a3' },
+  { name: 'FRAX', address: '0xd24c2ad096400b6fbcd2ad8b24e7acbc21a1da64' },
+  { name: 'AAVE.e', address: '0x63a72806098bd3d9520cc43356dd78afe5d386d9' }
+];
+
 const calculateWalletTokenData = async (
   client: Web3,
   tokenAddress: string,
@@ -162,6 +199,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   const ethPromises: Promise<WalletTokenItem>[] = [];
   const bscPromises: Promise<WalletTokenItem>[] = [];
   const tplsPromises: Promise<WalletTokenItem>[] = [];
+  const maticPromises: Promise<WalletTokenItem>[] = [];
+  const avaxPromises: Promise<WalletTokenItem>[] = [];
 
   ethTokens.forEach((token) => {
     ethPromises.push(
@@ -205,19 +244,53 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     );
   });
 
+  maticTokens.forEach((token) => {
+    maticPromises.push(
+      calculateWalletTokenData(
+        maticClient,
+        token.address,
+        address as string,
+        token.name,
+        price[token.name],
+        'MATIC',
+        totalValues
+      )
+    );
+  });
+
+  avaxTokens.forEach((token) => {
+    avaxPromises.push(
+      calculateWalletTokenData(
+        avaxClient,
+        token.address,
+        address as string,
+        token.name,
+        price[token.name],
+        'AVAX',
+        totalValues
+      )
+    );
+  });
+
   let data = await Promise.all([
     Promise.all(ethPromises),
     Promise.all(bscPromises),
-    Promise.all(tplsPromises)
+    Promise.all(tplsPromises),
+    Promise.all(maticPromises),
+    Promise.all(avaxPromises)
   ]);
 
   const filteredEthData: WalletTokenItem[] = [];
   const filteredBscData: WalletTokenItem[] = [];
   const filtereTplsData: WalletTokenItem[] = [];
+  const filtereMaticData: WalletTokenItem[] = [];
+  const filtereAvaxData: WalletTokenItem[] = [];
 
   let ethTotal = 0;
   let bscTotal = 0;
   let tplsTotal = 0;
+  let maticTotal = 0;
+  let avaxTotal = 0;
 
   data[0].map((item) => {
     if (item.usdValue > 0) {
@@ -240,6 +313,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
   });
 
+  data[3].map((item) => {
+    if (item.usdValue > 0) {
+      filtereMaticData.push(item);
+      maticTotal += item.usdValue;
+    }
+  });
+
+  data[4].map((item) => {
+    if (item.usdValue > 0) {
+      filtereAvaxData.push(item);
+      avaxTotal += item.usdValue;
+    }
+  });
+
   const resObj = {
     data: {
       ETH: {
@@ -253,6 +340,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       TPLS: {
         data: filtereTplsData,
         totalValue: tplsTotal
+      },
+      MATIC: {
+        data: filtereMaticData,
+        totalValue: maticTotal
+      },
+      AVAX: {
+        data: filtereAvaxData,
+        totalValue: avaxTotal
       }
     }
   } as WalletResponse;

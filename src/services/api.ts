@@ -213,6 +213,14 @@ export const getWallet = async (addresses: string[], refresh: boolean) => {
       TPLS: {
         data: [],
         totalValue: 0
+      },
+      MATIC: {
+        data: [],
+        totalValue: 0
+      },
+      AVAX: {
+        data: [],
+        totalValue: 0
       }
     }
   } as WalletResponse;
@@ -221,10 +229,14 @@ export const getWallet = async (addresses: string[], refresh: boolean) => {
     collatedRes.data.ETH.data = collatedRes.data.ETH.data.concat(wallet.data.ETH.data);
     collatedRes.data.BSC.data = collatedRes.data.BSC.data.concat(wallet.data.BSC.data);
     collatedRes.data.TPLS.data = collatedRes.data.TPLS.data.concat(wallet.data.TPLS.data);
+    collatedRes.data.MATIC.data = collatedRes.data.MATIC.data.concat(wallet.data.MATIC.data);
+    collatedRes.data.AVAX.data = collatedRes.data.AVAX.data.concat(wallet.data.AVAX.data);
 
     collatedRes.data.ETH.totalValue += wallet.data.ETH.totalValue;
     collatedRes.data.BSC.totalValue += wallet.data.BSC.totalValue;
     collatedRes.data.TPLS.totalValue += wallet.data.TPLS.totalValue;
+    collatedRes.data.MATIC.totalValue += wallet.data.MATIC.totalValue;
+    collatedRes.data.AVAX.totalValue += wallet.data.AVAX.totalValue;
   });
 
   return collatedRes;

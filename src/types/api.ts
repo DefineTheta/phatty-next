@@ -55,6 +55,8 @@ export interface WalletResponse {
     ETH: WalletChainItem;
     BSC: WalletChainItem;
     TPLS: WalletChainItem;
+    MATIC: WalletChainItem;
+    AVAX: WalletChainItem;
   };
 }
 

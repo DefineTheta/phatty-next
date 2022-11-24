@@ -43,7 +43,9 @@ export const selectWalletData = (chain: '' | keyof typeof WalletDataComponentEnu
         [
           state.protocols.WALLET.data.ETH,
           state.protocols.WALLET.data.TPLS,
-          state.protocols.WALLET.data.BSC
+          state.protocols.WALLET.data.BSC,
+          state.protocols.WALLET.data.MATIC,
+          state.protocols.WALLET.data.AVAX
         ]
       );
     else return state.protocols.WALLET.data[chain];
@@ -146,6 +148,18 @@ export const selectTplsTotal = memoize((state: RootState): number => {
   );
 });
 
+export const selectMaticTotal = memoize((state: RootState): number => {
+  console.log('SELECT_MATIC_TOTAL');
+
+  return getPositiveOrZero(state.protocols.WALLET.total.MATIC);
+});
+
+export const selectAvaxTotal = memoize((state: RootState): number => {
+  console.log('SELECT_AVAX_TOTAL');
+
+  return getPositiveOrZero(state.protocols.WALLET.total.AVAX);
+});
+
 export const selectWalletTotal = (chain: '' | keyof typeof WalletDataComponentEnum) =>
   memoize((state: RootState): number => {
     console.log('SELECT_WALLET_TOTAL');
@@ -157,11 +171,17 @@ export const selectWalletTotal = (chain: '' | keyof typeof WalletDataComponentEn
         return state.protocols.WALLET.total.BSC;
       case WalletDataComponentEnum.TPLS:
         return state.protocols.WALLET.total.TPLS;
+      case WalletDataComponentEnum.MATIC:
+        return state.protocols.WALLET.total.MATIC;
+      case WalletDataComponentEnum.AVAX:
+        return state.protocols.WALLET.total.AVAX;
       default:
         return (
           state.protocols.WALLET.total.ETH +
           state.protocols.WALLET.total.BSC +
-          state.protocols.WALLET.total.TPLS
+          state.protocols.WALLET.total.TPLS +
+          state.protocols.WALLET.total.MATIC +
+          state.protocols.WALLET.total.AVAX
         );
     }
   });
@@ -231,7 +251,13 @@ export const selectProfileHedronTotal = memoize((state: RootState): number => {
 export const selectTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
-  return selectEthereumTotal(state) + selectBscTotal(state) + selectTplsTotal(state);
+  return (
+    selectEthereumTotal(state) +
+    selectBscTotal(state) +
+    selectTplsTotal(state) +
+    selectMaticTotal(state) +
+    selectAvaxTotal(state)
+  );
 });
 
 export const selectHexToatlTSharesPercentage = (chain: keyof typeof HexDataComponentEnum) =>
