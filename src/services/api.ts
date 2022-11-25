@@ -552,7 +552,8 @@ export const getPhamous = async (addresses: string[], refresh: boolean) => {
       PHLP: {
         symbol: 'PHLP',
         balance: 0,
-        usdValue: 0
+        usdValue: 0,
+        image: phamousData[0].data.PHLP.image
       },
       PHAME: {
         symbol: 'PHAME',

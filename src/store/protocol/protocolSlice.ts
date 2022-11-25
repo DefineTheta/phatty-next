@@ -168,7 +168,8 @@ const initialState: ProtocolsState = {
       [PhamousDataComponentEnum.PHLP]: {
         symbol: 'PHLP',
         balance: 0,
-        usdValue: 0
+        usdValue: 0,
+        image: ''
       },
       [PhamousDataComponentEnum.PHAME]: {
         symbol: 'PHAME',

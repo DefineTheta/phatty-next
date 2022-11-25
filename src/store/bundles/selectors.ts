@@ -6,7 +6,9 @@ import {
   HexTokenItem,
   PancakeFarmTokenItem,
   PancakeLPTokenItem,
+  PhameData,
   PhiatTokenItem,
+  PhlpData,
   PulsexTokenItem,
   SushiItem,
   UniV2Item,
@@ -126,6 +128,18 @@ export const selectBundleHedronStakeData = (chain: keyof typeof HedronDataCompon
     return state.bundles.HEDRON.data[chain];
   });
 
+export const selectBundlePhamousPhameData = memoize((state: RootState): PhameData => {
+  console.log('SELECT_BUNCLE_PHAMOUS_PHAME_DATA');
+
+  return state.bundles.PHAMOUS.data.PHAME;
+});
+
+export const selectBundlePhamousPhlpData = memoize((state: RootState): PhlpData => {
+  console.log('SELECT_BUNCLE_PHAMOUS_PHLP_DATA');
+
+  return state.bundles.PHAMOUS.data.PHLP;
+});
+
 export const selectBundleEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
 
@@ -156,7 +170,8 @@ export const selectBundleTplsTotal = memoize((state: RootState): number => {
     getPositiveOrZero(state.bundles.HEX.total.TPLS) +
     getPositiveOrZero(selectBundlePhiatTotal(state)) +
     getPositiveOrZero(selectBundlePulsexTotal(state)) +
-    getPositiveOrZero(state.bundles.HEDRON.total.TPLS)
+    getPositiveOrZero(state.bundles.HEDRON.total.TPLS) +
+    getPositiveOrZero(state.bundles.PHAMOUS.total.TPLS)
   );
 });
 
@@ -262,6 +277,12 @@ export const selectBundleHedrontotal = memoize((state: RootState): number => {
   );
 });
 
+export const selectBundlePhamousTotal = memoize((state: RootState): number => {
+  console.log('SELECT_BUNDLE_PHAMOUS_TOTAL');
+
+  return state.bundles.PHAMOUS.total.TPLS;
+});
+
 export const selectBundleTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
@@ -343,6 +364,12 @@ export const selectBundleHedronLoading = memoize((state: RootState): boolean => 
   return state.bundles.HEDRON.loading;
 });
 
+export const selectBundlePhamousLoading = memoize((state: RootState): boolean => {
+  console.log('SELECT_PHAMOUS_LOADING');
+
+  return state.bundles.PHAMOUS.loading;
+});
+
 export const selectBundleWalletError = memoize((state: RootState): boolean => {
   console.log('SELECT_BUNDLE_WALLET_ERROR');
 
@@ -392,7 +419,13 @@ export const selectBundleUniV3Error = memoize((state: RootState): boolean => {
 });
 
 export const selectBundleHedronError = memoize((state: RootState): boolean => {
-  console.log('SELECT_BUNDLE_Hedron_ERROR');
+  console.log('SELECT_BUNDLE_HEDRON_ERROR');
 
   return state.bundles.HEDRON.error;
+});
+
+export const selectBundlePhamousError = memoize((state: RootState): boolean => {
+  console.log('SELECT_BUNDLE_PHAMOUS_ERROR');
+
+  return state.bundles.PHAMOUS.error;
 });

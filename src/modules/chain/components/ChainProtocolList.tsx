@@ -4,6 +4,7 @@ import {
   selectBundleHedrontotal,
   selectBundleHextotal,
   selectBundlePancakeTotal,
+  selectBundlePhamousTotal,
   selectBundlePhiatTotal,
   selectBundlePulsexTotal,
   selectBundleSushiTotal,
@@ -66,7 +67,7 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
     useCallback(page === 'profile' ? selectProfileHedronTotal : selectBundleHedrontotal, [page])
   );
   const phamousTotal = useSelector(
-    useCallback(page === 'profile' ? selectProfilePhamousTotal : selectProfilePhamousTotal, [page])
+    useCallback(page === 'profile' ? selectProfilePhamousTotal : selectBundlePhamousTotal, [page])
   );
 
   const protocolData = useMemo(

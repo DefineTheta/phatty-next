@@ -3,7 +3,9 @@ import {
   HexTokenItem,
   PancakeFarmTokenItem,
   PancakeLPTokenItem,
+  PhameData,
   PhiatTokenItem,
+  PhlpData,
   PulsexTokenItem,
   SushiItem,
   UniV2Item,
@@ -28,17 +30,18 @@ export enum BundleChains {
   'TPLS' = 'TPLS'
 }
 
-export enum ProtocolEnum {
-  WALLET = 'WALLET',
-  HEX = 'HEX',
-  PHIAT = 'PHIAT',
-  PULSEX = 'PULSEX',
-  PANCAKE = 'PANCAKE',
-  SUSHI = 'SUSHI',
-  UNISWAPV2 = 'UNISWAPV2',
-  UNISWAPV3 = 'UNISWAPV3',
-  HEDRON = 'HEDRON'
-}
+export const ProtocolEnum = {
+  WALLET: 'WALLET',
+  HEX: 'HEX',
+  PHIAT: 'PHIAT',
+  PULSEX: 'PULSEX',
+  PANCAKE: 'PANCAKE',
+  SUSHI: 'SUSHI',
+  UNISWAPV2: 'UNISWAPV2',
+  UNISWAPV3: 'UNISWAPV3',
+  HEDRON: 'HEDRON',
+  PHAMOUS: 'PHAMOUS'
+} as const;
 
 export enum WalletDataComponentEnum {
   ETH = 'ETH',
@@ -87,6 +90,14 @@ export enum HedronDataComponentEnum {
   TPLS = 'TPLS'
 }
 
+export const PhamousDataComponentEnum = {
+  PHLP: 'PHLP',
+  PHAME: 'PHAME'
+} as const;
+
+export type PhamousDataComponent =
+  typeof PhamousDataComponentEnum[keyof typeof PhamousDataComponentEnum];
+
 export interface BundlesState {
   bundleAddress: string;
   addresses: string[];
@@ -100,6 +111,7 @@ export interface BundlesState {
   [ProtocolEnum.UNISWAPV2]: UniswapV2Data;
   [ProtocolEnum.UNISWAPV3]: UniswapV3Data;
   [ProtocolEnum.HEDRON]: HedronData;
+  [ProtocolEnum.PHAMOUS]: PhamousData;
 }
 
 export interface ProtocolData {
@@ -161,4 +173,14 @@ interface UniswapV3Data extends ProtocolData {
 interface HedronData extends ProtocolData {
   total: Record<HedronDataComponentEnum, number>;
   data: Record<HedronDataComponentEnum, HedronItem[]>;
+}
+
+interface PhamousData extends ProtocolData {
+  total: {
+    TPLS: number;
+  };
+  data: {
+    [PhamousDataComponentEnum.PHLP]: PhlpData;
+    [PhamousDataComponentEnum.PHAME]: PhameData;
+  };
 }

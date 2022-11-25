@@ -6,6 +6,10 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
+import {
+  selectBundlePhamousPhameData,
+  selectBundlePhamousPhlpData
+} from '@app-src/store/bundles/selectors';
 import { selectPhamousPhameData, selectPhamousPhlpData } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
@@ -19,10 +23,10 @@ type IPhamousStakeTableProps = {
 
 const PhamousStakeTable = ({ page, loading }: IPhamousStakeTableProps) => {
   const phamousPhlpData = useAppSelector(
-    useCallback(page === 'profile' ? selectPhamousPhlpData : selectPhamousPhlpData, [page])
+    useCallback(page === 'profile' ? selectPhamousPhlpData : selectBundlePhamousPhlpData, [page])
   );
   const phamousPhameData = useAppSelector(
-    useCallback(page === 'profile' ? selectPhamousPhameData : selectPhamousPhameData, [page])
+    useCallback(page === 'profile' ? selectPhamousPhameData : selectBundlePhamousPhameData, [page])
   );
 
   const [sortedPhamousPhameRewardData, sortKey, sortOrder, handleTableHeaderClick] = useSort<

@@ -4,6 +4,7 @@ import {
   getHedron,
   getHex,
   getPancake,
+  getPhamous,
   getPhiat,
   getPulsex,
   getSushi,
@@ -19,6 +20,7 @@ import {
   HedronResponse,
   HexResponse,
   PancakeResponse,
+  PhamousResponse,
   PhiatResponse,
   PulsexResponse,
   SushiResponse,
@@ -32,6 +34,7 @@ import {
   HedronDataComponentEnum,
   HexDataComponentEnum,
   PancakeDataComponentEnum,
+  PhamousDataComponentEnum,
   PhiatDataComponentEnum,
   ProtocolEnum,
   PulsexDataComponentEnum,
@@ -159,6 +162,27 @@ const initialState: BundlesState = {
     data: {
       [HedronDataComponentEnum.ETH]: [],
       [HedronDataComponentEnum.TPLS]: []
+    }
+  },
+  [ProtocolEnum.PHAMOUS]: {
+    total: {
+      TPLS: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [PhamousDataComponentEnum.PHLP]: {
+        symbol: 'PHLP',
+        balance: 0,
+        usdValue: 0,
+        image: ''
+      },
+      [PhamousDataComponentEnum.PHAME]: {
+        symbol: 'PHAME',
+        balance: 0,
+        usdValue: 0,
+        rewards: []
+      }
     }
   }
 };
@@ -459,6 +483,26 @@ const fetchBundleHedronData = createAsyncThunk<
   return await getHedron(bundleAddresses, false);
 });
 
+const fetchBundlePhamousData = createAsyncThunk<
+  PhamousResponse,
+  { addresses: string[]; refresh: boolean } | undefined,
+  { state: RootState }
+>('bundles/fetchPhamousData', async (input, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  if (input) return await getPhamous(input.addresses, input.refresh);
+
+  const bundleAddresses = thunkAPI.getState().bundles.addresses;
+
+  if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return await getPhamous(bundleAddresses, false);
+});
+
 const fetchBundlePortfolioData = (dispatch: AppDispatch, addresses: string[], refresh = false) => {
   return Promise.all([
     dispatch(fetchBundleWalletData({ addresses, refresh })),
@@ -469,7 +513,8 @@ const fetchBundlePortfolioData = (dispatch: AppDispatch, addresses: string[], re
     dispatch(fetchBundleSushiData({ addresses, refresh })),
     dispatch(fetchBundleUniV2Data({ addresses, refresh })),
     dispatch(fetchBundleUniV3Data({ addresses, refresh })),
-    dispatch(fetchBundleHedronData({ addresses, refresh }))
+    dispatch(fetchBundleHedronData({ addresses, refresh })),
+    dispatch(fetchBundlePhamousData({ addresses, refresh }))
   ]);
 };
 
@@ -808,6 +853,32 @@ export const bundlesSlice = createSlice({
       // state.HEDRON.loading = false;
       state.HEDRON.error = true;
     });
+
+    //Phamous reducer functions
+    builder.addCase(fetchBundlePhamousData.pending, (state) => {
+      state.PHAMOUS.loading = true;
+      state.PHAMOUS.error = false;
+    });
+
+    builder.addCase(fetchBundlePhamousData.fulfilled, (state, action) => {
+      const res = action.payload;
+
+      state.PHAMOUS.data.PHLP = res.data.PHLP;
+      state.PHAMOUS.total.TPLS = res.data.PHLP.usdValue;
+
+      if (res.data.PHAME) {
+        state.PHAMOUS.data.PHAME = res.data.PHAME;
+        state.PHAMOUS.total.TPLS += res.data.PHAME.usdValue;
+      }
+
+      state.PHAMOUS.loading = false;
+      state.PHAMOUS.error = false;
+    });
+
+    builder.addCase(fetchBundlePhamousData.rejected, (state) => {
+      // state.PHAMOUS.loading = false;
+      state.PHAMOUS.error = true;
+    });
   }
 });
 
@@ -832,6 +903,7 @@ export {
   fetchBundleUniV2Data,
   fetchBundleUniV3Data,
   fetchBundleHedronData,
+  fetchBundlePhamousData,
   fetchBundlePortfolioData
 };
 

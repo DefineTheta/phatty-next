@@ -6,6 +6,7 @@ import ChainSummaryCard from '@app-src/modules/chain/components/ChainSummaryCard
 import HedronTableGroup from '@app-src/modules/portfolio/components/hedron/HedronTableGroup';
 import HexTableGroup from '@app-src/modules/portfolio/components/hex/HexTableGroup';
 import PancakeTableGroup from '@app-src/modules/portfolio/components/pancake/PancakeTableGroup';
+import PhamousTableGroup from '@app-src/modules/portfolio/components/phamous/PhamousTableGroup';
 import PhiatTableGroup from '@app-src/modules/portfolio/components/phiat/PhiatTableGroup';
 import PulsexTableGroup from '@app-src/modules/portfolio/components/pulsex/PulsexTableGroup';
 import SushiTableGroup from '@app-src/modules/portfolio/components/sushi/SushiTableGroup';
@@ -72,6 +73,7 @@ const BundlePortfolioPage = () => {
             <WalletTableGroup page="bundle" chain={currentChain} />
             <HexTableGroup page="bundle" chain={currentChain} />
             <PhiatTableGroup page="bundle" chain={currentChain} />
+            <PhamousTableGroup page="bundle" chain={currentChain} />
             <PulsexTableGroup page="bundle" chain={currentChain} />
             <PancakeTableGroup page="bundle" chain={currentChain} />
             <SushiTableGroup page="bundle" chain={currentChain} />

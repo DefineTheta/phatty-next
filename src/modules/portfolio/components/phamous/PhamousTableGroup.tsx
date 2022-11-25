@@ -2,6 +2,12 @@ import TableHeader from '@app-src/common/components/table/TableHeader';
 import TableWrapper from '@app-src/common/components/table/TableWrapper';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
+import { fetchBundlePhamousData } from '@app-src/store/bundles/bundleSlice';
+import {
+  selectBundlePhamousError,
+  selectBundlePhamousLoading,
+  selectBundlePhamousTotal
+} from '@app-src/store/bundles/selectors';
 import { fetchPhamousData } from '@app-src/store/protocol/protocolSlice';
 import {
   selectProfilePhamousError,
@@ -23,22 +29,22 @@ const PhamousTableGroup = ({ page, chain }: IPhamousTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const phamousTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectProfilePhamousTotal : selectProfilePhamousTotal, [page])
+    useCallback(page === 'profile' ? selectProfilePhamousTotal : selectBundlePhamousTotal, [page])
   );
   const loading = useAppSelector(
-    useCallback(page === 'profile' ? selectProfilePhamousLoading : selectProfilePhamousLoading, [
+    useCallback(page === 'profile' ? selectProfilePhamousLoading : selectBundlePhamousLoading, [
       page
     ])
   );
   const error = useAppSelector(
-    useCallback(page === 'profile' ? selectProfilePhamousError : selectProfilePhamousError, [page])
+    useCallback(page === 'profile' ? selectProfilePhamousError : selectBundlePhamousError, [page])
   );
 
   const styledPhamousTotal = useMemo(() => formatToMoney(phamousTotal), [phamousTotal]);
 
   const fetchTableData = useCallback(() => {
     if (page === 'profile') dispatch(fetchPhamousData());
-    // else dispatch(fetchBundlePhiatData());
+    else dispatch(fetchBundlePhamousData());
   }, [page, dispatch]);
 
   if ((!loading && !error && phamousTotal === 0) || !isCurrentChain('TPLS', chain)) {

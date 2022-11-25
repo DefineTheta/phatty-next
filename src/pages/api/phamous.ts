@@ -109,6 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         PHLP: {
           symbol: 'PHLP',
           balance: phlpBalance / 10 ** 18,
+          usdValue: 0,
           image: tokenImages['PHLP']
         }
       }
