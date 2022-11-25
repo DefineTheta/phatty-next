@@ -5,6 +5,7 @@ import {
   HedronResponse,
   HexResponse,
   PancakeResponse,
+  PhamousResponse,
   PhiatResponse,
   PulsexResponse,
   SushiResponse,
@@ -534,6 +535,45 @@ export const getHedron = async (addresses: string[], refresh: boolean) => {
 
     collatedRes.data.TPLS.data = collatedRes.data.TPLS.data.concat(hedron.data.TPLS.data);
     collatedRes.data.TPLS.totalValue += hedron.data.TPLS.totalValue;
+  });
+
+  return collatedRes;
+};
+
+export const getPhamous = async (addresses: string[], refresh: boolean) => {
+  const phamousData = await getMultipleAddressData<PhamousResponse>(addresses, '/api/phamous', {
+    cache: refresh ? 'reload' : 'default'
+  });
+
+  if (phamousData.length === 1) return phamousData[0];
+
+  const collatedRes = {
+    data: {
+      PHLP: {
+        symbol: 'PHLP',
+        balance: 0,
+        usdValue: 0
+      },
+      PHAME: {
+        symbol: 'PHAME',
+        balance: 0,
+        usdValue: 0,
+        rewards: []
+      }
+    }
+  } as PhamousResponse;
+
+  phamousData.forEach((phamous) => {
+    collatedRes.data.PHLP.balance += phamous.data.PHLP.balance;
+    collatedRes.data.PHLP.usdValue += phamous.data.PHLP.usdValue;
+
+    if (!phamous.data.PHAME || !collatedRes.data.PHAME) return;
+
+    collatedRes.data.PHAME.balance += phamous.data.PHAME.balance;
+    collatedRes.data.PHAME.usdValue += phamous.data.PHAME.usdValue;
+    collatedRes.data.PHAME.rewards = collatedRes.data.PHAME.rewards.concat(
+      phamous.data.PHAME.rewards
+    );
   });
 
   return collatedRes;

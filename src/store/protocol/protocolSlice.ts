@@ -2,6 +2,7 @@ import {
   getHedron,
   getHex,
   getPancake,
+  getPhamous,
   getPhiat,
   getPulsex,
   getSushi,
@@ -14,6 +15,7 @@ import {
   HedronResponse,
   HexResponse,
   PancakeResponse,
+  PhamousResponse,
   PhiatResponse,
   PulsexResponse,
   SushiResponse,
@@ -26,6 +28,7 @@ import {
   HedronDataComponentEnum,
   HexDataComponentEnum,
   PancakeDataComponentEnum,
+  PhamousDataComponentEnum,
   PhiatDataComponentEnum,
   ProtocolEnum,
   ProtocolsState,
@@ -153,6 +156,26 @@ const initialState: ProtocolsState = {
     data: {
       [HedronDataComponentEnum.ETH]: [],
       [HedronDataComponentEnum.TPLS]: []
+    }
+  },
+  [ProtocolEnum.PHAMOUS]: {
+    total: {
+      TPLS: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [PhamousDataComponentEnum.PHLP]: {
+        symbol: 'PHLP',
+        balance: 0,
+        usdValue: 0
+      },
+      [PhamousDataComponentEnum.PHAME]: {
+        symbol: 'PHAME',
+        balance: 0,
+        usdValue: 0,
+        rewards: []
+      }
     }
   }
 };
@@ -337,6 +360,26 @@ const fetchHedronData = createAsyncThunk<
   return await getHedron([profileAddress], false);
 });
 
+const fetchPhamousData = createAsyncThunk<
+  PhamousResponse,
+  { address: string; refresh: boolean } | undefined,
+  { state: RootState }
+>('protocols/fetchPhamousData', async (input, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  if (input) return await getPhamous([input.address], input.refresh);
+
+  const profileAddress = thunkAPI.getState().protocols.address;
+
+  if (!profileAddress) thunkAPI.rejectWithValue(null);
+
+  return await getPhamous([profileAddress], false);
+});
+
 const fetchPortfolioData = (dispatch: AppDispatch, address: string, refresh = false) => {
   return Promise.all([
     dispatch(fetchWalletData({ address, refresh })),
@@ -347,7 +390,8 @@ const fetchPortfolioData = (dispatch: AppDispatch, address: string, refresh = fa
     dispatch(fetchSushiData({ address, refresh })),
     dispatch(fetchUniV2Data({ address, refresh })),
     dispatch(fetchUniV3Data({ address, refresh })),
-    dispatch(fetchHedronData({ address, refresh }))
+    dispatch(fetchHedronData({ address, refresh })),
+    dispatch(fetchPhamousData({ address, refresh }))
   ]);
 };
 
@@ -620,6 +664,32 @@ export const protocolsSlice = createSlice({
     builder.addCase(fetchHedronData.rejected, (state) => {
       // state.HEDRON.loading = false;
       state.HEDRON.error = true;
+    });
+
+    //Phamous reducer functions
+    builder.addCase(fetchPhamousData.pending, (state) => {
+      state.PHAMOUS.loading = true;
+      state.PHAMOUS.error = false;
+    });
+
+    builder.addCase(fetchPhamousData.fulfilled, (state, action) => {
+      const res = action.payload;
+
+      state.PHAMOUS.data.PHLP = res.data.PHLP;
+      state.PHAMOUS.total.TPLS = res.data.PHLP.usdValue;
+
+      if (res.data.PHAME) {
+        state.PHAMOUS.data.PHAME = res.data.PHAME;
+        state.PHAMOUS.total.TPLS += res.data.PHAME.usdValue;
+      }
+
+      state.PHAMOUS.loading = false;
+      state.PHAMOUS.error = false;
+    });
+
+    builder.addCase(fetchPhamousData.rejected, (state) => {
+      // state.PHAMOUS.loading = false;
+      state.PHAMOUS.error = true;
     });
   }
 });
