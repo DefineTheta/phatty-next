@@ -1,4 +1,4 @@
-import { phiatFeeABI, phiatTokenABI } from '@app-src/services/abi';
+import { feeABI, tokenABI } from '@app-src/services/abi';
 import {
   fetchPrices,
   lendingPoolProviderAddress,
@@ -10,17 +10,13 @@ import {
 } from '@app-src/services/web3';
 import { PhiatData, PhiatResponse, PhiatTokenItem } from '@app-src/types/api';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { AbiItem } from 'web3-utils';
 
-const phiatFeeAddress = '0x2761E22bE85f1F485059BCB9DB481EA4b9f90B45';
+const phiatFeeAddress = '0x37838B260DD27565786B6c7E6cC35c0E65a47620';
 const phiatTokenAddress = '0x609BFD40359B3656858D83dc4c4E40D4fD34737F';
 const plsUsdPriceOracle = '0x2b8a4e53D0d46B91fb581a99893A9791F054b74e';
 
-const phiatFeeContract = new tplsClient.eth.Contract(phiatFeeABI as AbiItem[], phiatFeeAddress);
-const phiatTokenContract = new tplsClient.eth.Contract(
-  phiatTokenABI as AbiItem[],
-  phiatTokenAddress
-);
+const phiatFeeContract = new tplsClient.eth.Contract(feeABI, phiatFeeAddress);
+const phiatTokenContract = new tplsClient.eth.Contract(tokenABI, phiatTokenAddress);
 
 type UserDataItem = {
   underlyingAsset: string;

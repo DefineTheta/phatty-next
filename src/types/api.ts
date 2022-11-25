@@ -306,3 +306,32 @@ export type HedronResponse = {
     TPLS: HedronChainItem;
   };
 };
+
+// PHAMOUS Types
+
+export type PhameStakingRewardItem = {
+  symbol: string;
+  balance: number;
+  usdValue: number;
+  image: string;
+};
+
+export type PhlpData = {
+  symbol: string;
+  balance: number;
+  usdValue: number;
+};
+
+export type PhameData = {
+  symbol: string;
+  balance: number;
+  usdValue: number;
+  rewards: PhameStakingRewardItem[];
+};
+
+export type PhamousResponse = {
+  data: {
+    PHLP: PhlpData;
+    PHAME?: PhameData;
+  };
+};
