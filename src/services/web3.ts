@@ -86,7 +86,10 @@ export const tokenImages: Record<string, string> = {
   AVAX: '/img/tokens/avax.webp',
   WAVAX: '/img/tokens/avax.webp',
   FRAX: '/img/tokens/frax.webp',
-  AAVE: '/img/tokens/aave.webp'
+  AAVE: '/img/tokens/aave.webp',
+  PHLP: '/img/tokens/phlp.svg',
+  PHAME: '/img/tokens/phame.svg',
+  LOAN: '/img/tokens/loan.webp'
 };
 
 export const chainImages: Record<string, string> = {

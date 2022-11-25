@@ -103,7 +103,8 @@ export const PhamousDataComponentEnum = {
   PHAME: 'PHAME'
 } as const;
 
-type PhamousDataComponent = typeof PhamousDataComponentEnum[keyof typeof PhamousDataComponentEnum];
+export type PhamousDataComponent =
+  typeof PhamousDataComponentEnum[keyof typeof PhamousDataComponentEnum];
 
 export interface ProtocolsState {
   address: string;

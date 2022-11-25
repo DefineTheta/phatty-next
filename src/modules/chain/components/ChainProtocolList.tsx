@@ -16,6 +16,7 @@ import {
   selectPancakeTotal,
   selectPhiatTotal,
   selectProfileHedronTotal,
+  selectProfilePhamousTotal,
   selectPulsexTotal,
   selectSushiTotal,
   selectUniV2Total,
@@ -63,6 +64,9 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
   );
   const hedronTotal = useSelector(
     useCallback(page === 'profile' ? selectProfileHedronTotal : selectBundleHedrontotal, [page])
+  );
+  const phamousTotal = useSelector(
+    useCallback(page === 'profile' ? selectProfilePhamousTotal : selectProfilePhamousTotal, [page])
   );
 
   const protocolData = useMemo(
@@ -138,6 +142,14 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
         imgSrc: '/img/icon/hedron.webp',
         imgAlt: 'Hedron',
         linkHref: '#hedron'
+      },
+      {
+        protocolName: 'Phamous',
+        totalAmount: phamousTotal,
+        displayTotalAmount: formatToMoney(phamousTotal),
+        imgSrc: '/img/icon/phamous_table.svg',
+        imgAlt: 'Phamous',
+        linkHref: '#phamous'
       }
     ],
     [
@@ -149,7 +161,8 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
       sushiTotal,
       uniV2Total,
       uniV3Total,
-      hedronTotal
+      hedronTotal,
+      phamousTotal
     ]
   );
 

@@ -108,7 +108,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       data: {
         PHLP: {
           symbol: 'PHLP',
-          balance: phlpBalance / 10 ** 18
+          balance: phlpBalance / 10 ** 18,
+          image: tokenImages['PHLP']
         }
       }
     } as PhamousResponse;

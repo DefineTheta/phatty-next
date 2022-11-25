@@ -710,6 +710,7 @@ export {
   fetchUniV2Data,
   fetchUniV3Data,
   fetchHedronData,
+  fetchPhamousData,
   fetchPortfolioData
 };
 

@@ -320,6 +320,7 @@ export type PhlpData = {
   symbol: string;
   balance: number;
   usdValue: number;
+  image: string;
 };
 
 export type PhameData = {

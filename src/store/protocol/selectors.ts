@@ -6,7 +6,9 @@ import {
   HexTokenItem,
   PancakeFarmTokenItem,
   PancakeLPTokenItem,
+  PhameData,
   PhiatTokenItem,
+  PhlpData,
   PulsexTokenItem,
   SushiItem,
   UniV2Item,
@@ -114,6 +116,18 @@ export const selectProfileHedronStakeData = (chain: keyof typeof HedronDataCompo
     return state.protocols.HEDRON.data[chain];
   });
 
+export const selectPhamousPhameData = memoize((state: RootState): PhameData => {
+  console.log('SELECT_PHAMOUS_PHAME_DATA');
+
+  return state.protocols.PHAMOUS.data.PHAME;
+});
+
+export const selectPhamousPhlpData = memoize((state: RootState): PhlpData => {
+  console.log('SELECT_PHAMOUS_PHLP_DATA');
+
+  return state.protocols.PHAMOUS.data.PHLP;
+});
+
 export const selectEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
 
@@ -144,7 +158,8 @@ export const selectTplsTotal = memoize((state: RootState): number => {
     getPositiveOrZero(state.protocols.HEX.total.TPLS) +
     getPositiveOrZero(selectPhiatTotal(state)) +
     getPositiveOrZero(selectPulsexTotal(state)) +
-    getPositiveOrZero(state.protocols.HEDRON.total.TPLS)
+    getPositiveOrZero(state.protocols.HEDRON.total.TPLS) +
+    getPositiveOrZero(state.protocols.PHAMOUS.total.TPLS)
   );
 });
 
@@ -248,6 +263,12 @@ export const selectProfileHedronTotal = memoize((state: RootState): number => {
   return state.protocols.HEDRON.total.ETH + state.protocols.HEDRON.total.TPLS;
 });
 
+export const selectProfilePhamousTotal = memoize((state: RootState): number => {
+  console.log('SELECT_PROFILE_PHAMOUS_TOTAL');
+
+  return state.protocols.PHAMOUS.total.TPLS;
+});
+
 export const selectTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
@@ -329,6 +350,12 @@ export const selectProfileHedronLoading = memoize((state: RootState): boolean =>
   return state.protocols.HEDRON.loading;
 });
 
+export const selectProfilePhamousLoading = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_PHAMOUS_LOADING');
+
+  return state.protocols.PHAMOUS.loading;
+});
+
 export const selectProfileWalletError = memoize((state: RootState): boolean => {
   console.log('SELECT_PROFILE_WALLET_ERROR');
 
@@ -381,4 +408,10 @@ export const selectProfileHedronError = memoize((state: RootState): boolean => {
   console.log('SELECT_PROFILE_HEDRON_ERROR');
 
   return state.protocols.HEDRON.error;
+});
+
+export const selectProfilePhamousError = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_PHAMOUS_ERROR');
+
+  return state.protocols.PHAMOUS.error;
 });
