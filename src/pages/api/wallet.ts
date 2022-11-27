@@ -107,7 +107,8 @@ const tplsTokens = [
   { name: 'HDRN', address: '0x3819f64f282bf135d62168c1e513280daf905e06' },
   { name: 'HELGO', address: '0x0567ca0de35606e9c260cc2358404b11de21db44' },
   { name: 'MINT', address: '0x079d5348d11fc5636f2f569641aa32363888b568' },
-  { name: 'PHSAC', address: '0x609BFD40359B3656858D83dc4c4E40D4fD34737F' }
+  { name: 'PHSAC', address: '0x609BFD40359B3656858D83dc4c4E40D4fD34737F' },
+  { name: 'PHAME', address: '0xf120Dc7395FE6dDe218d72C9F5188FE280F6c458' }
 ];
 
 const maticTokens = [
