@@ -168,6 +168,9 @@ const initialState: BundlesState = {
     total: {
       TPLS: 0
     },
+    balance: {
+      STAKING: 0
+    },
     loading: false,
     error: false,
     data: {
@@ -862,6 +865,11 @@ export const bundlesSlice = createSlice({
         res.data.LIQUIDITY_PROVIDING.totalValue +
         res.data.STAKING.totalValue +
         res.data.REWARD.totalValue;
+
+      state.PHAMOUS.balance.STAKING = res.data.STAKING.data.reduce(
+        (prev, cur) => prev + cur.balance,
+        0
+      );
 
       state.PHAMOUS.loading = false;
       state.PHAMOUS.error = false;

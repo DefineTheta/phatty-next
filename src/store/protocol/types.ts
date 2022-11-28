@@ -186,6 +186,9 @@ interface PhamousData extends ProtocolData {
   total: {
     TPLS: number;
   };
+  balance: {
+    STAKING: number;
+  };
   data: Record<PhamousDataComponent, PhamousItem[]>;
 }
 

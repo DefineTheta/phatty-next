@@ -6,13 +6,15 @@ import { fetchBundlePhamousData } from '@app-src/store/bundles/bundleSlice';
 import {
   selectBundlePhamousError,
   selectBundlePhamousLoading,
-  selectBundlePhamousTotal
+  selectBundlePhamousTotal,
+  selectBundlePhamousTotalTSharesPercentage
 } from '@app-src/store/bundles/selectors';
 import { fetchPhamousData } from '@app-src/store/protocol/protocolSlice';
 import {
   selectProfilePhamousError,
   selectProfilePhamousLoading,
-  selectProfilePhamousTotal
+  selectProfilePhamousTotal,
+  selectProfilePhamousTotalTSharesPercentage
 } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { PortfolioChain } from '../../types/portfolio';
@@ -40,8 +42,22 @@ const PhamousTableGroup = ({ page, chain }: IPhamousTableGroupProps) => {
   const error = useAppSelector(
     useCallback(page === 'profile' ? selectProfilePhamousError : selectBundlePhamousError, [page])
   );
+  const phamousSeaCreature = useAppSelector(
+    useCallback(
+      page === 'profile'
+        ? selectProfilePhamousTotalTSharesPercentage
+        : selectBundlePhamousTotalTSharesPercentage,
+      []
+    )
+  );
 
-  const styledPhamousTotal = useMemo(() => formatToMoney(phamousTotal), [phamousTotal]);
+  const styledPhamousTotal = useMemo(
+    () =>
+      `${phamousSeaCreature.sum} ${phamousSeaCreature.name} ${
+        phamousSeaCreature.icon
+      } ${formatToMoney(phamousTotal)}`,
+    [phamousTotal, phamousSeaCreature]
+  );
 
   const fetchTableData = useCallback(() => {
     if (page === 'profile') dispatch(fetchPhamousData());

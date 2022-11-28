@@ -298,11 +298,21 @@ export const selectBundleHexToatlTSharesPercentage = (chain: keyof typeof HexDat
   });
 
 export const selectBundlePhiatTotalTSharesPercentage = memoize((state: RootState) => {
-  console.log('SELECT_BUNDLE_PHAT_TOTAL_T_SHARES_PERCENTAGE');
+  console.log('SELECT_BUNDLE_PHIAT_TOTAL_T_SHARES_PERCENTAGE');
 
   const TOTAL_NUM_OF_PHIAT_STAKES = 55555000;
 
   return getSeaCreature((state.bundles.PHIAT.balance.STAKING / TOTAL_NUM_OF_PHIAT_STAKES) * 100);
+});
+
+export const selectBundlePhamousTotalTSharesPercentage = memoize((state: RootState) => {
+  console.log('SELECT_BUNDLE_PHAMOUS_TOTAL_T_SHARES_PERCENTAGE');
+
+  const TOTAL_NUM_OF_PHAMOUS_STAKES = 55555000;
+
+  return getSeaCreature(
+    (state.bundles.PHAMOUS.balance.STAKING / TOTAL_NUM_OF_PHAMOUS_STAKES) * 100
+  );
 });
 
 export const selectBundleWalletLoading = memoize((state: RootState): boolean => {

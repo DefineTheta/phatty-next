@@ -284,11 +284,21 @@ export const selectHexToatlTSharesPercentage = (chain: keyof typeof HexDataCompo
   });
 
 export const selectPhiatTotalTSharesPercentage = memoize((state: RootState) => {
-  console.log('SELECT_PHAT_TOTAL_T_SHARES_PERCENTAGE');
+  console.log('SELECT_PHAIT_TOTAL_T_SHARES_PERCENTAGE');
 
   const TOTAL_NUM_OF_PHIAT_STAKES = 55555000;
 
   return getSeaCreature((state.protocols.PHIAT.balance.STAKING / TOTAL_NUM_OF_PHIAT_STAKES) * 100);
+});
+
+export const selectProfilePhamousTotalTSharesPercentage = memoize((state: RootState) => {
+  console.log('SELECT_PROFILE_PHAMOUS_TOTAL_T_SHARES_PERCENTAGE');
+
+  const TOTAL_NUM_OF_PHAMOUS_STAKES = 55555000;
+
+  return getSeaCreature(
+    (state.protocols.PHAMOUS.balance.STAKING / TOTAL_NUM_OF_PHAMOUS_STAKES) * 100
+  );
 });
 
 export const selectWalletLoading = memoize((state: RootState): boolean => {
