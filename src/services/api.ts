@@ -11,8 +11,10 @@ import {
   SushiResponse,
   UniV2Response,
   UniV3Response,
-  WalletResponse
+  WalletResponse,
+  WalletTokenItem
 } from '@app-src/types/api';
+import { ProtocolData } from './protocol';
 
 export class AuthenticationError extends Error {
   constructor(message: string) {
@@ -226,12 +228,23 @@ export const getWallet = async (addresses: string[], refresh: boolean) => {
     }
   } as WalletResponse;
 
+  const protocolData = new ProtocolData<WalletTokenItem>(
+    5,
+    (item) => item.chain + item.name,
+    (existingItem, item) => {
+      existingItem.balance += item.balance;
+      existingItem.usdValue += item.usdValue;
+    }
+  );
+
   walletData.forEach((wallet) => {
-    collatedRes.data.ETH.data = collatedRes.data.ETH.data.concat(wallet.data.ETH.data);
-    collatedRes.data.BSC.data = collatedRes.data.BSC.data.concat(wallet.data.BSC.data);
-    collatedRes.data.TPLS.data = collatedRes.data.TPLS.data.concat(wallet.data.TPLS.data);
-    collatedRes.data.MATIC.data = collatedRes.data.MATIC.data.concat(wallet.data.MATIC.data);
-    collatedRes.data.AVAX.data = collatedRes.data.AVAX.data.concat(wallet.data.AVAX.data);
+    protocolData.collate([
+      wallet.data.ETH.data,
+      wallet.data.BSC.data,
+      wallet.data.TPLS.data,
+      wallet.data.MATIC.data,
+      wallet.data.AVAX.data
+    ]);
 
     collatedRes.data.ETH.totalValue += wallet.data.ETH.totalValue;
     collatedRes.data.BSC.totalValue += wallet.data.BSC.totalValue;
@@ -239,6 +252,14 @@ export const getWallet = async (addresses: string[], refresh: boolean) => {
     collatedRes.data.MATIC.totalValue += wallet.data.MATIC.totalValue;
     collatedRes.data.AVAX.totalValue += wallet.data.AVAX.totalValue;
   });
+
+  const collatedData = protocolData.data;
+
+  collatedRes.data.ETH.data = collatedData[0];
+  collatedRes.data.BSC.data = collatedData[1];
+  collatedRes.data.TPLS.data = collatedData[2];
+  collatedRes.data.MATIC.data = collatedData[3];
+  collatedRes.data.AVAX.data = collatedData[4];
 
   return collatedRes;
 };
