@@ -6,9 +6,8 @@ import {
   HexTokenItem,
   PancakeFarmTokenItem,
   PancakeLPTokenItem,
-  PhameData,
+  PhamousItem,
   PhiatTokenItem,
-  PhlpData,
   PulsexTokenItem,
   SushiItem,
   UniV2Item,
@@ -19,6 +18,7 @@ import memoize from 'proxy-memoize';
 import {
   HedronDataComponentEnum,
   HexDataComponentEnum,
+  PhamousDataComponent,
   PhiatDataComponentEnum,
   WalletDataComponentEnum
 } from './types';
@@ -116,17 +116,12 @@ export const selectProfileHedronStakeData = (chain: keyof typeof HedronDataCompo
     return state.protocols.HEDRON.data[chain];
   });
 
-export const selectPhamousPhameData = memoize((state: RootState): PhameData => {
-  console.log('SELECT_PHAMOUS_PHAME_DATA');
+export const selectProfilePhamousComponentData = (component: PhamousDataComponent) =>
+  memoize((state: RootState): PhamousItem[] => {
+    console.log(`SELECT_${component}_PHAMOUS_DATA`);
 
-  return state.protocols.PHAMOUS.data.PHAME;
-});
-
-export const selectPhamousPhlpData = memoize((state: RootState): PhlpData => {
-  console.log('SELECT_PHAMOUS_PHLP_DATA');
-
-  return state.protocols.PHAMOUS.data.PHLP;
-});
+    return state.protocols.PHAMOUS.data[component];
+  });
 
 export const selectEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');

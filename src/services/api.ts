@@ -5,6 +5,7 @@ import {
   HedronResponse,
   HexResponse,
   PancakeResponse,
+  PhamousItem,
   PhamousResponse,
   PhiatResponse,
   PulsexResponse,
@@ -570,33 +571,47 @@ export const getPhamous = async (addresses: string[], refresh: boolean) => {
 
   const collatedRes = {
     data: {
-      PHLP: {
-        symbol: 'PHLP',
-        balance: 0,
-        usdValue: 0,
-        image: phamousData[0].data.PHLP.image
+      LIQUIDITY_PROVIDING: {
+        data: [],
+        totalValue: 0
       },
-      PHAME: {
-        symbol: 'PHAME',
-        balance: 0,
-        usdValue: 0,
-        rewards: []
+      STAKING: {
+        data: [],
+        totalValue: 0
+      },
+      REWARD: {
+        data: [],
+        totalValue: 0
       }
     }
   } as PhamousResponse;
 
+  const protocolData = new ProtocolData<PhamousItem>(
+    3,
+    (item) => item.symbol,
+    (existingItem, item) => {
+      existingItem.balance += item.balance;
+      existingItem.usdValue += item.usdValue;
+    }
+  );
+
   phamousData.forEach((phamous) => {
-    collatedRes.data.PHLP.balance += phamous.data.PHLP.balance;
-    collatedRes.data.PHLP.usdValue += phamous.data.PHLP.usdValue;
+    protocolData.collate([
+      phamous.data.LIQUIDITY_PROVIDING.data,
+      phamous.data.STAKING.data,
+      phamous.data.REWARD.data
+    ]);
 
-    if (!phamous.data.PHAME || !collatedRes.data.PHAME) return;
-
-    collatedRes.data.PHAME.balance += phamous.data.PHAME.balance;
-    collatedRes.data.PHAME.usdValue += phamous.data.PHAME.usdValue;
-    collatedRes.data.PHAME.rewards = collatedRes.data.PHAME.rewards.concat(
-      phamous.data.PHAME.rewards
-    );
+    collatedRes.data.LIQUIDITY_PROVIDING.totalValue += phamous.data.LIQUIDITY_PROVIDING.totalValue;
+    collatedRes.data.STAKING.totalValue += phamous.data.STAKING.totalValue;
+    collatedRes.data.REWARD.totalValue += phamous.data.REWARD.totalValue;
   });
+
+  const collatedData = protocolData.data;
+
+  collatedRes.data.LIQUIDITY_PROVIDING.data = collatedData[0];
+  collatedRes.data.STAKING.data = collatedData[1];
+  collatedRes.data.REWARD.data = collatedData[2];
 
   return collatedRes;
 };

@@ -3,9 +3,8 @@ import {
   HexTokenItem,
   PancakeFarmTokenItem,
   PancakeLPTokenItem,
-  PhameData,
+  PhamousItem,
   PhiatTokenItem,
-  PhlpData,
   PulsexTokenItem,
   SushiItem,
   UniV2Item,
@@ -91,8 +90,9 @@ export enum HedronDataComponentEnum {
 }
 
 export const PhamousDataComponentEnum = {
-  PHLP: 'PHLP',
-  PHAME: 'PHAME'
+  LIQUIDITY_PROVIDING: 'LIQUIDITY_PROVIDING',
+  STAKING: 'STAKING',
+  REWARD: 'REWARD'
 } as const;
 
 export type PhamousDataComponent =
@@ -179,8 +179,5 @@ interface PhamousData extends ProtocolData {
   total: {
     TPLS: number;
   };
-  data: {
-    [PhamousDataComponentEnum.PHLP]: PhlpData;
-    [PhamousDataComponentEnum.PHAME]: PhameData;
-  };
+  data: Record<PhamousDataComponent, PhamousItem[]>;
 }

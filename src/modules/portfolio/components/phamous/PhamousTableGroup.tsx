@@ -18,6 +18,7 @@ import { useCallback, useMemo } from 'react';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
 import { isCurrentChain } from '../../utils/misc';
+import PhamousLiquidityTable from './PhamousLiquidityTable';
 import PhamousStakeTable from './PhamousStakeTable';
 
 type IPhamousTableGroupProps = {
@@ -62,6 +63,9 @@ const PhamousTableGroup = ({ page, chain }: IPhamousTableGroupProps) => {
       />
       <TableWrapper error={error} handleRetry={fetchTableData}>
         <PhamousStakeTable page={page} loading={loading} />
+      </TableWrapper>
+      <TableWrapper error={error} handleRetry={fetchTableData}>
+        <PhamousLiquidityTable page={page} loading={loading} />
       </TableWrapper>
     </div>
   );

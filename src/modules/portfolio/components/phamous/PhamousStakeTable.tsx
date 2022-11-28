@@ -6,11 +6,8 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import {
-  selectBundlePhamousPhameData,
-  selectBundlePhamousPhlpData
-} from '@app-src/store/bundles/selectors';
-import { selectPhamousPhameData, selectPhamousPhlpData } from '@app-src/store/protocol/selectors';
+import { selectBundlePhamousComponentData } from '@app-src/store/bundles/selectors';
+import { selectProfilePhamousComponentData } from '@app-src/store/protocol/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import useSort from '../../hooks/useSort';
@@ -22,16 +19,26 @@ type IPhamousStakeTableProps = {
 };
 
 const PhamousStakeTable = ({ page, loading }: IPhamousStakeTableProps) => {
-  const phamousPhlpData = useAppSelector(
-    useCallback(page === 'profile' ? selectPhamousPhlpData : selectBundlePhamousPhlpData, [page])
+  const phamousRewardData = useAppSelector(
+    useCallback(
+      page === 'profile'
+        ? selectProfilePhamousComponentData('REWARD')
+        : selectBundlePhamousComponentData('REWARD'),
+      [page]
+    )
   );
-  const phamousPhameData = useAppSelector(
-    useCallback(page === 'profile' ? selectPhamousPhameData : selectBundlePhamousPhameData, [page])
+  const phamousStakingData = useAppSelector(
+    useCallback(
+      page === 'profile'
+        ? selectProfilePhamousComponentData('STAKING')
+        : selectBundlePhamousComponentData('STAKING'),
+      [page]
+    )
   );
 
-  const [sortedPhamousPhameRewardData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
-    typeof phamousPhameData.rewards[number]
-  >(phamousPhameData.rewards, 'usdValue', 'desc');
+  const [sortedPhamousRewardData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
+    typeof phamousRewardData[number]
+  >(phamousRewardData, 'usdValue', 'desc');
 
   if (loading) {
     return (
@@ -77,40 +84,38 @@ const PhamousStakeTable = ({ page, loading }: IPhamousStakeTableProps) => {
     );
   }
 
-  if (phamousPhlpData.balance === 0 && phamousPhameData.balance === 0) {
+  if (phamousRewardData.length === 0 && phamousStakingData.length === 0) {
     return null;
   }
 
   return (
     <Card>
       <Bookmark>Staking</Bookmark>
-      {phamousPhlpData.balance > 0 && (
+      {phamousStakingData.length > 0 && (
         <>
           <TableHeaderRow>
             <TableHeaderRowCell className="basis-1/4">Token</TableHeaderRowCell>
             <TableHeaderRowCell className="basis-1/3">Balance</TableHeaderRowCell>
             <TableHeaderRowCell className="basis-1/2">USD Value</TableHeaderRowCell>
           </TableHeaderRow>
-          <TableRow>
-            <TableRowCell className="basis-1/4">
-              <div className="flex flex-row gap-x-8">
-                <Image
-                  className="rounded-full"
-                  width="20px"
-                  height="20px"
-                  src={phamousPhlpData.image}
-                  alt={phamousPhlpData.symbol}
-                />
-                <span>{phamousPhlpData.symbol}</span>
-              </div>
-            </TableRowCell>
-            <TableRowCell className="basis-1/3">
-              {styleNumber(phamousPhlpData.balance, 3)}
-            </TableRowCell>
-            <TableRowCell className="basis-1/2">
-              {formatToMoney(phamousPhlpData.usdValue)}
-            </TableRowCell>
-          </TableRow>
+          {phamousStakingData.map((stake, index) => (
+            <TableRow key={index}>
+              <TableRowCell className="basis-1/4">
+                <div className="flex flex-row gap-x-8">
+                  <Image
+                    className="rounded-full"
+                    width="20px"
+                    height="20px"
+                    src={stake.image}
+                    alt={stake.symbol}
+                  />
+                  <span>{stake.symbol}</span>
+                </div>
+              </TableRowCell>
+              <TableRowCell className="basis-1/3">{styleNumber(stake.balance, 3)}</TableRowCell>
+              <TableRowCell className="basis-1/2">{formatToMoney(stake.usdValue)}</TableRowCell>
+            </TableRow>
+          ))}
         </>
       )}
       <TableHeaderRow>
@@ -125,7 +130,7 @@ const PhamousStakeTable = ({ page, loading }: IPhamousStakeTableProps) => {
           USD Value
         </TableHeaderRowCell>
       </TableHeaderRow>
-      {sortedPhamousPhameRewardData.map((reward, index) => (
+      {sortedPhamousRewardData.map((reward, index) => (
         <TableRow key={index}>
           <TableRowCell className="basis-1/4">
             <div className="flex flex-row gap-x-8">

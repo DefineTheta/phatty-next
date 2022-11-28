@@ -1,6 +1,6 @@
 import { feeABI, minABI, tokenABI } from '@app-src/services/abi';
 import { fetchPrices, tokenImages, tplsClient } from '@app-src/services/web3';
-import { PhameStakingRewardItem, PhamousResponse } from '@app-src/types/api';
+import { PhamousResponse } from '@app-src/types/api';
 
 const PHLP_TOKEN_ADDRESS = '0xbB5F9DC3454b02fE5eaF5070C62ad4C055e05F1f';
 const PHAME_STAKING_ADDRESS = '0x0914C4Be2b2cBdaBA944E667d3c5244f4dd6b8bd';
@@ -106,18 +106,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const resObj = {
       data: {
-        PHLP: {
-          symbol: 'PHLP',
-          balance: phlpBalance / 10 ** 18,
-          usdValue: 0,
-          image: tokenImages['PHLP']
+        LIQUIDITY_PROVIDING: {
+          data: [
+            {
+              symbol: 'PHLP',
+              balance: phlpBalance / 10 ** 18,
+              usdValue: 0,
+              image: tokenImages['PHLP']
+            }
+          ],
+          totalValue: 0
+        },
+        STAKING: {
+          data: [],
+          totalValue: 0
+        },
+        REWARD: {
+          data: [],
+          totalValue: 0
         }
       }
     } as PhamousResponse;
 
     if (userStake > 0) {
-      const stakingRewards: PhameStakingRewardItem[] = [];
-
       for (let i = 0; i < phamousStakingRewards.length; i++) {
         const reward = userRewardsLookupMap[phamousStakingRewards[i].address];
 
@@ -128,22 +139,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (value <= 0) continue;
 
-        stakingRewards.push({
+        resObj.data.REWARD.data.push({
           symbol: phamousStakingRewards[i].symbol,
           usdValue: value,
           image: tokenImages[phamousStakingRewards[i].symbol],
           balance
         });
+
+        resObj.data.REWARD.totalValue += value;
       }
 
-      resObj.data.PHLP.usdValue = (userStake / 10 ** 18) * price['PHAME'];
+      // resObj.data.PHLP.usdValue = (userStake / 10 ** 18) * price['PHAME'];
 
-      resObj.data.PHAME = {
+      const rewardTotalValue = (userStake / 10 ** 18) * price['PHAME'];
+      resObj.data.STAKING.data.push({
         symbol: 'PHAME',
         balance: userStake / 10 ** 18,
-        usdValue: (userStake / 10 ** 18) * price['PHAME'],
-        rewards: stakingRewards
-      };
+        usdValue: rewardTotalValue,
+        image: tokenImages['PHAME']
+      });
+
+      resObj.data.STAKING.totalValue = rewardTotalValue;
     }
 
     res.status(200).send(resObj);

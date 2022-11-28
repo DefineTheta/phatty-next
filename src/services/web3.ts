@@ -89,7 +89,9 @@ export const tokenImages: Record<string, string> = {
   AAVE: '/img/tokens/aave.webp',
   PHLP: '/img/tokens/phlp.svg',
   PHAME: '/img/tokens/phame.svg',
-  LOAN: '/img/tokens/loan.webp'
+  LOAN: '/img/tokens/loan.webp',
+  XEN: '/img/tokens/xen.webp',
+  MAXI: '/img/tokens/maxi.jpg'
 };
 
 export const chainImages: Record<string, string> = {
@@ -137,7 +139,7 @@ const phiatPriceURL = 'https://phiat.exchange/px';
 export const fetchPrices = async () => {
   try {
     const response = await fetch(
-      `${DEFI_LLAMA_URL}/coingecko:ethereum,coingecko:pancakeswap-token,coingecko:hex,coingecko:hedron,coingecko:usd-coin,coingecko:tether,coingecko:binance-usd,coingecko:matic-network,coingecko:shiba-inu,coingecko:weth,coingecko:chainlink,coingecko:dai,coingecko:genesis-mana,coingecko:binancecoin,coingecko:fantom,coingecko:wise-token11,coingecko:wrapped-bitcoin,coingecko:staked-ether,coingecko:near,coingecko:apecoin,coingecko:wrapped-filecoin,coingecko:stp-network,coingecko:the-sandbox,coingecko:chiliz,coingecko:theta-token,coingecko:zilliqa,coingecko:gala,coingecko:amber,coingecko:gmt-token,coingecko:true-usd,coingecko:the-graph,coingecko:status,coingecko:aergo,coingecko:ethereum-name-service,coingecko:lido-dao,coingecko:bitdao,coingecko:vendetta-finance,coingecko:enjincoin,coingecko:dydx,coingecko:harmony,coingecko:marlin,coingecko:polymath,coingecko:stargate-finance,coingecko:havven,coingecko:omisego,coingecko:power-ledger,coingecko:sushi,coingecko:basic-attention-token,coingecko:1inch,coingecko:yearn-finance,coingecko:golem,coingecko:wbnb,coingecko:synapse-2,coingecko:uniswap,coingecko:avalanche-2,coingecko:wrapped-avax,coingecko:frax,coingecko:aave`
+      `${DEFI_LLAMA_URL}/coingecko:ethereum,coingecko:pancakeswap-token,coingecko:hex,coingecko:hedron,coingecko:usd-coin,coingecko:tether,coingecko:binance-usd,coingecko:matic-network,coingecko:shiba-inu,coingecko:weth,coingecko:chainlink,coingecko:dai,coingecko:genesis-mana,coingecko:binancecoin,coingecko:fantom,coingecko:wise-token11,coingecko:wrapped-bitcoin,coingecko:staked-ether,coingecko:near,coingecko:apecoin,coingecko:wrapped-filecoin,coingecko:stp-network,coingecko:the-sandbox,coingecko:chiliz,coingecko:theta-token,coingecko:zilliqa,coingecko:gala,coingecko:amber,coingecko:gmt-token,coingecko:true-usd,coingecko:the-graph,coingecko:status,coingecko:aergo,coingecko:ethereum-name-service,coingecko:lido-dao,coingecko:bitdao,coingecko:vendetta-finance,coingecko:enjincoin,coingecko:dydx,coingecko:harmony,coingecko:marlin,coingecko:polymath,coingecko:stargate-finance,coingecko:havven,coingecko:omisego,coingecko:power-ledger,coingecko:sushi,coingecko:basic-attention-token,coingecko:1inch,coingecko:yearn-finance,coingecko:golem,coingecko:wbnb,coingecko:synapse-2,coingecko:uniswap,coingecko:avalanche-2,coingecko:wrapped-avax,coingecko:frax,coingecko:aave,coingecko:xen-crypto,coingecko:maximus`
     );
     const defiPriceData = (await response.json()) as any;
 

@@ -309,30 +309,22 @@ export type HedronResponse = {
 
 // PHAMOUS Types
 
-export type PhameStakingRewardItem = {
+export type PhamousItem = {
   symbol: string;
   balance: number;
   usdValue: number;
   image: string;
 };
 
-export type PhlpData = {
-  symbol: string;
-  balance: number;
-  usdValue: number;
-  image: string;
-};
-
-export type PhameData = {
-  symbol: string;
-  balance: number;
-  usdValue: number;
-  rewards: PhameStakingRewardItem[];
+export type PhamousChainItem = {
+  data: PhamousItem[];
+  totalValue: number;
 };
 
 export type PhamousResponse = {
   data: {
-    PHLP: PhlpData;
-    PHAME?: PhameData;
+    LIQUIDITY_PROVIDING: PhamousChainItem;
+    STAKING: PhamousChainItem;
+    REWARD: PhamousChainItem;
   };
 };

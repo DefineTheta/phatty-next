@@ -165,18 +165,9 @@ const initialState: ProtocolsState = {
     loading: false,
     error: false,
     data: {
-      [PhamousDataComponentEnum.PHLP]: {
-        symbol: 'PHLP',
-        balance: 0,
-        usdValue: 0,
-        image: ''
-      },
-      [PhamousDataComponentEnum.PHAME]: {
-        symbol: 'PHAME',
-        balance: 0,
-        usdValue: 0,
-        rewards: []
-      }
+      [PhamousDataComponentEnum.LIQUIDITY_PROVIDING]: [],
+      [PhamousDataComponentEnum.STAKING]: [],
+      [PhamousDataComponentEnum.REWARD]: []
     }
   }
 };
@@ -676,13 +667,14 @@ export const protocolsSlice = createSlice({
     builder.addCase(fetchPhamousData.fulfilled, (state, action) => {
       const res = action.payload;
 
-      state.PHAMOUS.data.PHLP = res.data.PHLP;
-      state.PHAMOUS.total.TPLS = res.data.PHLP.usdValue;
+      state.PHAMOUS.data.LIQUIDITY_PROVIDING = res.data.LIQUIDITY_PROVIDING.data;
+      state.PHAMOUS.data.STAKING = res.data.STAKING.data;
+      state.PHAMOUS.data.REWARD = res.data.REWARD.data;
 
-      if (res.data.PHAME) {
-        state.PHAMOUS.data.PHAME = res.data.PHAME;
-        state.PHAMOUS.total.TPLS += res.data.PHAME.usdValue;
-      }
+      state.PHAMOUS.total.TPLS =
+        res.data.LIQUIDITY_PROVIDING.totalValue +
+        res.data.STAKING.totalValue +
+        res.data.REWARD.totalValue;
 
       state.PHAMOUS.loading = false;
       state.PHAMOUS.error = false;
