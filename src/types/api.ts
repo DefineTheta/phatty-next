@@ -57,6 +57,7 @@ export interface WalletResponse {
     TPLS: WalletChainItem;
     MATIC: WalletChainItem;
     AVAX: WalletChainItem;
+    FTM: WalletChainItem;
   };
 }
 

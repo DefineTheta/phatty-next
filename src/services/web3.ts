@@ -29,6 +29,7 @@ export const tokenImages: Record<string, string> = {
   PLS: '/img/tokens/pls.svg',
   PHSAC: '/img/tokens/phsac.png',
   HEX: '/img/tokens/hex.svg',
+  TPLS_HEX: '/img/tokens/hex.svg',
   pulseX: '/img/tokens/pulsex.jpeg',
   HDRN: '/img/tokens/hdrn.png',
   HELGO: '/img/tokens/helgo.png',
@@ -92,16 +93,102 @@ export const tokenImages: Record<string, string> = {
   LOAN: '/img/tokens/loan.webp',
   XEN: '/img/tokens/xen.webp',
   MAXI: '/img/tokens/maxi.jpg',
-  WMATIC: '/img/tokens/wmatic.jpg',
-  AMB: '/img/tokens/amb.png'
+  WMATIC: '/img/tokens/wmatic.webp',
+  AMB: '/img/tokens/amb.png',
+  MARS: '/img/tokens/mars.webp',
+  WFTM: '/img/tokens/wftm.webp',
+  BOO: '/img/tokens/boo.webp',
+  SPIRIT: '/img/tokens/spirit.webp',
+  TOMB: '/img/tokens/tomb.webp',
+  TSHARE: '/img/tokens/tshare.webp',
+  LQDR: '/img/tokens/lqdr.webp',
+  SPELL: '/img/tokens/spell.webp',
+  MAN: '/img/tokens/man.webp',
+  BEETS: '/img/tokens/beets.webp'
 };
+
+const coingeckoIds = [
+  'ethereum',
+  'pancakeswap-token',
+  'hex',
+  'hedron',
+  'usd-coin',
+  'tether',
+  'binance-usd',
+  'matic-network',
+  'shiba-inu',
+  'weth',
+  'chainlink',
+  'dai',
+  'genesis-mana',
+  'binancecoin',
+  'fantom',
+  'wise-token11',
+  'wrapped-bitcoin',
+  'staked-ether',
+  'near',
+  'apecoin',
+  'wrapped-filecoin',
+  'stp-network',
+  'the-sandbox',
+  'chiliz',
+  'theta-token',
+  'zilliqa',
+  'gala',
+  'amber',
+  'gmt-token',
+  'true-usd',
+  'the-graph',
+  'status',
+  'aergo',
+  'ethereum-name-service',
+  'lido-dao',
+  'bitdao',
+  'vendetta-finance',
+  'enjincoin',
+  'dydx',
+  'harmony',
+  'marlin',
+  'polymath',
+  'stargate-finance',
+  'havven',
+  'omisego',
+  'power-ledger',
+  'sushi',
+  'basic-attention-token',
+  '1inch',
+  'yearn-finance',
+  'golem',
+  'wbnb',
+  'synapse-2',
+  'uniswap',
+  'avalanche-2',
+  'wrapped-avax',
+  'frax',
+  'aave',
+  'xen-crypto',
+  'maximus',
+  'wmatic',
+  'projectmars',
+  'wrapped-fantom',
+  'spookyswap',
+  'spiritswap',
+  'tomb',
+  'tomb-shares',
+  'liquiddriver',
+  'spell-token',
+  'mangamon',
+  'beethoven-x',
+  'magic-internet-money'
+];
 
 export const chainImages: Record<string, string> = {
   ETH: '/img/chains/eth.svg',
   BSC: '/img/chains/bsc.svg',
   TPLS: '/img/chains/tpls.svg',
   MATIC: '/img/chains/matic.svg',
-  AVAX: '/img/chains/avax.svg'
+  AVAX: '/img/chains/avax.svg',
+  FTML: '/img/chains/ftm.svg'
 };
 
 export const phiatTokensLookupMap = {
@@ -140,9 +227,9 @@ const phiatPriceURL = 'https://phiat.exchange/px';
 
 export const fetchPrices = async () => {
   try {
-    const response = await fetch(
-      `${DEFI_LLAMA_URL}/coingecko:ethereum,coingecko:pancakeswap-token,coingecko:hex,coingecko:hedron,coingecko:usd-coin,coingecko:tether,coingecko:binance-usd,coingecko:matic-network,coingecko:shiba-inu,coingecko:weth,coingecko:chainlink,coingecko:dai,coingecko:genesis-mana,coingecko:binancecoin,coingecko:fantom,coingecko:wise-token11,coingecko:wrapped-bitcoin,coingecko:staked-ether,coingecko:near,coingecko:apecoin,coingecko:wrapped-filecoin,coingecko:stp-network,coingecko:the-sandbox,coingecko:chiliz,coingecko:theta-token,coingecko:zilliqa,coingecko:gala,coingecko:amber,coingecko:gmt-token,coingecko:true-usd,coingecko:the-graph,coingecko:status,coingecko:aergo,coingecko:ethereum-name-service,coingecko:lido-dao,coingecko:bitdao,coingecko:vendetta-finance,coingecko:enjincoin,coingecko:dydx,coingecko:harmony,coingecko:marlin,coingecko:polymath,coingecko:stargate-finance,coingecko:havven,coingecko:omisego,coingecko:power-ledger,coingecko:sushi,coingecko:basic-attention-token,coingecko:1inch,coingecko:yearn-finance,coingecko:golem,coingecko:wbnb,coingecko:synapse-2,coingecko:uniswap,coingecko:avalanche-2,coingecko:wrapped-avax,coingecko:frax,coingecko:aave,coingecko:xen-crypto,coingecko:maximus,coingecko:wmatic`
-    );
+    const coingeckoQueryParams = coingeckoIds.reduce((str, id) => `${str},coingecko:${id}`, '');
+
+    const response = await fetch(`${DEFI_LLAMA_URL}/${coingeckoQueryParams}`);
     const defiPriceData = (await response.json()) as any;
 
     const tplsPriceResponse = await fetch(phiatPriceURL);
@@ -190,6 +277,10 @@ maticClient.setProvider(new Web3.providers.HttpProvider(MATIC_CONTRACT_URL));
 const AVAX_CONTRACT_URL = 'https://api.avax.network/ext/bc/C/rpc';
 export const avaxClient = new Web3();
 avaxClient.setProvider(new Web3.providers.HttpProvider(AVAX_CONTRACT_URL));
+
+const FTM_CONTRACT_URL = 'https://rpc.ankr.com/fantom';
+export const ftmClient = new Web3();
+ftmClient.setProvider(new Web3.providers.HttpProvider(FTM_CONTRACT_URL));
 
 export const hexETHContract = new ethClient.eth.Contract(
   hexABI as AbiItem[],
