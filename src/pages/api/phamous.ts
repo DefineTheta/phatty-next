@@ -149,7 +149,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         resObj.data.REWARD.totalValue += value;
       }
 
-      // resObj.data.PHLP.usdValue = (userStake / 10 ** 18) * price['PHAME'];
+      const PHLP_PRICE = 0.94;
+      resObj.data.LIQUIDITY_PROVIDING.data[0].usdValue = (userStake / 10 ** 18) * PHLP_PRICE;
 
       const rewardTotalValue = (userStake / 10 ** 18) * price['PHAME'];
       resObj.data.STAKING.data.push({

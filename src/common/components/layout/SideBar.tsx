@@ -171,7 +171,7 @@ const SideBar = () => {
         </button>
         <div className="flex h-full flex-col justify-between pt-20 pb-30 pl-20 sm:pl-30">
           <div className="flex flex-col gap-y-50">
-            <a>
+            <a href="/">
               <Image src="/img/logo-light.png" alt="Logo" width="140px" height="36px" />
             </a>
             <div className="flex flex-col gap-y-24">

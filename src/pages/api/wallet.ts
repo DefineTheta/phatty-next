@@ -127,7 +127,8 @@ const maticTokens = [
   { name: 'FRAX', address: '0x45c32fa6df82ead1e2ef74d17b76547eddfaff89' },
   { name: 'LDO', address: '0xc3c7d422809852031b44ab29eec9f1eff2a58756' },
   { name: 'SAND', address: '0xBbba073C31bF03b8ACf7c28EF0738DeCF3695683' },
-  { name: 'AAVE', address: '0xd6df932a45c0f255f85145f286ea0b292b21c90b' }
+  { name: 'AAVE', address: '0xd6df932a45c0f255f85145f286ea0b292b21c90b' },
+  { name: 'WMATIC', address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270' }
 ];
 
 const avaxTokens = [
