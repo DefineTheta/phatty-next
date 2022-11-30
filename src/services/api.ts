@@ -225,6 +225,10 @@ export const getWallet = async (addresses: string[], refresh: boolean) => {
       AVAX: {
         data: [],
         totalValue: 0
+      },
+      FTM: {
+        data: [],
+        totalValue: 0
       }
     }
   } as WalletResponse;
