@@ -175,19 +175,22 @@ const SideBar = () => {
               <Image src="/img/logo-light.png" alt="Logo" width="140px" height="36px" />
             </a>
             <div className="flex flex-col gap-y-24">
-              {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  className={`flex cursor-pointer items-center gap-x-12 duration-150 ease-in-out hover:text-gray-200 ${
-                    currentTab === item.name
-                      ? 'border-r-4 border-secondary text-gray-200'
-                      : 'text-gray-400'
-                  }`}
-                  onClick={() => handleNavClick(item.name)}
-                >
-                  {item.icon}
-                  <span className="text-base font-bold">{item.displayName}</span>
-                </a>
+              {navItems.map((item, index) => (
+                <>
+                  {index === 4 && <div className="mr:20 my-20 h-1 bg-gray-500 sm:mr-30"></div>}
+                  <a
+                    key={item.name}
+                    className={`flex cursor-pointer items-center gap-x-12 duration-150 ease-in-out hover:text-gray-200 ${
+                      currentTab === item.name
+                        ? 'border-r-4 border-secondary text-gray-200'
+                        : 'text-gray-400'
+                    }`}
+                    onClick={() => handleNavClick(item.name)}
+                  >
+                    {item.icon}
+                    <span className="text-base font-bold">{item.displayName}</span>
+                  </a>
+                </>
               ))}
             </div>
           </div>
