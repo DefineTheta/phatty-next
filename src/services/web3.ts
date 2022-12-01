@@ -282,6 +282,21 @@ const FTM_CONTRACT_URL = 'https://rpc.ankr.com/fantom';
 export const ftmClient = new Web3();
 ftmClient.setProvider(new Web3.providers.HttpProvider(FTM_CONTRACT_URL));
 
+const GLMR_CONTRACT_URL = 'https://rpc.api.moonbeam.network';
+export const glmrClient = new Web3(GLMR_CONTRACT_URL);
+
+const EVMOS_CONTRACT_URL = 'https://evmos-rpc.gateway.pokt.network';
+export const evmosClient = new Web3(EVMOS_CONTRACT_URL);
+
+const DOGE_CONTRACT_URL = 'https://rpc01.dogechain.dog';
+export const dogeClient = new Web3(DOGE_CONTRACT_URL);
+
+const OKC_CONTRACT_URL = 'https://exchainrpc.okex.org';
+export const okcClient = new Web3(OKC_CONTRACT_URL);
+
+const ETHW_CONTRACT_URL = 'https://mainnet.ethereumpow.org';
+export const ethwClient = new Web3(ETHW_CONTRACT_URL);
+
 export const hexETHContract = new ethClient.eth.Contract(
   hexABI as AbiItem[],
   '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39'

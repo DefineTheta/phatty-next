@@ -136,7 +136,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     .getPhiatStakingData(phiatFeeAddress)
     .call();
   const userRewardsDataPromise = phiatFeeContract.methods.claimableRewards(address).call();
-  const userStakePromise = await phiatFeeContract.methods.stakedBalance(address).call();
+  const userStakePromise = phiatFeeContract.methods.stakedBalance(address).call();
 
   const [phiatReserveData, userData, stakingData, userRewardsData, userStake] = await Promise.all<
     [PhiatReserveResponse, UserDataResponse, PhiatStakingResponse, UserRewardResponse, number]

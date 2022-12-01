@@ -80,20 +80,20 @@ const calculateLiquidity = async (positions: UniNftPosition, nftId: string) => {
   const tokenOneDefiKey = `ethereum:${positions.token0}`;
   const tokenTwoDefiKey = `ethereum:${positions.token1}`;
 
-  const tokenPricePromise = await fetch(`${DEFI_LLAMA_URL}/${tokenOneDefiKey},${tokenTwoDefiKey}`);
-  const slotPromise = await poolContract.methods.slot0().call();
-  const poolLiquidityPromise = await poolContract.methods.liquidity().call();
-  const feeGrowthGlobalOneX128Promise = await poolContract.methods.feeGrowthGlobal0X128().call();
-  const feeGrowthGlobalTwoX128Promise = await poolContract.methods.feeGrowthGlobal1X128().call();
+  const tokenPriceResponse = await fetch(`${DEFI_LLAMA_URL}/${tokenOneDefiKey},${tokenTwoDefiKey}`);
+  const slotPromise = poolContract.methods.slot0().call();
+  const poolLiquidityPromise = poolContract.methods.liquidity().call();
+  const feeGrowthGlobalOneX128Promise = poolContract.methods.feeGrowthGlobal0X128().call();
+  const feeGrowthGlobalTwoX128Promise = poolContract.methods.feeGrowthGlobal1X128().call();
 
-  const [tokenPriceResponse, slot, poolLiquidity, feeGrowthGlobalOneX128, feeGrowthGlobalTwoX128] =
-    await Promise.all<[Response, UniPoolSlot, string, string, string]>([
-      tokenPricePromise,
-      slotPromise,
-      poolLiquidityPromise,
-      feeGrowthGlobalOneX128Promise,
-      feeGrowthGlobalTwoX128Promise
-    ]);
+  const [slot, poolLiquidity, feeGrowthGlobalOneX128, feeGrowthGlobalTwoX128] = await Promise.all<
+    [UniPoolSlot, string, string, string]
+  >([
+    slotPromise,
+    poolLiquidityPromise,
+    feeGrowthGlobalOneX128Promise,
+    feeGrowthGlobalTwoX128Promise
+  ]);
 
   const tokenPriceData: DefiLlamaPriceRespnse = await tokenPriceResponse.json();
 

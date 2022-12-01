@@ -329,3 +329,32 @@ export type PhamousResponse = {
     REWARD: PhamousChainItem;
   };
 };
+
+// XEN Types
+
+export type XenStakeItem = {
+  balance: number;
+  staked: number;
+  term: number;
+  usdValue: number;
+};
+
+export type XenMintItem = {
+  term: number;
+  rank: number;
+  usdValue: number;
+  estimatedXen: number;
+};
+
+export type XenResponse = {
+  data: {
+    STAKING: {
+      data: XenStakeItem[];
+      totalValue: number;
+    };
+    MINTING: {
+      data: XenMintItem[];
+      totalValue: number;
+    };
+  };
+};
