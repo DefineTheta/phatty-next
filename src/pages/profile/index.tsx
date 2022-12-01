@@ -2,11 +2,15 @@ import Card from '@app-src/common/components/layout/Card';
 import Container from '@app-src/common/components/layout/Container';
 import ProfileHeader from '@app-src/modules/profile/components/ProfileHeader';
 import { selectProfileAddress } from '@app-src/store/protocol/selectors';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const ProfilePage = () => {
   const profileAddress = useSelector(useCallback(selectProfileAddress, []));
+
+  const [isModalVisible, setIsModalVisible] = useState(true);
+
+  const handleModalClose = useCallback(() => setIsModalVisible(false), []);
 
   return (
     <div className="flex flex-col gap-y-24">
