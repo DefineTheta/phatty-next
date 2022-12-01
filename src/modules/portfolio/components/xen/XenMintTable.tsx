@@ -38,7 +38,7 @@ const XenMintTable = ({ page, loading }: IXenMintTableProps) => {
         <Bookmark>Minting</Bookmark>
         <TableHeaderRow>
           <TableHeaderRowCell className="basis-1/4">Chain</TableHeaderRowCell>
-          <TableHeaderRowCell className="basis-1/4">Term</TableHeaderRowCell>
+          <TableHeaderRowCell className="basis-1/4">Term (Days)</TableHeaderRowCell>
           <TableHeaderRowCell className="basis-1/4">Estimated Xen</TableHeaderRowCell>
           <TableHeaderRowCell className="basis-1/4">Value</TableHeaderRowCell>
         </TableHeaderRow>
@@ -71,7 +71,7 @@ const XenMintTable = ({ page, loading }: IXenMintTableProps) => {
       <Bookmark>Minting</Bookmark>
       <TableHeaderRow>
         <TableHeaderRowCell className="basis-1/4">Chain</TableHeaderRowCell>
-        <TableHeaderRowCell className="basis-1/4">Term</TableHeaderRowCell>
+        <TableHeaderRowCell className="basis-1/4">Term (Days)</TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/4">Estimated Xen</TableHeaderRowCell>
         <TableHeaderRowCell
           className="basis-1/4"

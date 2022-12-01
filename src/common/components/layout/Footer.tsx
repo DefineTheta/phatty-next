@@ -10,7 +10,11 @@ const Footer = () => {
             <Image src="/img/logo-light.png" alt="Logo" width="140px" height="36px" />
           </a>
           <div className="items-cente flex flex-row gap-x-8">
-            <a href="" target="_blank" rel="noopener nofollow noreferrer">
+            <a
+              href="https://twitter.com/Phattywallet"
+              target="_blank"
+              rel="noopener nofollow noreferrer"
+            >
               <svg width="24px" height="24px" viewBox="0 0 24 24" className="fill-text-100">
                 <title>icon/twitter</title>
                 <desc>Created with Sketch.</desc>
@@ -22,7 +26,7 @@ const Footer = () => {
                 </g>
               </svg>
             </a>
-            <a href="" target="https://t.me/phattycrypto" rel="noopener nofollow noreferrer">
+            <a href="https://t.me/phattycrypto" target="_blank" rel="noopener nofollow noreferrer">
               <svg width="24px" height="24px" viewBox="0 0 24 24" className="fill-text-100">
                 <title>icon/telegram</title>
                 <desc>Created with Sketch.</desc>
