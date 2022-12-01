@@ -248,7 +248,8 @@ export const getWallet = async (addresses: string[], refresh: boolean) => {
       wallet.data.BSC.data,
       wallet.data.TPLS.data,
       wallet.data.MATIC.data,
-      wallet.data.AVAX.data
+      wallet.data.AVAX.data,
+      wallet.data.FTM.data
     ]);
 
     collatedRes.data.ETH.totalValue += wallet.data.ETH.totalValue;
@@ -256,6 +257,7 @@ export const getWallet = async (addresses: string[], refresh: boolean) => {
     collatedRes.data.TPLS.totalValue += wallet.data.TPLS.totalValue;
     collatedRes.data.MATIC.totalValue += wallet.data.MATIC.totalValue;
     collatedRes.data.AVAX.totalValue += wallet.data.AVAX.totalValue;
+    collatedRes.data.FTM.totalValue += wallet.data.FTM.totalValue;
   });
 
   const collatedData = protocolData.data;
@@ -265,6 +267,7 @@ export const getWallet = async (addresses: string[], refresh: boolean) => {
   collatedRes.data.TPLS.data = collatedData[2];
   collatedRes.data.MATIC.data = collatedData[3];
   collatedRes.data.AVAX.data = collatedData[4];
+  collatedRes.data.FTM.data = collatedData[5];
 
   return collatedRes;
 };

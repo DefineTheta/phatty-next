@@ -53,7 +53,8 @@ export const selectBundleWalletData = (chain: '' | keyof typeof WalletDataCompon
           state.bundles.WALLET.data.TPLS,
           state.bundles.WALLET.data.BSC,
           state.bundles.WALLET.data.MATIC,
-          state.bundles.WALLET.data.AVAX
+          state.bundles.WALLET.data.AVAX,
+          state.bundles.WALLET.data.FTM
         ]
       );
     else return state.bundles.WALLET.data[chain];
@@ -182,6 +183,12 @@ export const selectBundleAvaxTotal = memoize((state: RootState): number => {
   return getPositiveOrZero(state.bundles.WALLET.total.AVAX);
 });
 
+export const selectBundleFtmTotal = memoize((state: RootState): number => {
+  console.log('SELECT_BUNDLE_FTM_TOTAL');
+
+  return getPositiveOrZero(state.bundles.WALLET.total.FTM);
+});
+
 export const selectBundleWalletTotal = (chain: '' | keyof typeof WalletDataComponentEnum) =>
   memoize((state: RootState): number => {
     console.log('SELECT_BUNDLE_WALLET_TOTAL');
@@ -197,13 +204,16 @@ export const selectBundleWalletTotal = (chain: '' | keyof typeof WalletDataCompo
         return state.bundles.WALLET.total.MATIC;
       case WalletDataComponentEnum.AVAX:
         return state.bundles.WALLET.total.AVAX;
+      case WalletDataComponentEnum.FTM:
+        return state.bundles.WALLET.total.FTM;
       default:
         return (
           state.bundles.WALLET.total.ETH +
           state.bundles.WALLET.total.BSC +
           state.bundles.WALLET.total.TPLS +
           state.bundles.WALLET.total.MATIC +
-          state.bundles.WALLET.total.AVAX
+          state.bundles.WALLET.total.AVAX +
+          state.bundles.WALLET.total.FTM
         );
     }
   });
@@ -286,7 +296,8 @@ export const selectBundleTotal = memoize((state: RootState): number => {
     selectBundleBscTotal(state) +
     selectBundleTplsTotal(state) +
     selectBundleMaticTotal(state) +
-    selectBundleAvaxTotal(state)
+    selectBundleAvaxTotal(state) +
+    selectBundleFtmTotal(state)
   );
 });
 

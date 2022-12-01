@@ -38,7 +38,7 @@ const ProfilePortfolioPage = () => {
   useEffect(() => {
     const chain = String(router.query.chain || '');
 
-    if (['ETH', 'BSC', 'TPLS', 'MATIC', 'AVAX'].includes(chain))
+    if (['ETH', 'BSC', 'TPLS', 'MATIC', 'AVAX', 'FTM'].includes(chain))
       setCurrentChain(chain as PortfolioChain);
     else setCurrentChain('');
   }, [router.query.chain]);

@@ -55,7 +55,8 @@ export enum WalletDataComponentEnum {
   TPLS = 'TPLS',
   BSC = 'BSC',
   MATIC = 'MATIC',
-  AVAX = 'AVAX'
+  AVAX = 'AVAX',
+  FTM = 'FTM'
 }
 
 export enum HexDataComponentEnum {

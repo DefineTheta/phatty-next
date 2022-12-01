@@ -188,7 +188,7 @@ export const chainImages: Record<string, string> = {
   TPLS: '/img/chains/tpls.svg',
   MATIC: '/img/chains/matic.svg',
   AVAX: '/img/chains/avax.svg',
-  FTML: '/img/chains/ftm.svg'
+  FTM: '/img/chains/ftm.svg'
 };
 
 export const phiatTokensLookupMap = {

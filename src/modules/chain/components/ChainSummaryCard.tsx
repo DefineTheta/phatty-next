@@ -7,6 +7,7 @@ import {
   selectBundleAvaxTotal,
   selectBundleBscTotal,
   selectBundleEthereumTotal,
+  selectBundleFtmTotal,
   selectBundleMaticTotal,
   selectBundleTotal,
   selectBundleTplsTotal
@@ -16,6 +17,7 @@ import {
   selectBscTotal,
   selectEthereumTotal,
   selectMaticTotal,
+  selectProfileFtmTotal,
   selectTotal,
   selectTplsTotal
 } from '@app-src/store/protocol/selectors';
@@ -50,6 +52,10 @@ const ChainSummaryCard = ({ page, chain: currentChain }: IChainSummaryCardProps)
 
   const avaxTotal = useAppSelector(
     useCallback(page === 'profile' ? selectAvaxTotal : selectBundleAvaxTotal, [page])
+  );
+
+  const ftmTotal = useAppSelector(
+    useCallback(page === 'profile' ? selectProfileFtmTotal : selectBundleFtmTotal, [page])
   );
 
   const testData = [
@@ -97,6 +103,15 @@ const ChainSummaryCard = ({ page, chain: currentChain }: IChainSummaryCardProps)
       total: avaxTotal,
       displayTotal: formatToMoney(avaxTotal),
       percentage: styleNumber((avaxTotal / total) * 100, 2) + '%'
+    },
+    {
+      imgSrc: '/img/chains/ftm.svg',
+      imgAlt: 'Fantom logo',
+      displayName: 'Fantom',
+      chainId: 'FTM',
+      total: ftmTotal,
+      displayTotal: formatToMoney(ftmTotal),
+      percentage: styleNumber((ftmTotal / total) * 100, 2) + '%'
     }
   ];
 
