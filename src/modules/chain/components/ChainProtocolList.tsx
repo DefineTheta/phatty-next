@@ -10,7 +10,8 @@ import {
   selectBundleSushiTotal,
   selectBundleUniV2Total,
   selectBundleUniV3Total,
-  selectBundleWalletTotal
+  selectBundleWalletTotal,
+  selectBundleXenTotal
 } from '@app-src/store/bundles/selectors';
 import {
   selectHextotal,
@@ -18,6 +19,7 @@ import {
   selectPhiatTotal,
   selectProfileHedronTotal,
   selectProfilePhamousTotal,
+  selectProfileXenTotal,
   selectPulsexTotal,
   selectSushiTotal,
   selectUniV2Total,
@@ -68,6 +70,10 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
   );
   const phamousTotal = useSelector(
     useCallback(page === 'profile' ? selectProfilePhamousTotal : selectBundlePhamousTotal, [page])
+  );
+
+  const xenTotal = useSelector(
+    useCallback(page === 'profile' ? selectProfileXenTotal : selectBundleXenTotal, [page])
   );
 
   const protocolData = useMemo(
@@ -151,6 +157,14 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
         imgSrc: '/img/icon/phamous_table.svg',
         imgAlt: 'Phamous',
         linkHref: '#phamous'
+      },
+      {
+        protocolName: 'Xen',
+        totalAmount: xenTotal,
+        displayTotalAmount: formatToMoney(xenTotal),
+        imgSrc: '/img/icon/xen.png',
+        imgAlt: 'Xen',
+        linkHref: '#xen'
       }
     ],
     [
@@ -163,7 +177,8 @@ const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps)
       uniV2Total,
       uniV3Total,
       hedronTotal,
-      phamousTotal
+      phamousTotal,
+      xenTotal
     ]
   );
 

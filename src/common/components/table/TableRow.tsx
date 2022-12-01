@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 export type ITableRowProps = {
-  children: ReactNode;
+  children: ReactNode[];
 };
 
 const TableRow = ({ children }: ITableRowProps) => {

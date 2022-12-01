@@ -13,6 +13,7 @@ import SushiTableGroup from '@app-src/modules/portfolio/components/sushi/SushiTa
 import UniV2TableGroup from '@app-src/modules/portfolio/components/univ2/UniV2TableGroup';
 import UniV3TableGroup from '@app-src/modules/portfolio/components/univ3/UniV3TableGroup';
 import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/WalletTableGroup';
+import XenTableGroup from '@app-src/modules/portfolio/components/xen/XenTableGroup';
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import {
   fetchBundleAddresses,
@@ -80,6 +81,7 @@ const BundlePortfolioPage = () => {
             <UniV2TableGroup page="bundle" chain={currentChain} />
             <UniV3TableGroup page="bundle" chain={currentChain} />
             <HedronTableGroup page="bundle" chain={currentChain} />
+            <XenTableGroup page="bundle" chain={currentChain} />
           </div>
         </Container>
       </div>

@@ -139,12 +139,27 @@ export const selectBundlePhamousComponentData = (component: PhamousDataComponent
     return state.bundles.PHAMOUS.data[component];
   });
 
-export const selectBundleXenComponentData = (component: XenDataComponent) =>
-  memoize((state: RootState): XenStakeItem[] | XenMintItem[] => {
-    console.log(`SELECT_${component}_XEN_DATA`);
+// export const selectBundleXenComponentData = (component: XenDataComponent) =>
+//   memoize((state: RootState): XenStakeItem[] | XenMintItem[] => {
+//     console.log(`SELECT_${component}_XEN_DATA`);
+
+//     return state.bundles.XEN.data[component];
+//   });
+
+export function selectBundleXenComponentData(
+  component: Extract<XenDataComponent, 'STAKING'>
+): (state: RootState) => XenStakeItem[];
+export function selectBundleXenComponentData(
+  component: Extract<XenDataComponent, 'MINTING'>
+): (state: RootState) => XenMintItem[];
+
+export function selectBundleXenComponentData(component: XenDataComponent) {
+  return memoize((state: RootState) => {
+    console.log(`SELECT_BUNDLE_${component}_XEN_DATA`);
 
     return state.bundles.XEN.data[component];
   });
+}
 
 export const selectBundleEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');

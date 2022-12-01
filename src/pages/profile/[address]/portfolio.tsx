@@ -12,6 +12,7 @@ import SushiTableGroup from '@app-src/modules/portfolio/components/sushi/SushiTa
 import UniV2TableGroup from '@app-src/modules/portfolio/components/univ2/UniV2TableGroup';
 import UniV3TableGroup from '@app-src/modules/portfolio/components/univ3/UniV3TableGroup';
 import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/WalletTableGroup';
+import XenTableGroup from '@app-src/modules/portfolio/components/xen/XenTableGroup';
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import ProfileHeader from '@app-src/modules/profile/components/ProfileHeader';
 import { fetchPortfolioData, setProfileHasFetched } from '@app-src/store/protocol/protocolSlice';
@@ -60,6 +61,7 @@ const ProfilePortfolioPage = () => {
             <UniV2TableGroup page="profile" chain={currentChain} />
             <UniV3TableGroup page="profile" chain={currentChain} />
             <HedronTableGroup page="profile" chain={currentChain} />
+            <XenTableGroup page="profile" chain={currentChain} />
           </div>
         </Container>
       </div>

@@ -235,7 +235,7 @@ export const getWallet = async (addresses: string[], refresh: boolean) => {
   } as WalletResponse;
 
   const protocolData = new ProtocolData<WalletTokenItem>(
-    5,
+    6,
     (item) => item.chain + item.name,
     (existingItem, item) => {
       existingItem.balance += item.balance;

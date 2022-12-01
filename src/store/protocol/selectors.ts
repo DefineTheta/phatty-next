@@ -127,12 +127,33 @@ export const selectProfilePhamousComponentData = (component: PhamousDataComponen
     return state.protocols.PHAMOUS.data[component];
   });
 
-export const selectProfileXenComponentData = (component: XenDataComponent) =>
-  memoize((state: RootState): XenStakeItem[] | XenMintItem[] => {
+// export const selectProfileXenComponentData = <T>(component: XenDataComponent) =>
+//   memoize(
+//     (
+//       state: RootState
+//     ): T extends Extract<XenDataComponent, 'STAKING'> ? XenStakeItem[] : XenMintItem[] => {
+//       console.log(`SELECT_${component}_XEN_DATA`);
+
+//       type a = typeof component;
+
+//       return state.protocols.XEN.data[component];
+//     }
+//   );
+
+export function selectProfileXenComponentData(
+  component: Extract<XenDataComponent, 'STAKING'>
+): (state: RootState) => XenStakeItem[];
+export function selectProfileXenComponentData(
+  component: Extract<XenDataComponent, 'MINTING'>
+): (state: RootState) => XenMintItem[];
+
+export function selectProfileXenComponentData(component: XenDataComponent) {
+  return memoize((state: RootState) => {
     console.log(`SELECT_${component}_XEN_DATA`);
 
     return state.protocols.XEN.data[component];
   });
+}
 
 export const selectEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
