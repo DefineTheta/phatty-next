@@ -179,7 +179,12 @@ const coingeckoIds = [
   'spell-token',
   'mangamon',
   'beethoven-x',
-  'magic-internet-money'
+  'magic-internet-money',
+  'moonbeam',
+  'dogecoin',
+  'evmos',
+  'oec-token',
+  'ethereum-pow-iou'
 ];
 
 export const chainImages: Record<string, string> = {
@@ -188,7 +193,12 @@ export const chainImages: Record<string, string> = {
   TPLS: '/img/chains/tpls.svg',
   MATIC: '/img/chains/matic.svg',
   AVAX: '/img/chains/avax.svg',
-  FTM: '/img/chains/ftm.svg'
+  FTM: '/img/chains/ftm.svg',
+  GLMR: '/img/chains/moonbeam.png',
+  DOGE: '/img/chains/doge.svg',
+  EVMOS: '/img/chains/evmos.webp',
+  OKC: '/img/chains/okx.svg',
+  ETHW: '/img/chains/ethw.png'
 };
 
 export const phiatTokensLookupMap = {

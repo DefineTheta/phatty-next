@@ -96,7 +96,7 @@ const XenStakeTable = ({ page, loading }: IXenStakeTableProps) => {
               <span>{stake.chain}</span>
             </div>
           </TableRowCell>
-          <TableRowCell className="basis-1/4 pr-20">{formatToMoney(stake.balance)}</TableRowCell>
+          <TableRowCell className="basis-1/4 pr-20">{styleNumber(stake.balance, 2)}</TableRowCell>
           <TableRowCell className="basis-1/4 pr-20">{styleNumber(stake.staked, 3)}</TableRowCell>
           <TableRowCell className="basis-1/4 pr-20">{formatToMoney(stake.usdValue)}</TableRowCell>
         </TableRow>

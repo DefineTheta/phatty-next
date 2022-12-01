@@ -22,7 +22,7 @@ const Footer = () => {
                 </g>
               </svg>
             </a>
-            <a href="" target="_blank" rel="noopener nofollow noreferrer">
+            <a href="" target="https://t.me/phattycrypto" rel="noopener nofollow noreferrer">
               <svg width="24px" height="24px" viewBox="0 0 24 24" className="fill-text-100">
                 <title>icon/telegram</title>
                 <desc>Created with Sketch.</desc>
