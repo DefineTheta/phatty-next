@@ -2,6 +2,7 @@ import { XEN_ABI } from '@app-src/services/abi';
 import {
   avaxClient,
   bscClient,
+  chainImages,
   dogeClient,
   ethClient,
   ethwClient,
@@ -56,7 +57,12 @@ const contracts = [
   { name: 'ETHW', contract: new ethwClient.eth.Contract(XEN_ABI, XEN_ETHW_ADDRESS) }
 ];
 
-const calculateXen = async (contract: Contract, address: string, price: number) => {
+const calculateXen = async (
+  contract: Contract,
+  address: string,
+  price: number,
+  chainName: string
+) => {
   const walletBalancePromise = await contract.methods.balanceOf(address).call();
   const stakeDetailsPromise = await contract.methods.userStakes(address).call();
   const mintDetailsPromise = await contract.methods.userMints(address).call();
@@ -66,6 +72,7 @@ const calculateXen = async (contract: Contract, address: string, price: number) 
     [number, StakeDetail, MintDetail, number]
   >([walletBalancePromise, stakeDetailsPromise, mintDetailsPromise, globalRankPromise]);
 
+  const chainImg = chainImages[chainName];
   const walletAmount = Number(walletBalance) / 10e17;
   const stakedAmount = Number(stakeDetails.amount) / 10e17;
   const estimatedXen = Math.floor(
@@ -79,14 +86,18 @@ const calculateXen = async (contract: Contract, address: string, price: number) 
     balance: walletAmount,
     staked: stakedAmount,
     term: Number(stakeDetails.term),
-    usdValue: (walletAmount + stakedAmount) * price
+    usdValue: (walletAmount + stakedAmount) * price,
+    chain: chainName,
+    chainImg
   } as XenStakeItem;
 
   const mint = {
     term: Number(mintDetails.term),
     rank: Number(mintDetails.rank),
     usdValue: estimatedXen * price,
-    estimatedXen
+    estimatedXen,
+    chain: chainName,
+    chainImg
   } as XenMintItem;
 
   return [stake, mint] as [XenStakeItem, XenMintItem];
@@ -110,7 +121,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     let stakingTotal = 0;
     let mintingTotal = 0;
 
-    const promises = contracts.map((data) => calculateXen(data.contract, address, xenPrice));
+    const promises = contracts.map((data) =>
+      calculateXen(data.contract, address, xenPrice, data.name)
+    );
 
     const data = await Promise.all(promises);
 

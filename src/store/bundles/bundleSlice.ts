@@ -11,7 +11,8 @@ import {
   getUniV2,
   getUniV3,
   getWallet,
-  getWithAuthentication
+  getWithAuthentication,
+  getXen
 } from '@app-src/services/api';
 import { AppDispatch, RootState } from '@app-src/store/store';
 import {
@@ -26,7 +27,8 @@ import {
   SushiResponse,
   UniV2Response,
   UniV3Response,
-  WalletResponse
+  WalletResponse,
+  XenResponse
 } from '@app-src/types/api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
@@ -41,7 +43,8 @@ import {
   SushiDataComponentEnum,
   UniswapV2DataComponentEnum,
   UniswapV3DataComponentEnum,
-  WalletDataComponentEnum
+  WalletDataComponentEnum,
+  XenDataComponentEnum
 } from './types';
 
 const initialState: BundlesState = {
@@ -179,6 +182,17 @@ const initialState: BundlesState = {
       [PhamousDataComponentEnum.LIQUIDITY_PROVIDING]: [],
       [PhamousDataComponentEnum.STAKING]: [],
       [PhamousDataComponentEnum.REWARD]: []
+    }
+  },
+  [ProtocolEnum.XEN]: {
+    total: {
+      ETH: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [XenDataComponentEnum.MINTING]: [],
+      [XenDataComponentEnum.STAKING]: []
     }
   }
 };
@@ -499,6 +513,26 @@ const fetchBundlePhamousData = createAsyncThunk<
   return await getPhamous(bundleAddresses, false);
 });
 
+const fetchBundleXenData = createAsyncThunk<
+  XenResponse,
+  { addresses: string[]; refresh: boolean } | undefined,
+  { state: RootState }
+>('bundles/fetchXenData', async (input, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  if (input) return await getXen(input.addresses, input.refresh);
+
+  const bundleAddresses = thunkAPI.getState().bundles.addresses;
+
+  if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return await getXen(bundleAddresses, false);
+});
+
 const fetchBundlePortfolioData = (dispatch: AppDispatch, addresses: string[], refresh = false) => {
   return Promise.all([
     dispatch(fetchBundleWalletData({ addresses, refresh })),
@@ -510,7 +544,8 @@ const fetchBundlePortfolioData = (dispatch: AppDispatch, addresses: string[], re
     dispatch(fetchBundleUniV2Data({ addresses, refresh })),
     dispatch(fetchBundleUniV3Data({ addresses, refresh })),
     dispatch(fetchBundleHedronData({ addresses, refresh })),
-    dispatch(fetchBundlePhamousData({ addresses, refresh }))
+    dispatch(fetchBundlePhamousData({ addresses, refresh })),
+    dispatch(fetchBundleXenData({ addresses, refresh }))
   ]);
 };
 
@@ -883,6 +918,29 @@ export const bundlesSlice = createSlice({
       // state.PHAMOUS.loading = false;
       state.PHAMOUS.error = true;
     });
+
+    //Xen reducer functions
+    builder.addCase(fetchBundleXenData.pending, (state) => {
+      state.XEN.loading = true;
+      state.XEN.error = false;
+    });
+
+    builder.addCase(fetchBundleXenData.fulfilled, (state, action) => {
+      const res = action.payload;
+
+      state.XEN.data.STAKING = res.data.STAKING.data;
+      state.XEN.data.MINTING = res.data.MINTING.data;
+
+      state.XEN.total.ETH = res.data.STAKING.totalValue + res.data.MINTING.totalValue;
+
+      state.XEN.loading = false;
+      state.XEN.error = false;
+    });
+
+    builder.addCase(fetchBundleXenData.rejected, (state) => {
+      // state.XEN.loading = false;
+      state.XEN.error = true;
+    });
   }
 });
 
@@ -908,6 +966,7 @@ export {
   fetchBundleUniV3Data,
   fetchBundleHedronData,
   fetchBundlePhamousData,
+  fetchBundleXenData,
   fetchBundlePortfolioData
 };
 

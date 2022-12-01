@@ -12,7 +12,9 @@ import {
   SushiItem,
   UniV2Item,
   UniV3Item,
-  WalletTokenItem
+  WalletTokenItem,
+  XenMintItem,
+  XenStakeItem
 } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
 import {
@@ -20,7 +22,8 @@ import {
   HexDataComponentEnum,
   PhamousDataComponent,
   PhiatDataComponentEnum,
-  WalletDataComponentEnum
+  WalletDataComponentEnum,
+  XenDataComponent
 } from './types';
 
 export const selectBundleHasFetched = memoize((state: RootState) => {
@@ -136,6 +139,13 @@ export const selectBundlePhamousComponentData = (component: PhamousDataComponent
     return state.bundles.PHAMOUS.data[component];
   });
 
+export const selectBundleXenComponentData = (component: XenDataComponent) =>
+  memoize((state: RootState): XenStakeItem[] | XenMintItem[] => {
+    console.log(`SELECT_${component}_XEN_DATA`);
+
+    return state.bundles.XEN.data[component];
+  });
+
 export const selectBundleEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
 
@@ -145,7 +155,8 @@ export const selectBundleEthereumTotal = memoize((state: RootState): number => {
     getPositiveOrZero(state.bundles.SUSHI.total.LIQUIDITY_POOL) +
     getPositiveOrZero(state.bundles.UNISWAPV2.total.LIQUIDITY_POOL) +
     getPositiveOrZero(state.bundles.UNISWAPV3.total.LIQUIDITY_POOL) +
-    getPositiveOrZero(state.bundles.HEDRON.total.ETH)
+    getPositiveOrZero(state.bundles.HEDRON.total.ETH) +
+    getPositiveOrZero(state.bundles.XEN.total.ETH)
   );
 });
 
@@ -288,6 +299,12 @@ export const selectBundlePhamousTotal = memoize((state: RootState): number => {
   return state.bundles.PHAMOUS.total.TPLS;
 });
 
+export const selectBundleXenTotal = memoize((state: RootState): number => {
+  console.log('SELECT_BUNDLE_XEN_TOTAL');
+
+  return state.bundles.XEN.total.ETH;
+});
+
 export const selectBundleTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
@@ -386,6 +403,12 @@ export const selectBundlePhamousLoading = memoize((state: RootState): boolean =>
   return state.bundles.PHAMOUS.loading;
 });
 
+export const selectBundleXenLoading = memoize((state: RootState): boolean => {
+  console.log('SELECT_XEN_LOADING');
+
+  return state.bundles.XEN.loading;
+});
+
 export const selectBundleWalletError = memoize((state: RootState): boolean => {
   console.log('SELECT_BUNDLE_WALLET_ERROR');
 
@@ -444,4 +467,10 @@ export const selectBundlePhamousError = memoize((state: RootState): boolean => {
   console.log('SELECT_BUNDLE_PHAMOUS_ERROR');
 
   return state.bundles.PHAMOUS.error;
+});
+
+export const selectBundleXenError = memoize((state: RootState): boolean => {
+  console.log('SELECT_BUNDLE_XEN_ERROR');
+
+  return state.bundles.XEN.error;
 });

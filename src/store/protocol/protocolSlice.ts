@@ -8,7 +8,8 @@ import {
   getSushi,
   getUniV2,
   getUniV3,
-  getWallet
+  getWallet,
+  getXen
 } from '@app-src/services/api';
 import { AppDispatch, RootState } from '@app-src/store/store';
 import {
@@ -21,7 +22,8 @@ import {
   SushiResponse,
   UniV2Response,
   UniV3Response,
-  WalletResponse
+  WalletResponse,
+  XenResponse
 } from '@app-src/types/api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
@@ -36,7 +38,8 @@ import {
   SushiDataComponentEnum,
   UniswapV2DataComponentEnum,
   UniswapV3DataComponentEnum,
-  WalletDataComponentEnum
+  WalletDataComponentEnum,
+  XenDataComponentEnum
 } from './types';
 
 const initialState: ProtocolsState = {
@@ -173,6 +176,17 @@ const initialState: ProtocolsState = {
       [PhamousDataComponentEnum.LIQUIDITY_PROVIDING]: [],
       [PhamousDataComponentEnum.STAKING]: [],
       [PhamousDataComponentEnum.REWARD]: []
+    }
+  },
+  [ProtocolEnum.XEN]: {
+    total: {
+      ETH: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      [XenDataComponentEnum.MINTING]: [],
+      [XenDataComponentEnum.STAKING]: []
     }
   }
 };
@@ -377,6 +391,26 @@ const fetchPhamousData = createAsyncThunk<
   return await getPhamous([profileAddress], false);
 });
 
+const fetchXenData = createAsyncThunk<
+  XenResponse,
+  { address: string; refresh: boolean } | undefined,
+  { state: RootState }
+>('protocols/fetchXenData', async (input, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  if (input) return await getXen([input.address], input.refresh);
+
+  const profileAddress = thunkAPI.getState().protocols.address;
+
+  if (!profileAddress) thunkAPI.rejectWithValue(null);
+
+  return await getXen([profileAddress], false);
+});
+
 const fetchPortfolioData = (dispatch: AppDispatch, address: string, refresh = false) => {
   return Promise.all([
     dispatch(fetchWalletData({ address, refresh })),
@@ -388,7 +422,8 @@ const fetchPortfolioData = (dispatch: AppDispatch, address: string, refresh = fa
     dispatch(fetchUniV2Data({ address, refresh })),
     dispatch(fetchUniV3Data({ address, refresh })),
     dispatch(fetchHedronData({ address, refresh })),
-    dispatch(fetchPhamousData({ address, refresh }))
+    dispatch(fetchPhamousData({ address, refresh })),
+    dispatch(fetchXenData({ address, refresh }))
   ]);
 };
 
@@ -696,6 +731,29 @@ export const protocolsSlice = createSlice({
       // state.PHAMOUS.loading = false;
       state.PHAMOUS.error = true;
     });
+
+    //Xen reducer functions
+    builder.addCase(fetchXenData.pending, (state) => {
+      state.XEN.loading = true;
+      state.XEN.error = false;
+    });
+
+    builder.addCase(fetchXenData.fulfilled, (state, action) => {
+      const res = action.payload;
+
+      state.XEN.data.STAKING = res.data.STAKING.data;
+      state.XEN.data.MINTING = res.data.MINTING.data;
+
+      state.XEN.total.ETH = res.data.STAKING.totalValue + res.data.MINTING.totalValue;
+
+      state.XEN.loading = false;
+      state.XEN.error = false;
+    });
+
+    builder.addCase(fetchXenData.rejected, (state) => {
+      // state.XEN.loading = false;
+      state.XEN.error = true;
+    });
   }
 });
 
@@ -716,6 +774,7 @@ export {
   fetchUniV3Data,
   fetchHedronData,
   fetchPhamousData,
+  fetchXenData,
   fetchPortfolioData
 };
 

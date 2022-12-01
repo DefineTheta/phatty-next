@@ -12,7 +12,9 @@ import {
   SushiItem,
   UniV2Item,
   UniV3Item,
-  WalletTokenItem
+  WalletTokenItem,
+  XenMintItem,
+  XenStakeItem
 } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
 import {
@@ -20,7 +22,8 @@ import {
   HexDataComponentEnum,
   PhamousDataComponent,
   PhiatDataComponentEnum,
-  WalletDataComponentEnum
+  WalletDataComponentEnum,
+  XenDataComponent
 } from './types';
 
 export const selectProfileHasFetched = memoize((state: RootState) => {
@@ -124,6 +127,13 @@ export const selectProfilePhamousComponentData = (component: PhamousDataComponen
     return state.protocols.PHAMOUS.data[component];
   });
 
+export const selectProfileXenComponentData = (component: XenDataComponent) =>
+  memoize((state: RootState): XenStakeItem[] | XenMintItem[] => {
+    console.log(`SELECT_${component}_XEN_DATA`);
+
+    return state.protocols.XEN.data[component];
+  });
+
 export const selectEthereumTotal = memoize((state: RootState): number => {
   console.log('SELECT_ETHEREUM_TOTAL');
 
@@ -133,7 +143,8 @@ export const selectEthereumTotal = memoize((state: RootState): number => {
     getPositiveOrZero(state.protocols.SUSHI.total.LIQUIDITY_POOL) +
     getPositiveOrZero(state.protocols.UNISWAPV2.total.LIQUIDITY_POOL) +
     getPositiveOrZero(state.protocols.UNISWAPV3.total.LIQUIDITY_POOL) +
-    getPositiveOrZero(state.protocols.HEDRON.total.ETH)
+    getPositiveOrZero(state.protocols.HEDRON.total.ETH) +
+    getPositiveOrZero(state.protocols.XEN.total.ETH)
   );
 });
 
@@ -274,6 +285,12 @@ export const selectProfilePhamousTotal = memoize((state: RootState): number => {
   return state.protocols.PHAMOUS.total.TPLS;
 });
 
+export const selectProfileXenTotal = memoize((state: RootState): number => {
+  console.log('SELECT_PROFILE_XEN_TOTAL');
+
+  return state.protocols.XEN.total.ETH;
+});
+
 export const selectTotal = memoize((state: RootState): number => {
   console.log('SELECT_TOTAL');
 
@@ -372,6 +389,12 @@ export const selectProfilePhamousLoading = memoize((state: RootState): boolean =
   return state.protocols.PHAMOUS.loading;
 });
 
+export const selectProfileXenLoading = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_XEN_LOADING');
+
+  return state.protocols.XEN.loading;
+});
+
 export const selectProfileWalletError = memoize((state: RootState): boolean => {
   console.log('SELECT_PROFILE_WALLET_ERROR');
 
@@ -430,4 +453,10 @@ export const selectProfilePhamousError = memoize((state: RootState): boolean => 
   console.log('SELECT_PROFILE_PHAMOUS_ERROR');
 
   return state.protocols.PHAMOUS.error;
+});
+
+export const selectProfileXenError = memoize((state: RootState): boolean => {
+  console.log('SELECT_PROFILE_XEN_ERROR');
+
+  return state.protocols.XEN.error;
 });

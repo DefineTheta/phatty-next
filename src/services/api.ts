@@ -13,7 +13,8 @@ import {
   UniV2Response,
   UniV3Response,
   WalletResponse,
-  WalletTokenItem
+  WalletTokenItem,
+  XenResponse
 } from '@app-src/types/api';
 import { ProtocolData } from './protocol';
 
@@ -619,6 +620,42 @@ export const getPhamous = async (addresses: string[], refresh: boolean) => {
   collatedRes.data.LIQUIDITY_PROVIDING.data = collatedData[0];
   collatedRes.data.STAKING.data = collatedData[1];
   collatedRes.data.REWARD.data = collatedData[2];
+
+  return collatedRes;
+};
+
+export const getXen = async (addresses: string[], refresh: boolean) => {
+  const xenData = await getMultipleAddressData<XenResponse>(addresses, '/api/xen', {
+    cache: refresh ? 'reload' : 'default'
+  });
+
+  if (xenData.length === 1) return xenData[0];
+
+  const collatedRes = {
+    data: {
+      STAKING: {
+        data: [],
+        totalValue: 0
+      },
+      MINTING: {
+        data: [],
+        totalValue: 0
+      }
+    }
+  } as XenResponse;
+
+  // const isXenStakeItem = (item: XenStakeItem | XenMintItem): item is XenStakeItem => {
+  //   if ((item as XenStakeItem).staked) return true;
+  //   else return false;
+  // };
+
+  xenData.forEach((xen) => {
+    collatedRes.data.STAKING.data = collatedRes.data.STAKING.data.concat(xen.data.STAKING.data);
+    collatedRes.data.MINTING.data = collatedRes.data.MINTING.data.concat(xen.data.MINTING.data);
+
+    collatedRes.data.MINTING.totalValue += xen.data.MINTING.totalValue;
+    collatedRes.data.STAKING.totalValue += xen.data.STAKING.totalValue;
+  });
 
   return collatedRes;
 };

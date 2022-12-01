@@ -337,6 +337,8 @@ export type XenStakeItem = {
   staked: number;
   term: number;
   usdValue: number;
+  chain: string;
+  chainImg: string;
 };
 
 export type XenMintItem = {
@@ -344,6 +346,8 @@ export type XenMintItem = {
   rank: number;
   usdValue: number;
   estimatedXen: number;
+  chain: string;
+  chainImg: string;
 };
 
 export type XenResponse = {

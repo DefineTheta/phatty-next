@@ -9,7 +9,9 @@ import {
   SushiItem,
   UniV2Item,
   UniV3Item,
-  WalletTokenItem
+  WalletTokenItem,
+  XenMintItem,
+  XenStakeItem
 } from '@app-src/types/api';
 
 export enum ProtocolImgEnum {
@@ -39,7 +41,8 @@ export const ProtocolEnum = {
   UNISWAPV2: 'UNISWAPV2',
   UNISWAPV3: 'UNISWAPV3',
   HEDRON: 'HEDRON',
-  PHAMOUS: 'PHAMOUS'
+  PHAMOUS: 'PHAMOUS',
+  XEN: 'XEN'
 } as const;
 
 export enum WalletDataComponentEnum {
@@ -99,6 +102,13 @@ export const PhamousDataComponentEnum = {
 export type PhamousDataComponent =
   typeof PhamousDataComponentEnum[keyof typeof PhamousDataComponentEnum];
 
+export const XenDataComponentEnum = {
+  STAKING: 'STAKING',
+  MINTING: 'MINTING'
+} as const;
+
+export type XenDataComponent = typeof XenDataComponentEnum[keyof typeof XenDataComponentEnum];
+
 export interface BundlesState {
   bundleAddress: string;
   addresses: string[];
@@ -113,6 +123,7 @@ export interface BundlesState {
   [ProtocolEnum.UNISWAPV3]: UniswapV3Data;
   [ProtocolEnum.HEDRON]: HedronData;
   [ProtocolEnum.PHAMOUS]: PhamousData;
+  [ProtocolEnum.XEN]: XenData;
 }
 
 export interface ProtocolData {
@@ -184,4 +195,14 @@ interface PhamousData extends ProtocolData {
     STAKING: number;
   };
   data: Record<PhamousDataComponent, PhamousItem[]>;
+}
+
+interface XenData extends ProtocolData {
+  total: {
+    ETH: number;
+  };
+  data: {
+    [XenDataComponentEnum.STAKING]: XenStakeItem[];
+    [XenDataComponentEnum.MINTING]: XenMintItem[];
+  };
 }
