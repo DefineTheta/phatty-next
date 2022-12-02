@@ -254,16 +254,10 @@ export const fetchPrices = async () => {
       HEX: TPLS_HEX,
       HDRN: TPLS_HDRN,
       XEN: TPLS_XEN,
-      PLSX,
-      PHIAT,
-      PHSAC,
-      PLS,
-      PHAME,
-      PHLP,
       ...tplsTokenPrices
     } = tplsPriceData.chain_tpls;
 
-    prices = { ...prices, TPLS_HEX, TPLS_HDRN, TPLS_XEN, PLSX, PHIAT, PHSAC, PLS, PHAME, PHLP };
+    prices = { ...tplsTokenPrices, ...prices, TPLS_HEX, TPLS_HDRN, TPLS_XEN };
 
     return prices as Record<string, number>;
   } catch (e) {

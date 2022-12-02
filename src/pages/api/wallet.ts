@@ -117,7 +117,7 @@ const tplsTokens: TokenItem[] = [
   { name: 'TPLS_HEX', displayName: 'HEX', address: '0x2b591e99afe9f32eaa6214f7b7629768c40eeb39' },
   { name: 'INC', displayName: 'INC', address: '0x083f559993227395009596f77496fdc48e84c69a' },
   { name: 'PHIAT', displayName: 'PHIAT', address: '0x240196d9f3bad74e067a11093026b8bc2613b689' },
-  { name: 'HDRN', displayName: 'HDRN', address: '0x3819f64f282bf135d62168c1e513280daf905e06' },
+  { name: 'TPLS_HDRN', displayName: 'HDRN', address: '0x3819f64f282bf135d62168c1e513280daf905e06' },
   { name: 'HELGO', displayName: 'HELGO', address: '0x0567ca0de35606e9c260cc2358404b11de21db44' },
   { name: 'MINT', displayName: 'MINT', address: '0x079d5348d11fc5636f2f569641aa32363888b568' },
   { name: 'PHSAC', displayName: 'PHSAC', address: '0x609BFD40359B3656858D83dc4c4E40D4fD34737F' },
