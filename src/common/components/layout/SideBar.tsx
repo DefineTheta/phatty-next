@@ -2,7 +2,13 @@ import useBreakpoint, { Breakpoint } from '@app-src/common/hooks/useBreakpoint';
 import useClickOutside from '@app-src/common/hooks/useClickOutside';
 import { selectBundleAddress } from '@app-src/store/bundles/selectors';
 import { selectProfileAddress } from '@app-src/store/protocol/selectors';
-import { Bars3Icon, Squares2X2Icon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+  Bars3Icon,
+  FlagIcon,
+  Squares2X2Icon,
+  UserIcon,
+  XMarkIcon
+} from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo, useState } from 'react';
@@ -194,6 +200,15 @@ const SideBar = () => {
               ))}
             </div>
           </div>
+          <a
+            href="https://t.me/phattycrypto"
+            target="_blank"
+            rel="noopener nofollow noreferrer"
+            className="flex cursor-pointer flex-row gap-x-12 text-gray-400 duration-150 ease-in-out hover:text-gray-200"
+          >
+            <FlagIcon className="h-24 w-24" />
+            <span className="text-base font-bold">Report Issue</span>
+          </a>
         </div>
       </div>
       <button
