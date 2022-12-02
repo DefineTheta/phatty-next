@@ -34,8 +34,16 @@ function MyApp({ Component, pageProps }: AppProps) {
           may contain bugs.
         </p>
         <p className="text-base">
-          You should only use it for testing purposes as the information might be wrong. Experiment
-          and let us know what you think.
+          You can use the Profile by searching addresses, or connect your wallet to use the Bundle.
+          By connecting wallet, you will sign a simple message to prove you own the address.
+        </p>
+        <p className="text-base">
+          We do NOT collect any information about your account except the public address. Please do
+          NOT share your private key or recovery phrase with anyone. Stay SAFU.
+        </p>
+        <p className="text-base">
+          You should only use it for testing purposes as the information might be wrong. Experiment,
+          have fun and let us know what you think.
         </p>
       </Modal>
       <DefaultLayout>
