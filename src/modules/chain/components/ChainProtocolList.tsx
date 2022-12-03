@@ -32,17 +32,12 @@ import ChainProtocolItem from './ChainProtocolItem';
 
 export type IChainProtocolListProps = {
   page: 'profile' | 'bundle';
-  currentAssetChain: PortfolioChain;
+  currentAssetChains: PortfolioChain[];
 };
 
-const ChainProtocolList = ({ page, currentAssetChain }: IChainProtocolListProps) => {
+const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps) => {
   const walletTotal = useSelector(
-    useCallback(
-      page === 'profile'
-        ? selectWalletTotal(currentAssetChain)
-        : selectBundleWalletTotal(currentAssetChain),
-      [page, currentAssetChain]
-    )
+    useCallback(page === 'profile' ? selectWalletTotal('') : selectBundleWalletTotal(''), [page])
   );
   const hexTotal = useSelector(
     useCallback(page === 'profile' ? selectHextotal : selectBundleHextotal, [page])

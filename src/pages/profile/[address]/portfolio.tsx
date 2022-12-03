@@ -13,7 +13,10 @@ import UniV2TableGroup from '@app-src/modules/portfolio/components/univ2/UniV2Ta
 import UniV3TableGroup from '@app-src/modules/portfolio/components/univ3/UniV3TableGroup';
 import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/WalletTableGroup';
 import XenTableGroup from '@app-src/modules/portfolio/components/xen/XenTableGroup';
-import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
+import {
+  isArrayOfPortfolioChain,
+  PortfolioChain
+} from '@app-src/modules/portfolio/types/portfolio';
 import ProfileHeader from '@app-src/modules/profile/components/ProfileHeader';
 import { fetchPortfolioData, setProfileHasFetched } from '@app-src/store/protocol/protocolSlice';
 import { selectProfileHasFetched } from '@app-src/store/protocol/selectors';
@@ -27,7 +30,7 @@ const ProfilePortfolioPage = () => {
   const address = String(router.query.address || '');
   const hasFetched = useAppSelector(useCallback(selectProfileHasFetched, []));
 
-  const [currentChain, setCurrentChain] = useState<PortfolioChain>('');
+  const [currentChain, setCurrentChain] = useState<PortfolioChain[]>([]);
 
   useEffect(() => {
     if (hasFetched || !address) return;
@@ -37,11 +40,13 @@ const ProfilePortfolioPage = () => {
   }, [hasFetched, address]);
 
   useEffect(() => {
-    const chain = String(router.query.chain || '');
+    const chain = router.query.chain;
+    if (!chain || typeof chain === 'object') return;
 
-    if (['ETH', 'BSC', 'TPLS', 'MATIC', 'AVAX', 'FTM'].includes(chain))
-      setCurrentChain(chain as PortfolioChain);
-    else setCurrentChain('');
+    const chains = chain.split(',');
+
+    if (!isArrayOfPortfolioChain(chains)) return;
+    setCurrentChain(chains);
   }, [router.query.chain]);
 
   return (
@@ -50,8 +55,8 @@ const ProfilePortfolioPage = () => {
       <div className="flex w-full justify-center">
         <Container>
           <div className="flex flex-col items-center gap-y-30">
-            <ChainSummaryCard page="profile" chain={currentChain} />
-            <WalletTableGroup page="profile" chain={currentChain} />
+            <ChainSummaryCard page="profile" chains={currentChain} />
+            <WalletTableGroup page="profile" chains={currentChain} />
             <HexTableGroup page="profile" chain={currentChain} />
             <PhiatTableGroup page="profile" chain={currentChain} />
             <PhamousTableGroup page="profile" chain={currentChain} />

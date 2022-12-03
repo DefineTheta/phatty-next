@@ -21,10 +21,10 @@ import WalletTable from './WalletTable';
 
 type IWalletTableGroupProps = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  chains: PortfolioChain[];
 };
 
-const WalletTableGroup = ({ page, chain }: IWalletTableGroupProps) => {
+const WalletTableGroup = ({ page, chains }: IWalletTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const walletTotal = useAppSelector(

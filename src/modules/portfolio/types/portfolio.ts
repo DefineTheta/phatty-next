@@ -14,3 +14,11 @@ const PortfolioChainEnum = {
 } as const;
 
 export type PortfolioChain = typeof PortfolioChainEnum[keyof typeof PortfolioChainEnum];
+
+export const isArrayOfPortfolioChain = (chains: string[]): chains is PortfolioChain[] => {
+  chains.forEach((chain) => {
+    if (!(chain in PortfolioChainEnum)) return false;
+  });
+
+  return true;
+};

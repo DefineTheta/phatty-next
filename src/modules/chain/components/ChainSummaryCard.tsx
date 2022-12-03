@@ -27,10 +27,20 @@ import ChainProtocolList from './ChainProtocolList';
 
 type IChainSummaryCardProps = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  chains: PortfolioChain[];
 };
 
-const ChainSummaryCard = ({ page, chain: currentChain }: IChainSummaryCardProps) => {
+type ChainCardData = {
+  imgSrc: string;
+  imgAlt: string;
+  displayName: string;
+  chainId: PortfolioChain;
+  total: number;
+  displayTotal: string;
+  percentage: string;
+};
+
+const ChainSummaryCard = ({ page, chains: currentChains }: IChainSummaryCardProps) => {
   const router = useRouter();
 
   const total = useAppSelector(
@@ -58,7 +68,7 @@ const ChainSummaryCard = ({ page, chain: currentChain }: IChainSummaryCardProps)
     useCallback(page === 'profile' ? selectProfileFtmTotal : selectBundleFtmTotal, [page])
   );
 
-  const testData = [
+  const testData: ChainCardData[] = [
     {
       imgSrc: '/img/chains/eth.svg',
       imgAlt: 'Ethereum logo',
@@ -116,10 +126,18 @@ const ChainSummaryCard = ({ page, chain: currentChain }: IChainSummaryCardProps)
   ];
 
   const handleChainClick = (chain: PortfolioChain) => {
+    let updatedChains = [...currentChains];
+
+    if (updatedChains.includes(chain)) {
+      updatedChains = updatedChains.filter((chainIterator) => chainIterator != chain);
+    } else {
+      updatedChains.push(chain);
+    }
+
     router.push(
       {
         pathname: router.asPath.split('?')[0],
-        query: currentChain !== chain ? { chain } : undefined
+        query: updatedChains.length > 0 ? updatedChains.join(',') : undefined
       },
       undefined,
       {
@@ -145,13 +163,13 @@ const ChainSummaryCard = ({ page, chain: currentChain }: IChainSummaryCardProps)
                     chainDisplayName={chain.displayName}
                     chainTotal={chain.displayTotal}
                     chainPercentage={chain.percentage}
-                    selected={currentChain === '' || currentChain === chain.chainId}
+                    selected={currentChains.length === 0 || currentChains.includes(chain.chainId)}
                   />
                 </button>
               )
           )}
         </div>
-        <ChainProtocolList currentAssetChain={currentChain} page={page} />
+        <ChainProtocolList currentAssetChains={currentChains} page={page} />
       </div>
     </Card>
   );
