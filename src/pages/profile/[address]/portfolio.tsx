@@ -30,7 +30,7 @@ const ProfilePortfolioPage = () => {
   const address = String(router.query.address || '');
   const hasFetched = useAppSelector(useCallback(selectProfileHasFetched, []));
 
-  const [currentChain, setCurrentChain] = useState<PortfolioChain[]>([]);
+  const [currentChains, setCurrentChains] = useState<PortfolioChain[]>([]);
 
   useEffect(() => {
     if (hasFetched || !address) return;
@@ -43,32 +43,30 @@ const ProfilePortfolioPage = () => {
     const chains = router.query.chains;
     if (!chains || typeof chains === 'object') return;
 
-    console.log('Port', chains);
-
     const chainsArr = chains.split(',');
 
     if (!isArrayOfPortfolioChain(chainsArr)) return;
-    setCurrentChain(chainsArr);
+    setCurrentChains(chainsArr);
   }, [router.query.chains]);
 
   return (
     <div className="flex flex-col gap-y-24">
-      <ProfileHeader address={address} currentChains={currentChain} />
+      <ProfileHeader address={address} currentChains={currentChains} />
       <div className="flex w-full justify-center">
         <Container>
           <div className="flex flex-col items-center gap-y-30">
-            <ChainSummaryCard page="profile" chains={currentChain} />
-            <WalletTableGroup page="profile" chains={currentChain} />
-            <HexTableGroup page="profile" currentChains={currentChain} />
-            <PhiatTableGroup page="profile" currentChains={currentChain} />
-            <PhamousTableGroup page="profile" currentChains={currentChain} />
-            <PulsexTableGroup page="profile" currentChains={currentChain} />
-            <PancakeTableGroup page="profile" currentChains={currentChain} />
-            <SushiTableGroup page="profile" currentChains={currentChain} />
-            <UniV2TableGroup page="profile" currentChains={currentChain} />
-            <UniV3TableGroup page="profile" currentChains={currentChain} />
-            <HedronTableGroup page="profile" currentChains={currentChain} />
-            <XenTableGroup page="profile" currentChains={currentChain} />
+            <ChainSummaryCard page="profile" currentChains={currentChains} />
+            <WalletTableGroup page="profile" currentChains={currentChains} />
+            <HexTableGroup page="profile" currentChains={currentChains} />
+            <PhiatTableGroup page="profile" currentChains={currentChains} />
+            <PhamousTableGroup page="profile" currentChains={currentChains} />
+            <PulsexTableGroup page="profile" currentChains={currentChains} />
+            <PancakeTableGroup page="profile" currentChains={currentChains} />
+            <SushiTableGroup page="profile" currentChains={currentChains} />
+            <UniV2TableGroup page="profile" currentChains={currentChains} />
+            <UniV3TableGroup page="profile" currentChains={currentChains} />
+            <HedronTableGroup page="profile" currentChains={currentChains} />
+            <XenTableGroup page="profile" currentChains={currentChains} />
           </div>
         </Container>
       </div>

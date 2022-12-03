@@ -33,6 +33,7 @@ import {
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   BundlesState,
+  ChainEnum,
   HedronDataComponentEnum,
   HexDataComponentEnum,
   PancakeDataComponentEnum,
@@ -43,7 +44,6 @@ import {
   SushiDataComponentEnum,
   UniswapV2DataComponentEnum,
   UniswapV3DataComponentEnum,
-  WalletDataComponentEnum,
   XenDataComponentEnum
 } from './types';
 
@@ -53,22 +53,22 @@ const initialState: BundlesState = {
   hasFetched: false,
   [ProtocolEnum.WALLET]: {
     total: {
-      [WalletDataComponentEnum.ETH]: 0,
-      [WalletDataComponentEnum.TPLS]: 0,
-      [WalletDataComponentEnum.BSC]: 0,
-      [WalletDataComponentEnum.MATIC]: 0,
-      [WalletDataComponentEnum.AVAX]: 0,
-      [WalletDataComponentEnum.FTM]: 0
+      [ChainEnum.ETH]: 0,
+      [ChainEnum.TPLS]: 0,
+      [ChainEnum.BSC]: 0,
+      [ChainEnum.MATIC]: 0,
+      [ChainEnum.AVAX]: 0,
+      [ChainEnum.FTM]: 0
     },
     loading: false,
     error: false,
     data: {
-      [WalletDataComponentEnum.ETH]: [],
-      [WalletDataComponentEnum.TPLS]: [],
-      [WalletDataComponentEnum.BSC]: [],
-      [WalletDataComponentEnum.MATIC]: [],
-      [WalletDataComponentEnum.AVAX]: [],
-      [WalletDataComponentEnum.FTM]: []
+      [ChainEnum.ETH]: [],
+      [ChainEnum.TPLS]: [],
+      [ChainEnum.BSC]: [],
+      [ChainEnum.MATIC]: [],
+      [ChainEnum.AVAX]: [],
+      [ChainEnum.FTM]: []
     }
   },
   [ProtocolEnum.HEX]: {

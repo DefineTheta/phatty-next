@@ -27,7 +27,7 @@ import ChainProtocolList from './ChainProtocolList';
 
 type IChainSummaryCardProps = {
   page: 'profile' | 'bundle';
-  chains: PortfolioChain[];
+  currentChains: PortfolioChain[];
 };
 
 type ChainCardData = {
@@ -40,7 +40,7 @@ type ChainCardData = {
   percentage: string;
 };
 
-const ChainSummaryCard = ({ page, chains: currentChains }: IChainSummaryCardProps) => {
+const ChainSummaryCard = ({ page, currentChains }: IChainSummaryCardProps) => {
   const router = useRouter();
 
   const total = useAppSelector(
@@ -133,8 +133,6 @@ const ChainSummaryCard = ({ page, chains: currentChains }: IChainSummaryCardProp
     } else {
       updatedChains.push(chain);
     }
-
-    console.log(updatedChains);
 
     router.push(
       {

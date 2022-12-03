@@ -6,13 +6,7 @@ import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { fetchBundlePortfolioData } from '@app-src/store/bundles/bundleSlice';
 import {
-  selectBundleAddresses,
-  selectBundleAvaxTotal,
-  selectBundleBscTotal,
-  selectBundleEthereumTotal,
-  selectBundleMaticTotal,
-  selectBundleTotal,
-  selectBundleTplsTotal
+  selectBundleAddresses, selectBundleChainsTotal
 } from '@app-src/store/bundles/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -22,28 +16,15 @@ import { toast } from 'react-hot-toast';
 
 type IBundleHeaderProps = {
   address: string;
-  chain: PortfolioChain;
+  currentChains: PortfolioChain[];
 };
 
-const BundleHeader = ({ address, chain }: IBundleHeaderProps) => {
+const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const total = useAppSelector(
-    useCallback(
-      chain === 'ETH'
-        ? selectBundleEthereumTotal
-        : chain === 'BSC'
-        ? selectBundleBscTotal
-        : chain === 'TPLS'
-        ? selectBundleTplsTotal
-        : chain === 'MATIC'
-        ? selectBundleMaticTotal
-        : chain === 'AVAX'
-        ? selectBundleAvaxTotal
-        : selectBundleTotal,
-      [chain]
-    )
+    useCallback(selectBundleChainsTotal(currentChains), [currentChains])
   );
   const bundleAddresses = useAppSelector(useCallback(selectBundleAddresses, []));
 

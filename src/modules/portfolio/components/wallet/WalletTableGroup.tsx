@@ -21,17 +21,19 @@ import WalletTable from './WalletTable';
 
 type IWalletTableGroupProps = {
   page: 'profile' | 'bundle';
-  chains: PortfolioChain[];
+  currentChains: PortfolioChain[];
 };
 
-const WalletTableGroup = ({ page, chains }: IWalletTableGroupProps) => {
+const WalletTableGroup = ({ page, currentChains }: IWalletTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const walletTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectWalletTotal(chains) : selectBundleWalletTotal(chains), [
-      page,
-      chains
-    ])
+    useCallback(
+      page === 'profile'
+        ? selectWalletTotal(currentChains)
+        : selectBundleWalletTotal(currentChains),
+      [page, currentChains]
+    )
   );
   const loading = useAppSelector(
     useCallback(page === 'profile' ? selectWalletLoading : selectBundleWalletLoading, [page])
@@ -60,7 +62,7 @@ const WalletTableGroup = ({ page, chains }: IWalletTableGroupProps) => {
         tablePrimaryImgAlt="Wallet"
       />
       <TableWrapper error={error} handleRetry={fetchTableData}>
-        <WalletTable page={page} chains={chains} loading={loading} />
+        <WalletTable page={page} chains={currentChains} loading={loading} />
       </TableWrapper>
     </div>
   );

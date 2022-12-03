@@ -14,7 +14,10 @@ import UniV2TableGroup from '@app-src/modules/portfolio/components/univ2/UniV2Ta
 import UniV3TableGroup from '@app-src/modules/portfolio/components/univ3/UniV3TableGroup';
 import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/WalletTableGroup';
 import XenTableGroup from '@app-src/modules/portfolio/components/xen/XenTableGroup';
-import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
+import {
+  isArrayOfPortfolioChain,
+  PortfolioChain
+} from '@app-src/modules/portfolio/types/portfolio';
 import {
   fetchBundleAddresses,
   fetchBundlePortfolioData,
@@ -36,7 +39,7 @@ const BundlePortfolioPage = () => {
   const bundleAddresses = useAppSelector(useCallback(selectBundleAddresses, []));
   const hasFetched = useAppSelector(useCallback(selectBundleHasFetched, []));
 
-  const [currentChain, setCurrentChain] = useState<PortfolioChain>('');
+  const [currentChains, setCurrentChains] = useState<PortfolioChain[]>([]);
 
   useEffect(() => {
     if (!hasFetched && bundleAddress) {
@@ -57,31 +60,33 @@ const BundlePortfolioPage = () => {
   }, [bundleAddresses, hasFetched]);
 
   useEffect(() => {
-    const chain = String(router.query.chain || '');
+    const chains = router.query.chains;
+    if (!chains || typeof chains === 'object') return;
 
-    if (['ETH', 'BSC', 'TPLS', 'MATIC', 'AVAX', 'FTM'].includes(chain))
-      setCurrentChain(chain as PortfolioChain);
-    else setCurrentChain('');
-  }, [router.query.chain]);
+    const chainsArr = chains.split(',');
+
+    if (!isArrayOfPortfolioChain(chainsArr)) return;
+    setCurrentChains(chainsArr);
+  }, [router.query.chains]);
 
   return (
     <div className="flex flex-col gap-y-24">
-      <BundleHeader address={bundleAddress} chain={currentChain} />
+      <BundleHeader address={bundleAddress} currentChains={currentChains} />
       <div className="flex w-full justify-center">
         <Container>
           <div className="flex w-full flex-col items-center gap-y-30">
-            <ChainSummaryCard page="bundle" chain={currentChain} />
-            <WalletTableGroup page="bundle" chain={currentChain} />
-            <HexTableGroup page="bundle" chain={currentChain} />
-            <PhiatTableGroup page="bundle" chain={currentChain} />
-            <PhamousTableGroup page="bundle" chain={currentChain} />
-            <PulsexTableGroup page="bundle" chain={currentChain} />
-            <PancakeTableGroup page="bundle" chain={currentChain} />
-            <SushiTableGroup page="bundle" chain={currentChain} />
-            <UniV2TableGroup page="bundle" chain={currentChain} />
-            <UniV3TableGroup page="bundle" chain={currentChain} />
-            <HedronTableGroup page="bundle" chain={currentChain} />
-            <XenTableGroup page="bundle" chain={currentChain} />
+            <ChainSummaryCard page="bundle" currentChains={currentChains} />
+            <WalletTableGroup page="bundle" currentChains={currentChains} />
+            <HexTableGroup page="bundle" currentChains={currentChains} />
+            <PhiatTableGroup page="bundle" currentChains={currentChains} />
+            <PhamousTableGroup page="bundle" currentChains={currentChains} />
+            <PulsexTableGroup page="bundle" currentChains={currentChains} />
+            <PancakeTableGroup page="bundle" currentChains={currentChains} />
+            <SushiTableGroup page="bundle" currentChains={currentChains} />
+            <UniV2TableGroup page="bundle" currentChains={currentChains} />
+            <UniV3TableGroup page="bundle" currentChains={currentChains} />
+            <HedronTableGroup page="bundle" currentChains={currentChains} />
+            <XenTableGroup page="bundle" currentChains={currentChains} />
           </div>
         </Container>
       </div>

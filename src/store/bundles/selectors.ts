@@ -18,11 +18,12 @@ import {
 } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
 import {
+  Chain,
+  ChainEnum,
   HedronDataComponentEnum,
   HexDataComponentEnum,
   PhamousDataComponent,
   PhiatDataComponentEnum,
-  WalletDataComponentEnum,
   XenDataComponent
 } from './types';
 
@@ -44,7 +45,7 @@ export const selectBundleAddresses = memoize((state: RootState) => {
   return state.bundles.addresses;
 });
 
-export const selectBundleWalletData = (chains: (keyof typeof WalletDataComponentEnum)[]) =>
+export const selectBundleWalletData = (chains: Chain[]) =>
   memoize((state: RootState): WalletTokenItem[] => {
     console.log('SELECT_WALLET_DATA');
 
@@ -218,7 +219,7 @@ export const selectBundleFtmTotal = memoize((state: RootState): number => {
   return getPositiveOrZero(state.bundles.WALLET.total.FTM);
 });
 
-export const selectBundleWalletTotal = (chains: (keyof typeof WalletDataComponentEnum)[]) =>
+export const selectBundleWalletTotal = (chains: Chain[]) =>
   memoize((state: RootState): number => {
     console.log('SELECT_BUNDLE_WALLET_TOTAL');
 
@@ -324,6 +325,32 @@ export const selectBundleTotal = memoize((state: RootState): number => {
     selectBundleFtmTotal(state)
   );
 });
+
+export const selectBundleChainsTotal = (chains: Chain[]) =>
+  memoize((state: RootState): number => {
+    console.log('SELECT_BUNDLE_CHAINS_TOTAL');
+
+    if (!chains || chains.length === 0) return selectBundleTotal(state);
+
+    const selectChaintotal = (chain: Chain) => {
+      switch (chain) {
+        case ChainEnum.ETH:
+          return selectBundleEthereumTotal(state);
+        case ChainEnum.BSC:
+          return selectBundleBscTotal(state);
+        case ChainEnum.TPLS:
+          return selectBundleTplsTotal(state);
+        case ChainEnum.MATIC:
+          return selectBundleMaticTotal(state);
+        case ChainEnum.AVAX:
+          return selectBundleAvaxTotal(state);
+        case ChainEnum.FTM:
+          return selectBundleFtmTotal(state);
+      }
+    };
+
+    return chains.reduce((total, chain) => total + selectChaintotal(chain), 0);
+  });
 
 export const selectBundleHexToatlTSharesPercentage = (chain: keyof typeof HexDataComponentEnum) =>
   memoize((state: RootState) => {

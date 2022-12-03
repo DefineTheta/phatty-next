@@ -45,14 +45,16 @@ export const ProtocolEnum = {
   XEN: 'XEN'
 } as const;
 
-export enum WalletDataComponentEnum {
-  ETH = 'ETH',
-  TPLS = 'TPLS',
-  BSC = 'BSC',
-  MATIC = 'MATIC',
-  AVAX = 'AVAX',
-  FTM = 'FTM'
-}
+export const ChainEnum = {
+  ETH: 'ETH',
+  TPLS: 'TPLS',
+  BSC: 'BSC',
+  MATIC: 'MATIC',
+  AVAX: 'AVAX',
+  FTM: 'FTM'
+} as const;
+
+export type Chain = typeof ChainEnum[keyof typeof ChainEnum];
 
 export enum HexDataComponentEnum {
   ETH = 'ETH',
@@ -132,8 +134,8 @@ export interface ProtocolData {
 }
 
 interface WalletData extends ProtocolData {
-  total: Record<WalletDataComponentEnum, number>;
-  data: Record<WalletDataComponentEnum, WalletTokenItem[]>;
+  total: Record<Chain, number>;
+  data: Record<Chain, WalletTokenItem[]>;
 }
 
 interface HexData extends ProtocolData {
