@@ -17,15 +17,15 @@ import {
 import { useCallback, useMemo } from 'react';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
-import { isCurrentChain } from '../../utils/misc';
+import { isInCurrentChains } from '../../utils/misc';
 import UniV2LiquidityPoolTable from './UniV2LiquidityPoolTable';
 
 type IUniV2TableGroup = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  currentChains: PortfolioChain[];
 };
 
-const UniV2TableGroup = ({ page, chain }: IUniV2TableGroup) => {
+const UniV2TableGroup = ({ page, currentChains }: IUniV2TableGroup) => {
   const dispatch = useAppDispatch();
 
   const uniV2Total = useAppSelector(
@@ -45,7 +45,7 @@ const UniV2TableGroup = ({ page, chain }: IUniV2TableGroup) => {
     else dispatch(fetchBundleUniV2Data());
   }, [page, dispatch]);
 
-  if ((!loading && uniV2Total === 0) || !isCurrentChain('ETH', chain)) {
+  if ((!loading && uniV2Total === 0) || !isInCurrentChains('ETH', currentChains)) {
     return null;
   }
 

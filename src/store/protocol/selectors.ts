@@ -18,11 +18,12 @@ import {
 } from '@app-src/types/api';
 import memoize from 'proxy-memoize';
 import {
+  Chain,
+  ChainEnum,
   HedronDataComponentEnum,
   HexDataComponentEnum,
   PhamousDataComponent,
   PhiatDataComponentEnum,
-  WalletDataComponentEnum,
   XenDataComponent
 } from './types';
 
@@ -38,11 +39,11 @@ export const selectProfileAddress = memoize((state: RootState) => {
   return state.protocols.address;
 });
 
-export const selectWalletData = (chain: '' | keyof typeof WalletDataComponentEnum) =>
+export const selectWalletData = (chains: Chain[]) =>
   memoize((state: RootState): WalletTokenItem[] => {
     console.log('SELECT_WALLET_DATA');
 
-    if (!chain)
+    if (chains.length === 0)
       return Array.prototype.concat.apply(
         [],
         [
@@ -54,7 +55,10 @@ export const selectWalletData = (chain: '' | keyof typeof WalletDataComponentEnu
           state.protocols.WALLET.data.FTM
         ]
       );
-    else return state.protocols.WALLET.data[chain];
+
+    return chains.reduce((data, chain) => {
+      return [...data, ...state.protocols.WALLET.data[chain]];
+    }, [] as WalletTokenItem[]);
   });
 
 export const selectHexStakeData = (chain: keyof typeof HexDataComponentEnum) =>
@@ -209,33 +213,22 @@ export const selectProfileFtmTotal = memoize((state: RootState): number => {
   return getPositiveOrZero(state.protocols.WALLET.total.FTM);
 });
 
-export const selectWalletTotal = (chain: '' | keyof typeof WalletDataComponentEnum) =>
+export const selectWalletTotal = (chains: Chain[]) =>
   memoize((state: RootState): number => {
     console.log('SELECT_WALLET_TOTAL');
 
-    switch (chain) {
-      case WalletDataComponentEnum.ETH:
-        return state.protocols.WALLET.total.ETH;
-      case WalletDataComponentEnum.BSC:
-        return state.protocols.WALLET.total.BSC;
-      case WalletDataComponentEnum.TPLS:
-        return state.protocols.WALLET.total.TPLS;
-      case WalletDataComponentEnum.MATIC:
-        return state.protocols.WALLET.total.MATIC;
-      case WalletDataComponentEnum.AVAX:
-        return state.protocols.WALLET.total.AVAX;
-      case WalletDataComponentEnum.FTM:
-        return state.protocols.WALLET.total.FTM;
-      default:
-        return (
-          state.protocols.WALLET.total.ETH +
-          state.protocols.WALLET.total.BSC +
-          state.protocols.WALLET.total.TPLS +
-          state.protocols.WALLET.total.MATIC +
-          state.protocols.WALLET.total.AVAX +
-          state.protocols.WALLET.total.FTM
-        );
+    if (chains.length === 0) {
+      return (
+        state.protocols.WALLET.total.ETH +
+        state.protocols.WALLET.total.BSC +
+        state.protocols.WALLET.total.TPLS +
+        state.protocols.WALLET.total.MATIC +
+        state.protocols.WALLET.total.AVAX +
+        state.protocols.WALLET.total.FTM
+      );
     }
+
+    return chains.reduce((total, chain) => total + state.protocols.WALLET.total[chain], 0);
   });
 
 export const selectHexComponentTotal = (chain: keyof typeof HexDataComponentEnum) =>
@@ -324,6 +317,32 @@ export const selectTotal = memoize((state: RootState): number => {
     selectProfileFtmTotal(state)
   );
 });
+
+export const selectProfileChainsTotal = (chains: Chain[]) =>
+  memoize((state: RootState): number => {
+    console.log('SELECT_PROFILE_CHAINS_TOTAL');
+
+    if (!chains || chains.length === 0) return selectTotal(state);
+
+    const selectChaintotal = (chain: Chain) => {
+      switch (chain) {
+        case ChainEnum.ETH:
+          return selectEthereumTotal(state);
+        case ChainEnum.BSC:
+          return selectBscTotal(state);
+        case ChainEnum.TPLS:
+          return selectTplsTotal(state);
+        case ChainEnum.MATIC:
+          return selectMaticTotal(state);
+        case ChainEnum.AVAX:
+          return selectAvaxTotal(state);
+        case ChainEnum.FTM:
+          return selectProfileFtmTotal(state);
+      }
+    };
+
+    return chains.reduce((total, chain) => total + selectChaintotal(chain), 0);
+  });
 
 export const selectHexToatlTSharesPercentage = (chain: keyof typeof HexDataComponentEnum) =>
   memoize((state: RootState) => {

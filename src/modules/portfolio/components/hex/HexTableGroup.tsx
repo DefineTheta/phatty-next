@@ -19,15 +19,15 @@ import {
 } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { formatToMoney } from '../../utils/format';
-import { isCurrentChain, isCurrentChainIn } from '../../utils/misc';
+import { isInCurrentChains } from '../../utils/misc';
 import HexStakeTable from './HexStakeTable';
 
 type IHexTableGroupProps = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  currentChains: PortfolioChain[];
 };
 
-const HexTableGroup = ({ page, chain }: IHexTableGroupProps) => {
+const HexTableGroup = ({ page, currentChains }: IHexTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const hexEthTotal = useAppSelector(
@@ -87,14 +87,14 @@ const HexTableGroup = ({ page, chain }: IHexTableGroupProps) => {
 
   if (
     (!loading && !error && hexEthTotal + hexTplsTotal === 0) ||
-    !isCurrentChainIn(['ETH', 'TPLS'], chain)
+    !isInCurrentChains(['ETH', 'TPLS'], currentChains)
   ) {
     return null;
   }
 
   return (
     <div id="hex" className="flex w-full max-w-96 flex-col gap-y-24">
-      {(loading || hexEthTotal !== 0) && isCurrentChain('ETH', chain) && (
+      {(loading || hexEthTotal !== 0) && isInCurrentChains('ETH', currentChains) && (
         <div className="flex flex-col gap-y-12">
           <TableHeader
             tableName="Hex.com"
@@ -110,7 +110,7 @@ const HexTableGroup = ({ page, chain }: IHexTableGroupProps) => {
           </TableWrapper>
         </div>
       )}
-      {(loading || hexTplsTotal !== 0) && isCurrentChain('TPLS', chain) && (
+      {(loading || hexTplsTotal !== 0) && isInCurrentChains('TPLS', currentChains) && (
         <div className="flex flex-col gap-y-12">
           <TableHeader
             tableName="Hex.com"

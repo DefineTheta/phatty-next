@@ -19,16 +19,16 @@ import {
 import { useCallback, useMemo } from 'react';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
-import { isCurrentChain } from '../../utils/misc';
+import { isInCurrentChains } from '../../utils/misc';
 import PhamousLiquidityTable from './PhamousLiquidityTable';
 import PhamousStakeTable from './PhamousStakeTable';
 
 type IPhamousTableGroupProps = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  currentChains: PortfolioChain[];
 };
 
-const PhamousTableGroup = ({ page, chain }: IPhamousTableGroupProps) => {
+const PhamousTableGroup = ({ page, currentChains }: IPhamousTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const phamousTotal = useAppSelector(
@@ -64,7 +64,7 @@ const PhamousTableGroup = ({ page, chain }: IPhamousTableGroupProps) => {
     else dispatch(fetchBundlePhamousData());
   }, [page, dispatch]);
 
-  if ((!loading && !error && phamousTotal === 0) || !isCurrentChain('TPLS', chain)) {
+  if ((!loading && !error && phamousTotal === 0) || !isInCurrentChains('TPLS', currentChains)) {
     return null;
   }
 

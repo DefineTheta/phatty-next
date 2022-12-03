@@ -6,14 +6,7 @@ import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { selectBundleAddress } from '@app-src/store/bundles/selectors';
 import { fetchPortfolioData } from '@app-src/store/protocol/protocolSlice';
-import {
-  selectAvaxTotal,
-  selectBscTotal,
-  selectEthereumTotal,
-  selectMaticTotal,
-  selectTotal,
-  selectTplsTotal
-} from '@app-src/store/protocol/selectors';
+import { selectProfileChainsTotal } from '@app-src/store/protocol/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -22,29 +15,16 @@ import { toast } from 'react-hot-toast';
 
 type IProfileHeaderProps = {
   address: string;
-  chain: PortfolioChain;
+  currentChains: PortfolioChain[];
 };
 
-const ProfileHeader = ({ address, chain }: IProfileHeaderProps) => {
+const ProfileHeader = ({ address, currentChains }: IProfileHeaderProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const bundleAddress = useAppSelector(useCallback(selectBundleAddress, []));
 
   const total = useAppSelector(
-    useCallback(
-      chain === 'ETH'
-        ? selectEthereumTotal
-        : chain === 'BSC'
-        ? selectBscTotal
-        : chain === 'TPLS'
-        ? selectTplsTotal
-        : chain === 'MATIC'
-        ? selectMaticTotal
-        : chain === 'AVAX'
-        ? selectAvaxTotal
-        : selectTotal,
-      [chain]
-    )
+    useCallback(selectProfileChainsTotal(currentChains), [currentChains])
   );
   const styledTotal = useMemo(() => formatToMoney(total), [total]);
 

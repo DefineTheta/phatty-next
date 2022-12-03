@@ -22,10 +22,10 @@ import XenStakeTable from './XenStakeTable';
 
 type IXenTableGroupProps = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  currentChains: PortfolioChain[];
 };
 
-const XenTableGroup = ({ page, chain }: IXenTableGroupProps) => {
+const XenTableGroup = ({ page, currentChains }: IXenTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const xenTotal = useAppSelector(

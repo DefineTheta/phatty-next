@@ -1,11 +1,16 @@
 import { PortfolioChain } from '../types/portfolio';
 
-export const isCurrentChain = (chain: PortfolioChain, currentChain: PortfolioChain) => {
-  if (currentChain === '' || chain === currentChain) return true;
-  else return false;
+type IsInCurrentChainsFunc = {
+  (chain: PortfolioChain, currentChains: PortfolioChain[]): boolean;
+  (chain: PortfolioChain[], currentChains: PortfolioChain[]): boolean;
 };
 
-export const isCurrentChainIn = (chains: PortfolioChain[], currentChain: PortfolioChain) => {
-  if (currentChain === '' || chains.includes(currentChain)) return true;
-  else return false;
+export const isInCurrentChains: IsInCurrentChainsFunc = (
+  chain: PortfolioChain | PortfolioChain[],
+  currentChains: PortfolioChain[]
+) => {
+  if (currentChains.length === 0) return true;
+
+  if (typeof chain === 'string') return currentChains.includes(chain);
+  else return currentChains.some((item) => chain.includes(item));
 };

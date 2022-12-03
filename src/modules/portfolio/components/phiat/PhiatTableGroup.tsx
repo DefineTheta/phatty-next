@@ -19,16 +19,16 @@ import {
 import { useCallback, useMemo } from 'react';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
-import { isCurrentChain } from '../../utils/misc';
+import { isInCurrentChains } from '../../utils/misc';
 import PhiatGenericTable from './PhiatGenericTable';
 import PhiatStakeTable from './PhiatStakeTable';
 
 type IPhiatTableGroupProps = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  currentChains: PortfolioChain[];
 };
 
-const PhiatTableGroup = ({ page, chain }: IPhiatTableGroupProps) => {
+const PhiatTableGroup = ({ page, currentChains }: IPhiatTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const phiatTotal = useAppSelector(
@@ -62,7 +62,7 @@ const PhiatTableGroup = ({ page, chain }: IPhiatTableGroupProps) => {
     else dispatch(fetchBundlePhiatData());
   }, [page, dispatch]);
 
-  if ((!loading && !error && phiatTotal === 0) || !isCurrentChain('TPLS', chain)) {
+  if ((!loading && !error && phiatTotal === 0) || !isInCurrentChains('TPLS', currentChains)) {
     return null;
   }
 

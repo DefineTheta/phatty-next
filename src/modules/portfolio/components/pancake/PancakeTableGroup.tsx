@@ -17,16 +17,16 @@ import {
 import { useCallback, useMemo } from 'react';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
-import { isCurrentChain } from '../../utils/misc';
+import { isInCurrentChains } from '../../utils/misc';
 import PancakeFarmTable from './PancakeFarmTable';
 import PancakeLiquidityPoolTable from './PancakeLiquidityPoolTable';
 
 type IPancakeTableGroup = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  currentChains: PortfolioChain[];
 };
 
-const PancakeTableGroup = ({ page, chain }: IPancakeTableGroup) => {
+const PancakeTableGroup = ({ page, currentChains }: IPancakeTableGroup) => {
   const dispatch = useAppDispatch();
 
   const pancakeTotal = useAppSelector(
@@ -46,7 +46,7 @@ const PancakeTableGroup = ({ page, chain }: IPancakeTableGroup) => {
     else dispatch(fetchBundlePancakeData());
   }, [page, dispatch]);
 
-  if ((!loading && pancakeTotal === 0) || !isCurrentChain('BSC', chain)) {
+  if ((!loading && pancakeTotal === 0) || !isInCurrentChains('BSC', currentChains)) {
     return null;
   }
 

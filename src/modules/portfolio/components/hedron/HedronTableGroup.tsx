@@ -17,15 +17,15 @@ import {
 } from '@app-src/store/protocol/selectors';
 import { useCallback, useMemo } from 'react';
 import { formatToMoney } from '../../utils/format';
-import { isCurrentChain, isCurrentChainIn } from '../../utils/misc';
+import { isInCurrentChains } from '../../utils/misc';
 import HedronStakeTable from './HedronStakeTable';
 
 type IHedronTableGroupProps = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  currentChains: PortfolioChain[];
 };
 
-const HedronTableGroup = ({ page, chain }: IHedronTableGroupProps) => {
+const HedronTableGroup = ({ page, currentChains }: IHedronTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const hedronEthTotal = useAppSelector(
@@ -61,14 +61,14 @@ const HedronTableGroup = ({ page, chain }: IHedronTableGroupProps) => {
 
   if (
     (!loading && !error && hedronEthTotal + hedronTplsTotal === 0) ||
-    !isCurrentChainIn(['ETH', 'TPLS'], chain)
+    !isInCurrentChains(['ETH', 'TPLS'], currentChains)
   ) {
     return null;
   }
 
   return (
     <div id="hedron" className="flex w-full max-w-96 flex-col gap-y-24">
-      {(loading || hedronEthTotal !== 0) && isCurrentChain('ETH', chain) && (
+      {(loading || hedronEthTotal !== 0) && isInCurrentChains('ETH', currentChains) && (
         <div className="flex flex-col gap-y-12">
           <TableHeader
             tableName="Hedron"
@@ -84,7 +84,7 @@ const HedronTableGroup = ({ page, chain }: IHedronTableGroupProps) => {
           </TableWrapper>
         </div>
       )}
-      {(loading || hedronTplsTotal !== 0) && isCurrentChain('TPLS', chain) && (
+      {(loading || hedronTplsTotal !== 0) && isInCurrentChains('TPLS', currentChains) && (
         <div className="flex flex-col gap-y-12">
           <TableHeader
             tableName="Hedron"

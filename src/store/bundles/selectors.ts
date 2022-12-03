@@ -44,11 +44,11 @@ export const selectBundleAddresses = memoize((state: RootState) => {
   return state.bundles.addresses;
 });
 
-export const selectBundleWalletData = (chain: '' | keyof typeof WalletDataComponentEnum) =>
+export const selectBundleWalletData = (chains: (keyof typeof WalletDataComponentEnum)[]) =>
   memoize((state: RootState): WalletTokenItem[] => {
     console.log('SELECT_WALLET_DATA');
 
-    if (!chain)
+    if (chains.length === 0)
       return Array.prototype.concat.apply(
         [],
         [
@@ -60,7 +60,10 @@ export const selectBundleWalletData = (chain: '' | keyof typeof WalletDataCompon
           state.bundles.WALLET.data.FTM
         ]
       );
-    else return state.bundles.WALLET.data[chain];
+
+    return chains.reduce((data, chain) => {
+      return [...data, ...state.bundles.WALLET.data[chain]];
+    }, [] as WalletTokenItem[]);
   });
 
 export const selectBundleHexStakeData = (chain: keyof typeof HexDataComponentEnum) =>
@@ -215,33 +218,22 @@ export const selectBundleFtmTotal = memoize((state: RootState): number => {
   return getPositiveOrZero(state.bundles.WALLET.total.FTM);
 });
 
-export const selectBundleWalletTotal = (chain: '' | keyof typeof WalletDataComponentEnum) =>
+export const selectBundleWalletTotal = (chains: (keyof typeof WalletDataComponentEnum)[]) =>
   memoize((state: RootState): number => {
     console.log('SELECT_BUNDLE_WALLET_TOTAL');
 
-    switch (chain) {
-      case WalletDataComponentEnum.ETH:
-        return state.bundles.WALLET.total.ETH;
-      case WalletDataComponentEnum.BSC:
-        return state.bundles.WALLET.total.BSC;
-      case WalletDataComponentEnum.TPLS:
-        return state.bundles.WALLET.total.TPLS;
-      case WalletDataComponentEnum.MATIC:
-        return state.bundles.WALLET.total.MATIC;
-      case WalletDataComponentEnum.AVAX:
-        return state.bundles.WALLET.total.AVAX;
-      case WalletDataComponentEnum.FTM:
-        return state.bundles.WALLET.total.FTM;
-      default:
-        return (
-          state.bundles.WALLET.total.ETH +
-          state.bundles.WALLET.total.BSC +
-          state.bundles.WALLET.total.TPLS +
-          state.bundles.WALLET.total.MATIC +
-          state.bundles.WALLET.total.AVAX +
-          state.bundles.WALLET.total.FTM
-        );
+    if (chains.length === 0) {
+      return (
+        state.bundles.WALLET.total.ETH +
+        state.bundles.WALLET.total.BSC +
+        state.bundles.WALLET.total.TPLS +
+        state.bundles.WALLET.total.MATIC +
+        state.bundles.WALLET.total.AVAX +
+        state.bundles.WALLET.total.FTM
+      );
     }
+
+    return chains.reduce((total, chain) => total + state.bundles.WALLET.total[chain], 0);
   });
 
 export const selectBundleHexComponentTotal = (chain: keyof typeof HexDataComponentEnum) =>

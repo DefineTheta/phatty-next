@@ -17,15 +17,15 @@ import {
 import { useCallback, useMemo } from 'react';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
-import { isCurrentChain } from '../../utils/misc';
+import { isInCurrentChains } from '../../utils/misc';
 import SushiLiquidityPoolTable from './SushiLiquidityPoolTable';
 
 type ISushiTableGroup = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  currentChains: PortfolioChain[];
 };
 
-const SushiTableGroup = ({ page, chain }: ISushiTableGroup) => {
+const SushiTableGroup = ({ page, currentChains }: ISushiTableGroup) => {
   const dispatch = useAppDispatch();
 
   const sushiTotal = useAppSelector(
@@ -45,7 +45,7 @@ const SushiTableGroup = ({ page, chain }: ISushiTableGroup) => {
     else dispatch(fetchBundleSushiData());
   }, [page, dispatch]);
 
-  if ((!loading && sushiTotal === 0) || !isCurrentChain('ETH', chain)) {
+  if ((!loading && sushiTotal === 0) || !isInCurrentChains('ETH', currentChains)) {
     return null;
   }
 

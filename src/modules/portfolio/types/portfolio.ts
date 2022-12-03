@@ -4,7 +4,6 @@ export enum PortfolioPageEnum {
 }
 
 const PortfolioChainEnum = {
-  '': '',
   ETH: 'ETH',
   BSC: 'BSC',
   TPLS: 'TPLS',

@@ -17,15 +17,15 @@ import { PortfolioChain } from '../../types/portfolio';
 
 type IWalletTableProps = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  chains: PortfolioChain[];
   loading: boolean;
 };
 
-const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
+const WalletTable = ({ page, chains, loading }: IWalletTableProps) => {
   const walletData = useSelector(
-    useCallback(page === 'profile' ? selectWalletData(chain) : selectBundleWalletData(chain), [
+    useCallback(page === 'profile' ? selectWalletData(chains) : selectBundleWalletData(chains), [
       page,
-      chain
+      chains
     ])
   );
 

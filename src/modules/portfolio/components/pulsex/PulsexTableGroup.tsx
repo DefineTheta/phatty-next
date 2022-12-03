@@ -17,15 +17,15 @@ import {
 import { useCallback, useMemo } from 'react';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
-import { isCurrentChain } from '../../utils/misc';
+import { isInCurrentChains } from '../../utils/misc';
 import PulsexLiquidityPoolTable from './PulsexLiquidityPoolTable';
 
 type IPulsexTableGroupProps = {
   page: 'profile' | 'bundle';
-  chain: PortfolioChain;
+  currentChains: PortfolioChain[];
 };
 
-const PulsexTableGroup = ({ page, chain }: IPulsexTableGroupProps) => {
+const PulsexTableGroup = ({ page, currentChains }: IPulsexTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const pulsexTotal = useAppSelector(
@@ -45,7 +45,7 @@ const PulsexTableGroup = ({ page, chain }: IPulsexTableGroupProps) => {
     else dispatch(fetchBundlePulsexData());
   }, [page, dispatch]);
 
-  if ((!loading && !error && pulsexTotal === 0) || !isCurrentChain('TPLS', chain)) {
+  if ((!loading && !error && pulsexTotal === 0) || !isInCurrentChains('TPLS', currentChains)) {
     return null;
   }
 

@@ -134,10 +134,12 @@ const ChainSummaryCard = ({ page, chains: currentChains }: IChainSummaryCardProp
       updatedChains.push(chain);
     }
 
+    console.log(updatedChains);
+
     router.push(
       {
         pathname: router.asPath.split('?')[0],
-        query: updatedChains.length > 0 ? updatedChains.join(',') : undefined
+        query: updatedChains.length > 0 ? { chains: updatedChains.join(',') } : undefined
       },
       undefined,
       {

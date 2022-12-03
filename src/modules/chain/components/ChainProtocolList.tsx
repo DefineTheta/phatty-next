@@ -37,7 +37,12 @@ export type IChainProtocolListProps = {
 
 const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps) => {
   const walletTotal = useSelector(
-    useCallback(page === 'profile' ? selectWalletTotal('') : selectBundleWalletTotal(''), [page])
+    useCallback(
+      page === 'profile'
+        ? selectWalletTotal(currentAssetChains)
+        : selectBundleWalletTotal(currentAssetChains),
+      [page]
+    )
   );
   const hexTotal = useSelector(
     useCallback(page === 'profile' ? selectHextotal : selectBundleHextotal, [page])
