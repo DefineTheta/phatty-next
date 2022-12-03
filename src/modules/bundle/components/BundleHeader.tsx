@@ -5,9 +5,7 @@ import { truncateAddress } from '@app-src/common/utils/format';
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { fetchBundlePortfolioData } from '@app-src/store/bundles/bundleSlice';
-import {
-  selectBundleAddresses, selectBundleChainsTotal
-} from '@app-src/store/bundles/selectors';
+import { selectBundleAddresses, selectBundleChainsTotal } from '@app-src/store/bundles/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

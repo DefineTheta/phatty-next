@@ -42,7 +42,7 @@ const BundleAccountPage = () => {
 
   return (
     <div className="flex flex-col gap-y-24">
-      <BundleHeader address={bundleAddress} chain="" />
+      <BundleHeader address={bundleAddress} currentChains={[]} />
       <div className="flex w-full justify-center">
         <Container>
           <div className="flex w-full flex-col items-center gap-y-30">

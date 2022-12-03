@@ -14,7 +14,7 @@ const ProfilePage = () => {
 
   return (
     <div className="flex flex-col gap-y-24">
-      <ProfileHeader address={profileAddress} chain="" />
+      <ProfileHeader address={profileAddress} currentChains={[]} />
       <div className="flex w-full flex-col items-center gap-y-30">
         <Container>
           <Card>
