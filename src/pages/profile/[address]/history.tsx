@@ -32,8 +32,8 @@ const ProfileHistoryPage = () => {
         </div>
         <p className="text-base">
           The history data is using third party services such as etherscan.io and might be slow to
-          load. It only supports a few chains and only goes back by a limited number of blocks. It
-          is for testing and as a proof concept only.
+          load. It currently only supports ETH and BSC chains and only goes back by a limited number
+          of blocks. It is for testing and as a proof concept only.
         </p>
       </Modal>
       <div className="flex flex-col gap-y-24">

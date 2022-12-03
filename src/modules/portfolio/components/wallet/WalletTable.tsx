@@ -129,10 +129,14 @@ const WalletTable = ({ page, chain, loading }: IWalletTableProps) => {
               <a
                 className="bg-purple-a cursor-pointer rounded-full px-10 py-1 text-md font-bold text-text-200 underline underline-offset-2"
                 target="_blank"
-                href="https://testnet.phiat.io/markets"
+                href={
+                  item.name === 'PHAME'
+                    ? 'https://testnet.phamous.io/#/earn'
+                    : 'https://testnet.phiat.io/markets'
+                }
                 rel="noreferrer"
               >
-                Earn
+                {item.name === 'PHAME' ? 'Stake' : 'Earn'}
               </a>
             )}
           </TableRowCell>

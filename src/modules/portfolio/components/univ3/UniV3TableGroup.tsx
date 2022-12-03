@@ -53,6 +53,7 @@ const UniV3TableGroup = ({ page, chain }: IUniV3TableGroup) => {
     <div id="univ3" className="flex w-full max-w-96 flex-col gap-y-12">
       <TableHeader
         tableName="Uniswap V3"
+        tableLink="https://app.uniswap.org/#/swap"
         totalValue={styledUniV3Total}
         tablePrimaryImgSrc="/img/icon/univ2.svg"
         tablePrimaryImgAlt="Uniswap V3"

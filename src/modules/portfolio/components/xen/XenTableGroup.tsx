@@ -53,6 +53,7 @@ const XenTableGroup = ({ page, chain }: IXenTableGroupProps) => {
     <div id="xen" className="flex w-full max-w-96 flex-col gap-y-12">
       <TableHeader
         tableName="Xen"
+        tableLink="https://xen.network/"
         totalValue={styledXenTotal}
         tablePrimaryImgSrc="/img/icon/xen.png"
         tablePrimaryImgAlt="Xen"
