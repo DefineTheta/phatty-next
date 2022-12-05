@@ -1,9 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import bundlesReducer from './bundles/bundleSlice';
 import historySlice from './history/historySlice';
+import portfolioSlice from './portfolio/portfolioSlice';
 // import chainsReducer from './chains/chainsSlice';
-// import historiesReducer from './histories/historiesSlice';
-import protocolsReducer from './protocol/protocolSlice';
 // import utilityReducer from './utility/utilitySlice';
 
 // import cryptoReducer from './crypto/reducer';
@@ -15,9 +13,9 @@ export const store = configureStore({
     // utility: utilityReducer,
     // histories: historiesReducer,
     history: historySlice,
-    protocols: protocolsReducer,
+    // protocols: protocolsReducer,
+    portfolio: portfolioSlice
     // chains: chainsReducer,
-    bundles: bundlesReducer
   }
 });
 
