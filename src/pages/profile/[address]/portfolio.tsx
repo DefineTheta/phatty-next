@@ -15,11 +15,12 @@ import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/Walle
 import XenTableGroup from '@app-src/modules/portfolio/components/xen/XenTableGroup';
 import {
   isArrayOfPortfolioChain,
-  PortfolioChain
+  PortfolioChain,
+  PortfolioEnum
 } from '@app-src/modules/portfolio/types/portfolio';
 import ProfileHeader from '@app-src/modules/profile/components/ProfileHeader';
-import { fetchPortfolioData, setProfileHasFetched } from '@app-src/store/protocol/protocolSlice';
-import { selectProfileHasFetched } from '@app-src/store/protocol/selectors';
+import { fetchPortfolioData, setHasFetched } from '@app-src/store/portfolio/portfolioSlice';
+import { selectHasFetched } from '@app-src/store/portfolio/selectors';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -28,7 +29,7 @@ const ProfilePortfolioPage = () => {
   const router = useRouter();
 
   const address = String(router.query.address || '');
-  const hasFetched = useAppSelector(useCallback(selectProfileHasFetched, []));
+  const hasFetched = useAppSelector(useCallback(selectHasFetched(PortfolioEnum.PROFILE), []));
 
   const [currentChains, setCurrentChains] = useState<PortfolioChain[]>([]);
 
@@ -36,7 +37,9 @@ const ProfilePortfolioPage = () => {
     if (hasFetched || !address) return;
     console.log('Address', address);
 
-    fetchPortfolioData(dispatch, address).then(() => dispatch(setProfileHasFetched(true)));
+    fetchPortfolioData(dispatch, [address], PortfolioEnum.PROFILE).then(() =>
+      dispatch(setHasFetched({ hasFetched: true, type: PortfolioEnum.PROFILE }))
+    );
   }, [hasFetched, address]);
 
   useEffect(() => {
