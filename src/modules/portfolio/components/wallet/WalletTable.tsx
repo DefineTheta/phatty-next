@@ -6,28 +6,22 @@ import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import useSort from '@app-src/modules/portfolio/hooks/useSort';
 import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
-import { selectBundleWalletData } from '@app-src/store/bundles/selectors';
-import { selectWalletData } from '@app-src/store/protocol/selectors';
+import { selectWalletData } from '@app-src/store/portfolio/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { PORTFOLIO_WALLET_FILTER_AMOUNT } from '../../constants/data';
 import useFilter from '../../hooks/useFilter';
-import { PortfolioChain } from '../../types/portfolio';
+import { Portfolio, PortfolioChain } from '../../types/portfolio';
 
 type IWalletTableProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   chains: PortfolioChain[];
   loading: boolean;
 };
 
 const WalletTable = ({ page, chains, loading }: IWalletTableProps) => {
-  const walletData = useSelector(
-    useCallback(page === 'profile' ? selectWalletData(chains) : selectBundleWalletData(chains), [
-      page,
-      chains
-    ])
-  );
+  const walletData = useSelector(useCallback(selectWalletData(chains), [page, chains]));
 
   const [filteredWalletData, isFiltered, setIsFiltered] = useFilter<typeof walletData[number]>(
     walletData,

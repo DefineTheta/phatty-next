@@ -2,25 +2,19 @@ import TableHeader from '@app-src/common/components/table/TableHeader';
 import TableWrapper from '@app-src/common/components/table/TableWrapper';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { fetchBundleWalletData } from '@app-src/store/bundles/bundleSlice';
+import { fetchWalletData } from '@app-src/store/portfolio/portfolioSlice';
 import {
-  selectBundleWalletError,
-  selectBundleWalletLoading,
-  selectBundleWalletTotal
-} from '@app-src/store/bundles/selectors';
-import { fetchWalletData } from '@app-src/store/protocol/protocolSlice';
-import {
-  selectProfileWalletError,
+  selectWalletError,
   selectWalletLoading,
   selectWalletTotal
-} from '@app-src/store/protocol/selectors';
+} from '@app-src/store/portfolio/selectors';
 import { useCallback, useMemo } from 'react';
-import { PortfolioChain } from '../../types/portfolio';
+import { Portfolio, PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
 import WalletTable from './WalletTable';
 
 type IWalletTableGroupProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   currentChains: PortfolioChain[];
 };
 
@@ -28,26 +22,14 @@ const WalletTableGroup = ({ page, currentChains }: IWalletTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const walletTotal = useAppSelector(
-    useCallback(
-      page === 'profile'
-        ? selectWalletTotal(currentChains)
-        : selectBundleWalletTotal(currentChains),
-      [page, currentChains]
-    )
+    useCallback(selectWalletTotal(currentChains, page), [page, currentChains])
   );
-  const loading = useAppSelector(
-    useCallback(page === 'profile' ? selectWalletLoading : selectBundleWalletLoading, [page])
-  );
-  const error = useAppSelector(
-    useCallback(page === 'profile' ? selectProfileWalletError : selectBundleWalletError, [page])
-  );
+  const loading = useAppSelector(useCallback(selectWalletLoading(page), [page]));
+  const error = useAppSelector(useCallback(selectWalletError(page), [page]));
 
   const styledWalletTotal = useMemo(() => formatToMoney(walletTotal), [walletTotal]);
 
-  const fetchTableData = useCallback(() => {
-    if (page === 'profile') dispatch(fetchWalletData());
-    else dispatch(fetchBundleWalletData());
-  }, [page, dispatch]);
+  const fetchTableData = useCallback(() => dispatch(fetchWalletData(page)), [page, dispatch]);
 
   if (!loading && !error && walletTotal === 0) {
     return null;
