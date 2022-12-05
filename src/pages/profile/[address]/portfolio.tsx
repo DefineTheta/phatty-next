@@ -58,7 +58,7 @@ const ProfilePortfolioPage = () => {
       <div className="flex w-full justify-center">
         <Container>
           <div className="flex flex-col items-center gap-y-30">
-            <ChainSummaryCard page="profile" currentChains={currentChains} />
+            <ChainSummaryCard page={PortfolioEnum.PROFILE} currentChains={currentChains} />
             <WalletTableGroup page="profile" currentChains={currentChains} />
             <HexTableGroup page="profile" currentChains={currentChains} />
             <PhiatTableGroup page="profile" currentChains={currentChains} />

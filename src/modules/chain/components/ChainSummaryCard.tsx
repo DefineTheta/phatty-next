@@ -1,32 +1,23 @@
 import Card from '@app-src/common/components/layout/Card';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import ChainSummaryItem from '@app-src/modules/chain/components/ChainSummaryItem';
-import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
+import { Portfolio, PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
-import {
-  selectBundleAvaxTotal,
-  selectBundleBscTotal,
-  selectBundleEthereumTotal,
-  selectBundleFtmTotal,
-  selectBundleMaticTotal,
-  selectBundleTotal,
-  selectBundleTplsTotal
-} from '@app-src/store/bundles/selectors';
 import {
   selectAvaxTotal,
   selectBscTotal,
   selectEthereumTotal,
+  selectFtmTotal,
   selectMaticTotal,
-  selectProfileFtmTotal,
   selectTotal,
   selectTplsTotal
-} from '@app-src/store/protocol/selectors';
+} from '@app-src/store/portfolio/selectors';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import ChainProtocolList from './ChainProtocolList';
 
 type IChainSummaryCardProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   currentChains: PortfolioChain[];
 };
 
@@ -43,30 +34,13 @@ type ChainCardData = {
 const ChainSummaryCard = ({ page, currentChains }: IChainSummaryCardProps) => {
   const router = useRouter();
 
-  const total = useAppSelector(
-    useCallback(page === 'profile' ? selectTotal : selectBundleTotal, [page])
-  );
-  const ethereumTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectEthereumTotal : selectBundleEthereumTotal, [page])
-  );
-  const bscTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectBscTotal : selectBundleBscTotal, [page])
-  );
-  const tplsTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectTplsTotal : selectBundleTplsTotal, [page])
-  );
-
-  const maticTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectMaticTotal : selectBundleMaticTotal, [page])
-  );
-
-  const avaxTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectAvaxTotal : selectBundleAvaxTotal, [page])
-  );
-
-  const ftmTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectProfileFtmTotal : selectBundleFtmTotal, [page])
-  );
+  const total = useAppSelector(useCallback(selectTotal(page), [page]));
+  const ethereumTotal = useAppSelector(useCallback(selectEthereumTotal(page), [page]));
+  const bscTotal = useAppSelector(useCallback(selectBscTotal(page), [page]));
+  const tplsTotal = useAppSelector(useCallback(selectTplsTotal(page), [page]));
+  const maticTotal = useAppSelector(useCallback(selectMaticTotal(page), [page]));
+  const avaxTotal = useAppSelector(useCallback(selectAvaxTotal(page), [page]));
+  const ftmTotal = useAppSelector(useCallback(selectFtmTotal(page), [page]));
 
   const testData: ChainCardData[] = [
     {

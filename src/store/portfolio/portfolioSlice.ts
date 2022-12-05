@@ -50,6 +50,8 @@ import {
   XenDataComponentEnum
 } from './types';
 
+type FetchDataInput = { addresses: string[]; refresh: boolean; type: Portfolio } | Portfolio;
+
 const initialPortfolioData: PortfolioData = {
   bundleAddress: '',
   addresses: [],
@@ -323,7 +325,7 @@ const deleteBundleSession = createAsyncThunk<AuthResponse, void, { state: RootSt
 
 const fetchWalletData = createAsyncThunk<
   { data: WalletResponse; type: Portfolio },
-  { addresses: string[]; refresh: boolean; type: Portfolio },
+  FetchDataInput,
   { state: RootState }
 >('portfolio/fetchWalletData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -332,19 +334,19 @@ const fetchWalletData = createAsyncThunk<
     controller.abort();
   };
 
-  return { data: await getWallet(input.addresses, input.refresh), type: input.type };
-  // if (input) return await getWallet(input.addresses, input.refresh);
+  if (typeof input === 'object')
+    return { data: await getWallet(input.addresses, input.refresh), type: input.type };
 
-  // const existingAddresses = thunkAPI.getState().portfolio[input.type];
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
 
-  // if (!existingAddresses || existingAddresses.length === 0) thunkAPI.rejectWithValue(null);
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  // return await getWallet(existingAddresses, false);
+  return { data: await getWallet(addresses, false), type: input };
 });
 
 const fetchHexData = createAsyncThunk<
   { data: HexResponse; type: Portfolio },
-  { addresses: string[]; refresh: boolean; type: Portfolio },
+  FetchDataInput,
   { state: RootState }
 >('portfolio/fetchHexData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -353,19 +355,19 @@ const fetchHexData = createAsyncThunk<
     controller.abort();
   };
 
-  return { data: await getHex(input.addresses, input.refresh), type: input.type };
-  // if (input) return await getHex(input.addresses, input.refresh);
+  if (typeof input === 'object')
+    return { data: await getHex(input.addresses, input.refresh), type: input.type };
 
-  // const bundleAddresses = thunkAPI.getState().bundles.addresses;
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
 
-  // if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  // return await getHex(bundleAddresses, false);
+  return { data: await getHex(addresses, false), type: input };
 });
 
 const fetchPhiatData = createAsyncThunk<
   { data: PhiatResponse; type: Portfolio },
-  { addresses: string[]; refresh: boolean; type: Portfolio },
+  FetchDataInput,
   { state: RootState }
 >('portfolio/fetchPhiatData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -374,19 +376,19 @@ const fetchPhiatData = createAsyncThunk<
     controller.abort();
   };
 
-  return { data: await getPhiat(input.addresses, input.refresh), type: input.type };
-  // if (input) return await getPhiat(input.addresses, input.refresh);
+  if (typeof input === 'object')
+    return { data: await getPhiat(input.addresses, input.refresh), type: input.type };
 
-  // const bundleAddresses = thunkAPI.getState().bundles.addresses;
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
 
-  // if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  // return await getPhiat(bundleAddresses, false);
+  return { data: await getPhiat(addresses, false), type: input };
 });
 
 const fetchPulsexData = createAsyncThunk<
   { data: PulsexResponse; type: Portfolio },
-  { addresses: string[]; refresh: boolean; type: Portfolio },
+  FetchDataInput,
   { state: RootState }
 >('portfolio/fetchPulsexData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -395,19 +397,19 @@ const fetchPulsexData = createAsyncThunk<
     controller.abort();
   };
 
-  return { data: await getPulsex(input.addresses, input.refresh), type: input.type };
-  // if (input) return await getPulsex(input.addresses, input.refresh);
+  if (typeof input === 'object')
+    return { data: await getPulsex(input.addresses, input.refresh), type: input.type };
 
-  // const bundleAddresses = thunkAPI.getState().bundles.addresses;
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
 
-  // if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  // return await getPulsex(bundleAddresses, false);
+  return { data: await getPulsex(addresses, false), type: input };
 });
 
 const fetchPancakeData = createAsyncThunk<
   { data: PancakeResponse; type: Portfolio },
-  { addresses: string[]; refresh: boolean; type: Portfolio },
+  FetchDataInput,
   { state: RootState }
 >('portfolio/fetchPancakeData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -416,19 +418,19 @@ const fetchPancakeData = createAsyncThunk<
     controller.abort();
   };
 
-  return { data: await getPancake(input.addresses, input.refresh), type: input.type };
-  // if (input) return await getPancake(input.addresses, input.refresh);
+  if (typeof input === 'object')
+    return { data: await getPancake(input.addresses, input.refresh), type: input.type };
 
-  // const bundleAddresses = thunkAPI.getState().bundles.addresses;
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
 
-  // if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  // return await getPancake(bundleAddresses, false);
+  return { data: await getPancake(addresses, false), type: input };
 });
 
 const fetchSushiData = createAsyncThunk<
   { data: SushiResponse; type: Portfolio },
-  { addresses: string[]; refresh: boolean; type: Portfolio },
+  FetchDataInput,
   { state: RootState }
 >('portfolio/fetchSushiData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -437,19 +439,19 @@ const fetchSushiData = createAsyncThunk<
     controller.abort();
   };
 
-  return { data: await getSushi(input.addresses, input.refresh), type: input.type };
-  // if (input) return await getSushi(input.addresses, input.refresh);
+  if (typeof input === 'object')
+    return { data: await getSushi(input.addresses, input.refresh), type: input.type };
 
-  // const bundleAddresses = thunkAPI.getState().bundles.addresses;
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
 
-  // if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  // return await getSushi(bundleAddresses, false);
+  return { data: await getSushi(addresses, false), type: input };
 });
 
 const fetchUniV2Data = createAsyncThunk<
   { data: UniV2Response; type: Portfolio },
-  { addresses: string[]; refresh: boolean; type: Portfolio },
+  FetchDataInput,
   { state: RootState }
 >('portfolio/fetchUniV2Data', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -458,19 +460,19 @@ const fetchUniV2Data = createAsyncThunk<
     controller.abort();
   };
 
-  return { data: await getUniV2(input.addresses, input.refresh), type: input.type };
-  // if (input) return await getUniV2(input.addresses, input.refresh);
+  if (typeof input === 'object')
+    return { data: await getUniV2(input.addresses, input.refresh), type: input.type };
 
-  // const bundleAddresses = thunkAPI.getState().bundles.addresses;
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
 
-  // if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  // return await getUniV2(bundleAddresses, false);
+  return { data: await getUniV2(addresses, false), type: input };
 });
 
 const fetchUniV3Data = createAsyncThunk<
   { data: UniV3Response; type: Portfolio },
-  { addresses: string[]; refresh: boolean; type: Portfolio },
+  FetchDataInput,
   { state: RootState }
 >('portfolio/fetchUniV3Data', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -479,19 +481,19 @@ const fetchUniV3Data = createAsyncThunk<
     controller.abort();
   };
 
-  return { data: await getUniV3(input.addresses, input.refresh), type: input.type };
-  // if (input) return await getUniV3(input.addresses, input.refresh);
+  if (typeof input === 'object')
+    return { data: await getUniV3(input.addresses, input.refresh), type: input.type };
 
-  // const bundleAddresses = thunkAPI.getState().bundles.addresses;
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
 
-  // if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  // return await getUniV3(bundleAddresses, false);
+  return { data: await getUniV3(addresses, false), type: input };
 });
 
 const fetchHedronData = createAsyncThunk<
   { data: HedronResponse; type: Portfolio },
-  { addresses: string[]; refresh: boolean; type: Portfolio },
+  FetchDataInput,
   { state: RootState }
 >('portfolio/fetchHedronData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -500,19 +502,19 @@ const fetchHedronData = createAsyncThunk<
     controller.abort();
   };
 
-  return { data: await getHedron(input.addresses, input.refresh), type: input.type };
-  // if (input) return await getHedron(input.addresses, input.refresh);
+  if (typeof input === 'object')
+    return { data: await getHedron(input.addresses, input.refresh), type: input.type };
 
-  // const bundleAddresses = thunkAPI.getState().bundles.addresses;
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
 
-  // if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  // return await getHedron(bundleAddresses, false);
+  return { data: await getHedron(addresses, false), type: input };
 });
 
 const fetchPhamousData = createAsyncThunk<
   { data: PhamousResponse; type: Portfolio },
-  { addresses: string[]; refresh: boolean; type: Portfolio },
+  FetchDataInput,
   { state: RootState }
 >('portfolio/fetchPhamousData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -521,19 +523,19 @@ const fetchPhamousData = createAsyncThunk<
     controller.abort();
   };
 
-  return { data: await getPhamous(input.addresses, input.refresh), type: input.type };
-  // if (input) return await getPhamous(input.addresses, input.refresh);
+  if (typeof input === 'object')
+    return { data: await getPhamous(input.addresses, input.refresh), type: input.type };
 
-  // const bundleAddresses = thunkAPI.getState().bundles.addresses;
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
 
-  // if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  // return await getPhamous(bundleAddresses, false);
+  return { data: await getPhamous(addresses, false), type: input };
 });
 
 const fetchXenData = createAsyncThunk<
   { data: XenResponse; type: Portfolio },
-  { addresses: string[]; refresh: boolean; type: Portfolio },
+  FetchDataInput,
   { state: RootState }
 >('portfolio/fetchXenData', async (input, thunkAPI) => {
   const controller = new AbortController();
@@ -542,14 +544,14 @@ const fetchXenData = createAsyncThunk<
     controller.abort();
   };
 
-  return { data: await getXen(input.addresses, input.refresh), type: input.type };
-  // if (input) return await getXen(input.addresses, input.refresh);
+  if (typeof input === 'object')
+    return { data: await getXen(input.addresses, input.refresh), type: input.type };
 
-  // const bundleAddresses = thunkAPI.getState().bundles.addresses;
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
 
-  // if (!bundleAddresses || bundleAddresses.length === 0) thunkAPI.rejectWithValue(null);
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  // return await getXen(bundleAddresses, false);
+  return { data: await getXen(addresses, false), type: input };
 });
 
 const fetchPortfolioData = (
@@ -584,7 +586,7 @@ export const portfolioSlice = createSlice({
     setBundleAddress: (state, action: PayloadAction<string>) => {
       state.bundleAddress = action.payload;
     },
-    setHasFetched: (state, action: PayloadAction<{hasFetched: boolean; type: Portfolio}>) => {
+    setHasFetched: (state, action: PayloadAction<{ hasFetched: boolean; type: Portfolio }>) => {
       state[action.payload.type].hasFetched = action.payload.hasFetched;
     }
   },
@@ -675,8 +677,10 @@ export const portfolioSlice = createSlice({
 
     //Wallet reducer functions
     builder.addCase(fetchWalletData.pending, (state, action) => {
-      state[action.meta.arg.type].WALLET.loading = true;
-      state[action.meta.arg.type].WALLET.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].WALLET.loading = true;
+      state[type].WALLET.error = false;
     });
 
     builder.addCase(fetchWalletData.fulfilled, (state, action) => {
@@ -702,14 +706,18 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(fetchWalletData.rejected, (state, action) => {
-      // state[action.meta.arg.type].WALLET.loading = false;
-      state[action.meta.arg.type].WALLET.error = true;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].WALLET.loading = false;
+      state[type].WALLET.error = true;
     });
 
     //Hex reducer functions
     builder.addCase(fetchHexData.pending, (state, action) => {
-      state[action.meta.arg.type].HEX.loading = true;
-      state[action.meta.arg.type].HEX.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].HEX.loading = true;
+      state[type].HEX.error = false;
     });
 
     builder.addCase(fetchHexData.fulfilled, (state, action) => {
@@ -730,14 +738,18 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(fetchHexData.rejected, (state, action) => {
-      // state[action.meta.arg.type].HEX.loading = false;
-      state[action.meta.arg.type].HEX.error = true;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].HEX.loading = false;
+      state[type].HEX.error = true;
     });
 
     //Phiat reducer functions
     builder.addCase(fetchPhiatData.pending, (state, action) => {
-      state[action.meta.arg.type].PHIAT.loading = true;
-      state[action.meta.arg.type].PHIAT.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].PHIAT.loading = true;
+      state[type].PHIAT.error = false;
     });
 
     builder.addCase(fetchPhiatData.fulfilled, (state, action) => {
@@ -770,14 +782,18 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(fetchPhiatData.rejected, (state, action) => {
-      // state[action.meta.arg.type].PHIAT.loading = false;
-      state[action.meta.arg.type].PHIAT.error = true;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].PHIAT.loading = false;
+      state[type].PHIAT.error = true;
     });
 
     // Pulsex reducer functions
     builder.addCase(fetchPulsexData.pending, (state, action) => {
-      state[action.meta.arg.type].PULSEX.loading = true;
-      state[action.meta.arg.type].PULSEX.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].PULSEX.loading = true;
+      state[type].PULSEX.error = false;
     });
 
     builder.addCase(fetchPulsexData.fulfilled, (state, action) => {
@@ -795,14 +811,18 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(fetchPulsexData.rejected, (state, action) => {
-      // state[action.meta.arg.type].PULSEX.loading = false;
-      state[action.meta.arg.type].PULSEX.error = true;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].PULSEX.loading = false;
+      state[type].PULSEX.error = true;
     });
 
     // Pancake reducer functions
     builder.addCase(fetchPancakeData.pending, (state, action) => {
-      state[action.meta.arg.type].PANCAKE.loading = true;
-      state[action.meta.arg.type].PANCAKE.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].PANCAKE.loading = true;
+      state[type].PANCAKE.error = false;
     });
 
     builder.addCase(fetchPancakeData.fulfilled, (state, action) => {
@@ -822,13 +842,17 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(fetchPancakeData.rejected, (state, action) => {
-      // state[action.meta.arg.type].PANCAKE.loading = false;
-      state[action.meta.arg.type].PANCAKE.error = true;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].PANCAKE.loading = false;
+      state[type].PANCAKE.error = true;
     });
     // Sushi reducer functions
     builder.addCase(fetchSushiData.pending, (state, action) => {
-      state[action.meta.arg.type].SUSHI.loading = true;
-      state[action.meta.arg.type].SUSHI.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].SUSHI.loading = true;
+      state[type].SUSHI.error = false;
     });
 
     builder.addCase(fetchSushiData.fulfilled, (state, action) => {
@@ -846,14 +870,18 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(fetchSushiData.rejected, (state, action) => {
-      // state[action.meta.arg.type].SUSHI.loading = false;
-      state[action.meta.arg.type].SUSHI.error = true;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].SUSHI.loading = false;
+      state[type].SUSHI.error = true;
     });
 
     // UniV2 reducer functions
     builder.addCase(fetchUniV2Data.pending, (state, action) => {
-      state[action.meta.arg.type].UNISWAPV2.loading = true;
-      state[action.meta.arg.type].UNISWAPV2.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].UNISWAPV2.loading = true;
+      state[type].UNISWAPV2.error = false;
     });
 
     builder.addCase(fetchUniV2Data.fulfilled, (state, action) => {
@@ -871,14 +899,18 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(fetchUniV2Data.rejected, (state, action) => {
-      // state[action.meta.arg.type].UNISWAPV2.loading = false;
-      state[action.meta.arg.type].UNISWAPV2.error = true;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].UNISWAPV2.loading = false;
+      state[type].UNISWAPV2.error = true;
     });
 
     // UniV3 reducer functions
     builder.addCase(fetchUniV3Data.pending, (state, action) => {
-      state[action.meta.arg.type].UNISWAPV3.loading = true;
-      state[action.meta.arg.type].UNISWAPV3.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].UNISWAPV3.loading = true;
+      state[type].UNISWAPV3.error = false;
     });
 
     builder.addCase(fetchUniV3Data.fulfilled, (state, action) => {
@@ -896,14 +928,18 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(fetchUniV3Data.rejected, (state, action) => {
-      // state[action.meta.arg.type].UNISWAPV3.loading = false;
-      state[action.meta.arg.type].UNISWAPV3.error = true;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].UNISWAPV3.loading = false;
+      state[type].UNISWAPV3.error = true;
     });
 
     //Hedron reducer functions
     builder.addCase(fetchHedronData.pending, (state, action) => {
-      state[action.meta.arg.type].HEDRON.loading = true;
-      state[action.meta.arg.type].HEDRON.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].HEDRON.loading = true;
+      state[type].HEDRON.error = false;
     });
 
     builder.addCase(fetchHedronData.fulfilled, (state, action) => {
@@ -921,14 +957,18 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(fetchHedronData.rejected, (state, action) => {
-      // state[action.meta.arg.type].HEDRON.loading = false;
-      state[action.meta.arg.type].HEDRON.error = true;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].HEDRON.loading = false;
+      state[type].HEDRON.error = true;
     });
 
     //Phamous reducer functions
     builder.addCase(fetchPhamousData.pending, (state, action) => {
-      state[action.meta.arg.type].PHAMOUS.loading = true;
-      state[action.meta.arg.type]PHAMOUS.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].PHAMOUS.loading = true;
+      state[type].PHAMOUS.error = false;
     });
 
     builder.addCase(fetchPhamousData.fulfilled, (state, action) => {
@@ -954,14 +994,18 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(fetchPhamousData.rejected, (state, action) => {
-      // state[action.meta.arg.type].PHAMOUS.loading = false;
-      state[action.meta.arg.type].PHAMOUS.error = true;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].PHAMOUS.loading = false;
+      state[type].PHAMOUS.error = true;
     });
 
     //Xen reducer functions
     builder.addCase(fetchXenData.pending, (state, action) => {
-      state[action.meta.arg.type].XEN.loading = true;
-      state[action.meta.arg.type].XEN.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].XEN.loading = true;
+      state[type].XEN.error = false;
     });
 
     builder.addCase(fetchXenData.fulfilled, (state, action) => {
@@ -978,18 +1022,16 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(fetchXenData.rejected, (state, action) => {
-      // state[action.meta.arg.type].XEN.loading = false;
-      state[action.meta.arg.type].XEN.error = true;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].XEN.loading = false;
+      state[type].XEN.error = true;
     });
   }
 });
 
-export const {
-  reset,
-  setHasFetched,
-  setBundleAddress,
-  clearBundleAddresses
-} = portfolioSlice.actions;
+export const { reset, setHasFetched, setBundleAddress, clearBundleAddresses } =
+  portfolioSlice.actions;
 
 export {
   fetchBundleAddresses,

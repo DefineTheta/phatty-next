@@ -266,7 +266,7 @@ export const selectHexComponentTotal = (
     return state.portfolio[type].HEX.total[chain];
   });
 
-export const selectHextotal = (type: Portfolio) =>
+export const selectHexTotal = (type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_HEX_TOTAL');
 
@@ -330,7 +330,7 @@ export const selectHedronComponentTotal = (
     return state.portfolio[type].HEDRON.total[chain];
   });
 
-export const selectHedrontotal = (type: Portfolio) =>
+export const selectHedronTotal = (type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_HEDRON_TOTAL');
 
