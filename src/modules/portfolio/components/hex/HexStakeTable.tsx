@@ -8,26 +8,21 @@ import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import useSort from '@app-src/modules/portfolio/hooks/useSort';
 import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
-import { selectBundleHexStakeData } from '@app-src/store/bundles/selectors';
-import { selectHexStakeData } from '@app-src/store/protocol/selectors';
+import { selectHexStakeData } from '@app-src/store/portfolio/selectors';
 import { HexDataComponentEnum } from '@app-src/store/protocol/types';
 import { useCallback } from 'react';
 import { PORTFOLIO_DATA_LIMIT } from '../../constants/data';
 import useLimit from '../../hooks/useLimit';
+import { Portfolio } from '../../types/portfolio';
 
 type IHexStakeTableProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   chain: keyof typeof HexDataComponentEnum;
   loading: boolean;
 };
 
 const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
-  const hexStakeData = useAppSelector(
-    useCallback(page === 'profile' ? selectHexStakeData(chain) : selectBundleHexStakeData(chain), [
-      page,
-      chain
-    ])
-  );
+  const hexStakeData = useAppSelector(useCallback(selectHexStakeData(page), [page, chain]));
 
   const [sortedHexStakeData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof hexStakeData[number]

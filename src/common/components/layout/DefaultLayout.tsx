@@ -1,12 +1,12 @@
 import NavBar from '@app-src/common/components/layout/NavBar';
 import SideBar from '@app-src/common/components/layout/SideBar';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
+import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import {
-  clearBundleAddresses,
-  setBundleAddress,
-  setBundleFetched
-} from '@app-src/store/bundles/bundleSlice';
-import { setProfileAddress } from '@app-src/store/protocol/protocolSlice';
+  clearAddresses,
+  setDisplayAddress,
+  setHasFetched
+} from '@app-src/store/portfolio/portfolioSlice';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -31,7 +31,7 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
         window.ethereum?.request<string[]>({ method: 'eth_requestAccounts' }).then((accounts) => {
           console.log(accounts);
           if (accounts && accounts.length !== 0 && accounts[0]) {
-            dispatch(setBundleAddress(accounts[0]));
+            dispatch(setDisplayAddress({ address: accounts[0], type: PortfolioEnum.BUNDLE }));
           }
         });
       }
@@ -40,9 +40,9 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
         console.log('Metamask accounts change');
         let acc = accounts as string[];
         if (acc && acc.length !== 0 && acc[0]) {
-          dispatch(setBundleAddress(acc[0]));
-          dispatch(clearBundleAddresses());
-          dispatch(setBundleFetched(false));
+          dispatch(setDisplayAddress({ address: acc[0], type: PortfolioEnum.BUNDLE }));
+          dispatch(clearAddresses(PortfolioEnum.BUNDLE));
+          dispatch(setHasFetched({ hasFetched: false, type: PortfolioEnum.BUNDLE }));
         }
       };
 

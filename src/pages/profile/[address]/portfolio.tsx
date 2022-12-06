@@ -59,17 +59,17 @@ const ProfilePortfolioPage = () => {
         <Container>
           <div className="flex flex-col items-center gap-y-30">
             <ChainSummaryCard page={PortfolioEnum.PROFILE} currentChains={currentChains} />
-            <WalletTableGroup page="profile" currentChains={currentChains} />
-            <HexTableGroup page="profile" currentChains={currentChains} />
-            <PhiatTableGroup page="profile" currentChains={currentChains} />
-            <PhamousTableGroup page="profile" currentChains={currentChains} />
-            <PulsexTableGroup page="profile" currentChains={currentChains} />
-            <PancakeTableGroup page="profile" currentChains={currentChains} />
-            <SushiTableGroup page="profile" currentChains={currentChains} />
-            <UniV2TableGroup page="profile" currentChains={currentChains} />
-            <UniV3TableGroup page="profile" currentChains={currentChains} />
-            <HedronTableGroup page="profile" currentChains={currentChains} />
-            <XenTableGroup page="profile" currentChains={currentChains} />
+            <WalletTableGroup page={PortfolioEnum.PROFILE} currentChains={currentChains} />
+            <HexTableGroup page={PortfolioEnum.PROFILE} currentChains={currentChains} />
+            <PhiatTableGroup page={PortfolioEnum.PROFILE} currentChains={currentChains} />
+            <PhamousTableGroup page={PortfolioEnum.PROFILE} currentChains={currentChains} />
+            <PulsexTableGroup page={PortfolioEnum.PROFILE} currentChains={currentChains} />
+            <PancakeTableGroup page={PortfolioEnum.PROFILE} currentChains={currentChains} />
+            <SushiTableGroup page={PortfolioEnum.PROFILE} currentChains={currentChains} />
+            <UniV2TableGroup page={PortfolioEnum.PROFILE} currentChains={currentChains} />
+            <UniV3TableGroup page={PortfolioEnum.PROFILE} currentChains={currentChains} />
+            <HedronTableGroup page={PortfolioEnum.PROFILE} currentChains={currentChains} />
+            <XenTableGroup page={PortfolioEnum.PROFILE} currentChains={currentChains} />
           </div>
         </Container>
       </div>

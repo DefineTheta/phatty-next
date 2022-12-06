@@ -2,53 +2,33 @@ import TableHeader from '@app-src/common/components/table/TableHeader';
 import TableWrapper from '@app-src/common/components/table/TableWrapper';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { fetchBundlePhamousData } from '@app-src/store/bundles/bundleSlice';
+import { fetchPhamousData } from '@app-src/store/portfolio/portfolioSlice';
 import {
-  selectBundlePhamousError,
-  selectBundlePhamousLoading,
-  selectBundlePhamousTotal,
-  selectBundlePhamousTotalTSharesPercentage
-} from '@app-src/store/bundles/selectors';
-import { fetchPhamousData } from '@app-src/store/protocol/protocolSlice';
-import {
-  selectProfilePhamousError,
-  selectProfilePhamousLoading,
-  selectProfilePhamousTotal,
-  selectProfilePhamousTotalTSharesPercentage
-} from '@app-src/store/protocol/selectors';
+  selectPhamousError,
+  selectPhamousLoading,
+  selectPhamousTotal,
+  selectPhamousTotalTSharesPercentage
+} from '@app-src/store/portfolio/selectors';
 import { useCallback, useMemo } from 'react';
-import { PortfolioChain } from '../../types/portfolio';
+import { Portfolio, PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
 import { isInCurrentChains } from '../../utils/misc';
 import PhamousLiquidityTable from './PhamousLiquidityTable';
 import PhamousStakeTable from './PhamousStakeTable';
 
 type IPhamousTableGroupProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   currentChains: PortfolioChain[];
 };
 
 const PhamousTableGroup = ({ page, currentChains }: IPhamousTableGroupProps) => {
   const dispatch = useAppDispatch();
 
-  const phamousTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectProfilePhamousTotal : selectBundlePhamousTotal, [page])
-  );
-  const loading = useAppSelector(
-    useCallback(page === 'profile' ? selectProfilePhamousLoading : selectBundlePhamousLoading, [
-      page
-    ])
-  );
-  const error = useAppSelector(
-    useCallback(page === 'profile' ? selectProfilePhamousError : selectBundlePhamousError, [page])
-  );
+  const phamousTotal = useAppSelector(useCallback(selectPhamousTotal(page), [page]));
+  const loading = useAppSelector(useCallback(selectPhamousLoading(page), [page]));
+  const error = useAppSelector(useCallback(selectPhamousError(page), [page]));
   const phamousSeaCreature = useAppSelector(
-    useCallback(
-      page === 'profile'
-        ? selectProfilePhamousTotalTSharesPercentage
-        : selectBundlePhamousTotalTSharesPercentage,
-      []
-    )
+    useCallback(selectPhamousTotalTSharesPercentage(page), [page])
   );
 
   const styledPhamousTotal = useMemo(
@@ -59,10 +39,7 @@ const PhamousTableGroup = ({ page, currentChains }: IPhamousTableGroupProps) => 
     [phamousTotal, phamousSeaCreature]
   );
 
-  const fetchTableData = useCallback(() => {
-    if (page === 'profile') dispatch(fetchPhamousData());
-    else dispatch(fetchBundlePhamousData());
-  }, [page, dispatch]);
+  const fetchTableData = useCallback(() => dispatch(fetchPhamousData(page)), [page, dispatch]);
 
   if ((!loading && !error && phamousTotal === 0) || !isInCurrentChains('TPLS', currentChains)) {
     return null;

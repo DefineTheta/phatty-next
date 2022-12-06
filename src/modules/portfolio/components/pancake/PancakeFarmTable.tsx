@@ -5,25 +5,21 @@ import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
-import { selectBundlePancakeFarmingData } from '@app-src/store/bundles/selectors';
-import { selectPancakeFarmingData } from '@app-src/store/protocol/selectors';
+import { selectPancakeFarmingData } from '@app-src/store/portfolio/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import useSort from '../../hooks/useSort';
+import { Portfolio } from '../../types/portfolio';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IPancakeFarmTable = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   loading: boolean;
 };
 
 const PancakeFarmTable = ({ page, loading }: IPancakeFarmTable) => {
-  const pancakeFarmData = useSelector(
-    useCallback(page === 'profile' ? selectPancakeFarmingData : selectBundlePancakeFarmingData, [
-      page
-    ])
-  );
+  const pancakeFarmData = useSelector(useCallback(selectPancakeFarmingData(page), [page]));
 
   const [sortedPancakeFarmData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof pancakeFarmData[number]
