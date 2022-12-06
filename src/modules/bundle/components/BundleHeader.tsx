@@ -2,10 +2,10 @@ import Container from '@app-src/common/components/layout/Container';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { truncateAddress } from '@app-src/common/utils/format';
-import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
+import { PortfolioChain, PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
-import { fetchBundlePortfolioData } from '@app-src/store/bundles/bundleSlice';
-import { selectBundleAddresses, selectBundleChainsTotal } from '@app-src/store/bundles/selectors';
+import { fetchPortfolioData } from '@app-src/store/portfolio/portfolioSlice';
+import { selectAddresses, selectChainsTotal } from '@app-src/store/portfolio/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -22,9 +22,9 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
   const dispatch = useAppDispatch();
 
   const total = useAppSelector(
-    useCallback(selectBundleChainsTotal(currentChains), [currentChains])
+    useCallback(selectChainsTotal(currentChains, PortfolioEnum.BUNDLE), [currentChains])
   );
-  const bundleAddresses = useAppSelector(useCallback(selectBundleAddresses, []));
+  const bundleAddresses = useAppSelector(useCallback(selectAddresses(PortfolioEnum.BUNDLE), []));
 
   const styledTotal = useMemo(() => formatToMoney(total), [total]);
 
@@ -65,7 +65,7 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
   }, [address]);
 
   const handleRefreshDataClick = useCallback(() => {
-    fetchBundlePortfolioData(dispatch, bundleAddresses, true);
+    fetchPortfolioData(dispatch, bundleAddresses, PortfolioEnum.BUNDLE, true);
   }, [dispatch, bundleAddresses]);
 
   return (

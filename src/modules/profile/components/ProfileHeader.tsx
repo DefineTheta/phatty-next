@@ -60,7 +60,7 @@ const ProfileHeader = ({ address, currentChains }: IProfileHeaderProps) => {
   }, [address]);
 
   const handleRefreshDataClick = useCallback(() => {
-    fetchPortfolioData(dispatch, [address], true, PortfolioEnum.PROFILE);
+    fetchPortfolioData(dispatch, [address], PortfolioEnum.PROFILE, true);
   }, [dispatch, address]);
 
   return (

@@ -570,8 +570,8 @@ const fetchPortfolioData = (
     dispatch(fetchUniV2Data({ addresses, refresh, type })),
     dispatch(fetchUniV3Data({ addresses, refresh, type })),
     dispatch(fetchHedronData({ addresses, refresh, type })),
-    dispatch(fetchPhamousData({ addresses, refresh, type })),
-    dispatch(fetchXenData({ addresses, refresh, type }))
+    dispatch(fetchPhamousData({ addresses, refresh, type }))
+    // dispatch(fetchXenData({ addresses, refresh, type }))
   ]);
 };
 

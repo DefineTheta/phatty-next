@@ -1,7 +1,7 @@
 import useBreakpoint, { Breakpoint } from '@app-src/common/hooks/useBreakpoint';
 import useClickOutside from '@app-src/common/hooks/useClickOutside';
-import { selectBundleAddress } from '@app-src/store/bundles/selectors';
-import { selectProfileAddress } from '@app-src/store/protocol/selectors';
+import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
+import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import {
   Bars3Icon,
   FlagIcon,
@@ -17,8 +17,8 @@ import { useSelector } from 'react-redux';
 const SideBar = () => {
   const router = useRouter();
 
-  const profileAddress = useSelector(useCallback(selectProfileAddress, []));
-  const bundleAddress = useSelector(useCallback(selectBundleAddress, []));
+  const profileAddress = useSelector(useCallback(selectDisplayAddress(PortfolioEnum.PROFILE), []));
+  const bundleAddress = useSelector(useCallback(selectDisplayAddress(PortfolioEnum.BUNDLE), []));
 
   const currentTab = useMemo(() => router.pathname.split('/').at(1), [router]);
 

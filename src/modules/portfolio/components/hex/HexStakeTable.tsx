@@ -22,7 +22,7 @@ type IHexStakeTableProps = {
 };
 
 const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
-  const hexStakeData = useAppSelector(useCallback(selectHexStakeData(page), [page, chain]));
+  const hexStakeData = useAppSelector(useCallback(selectHexStakeData(chain, page), [page, chain]));
 
   const [sortedHexStakeData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof hexStakeData[number]
