@@ -57,15 +57,16 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
       //   dispatch(fetchBundleAddresses());
       // });
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const arr = router.asPath.split('/');
 
     if (arr.length > 3 && arr[2] !== '[address]') {
-      if (arr[1] === 'profile') dispatch(setProfileAddress(arr[2]));
+      if (arr[1] === 'profile')
+        dispatch(setDisplayAddress({ address: arr[2], type: PortfolioEnum.PROFILE }));
     }
-  }, [router.asPath]);
+  }, [dispatch, router.asPath]);
 
   return (
     <div className="flex w-full flex-row bg-background-100">

@@ -6,6 +6,7 @@ import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { howLongAgo } from '@app-src/common/utils/time';
+import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { fetchProfileHistory, setHistoryHasFetched } from '@app-src/store/history/historySlice';
 import {
@@ -13,7 +14,7 @@ import {
   selectProfileHistoryFetched,
   selectProfileHistoryLoading
 } from '@app-src/store/history/selectors';
-import { selectProfileAddress } from '@app-src/store/protocol/selectors';
+import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import Image from 'next/image';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -21,7 +22,7 @@ import { useSelector } from 'react-redux';
 const HistoryTable = () => {
   const dispatch = useAppDispatch();
 
-  const profileAddress = useSelector(useCallback(selectProfileAddress, []));
+  const profileAddress = useSelector(useCallback(selectDisplayAddress(PortfolioEnum.PROFILE), []));
   const profileHistorData = useSelector(useCallback(selectProfileHistory, []));
 
   const hasFetched = useSelector(useCallback(selectProfileHistoryFetched, []));

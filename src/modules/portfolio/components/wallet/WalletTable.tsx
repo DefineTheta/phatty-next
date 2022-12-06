@@ -21,7 +21,7 @@ type IWalletTableProps = {
 };
 
 const WalletTable = ({ page, chains, loading }: IWalletTableProps) => {
-  const walletData = useSelector(useCallback(selectWalletData(chains), [page, chains]));
+  const walletData = useSelector(useCallback(selectWalletData(chains, page), [page, chains]));
 
   const [filteredWalletData, isFiltered, setIsFiltered] = useFilter<typeof walletData[number]>(
     walletData,
