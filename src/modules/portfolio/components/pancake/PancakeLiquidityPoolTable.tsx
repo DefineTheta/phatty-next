@@ -5,26 +5,21 @@ import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
-import { selectBundlePancakeLiquidityPoolData } from '@app-src/store/bundles/selectors';
-import { selectPancakeLiquidityPoolData } from '@app-src/store/protocol/selectors';
+import { selectPancakeLiquidityPoolData } from '@app-src/store/portfolio/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import useSort from '../../hooks/useSort';
+import { Portfolio } from '../../types/portfolio';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IPancakeLiquidityPoolTable = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   loading: boolean;
 };
 
 const PancakeLiquidityPoolTable = ({ page, loading }: IPancakeLiquidityPoolTable) => {
-  const pancakeLPData = useSelector(
-    useCallback(
-      page === 'profile' ? selectPancakeLiquidityPoolData : selectBundlePancakeLiquidityPoolData,
-      [page]
-    )
-  );
+  const pancakeLPData = useSelector(useCallback(selectPancakeLiquidityPoolData(page), [page]));
 
   const [sortedPancakeLPData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof pancakeLPData[number]

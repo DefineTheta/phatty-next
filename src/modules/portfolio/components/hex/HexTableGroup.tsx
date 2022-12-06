@@ -2,67 +2,36 @@ import TableHeader from '@app-src/common/components/table/TableHeader';
 import TableWrapper from '@app-src/common/components/table/TableWrapper';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
-import { fetchBundleHexData } from '@app-src/store/bundles/bundleSlice';
-import {
-  selectBundleHexComponentTotal,
-  selectBundleHexError,
-  selectBundleHexStakeLoading,
-  selectBundleHexToatlTSharesPercentage
-} from '@app-src/store/bundles/selectors';
-import { fetchHexData } from '@app-src/store/protocol/protocolSlice';
+import { Portfolio, PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
+import { fetchHexData } from '@app-src/store/portfolio/portfolioSlice';
 import {
   selectHexComponentTotal,
+  selectHexError,
   selectHexStakeLoading,
-  selectHexToatlTSharesPercentage,
-  selectProfileHexError
-} from '@app-src/store/protocol/selectors';
+  selectHexToatlTSharesPercentage
+} from '@app-src/store/portfolio/selectors';
 import { useCallback, useMemo } from 'react';
 import { formatToMoney } from '../../utils/format';
 import { isInCurrentChains } from '../../utils/misc';
 import HexStakeTable from './HexStakeTable';
 
 type IHexTableGroupProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   currentChains: PortfolioChain[];
 };
 
 const HexTableGroup = ({ page, currentChains }: IHexTableGroupProps) => {
   const dispatch = useAppDispatch();
 
-  const hexEthTotal = useAppSelector(
-    useCallback(
-      page === 'profile' ? selectHexComponentTotal('ETH') : selectBundleHexComponentTotal('ETH'),
-      [page]
-    )
-  );
-  const hexTplsTotal = useAppSelector(
-    useCallback(
-      page === 'profile' ? selectHexComponentTotal('TPLS') : selectBundleHexComponentTotal('TPLS'),
-      [page]
-    )
-  );
-  const loading = useAppSelector(
-    useCallback(page === 'profile' ? selectHexStakeLoading : selectBundleHexStakeLoading, [page])
-  );
-  const error = useAppSelector(
-    useCallback(page === 'profile' ? selectProfileHexError : selectBundleHexError, [page])
-  );
+  const hexEthTotal = useAppSelector(useCallback(selectHexComponentTotal('ETH', page), [page]));
+  const hexTplsTotal = useAppSelector(useCallback(selectHexComponentTotal('TPLS', page), [page]));
+  const loading = useAppSelector(useCallback(selectHexStakeLoading(page), [page]));
+  const error = useAppSelector(useCallback(selectHexError(page), [page]));
   const hexEthSeaCreature = useAppSelector(
-    useCallback(
-      page === 'profile'
-        ? selectHexToatlTSharesPercentage('ETH')
-        : selectBundleHexToatlTSharesPercentage('ETH'),
-      []
-    )
+    useCallback(selectHexToatlTSharesPercentage('ETH', page), [])
   );
   const hexTplsSeaCreature = useAppSelector(
-    useCallback(
-      page === 'profile'
-        ? selectHexToatlTSharesPercentage('TPLS')
-        : selectBundleHexToatlTSharesPercentage('TPLS'),
-      []
-    )
+    useCallback(selectHexToatlTSharesPercentage('TPLS', page), [])
   );
 
   const styledHexEthTotal = useMemo(
@@ -80,10 +49,7 @@ const HexTableGroup = ({ page, currentChains }: IHexTableGroupProps) => {
     [hexTplsTotal, hexTplsSeaCreature]
   );
 
-  const fetchTableData = useCallback(() => {
-    if (page === 'profile') dispatch(fetchHexData());
-    else dispatch(fetchBundleHexData());
-  }, [page, dispatch]);
+  const fetchTableData = useCallback(() => dispatch(fetchHexData(page)), [page, dispatch]);
 
   if (
     (!loading && !error && hexEthTotal + hexTplsTotal === 0) ||

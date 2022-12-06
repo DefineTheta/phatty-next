@@ -2,48 +2,33 @@ import TableHeader from '@app-src/common/components/table/TableHeader';
 import TableWrapper from '@app-src/common/components/table/TableWrapper';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { fetchBundleXenData } from '@app-src/store/bundles/bundleSlice';
+import { fetchXenData } from '@app-src/store/portfolio/portfolioSlice';
 import {
-  selectBundleXenError,
-  selectBundleXenLoading,
-  selectBundleXenTotal
-} from '@app-src/store/bundles/selectors';
-import { fetchXenData } from '@app-src/store/protocol/protocolSlice';
-import {
-  selectProfileXenError,
-  selectProfileXenLoading,
-  selectProfileXenTotal
-} from '@app-src/store/protocol/selectors';
+  selectXenError,
+  selectXenLoading,
+  selectXenTotal
+} from '@app-src/store/portfolio/selectors';
 import { useCallback, useMemo } from 'react';
-import { PortfolioChain } from '../../types/portfolio';
+import { Portfolio, PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
 import XenMintTable from './XenMintTable';
 import XenStakeTable from './XenStakeTable';
 
 type IXenTableGroupProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   currentChains: PortfolioChain[];
 };
 
 const XenTableGroup = ({ page, currentChains }: IXenTableGroupProps) => {
   const dispatch = useAppDispatch();
 
-  const xenTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectProfileXenTotal : selectBundleXenTotal, [page])
-  );
-  const loading = useAppSelector(
-    useCallback(page === 'profile' ? selectProfileXenLoading : selectBundleXenLoading, [page])
-  );
-  const error = useAppSelector(
-    useCallback(page === 'profile' ? selectProfileXenError : selectBundleXenError, [page])
-  );
+  const xenTotal = useAppSelector(useCallback(selectXenTotal(page), [page]));
+  const loading = useAppSelector(useCallback(selectXenLoading(page), [page]));
+  const error = useAppSelector(useCallback(selectXenError(page), [page]));
 
   const styledXenTotal = useMemo(() => formatToMoney(xenTotal), [xenTotal]);
 
-  const fetchTableData = useCallback(() => {
-    if (page === 'profile') dispatch(fetchXenData());
-    else dispatch(fetchBundleXenData());
-  }, [page, dispatch]);
+  const fetchTableData = useCallback(() => dispatch(fetchXenData(page)), [page, dispatch]);
 
   if (!loading && !error && xenTotal === 0) {
     return null;

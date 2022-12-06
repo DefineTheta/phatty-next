@@ -6,25 +6,22 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { selectBundleHedronStakeData } from '@app-src/store/bundles/selectors';
-import { selectProfileHedronStakeData } from '@app-src/store/protocol/selectors';
+import { selectHedronStakeData } from '@app-src/store/portfolio/selectors';
 import { HedronDataComponentEnum } from '@app-src/store/protocol/types';
 import { useCallback } from 'react';
 import useSort from '../../hooks/useSort';
+import { Portfolio } from '../../types/portfolio';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IHedronStakeTableProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   chain: keyof typeof HedronDataComponentEnum;
   loading: boolean;
 };
 
 const HedronStakeTable = ({ page, chain, loading }: IHedronStakeTableProps) => {
   const hedronStakeData = useAppSelector(
-    useCallback(
-      page === 'profile' ? selectProfileHedronStakeData(chain) : selectBundleHedronStakeData(chain),
-      []
-    )
+    useCallback(selectHedronStakeData(chain, page), [chain, page])
   );
 
   const [sortedHedronStakeData, sortKey, sortOrder, handleTableHeaderClick] = useSort<

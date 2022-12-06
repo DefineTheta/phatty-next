@@ -6,25 +6,20 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { selectBundleSushiLiquidityPoolData } from '@app-src/store/bundles/selectors';
-import { selectSushiLiquidityPoolData } from '@app-src/store/protocol/selectors';
+import { selectSushiLiquidityPoolData } from '@app-src/store/portfolio/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import useSort from '../../hooks/useSort';
+import { Portfolio } from '../../types/portfolio';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type ISushiLiquidityPoolTableProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   loading: boolean;
 };
 
 const SushiLiquidityPoolTable = ({ page, loading }: ISushiLiquidityPoolTableProps) => {
-  const sushiLPData = useAppSelector(
-    useCallback(
-      page === 'profile' ? selectSushiLiquidityPoolData : selectBundleSushiLiquidityPoolData,
-      [page]
-    )
-  );
+  const sushiLPData = useAppSelector(useCallback(selectSushiLiquidityPoolData(page), [page]));
 
   const [sortedSushiLPData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof sushiLPData[number]

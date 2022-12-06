@@ -6,26 +6,21 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { selectBundleXenComponentData } from '@app-src/store/bundles/selectors';
-import { selectProfileXenComponentData } from '@app-src/store/protocol/selectors';
+import { selectXenComponentData } from '@app-src/store/portfolio/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import useSort from '../../hooks/useSort';
+import { Portfolio } from '../../types/portfolio';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IXenMintTableProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   loading: boolean;
 };
 
 const XenMintTable = ({ page, loading }: IXenMintTableProps) => {
   const xenMintingData = useAppSelector(
-    useCallback(
-      page === 'profile'
-        ? selectProfileXenComponentData('MINTING')
-        : selectBundleXenComponentData('MINTING'),
-      [page]
-    )
+    useCallback(selectXenComponentData('MINTING', page), [page])
   );
 
   const [sortedXenMintingData, sortKey, sortOrder, handleTableHeaderClick] = useSort<

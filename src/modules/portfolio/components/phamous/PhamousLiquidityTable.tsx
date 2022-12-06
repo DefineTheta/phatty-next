@@ -6,25 +6,20 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { selectBundlePhamousComponentData } from '@app-src/store/bundles/selectors';
-import { selectProfilePhamousComponentData } from '@app-src/store/protocol/selectors';
+import { selectPhamousComponentData } from '@app-src/store/portfolio/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
+import { Portfolio } from '../../types/portfolio';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IPhamousLiquidityTableProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   loading: boolean;
 };
 
 const PhamousLiquidityTable = ({ page, loading }: IPhamousLiquidityTableProps) => {
   const phamousLiquidityData = useAppSelector(
-    useCallback(
-      page === 'profile'
-        ? selectProfilePhamousComponentData('LIQUIDITY_PROVIDING')
-        : selectBundlePhamousComponentData('LIQUIDITY_PROVIDING'),
-      [page]
-    )
+    useCallback(selectPhamousComponentData('LIQUIDITY_PROVIDING', page), [page])
   );
 
   if (loading) {

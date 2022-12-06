@@ -53,7 +53,7 @@ import {
 type FetchDataInput = { addresses: string[]; refresh: boolean; type: Portfolio } | Portfolio;
 
 const initialPortfolioData: PortfolioData = {
-  bundleAddress: '',
+  displayAddress: '',
   addresses: [],
   hasFetched: false,
   [ProtocolEnum.WALLET]: {
@@ -580,11 +580,11 @@ export const portfolioSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
-    clearBundleAddresses: (state) => {
-      state.addresses = [];
+    clearAddresses: (state, action: PayloadAction<Portfolio>) => {
+      state[action.payload].addresses = [];
     },
-    setBundleAddress: (state, action: PayloadAction<string>) => {
-      state.bundleAddress = action.payload;
+    setDisplayAddress: (state, action: PayloadAction<{ address: string; type: Portfolio }>) => {
+      state[action.payload.type].displayAddress = action.payload.address;
     },
     setHasFetched: (state, action: PayloadAction<{ hasFetched: boolean; type: Portfolio }>) => {
       state[action.payload.type].hasFetched = action.payload.hasFetched;
@@ -1030,8 +1030,7 @@ export const portfolioSlice = createSlice({
   }
 });
 
-export const { reset, setHasFetched, setBundleAddress, clearBundleAddresses } =
-  portfolioSlice.actions;
+export const { reset, setHasFetched, setDisplayAddress, clearAddresses } = portfolioSlice.actions;
 
 export {
   fetchBundleAddresses,
