@@ -587,6 +587,9 @@ export const portfolioSlice = createSlice({
     setDisplayAddress: (state, action: PayloadAction<{ address: string; type: Portfolio }>) => {
       state[action.payload.type].displayAddress = action.payload.address;
     },
+    setAddresses: (state, action: PayloadAction<{ addresses: string[]; type: Portfolio }>) => {
+      state[action.payload.type].addresses = action.payload.addresses;
+    },
     setHasFetched: (state, action: PayloadAction<{ hasFetched: boolean; type: Portfolio }>) => {
       state[action.payload.type].hasFetched = action.payload.hasFetched;
     }
@@ -1031,7 +1034,8 @@ export const portfolioSlice = createSlice({
   }
 });
 
-export const { reset, setHasFetched, setDisplayAddress, clearAddresses } = portfolioSlice.actions;
+export const { reset, setHasFetched, setDisplayAddress, setAddresses, clearAddresses } =
+  portfolioSlice.actions;
 
 export {
   fetchBundleAddresses,
