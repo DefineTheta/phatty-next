@@ -1,7 +1,7 @@
 import Container from '@app-src/common/components/layout/Container';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import BundleHeader from '@app-src/modules/bundle/components/BundleHeader';
+import PublicBundleHeader from '@app-src/modules/bundle/components/PublicBundleHeader';
 import ChainSummaryCard from '@app-src/modules/chain/components/ChainSummaryCard';
 import HedronTableGroup from '@app-src/modules/portfolio/components/hedron/HedronTableGroup';
 import HexTableGroup from '@app-src/modules/portfolio/components/hex/HexTableGroup';
@@ -18,9 +18,14 @@ import {
   isArrayOfPortfolioChain,
   PortfolioChain,
   PublicBundleAddresses,
-  PublicBundleLookup
+  PublicBundleLookup,
+  PublicBundleName
 } from '@app-src/modules/portfolio/types/portfolio';
-import { fetchPortfolioData, setHasFetched } from '@app-src/store/portfolio/portfolioSlice';
+import {
+  fetchPortfolioData,
+  setAddresses,
+  setHasFetched
+} from '@app-src/store/portfolio/portfolioSlice';
 import { selectHasFetched } from '@app-src/store/portfolio/selectors';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -29,15 +34,14 @@ const BundlePublicPortfolioPage = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const index = useMemo(() => Number(router.asPath.split('/').at(-1)), [router]);
-  const addresses = useMemo(() => (!isNaN(index) ? PublicBundleAddresses[index] : []), [index]);
+  const index = useMemo(() => Number(router.asPath.split('/').at(-1)?.split('?')[0]), [router]);
   const portfolioType = useMemo(
     () => (!isNaN(index) ? PublicBundleLookup[index] : undefined),
     [index]
   );
-  console.log(index);
-  console.log(addresses);
+  const addresses = useMemo(() => (!isNaN(index) ? PublicBundleAddresses[index] : []), [index]);
 
+  // const addresses = useAppSelector(useCallback(selectAddresses(portfolioType)), [portfolioType]);
   const hasFetched = useAppSelector(useCallback(selectHasFetched(portfolioType), [portfolioType]));
 
   const [currentChains, setCurrentChains] = useState<PortfolioChain[]>([]);
@@ -51,6 +55,12 @@ const BundlePublicPortfolioPage = () => {
   //     };
   //   }
   // }, [dispatch, hasFetched, bundleAddress]);
+
+  useEffect(() => {
+    if (!portfolioType || !addresses || addresses.length === 0) return;
+
+    dispatch(setAddresses({ addresses, type: portfolioType }));
+  }, [dispatch, addresses, portfolioType]);
 
   useEffect(() => {
     if (hasFetched || !portfolioType || !addresses || addresses.length === 0) return;
@@ -73,7 +83,11 @@ const BundlePublicPortfolioPage = () => {
   if (portfolioType) {
     return (
       <div className="flex flex-col gap-y-24">
-        <BundleHeader address={''} currentChains={currentChains} />
+        <PublicBundleHeader
+          page={portfolioType}
+          currentChains={currentChains}
+          displayName={PublicBundleName[index]}
+        />
         <div className="flex w-full justify-center">
           <Container>
             <div className="flex w-full flex-col items-center gap-y-30">
