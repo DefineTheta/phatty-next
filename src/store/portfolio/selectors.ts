@@ -28,9 +28,10 @@ import {
   XenDataComponent
 } from './types';
 
-export const selectHasFetched = (type: Portfolio) =>
+export const selectHasFetched = (type?: Portfolio) =>
   memoize((state: RootState) => {
     console.log('SELCT_HAS_FETCHED');
+    if (!type) return false;
 
     return state.portfolio[type].hasFetched;
   });

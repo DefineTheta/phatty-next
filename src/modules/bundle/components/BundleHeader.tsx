@@ -41,6 +41,11 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
         href: `/bundle/${encodeURIComponent(address)}/portfolio`
       },
       {
+        displayName: 'Public',
+        name: 'public',
+        href: `/bundle/public/public`
+      },
+      {
         displayName: 'NFT',
         name: 'nft',
         href: `/bundle/${encodeURIComponent(address)}/portfolio`
@@ -107,7 +112,7 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
           </div>
           <div className="flex flex-row items-center gap-x-30">
             {tabs.map((tab) => (
-              <Link key={tab.name} href={address ? tab.href : '/bundle'}>
+              <Link key={tab.name} href={address || tab.name === 'public' ? tab.href : '/bundle'}>
                 <a
                   className={`cursor-pointer px-10 pb-6 text-base font-bold ${
                     tab.name === currentTab

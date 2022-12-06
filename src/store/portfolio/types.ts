@@ -204,7 +204,8 @@ export interface PortfolioData {
 
 export const PortfolioEnum = {
   PROFILE: 'PROFILE',
-  BUNDLE: 'BUNDLE'
+  BUNDLE: 'BUNDLE',
+  PUBLICONE: 'PUBLICONE'
 } as const;
 
 export type Portfolio = typeof PortfolioEnum[keyof typeof PortfolioEnum];

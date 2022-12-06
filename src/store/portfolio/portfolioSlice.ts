@@ -204,7 +204,8 @@ const initialPortfolioData: PortfolioData = {
 
 const initialState: PortfolioState = {
   [PortfolioEnum.PROFILE]: initialPortfolioData,
-  [PortfolioEnum.BUNDLE]: initialPortfolioData
+  [PortfolioEnum.BUNDLE]: initialPortfolioData,
+  [PortfolioEnum.PUBLICONE]: initialPortfolioData
 };
 
 const fetchBundleAddresses = createAsyncThunk<BundleResponse, void, { state: RootState }>(
