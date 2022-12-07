@@ -6,6 +6,7 @@ import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { truncateAddress } from '@app-src/common/utils/format';
 import BundleHeader from '@app-src/modules/bundle/components/BundleHeader';
+import { PublicBundleName } from '@app-src/modules/portfolio/types/portfolio';
 import Link from 'next/link';
 import { useMemo } from 'react';
 
@@ -25,7 +26,8 @@ const BundlePublicPage = () => {
     () =>
       publicBundleAddresses.map((addresses, index) => ({
         addresses,
-        displayName: addresses.reduce(
+        displayName: PublicBundleName[index],
+        walletDisplayName: addresses.reduce(
           (name, address, index) => `${index !== 0 ? `${name} |` : ''} ${truncateAddress(address)}`,
           ''
         ),
@@ -42,15 +44,17 @@ const BundlePublicPage = () => {
           <Card>
             <TableHeaderRow>
               <TableHeaderRowCell className="basis-1/12">No.</TableHeaderRowCell>
-              <TableHeaderRowCell className="basis-11/12">Wallets</TableHeaderRowCell>
+              <TableHeaderRowCell className="basis-2/12">Name</TableHeaderRowCell>
+              <TableHeaderRowCell className="basis-9/12">Wallets</TableHeaderRowCell>
             </TableHeaderRow>
             {publicBundles.map((bundle, index) => (
               <TableRow key={index}>
                 <TableRowCell className="basis-1/12">{index + 1}</TableRowCell>
-                <TableRowCell className="basis-11/12">
+                <TableRowCell className="basis-2/12">{bundle.displayName}</TableRowCell>
+                <TableRowCell className="basis-9/12">
                   <Link href={bundle.href}>
-                    <a className="bg-purple-a cursor-pointer rounded-full px-10 py-1 text-md font-bold text-text-200 underline underline-offset-2">
-                      {bundle.displayName}
+                    <a className="bg-purple-a cursor-pointer rounded-full text-md font-bold text-text-200 underline underline-offset-2">
+                      {bundle.walletDisplayName}
                     </a>
                   </Link>
                 </TableRowCell>

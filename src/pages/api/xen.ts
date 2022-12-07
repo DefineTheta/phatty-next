@@ -118,8 +118,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     if (!price) return res.status(500).end();
 
-    const xenPrice = price['XEN'];
-
     const stakingData: XenStakeItem[] = [];
     const mintingData: XenMintItem[] = [];
     let stakingTotal = 0;
@@ -130,6 +128,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     for (let i = (page - 1) * 5; i < (isLastPage ? contracts.length : page * 5); i++) {
       const data = contracts[i];
+      const xenPrice = price[`XEN_${data.name}`] || price['XEN'];
+
       promises.push(calculateXen(data.contract, address, xenPrice, data.name));
     }
 

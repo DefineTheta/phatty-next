@@ -107,84 +107,87 @@ export const tokenImages: Record<string, string> = {
   BEETS: '/img/tokens/beets.webp'
 };
 
-const coingeckoIds = [
-  'ethereum',
-  'pancakeswap-token',
-  'hex',
-  'hedron',
-  'usd-coin',
-  'tether',
-  'binance-usd',
-  'matic-network',
-  'shiba-inu',
-  'weth',
-  'chainlink',
-  'dai',
-  'genesis-mana',
-  'binancecoin',
-  'fantom',
-  'wise-token11',
-  'wrapped-bitcoin',
-  'staked-ether',
-  'near',
-  'apecoin',
-  'wrapped-filecoin',
-  'stp-network',
-  'the-sandbox',
-  'chiliz',
-  'theta-token',
-  'zilliqa',
-  'gala',
-  'amber',
-  'gmt-token',
-  'true-usd',
-  'the-graph',
-  'status',
-  'aergo',
-  'ethereum-name-service',
-  'lido-dao',
-  'bitdao',
-  'vendetta-finance',
-  'enjincoin',
-  'dydx',
-  'harmony',
-  'marlin',
-  'polymath',
-  'stargate-finance',
-  'havven',
-  'omisego',
-  'power-ledger',
-  'sushi',
-  'basic-attention-token',
-  '1inch',
-  'yearn-finance',
-  'golem',
-  'wbnb',
-  'synapse-2',
-  'uniswap',
-  'avalanche-2',
-  'wrapped-avax',
-  'frax',
-  'aave',
-  'xen-crypto',
-  'maximus',
-  'wmatic',
-  'projectmars',
-  'wrapped-fantom',
-  'spookyswap',
-  'spiritswap',
-  'tomb',
-  'tomb-shares',
-  'liquiddriver',
-  'spell-token',
-  'mangamon',
-  'beethoven-x',
-  'magic-internet-money',
-  'moonbeam',
-  'dogecoin',
-  'evmos',
-  'oec-token',
-  'ethereum-pow-iou'
+const defiLlamaPriceQueryData = [
+  { type: 'coingecko', symbol: 'ETH', id: 'ethereum' },
+  { type: 'coingecko', symbol: 'CAKE', id: 'pancakeswap-token' },
+  { type: 'coingecko', symbol: 'HEX', id: 'hex' },
+  { type: 'coingecko', symbol: 'HDRN', id: 'hedron' },
+  { type: 'coingecko', symbol: 'USDC', id: 'usd-coin' },
+  { type: 'coingecko', symbol: 'USDT', id: 'tether' },
+  { type: 'coingecko', symbol: 'BUSD', id: 'binance-usd' },
+  { type: 'coingecko', symbol: 'MATIC', id: 'matic-network' },
+  { type: 'coingecko', symbol: 'SHIB', id: 'shiba-inu' },
+  { type: 'coingecko', symbol: 'WETH', id: 'weth' },
+  { type: 'coingecko', symbol: 'LINK', id: 'chainlink' },
+  { type: 'coingecko', symbol: 'DAI', id: 'dai' },
+  { type: 'coingecko', symbol: 'MANA', id: 'genesis-mana' },
+  { type: 'coingecko', symbol: 'BNB', id: 'binancecoin' },
+  { type: 'coingecko', symbol: 'FTM', id: 'fantom' },
+  { type: 'coingecko', symbol: 'WISE', id: 'wise-token11' },
+  { type: 'coingecko', symbol: 'WBTC', id: 'wrapped-bitcoin' },
+  { type: 'coingecko', symbol: 'STETH', id: 'staked-ether' },
+  { type: 'coingecko', symbol: 'NEAR', id: 'near' },
+  { type: 'coingecko', symbol: 'APE', id: 'apecoin' },
+  { type: 'coingecko', symbol: 'WFIL', id: 'wrapped-filecoin' },
+  { type: 'coingecko', symbol: 'STPT', id: 'stp-network' },
+  { type: 'coingecko', symbol: 'SAND', id: 'the-sandbox' },
+  { type: 'coingecko', symbol: 'CHZ', id: 'chiliz' },
+  { type: 'coingecko', symbol: 'THETA', id: 'theta-token' },
+  { type: 'coingecko', symbol: 'ZIL', id: 'zilliqa' },
+  { type: 'coingecko', symbol: 'GALA', id: 'gala' },
+  { type: 'coingecko', symbol: 'AMB', id: 'amber' },
+  { type: 'coingecko', symbol: 'GMT', id: 'gmt-token' },
+  { type: 'coingecko', symbol: 'TUSD', id: 'true-usd' },
+  { type: 'coingecko', symbol: 'GRT', id: 'the-graph' },
+  { type: 'coingecko', symbol: 'SNT', id: 'status' },
+  { type: 'coingecko', symbol: 'AERGO', id: 'aergo' },
+  { type: 'coingecko', symbol: 'ENS', id: 'ethereum-name-service' },
+  { type: 'coingecko', symbol: 'LDO', id: 'lido-dao' },
+  { type: 'coingecko', symbol: 'BIT', id: 'bitdao' },
+  { type: 'coingecko', symbol: 'VEN', id: 'vendetta-finance' },
+  { type: 'coingecko', symbol: 'ENJ', id: 'enjincoin' },
+  { type: 'coingecko', symbol: 'DYDX', id: 'dydx' },
+  { type: 'coingecko', symbol: 'ONE', id: 'harmony' },
+  { type: 'coingecko', symbol: 'POND', id: 'marlin' },
+  { type: 'coingecko', symbol: 'POLY', id: 'polymath' },
+  { type: 'coingecko', symbol: 'STG', id: 'stargate-finance' },
+  { type: 'coingecko', symbol: 'SNX', id: 'havven' },
+  { type: 'coingecko', symbol: 'OMG', id: 'omisego' },
+  { type: 'coingecko', symbol: 'POWR', id: 'power-ledger' },
+  { type: 'coingecko', symbol: 'SUSHI', id: 'sushi' },
+  { type: 'coingecko', symbol: 'BAT', id: 'basic-attention-token' },
+  { type: 'coingecko', symbol: '1INCH', id: '1inch' },
+  { type: 'coingecko', symbol: 'YFI', id: 'yearn-finance' },
+  { type: 'coingecko', symbol: 'GLM', id: 'golem' },
+  { type: 'coingecko', symbol: 'WBNB', id: 'wbnb' },
+  { type: 'coingecko', symbol: 'SYN', id: 'synapse-2' },
+  { type: 'coingecko', symbol: 'UNI', id: 'uniswap' },
+  { type: 'coingecko', symbol: 'AVAX', id: 'avalanche-2' },
+  { type: 'coingecko', symbol: 'WAVAX', id: 'wrapped-avax' },
+  { type: 'coingecko', symbol: 'FRAX', id: 'frax' },
+  { type: 'coingecko', symbol: 'AAVE', id: 'aave' },
+  { type: 'coingecko', symbol: 'MAXI', id: 'maximus' },
+  { type: 'coingecko', symbol: 'WMATIC', id: 'wmatic' },
+  { type: 'coingecko', symbol: 'MARS', id: 'projectmars' },
+  { type: 'coingecko', symbol: 'WFTM', id: 'wrapped-fantom' },
+  { type: 'coingecko', symbol: 'BOO', id: 'spookyswap' },
+  { type: 'coingecko', symbol: 'SPIRIT', id: 'spiritswap' },
+  { type: 'coingecko', symbol: 'TOMB', id: 'tomb' },
+  { type: 'coingecko', symbol: 'TSHARE', id: 'tomb-shares' },
+  { type: 'coingecko', symbol: 'LQDR', id: 'liquiddriver' },
+  { type: 'coingecko', symbol: 'SPELL', id: 'spell-token' },
+  { type: 'coingecko', symbol: 'MAN', id: 'mangamon' },
+  { type: 'coingecko', symbol: 'BEETS', id: 'beethoven-x' },
+  { type: 'coingecko', symbol: 'MIM', id: 'magic-internet-money' },
+  { type: 'coingecko', symbol: 'GLMR', id: 'moonbeam' },
+  { type: 'coingecko', symbol: 'DOGE', id: 'dogecoin' },
+  { type: 'coingecko', symbol: 'EVMOS', id: 'evmos' },
+  { type: 'coingecko', symbol: 'OKT', id: 'oec-token' },
+  { type: 'coingecko', symbol: 'ETHW', id: 'ethereum-pow-iou' },
+  { type: 'coingecko', symbol: 'XEN', id: 'xen-crypto' },
+  { type: 'bsc', symbol: 'XEN', id: '0x2AB0e9e4eE70FFf1fB9D67031E44F6410170d00e' },
+  { type: 'polygon', symbol: 'XEN', id: '0x2AB0e9e4eE70FFf1fB9D67031E44F6410170d00e' },
+  { type: 'avax', symbol: 'XEN', id: '0xC0C5AA69Dbe4d6DDdfBc89c0957686ec60F24389' }
 ];
 
 export const chainImages: Record<string, string> = {
@@ -232,22 +235,140 @@ export const phiatTokensLookupMap = {
   }
 };
 
+const defiLlamaPriceQueryDataLookup: Record<string, number> = {
+  ETH: 0,
+  CAKE: 1,
+  HEX: 2,
+  HDRN: 3,
+  USDC: 4,
+  USDT: 5,
+  BUSD: 6,
+  MATIC: 7,
+  SHIB: 8,
+  WETH: 9,
+  LINK: 10,
+  DAI: 11,
+  MANA: 12,
+  BNB: 13,
+  FTM: 14,
+  WISE: 15,
+  WBTC: 16,
+  STETH: 17,
+  NEAR: 18,
+  APE: 19,
+  WFIL: 20,
+  STPT: 21,
+  SAND: 22,
+  CHZ: 23,
+  THETA: 24,
+  ZIL: 25,
+  GALA: 26,
+  AMB: 27,
+  GMT: 28,
+  TUSD: 29,
+  GRT: 30,
+  SNT: 31,
+  AERGO: 32,
+  ENS: 33,
+  LDO: 34,
+  BIT: 35,
+  VEN: 36,
+  ENJ: 37,
+  DYDX: 38,
+  ONE: 39,
+  POND: 40,
+  POLY: 41,
+  STG: 42,
+  SNX: 43,
+  OMG: 44,
+  POWR: 45,
+  SUSHI: 46,
+  BAT: 47,
+  '1INCH': 48,
+  YFI: 49,
+  GLM: 50,
+  WBNB: 51,
+  SYN: 52,
+  UNI: 53,
+  AVAX: 54,
+  WAVAX: 55,
+  FRAX: 56,
+  AAVE: 57,
+  MAXI: 58,
+  WMATIC: 59,
+  MARS: 60,
+  WFTM: 61,
+  BOO: 62,
+  SPIRIT: 63,
+  TOMB: 64,
+  TSHARE: 65,
+  LQDR: 66,
+  SPELL: 67,
+  MAN: 68,
+  BEETS: 69,
+  MIM: 70,
+  GLMR: 71,
+  DOGE: 72,
+  EVMOS: 73,
+  OKT: 74,
+  ETHW: 75,
+  XEN: 76,
+  bXEN: 77,
+  mXEN: 78,
+  aXEN: 79
+};
+
+type DefiLlamaPriceItem = {
+  decimals: number;
+  symbol: string;
+  price: number;
+  timestamp: number;
+  confidence: number;
+};
+
+type DefiLlamaPriceResponse = {
+  coins: Record<string, DefiLlamaPriceItem>;
+};
+
 export const DEFI_LLAMA_URL = 'https://coins.llama.fi/prices/current';
 const phiatPriceURL = 'https://phiat.exchange/px';
 
+const getDefiCoinChain = (str: string) => {
+  const parts = str.split(':');
+
+  if (parts.length < 2) return '';
+
+  switch (parts[0]) {
+    case 'bsc':
+      return 'BSC';
+    case 'polygon':
+      return 'MATIC';
+    case 'avax':
+      return 'AVAX';
+    default:
+      return '';
+  }
+};
+
 export const fetchPrices = async () => {
   try {
-    const coingeckoQueryParams = coingeckoIds.reduce((str, id) => `${str},coingecko:${id}`, '');
+    const coingeckoQueryParams = defiLlamaPriceQueryData.reduce(
+      (str, priceData) => `${str},${priceData.type}:${priceData.id}`,
+      ''
+    );
 
     const response = await fetch(`${DEFI_LLAMA_URL}/${coingeckoQueryParams}`);
-    const defiPriceData = (await response.json()) as any;
+    const defiPriceData: DefiLlamaPriceResponse = (await response.json()) as any;
 
     const tplsPriceResponse = await fetch(phiatPriceURL);
     const tplsPriceData = await tplsPriceResponse.json();
 
     let prices: any = {};
-    Object.values(defiPriceData.coins).forEach((item: any) => {
-      prices[item.symbol] = item.price;
+    Object.entries(defiPriceData.coins).forEach(([key, value]) => {
+      const chain = getDefiCoinChain(key);
+      const defiQueryParam = defiLlamaPriceQueryData[defiLlamaPriceQueryDataLookup[value.symbol]];
+
+      prices[`${defiQueryParam.symbol}${chain ? `_${chain}` : ''}`] = value.price;
     });
 
     const {

@@ -24,7 +24,7 @@ export type Portfolio = typeof PortfolioEnum[keyof typeof PortfolioEnum];
 
 export const PublicBundleLookup: Portfolio[] = ['PUBLICONE'];
 
-export const PublicBundleName: string[] = ['Bundle One'];
+export const PublicBundleName: string[] = ['Dummy Bundle'];
 
 export const PublicBundleAddresses = [
   [
