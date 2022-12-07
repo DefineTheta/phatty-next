@@ -1,6 +1,7 @@
 import DefaultLayout from '@app-src/common/components/layout/DefaultLayout';
 import { store } from '@app-src/store/store';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { Analytics } from '@vercel/analytics/react';
 import type { AppProps } from 'next/app';
 import { useCallback, useState } from 'react';
 import Modal from 'react-modal';
@@ -49,6 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <DefaultLayout>
         <Component {...pageProps} />
       </DefaultLayout>
+      <Analytics />
     </Provider>
   );
 }
