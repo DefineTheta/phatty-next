@@ -5,30 +5,25 @@ import TableHeaderRow from '@app-src/common/components/table/TableHeaderRow';
 import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowCell';
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
-import { selectBundlePhiatComponentData } from '@app-src/store/bundles/selectors';
-import { selectPhiatComponentData } from '@app-src/store/protocol/selectors';
+import { selectPhiatComponentData } from '@app-src/store/portfolio/selectors';
 import { PhiatDataComponentEnum } from '@app-src/store/protocol/types';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import useSort from '../../hooks/useSort';
+import { Portfolio } from '../../types/portfolio';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IPhiatGenericTableProps = {
   component: keyof typeof PhiatDataComponentEnum;
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   loading: boolean;
   bookmark: string;
 };
 
 const PhiatGenericTable = ({ component, page, loading, bookmark }: IPhiatGenericTableProps) => {
   const phiatComponentData = useSelector(
-    useCallback(
-      page === 'profile'
-        ? selectPhiatComponentData(component)
-        : selectBundlePhiatComponentData(component),
-      [page]
-    )
+    useCallback(selectPhiatComponentData(component, page), [page, component])
   );
 
   const [sortedPhiatComponentData, sortKey, sortOrder, handleTableHeaderClick] = useSort<

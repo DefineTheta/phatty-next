@@ -6,24 +6,21 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import useSort from '@app-src/modules/portfolio/hooks/useSort';
-import { selectBundlePulsexLiquidityPoolData } from '@app-src/store/bundles/selectors';
-import { selectPulsexLiquidityPoolData } from '@app-src/store/protocol/selectors';
+import { selectPulsexLiquidityPoolData } from '@app-src/store/portfolio/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { Portfolio } from '../../types/portfolio';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IPulsexLiquidityPoolTableProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   loading: boolean;
 };
 
 const PulsexLiquidityPoolTable = ({ page, loading }: IPulsexLiquidityPoolTableProps) => {
   const pulsexLiquidityPoolData = useSelector(
-    useCallback(
-      page === 'profile' ? selectPulsexLiquidityPoolData : selectBundlePulsexLiquidityPoolData,
-      [page]
-    )
+    useCallback(selectPulsexLiquidityPoolData(page), [page])
   );
 
   const [sortedPulsexLiquidityPoolData, sortKey, sortOrder, handleTableHeaderClick] = useSort<

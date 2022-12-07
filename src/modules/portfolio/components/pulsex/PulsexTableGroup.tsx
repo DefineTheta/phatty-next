@@ -2,48 +2,33 @@ import TableHeader from '@app-src/common/components/table/TableHeader';
 import TableWrapper from '@app-src/common/components/table/TableWrapper';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { fetchBundlePulsexData } from '@app-src/store/bundles/bundleSlice';
+import { fetchPulsexData } from '@app-src/store/portfolio/portfolioSlice';
 import {
-  selectBundlePulsexError,
-  selectBundlePulsexLoading,
-  selectBundlePulsexTotal
-} from '@app-src/store/bundles/selectors';
-import { fetchPulsexData } from '@app-src/store/protocol/protocolSlice';
-import {
-  selectProfilePulsexError,
+  selectPulsexError,
   selectPulsexLoading,
   selectPulsexTotal
-} from '@app-src/store/protocol/selectors';
+} from '@app-src/store/portfolio/selectors';
 import { useCallback, useMemo } from 'react';
-import { PortfolioChain } from '../../types/portfolio';
+import { Portfolio, PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
 import { isInCurrentChains } from '../../utils/misc';
 import PulsexLiquidityPoolTable from './PulsexLiquidityPoolTable';
 
 type IPulsexTableGroupProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   currentChains: PortfolioChain[];
 };
 
 const PulsexTableGroup = ({ page, currentChains }: IPulsexTableGroupProps) => {
   const dispatch = useAppDispatch();
 
-  const pulsexTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectPulsexTotal : selectBundlePulsexTotal, [page])
-  );
-  const loading = useAppSelector(
-    useCallback(page === 'profile' ? selectPulsexLoading : selectBundlePulsexLoading, [page])
-  );
-  const error = useAppSelector(
-    useCallback(page === 'profile' ? selectProfilePulsexError : selectBundlePulsexError, [page])
-  );
+  const pulsexTotal = useAppSelector(useCallback(selectPulsexTotal(page), [page]));
+  const loading = useAppSelector(useCallback(selectPulsexLoading(page), [page]));
+  const error = useAppSelector(useCallback(selectPulsexError(page), [page]));
 
   const styledPulsexTotal = useMemo(() => formatToMoney(pulsexTotal), [pulsexTotal]);
 
-  const fetchTableData = useCallback(() => {
-    if (page === 'profile') dispatch(fetchPulsexData());
-    else dispatch(fetchBundlePulsexData());
-  }, [page, dispatch]);
+  const fetchTableData = useCallback(() => dispatch(fetchPulsexData(page)), [page, dispatch]);
 
   if ((!loading && !error && pulsexTotal === 0) || !isInCurrentChains('TPLS', currentChains)) {
     return null;

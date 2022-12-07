@@ -1,9 +1,14 @@
 import SearchInput from '@app-src/common/components/input/SearchInput';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
-import { deleteBundleSession, fetchBundleAddresses } from '@app-src/store/bundles/bundleSlice';
-import { selectBundleAddress } from '@app-src/store/bundles/selectors';
+import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import { setHistoryHasFetched } from '@app-src/store/history/historySlice';
-import { setProfileAddress, setProfileHasFetched } from '@app-src/store/protocol/protocolSlice';
+import {
+  deleteBundleSession,
+  fetchBundleAddresses,
+  setDisplayAddress,
+  setHasFetched
+} from '@app-src/store/portfolio/portfolioSlice';
+import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import { useRouter } from 'next/router';
 import { KeyboardEvent, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -15,7 +20,7 @@ const NavBar = () => {
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  const bundleAddress = useSelector(useCallback(selectBundleAddress, []));
+  const bundleAddress = useSelector(useCallback(selectDisplayAddress(PortfolioEnum.BUNDLE), []));
 
   const handleSearch = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
@@ -24,13 +29,13 @@ const NavBar = () => {
         if (!address) return;
 
         router.push(`/profile/${address}/portfolio`).then(() => {
-          dispatch(setProfileHasFetched(false));
+          dispatch(setHasFetched({ hasFetched: false, type: PortfolioEnum.PROFILE }));
           dispatch(setHistoryHasFetched(false));
-          dispatch(setProfileAddress(address));
+          dispatch(setDisplayAddress({ address, type: PortfolioEnum.PROFILE }));
         });
       }
     },
-    [searchInputRef]
+    [dispatch, searchInputRef]
   );
 
   const handleButtonClick = (type: 'connect' | 'disconnect') => {

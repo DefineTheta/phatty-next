@@ -3,16 +3,20 @@ import Card from '@app-src/common/components/layout/Card';
 import Container from '@app-src/common/components/layout/Container';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import BundleHeader from '@app-src/modules/bundle/components/BundleHeader';
-import { addAddressToBundle, removeAddressFromBundle } from '@app-src/store/bundles/bundleSlice';
-import { selectBundleAddress, selectBundleAddresses } from '@app-src/store/bundles/selectors';
+import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
+import {
+  addAddressToBundle,
+  removeAddressFromBundle
+} from '@app-src/store/portfolio/portfolioSlice';
+import { selectAddresses, selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import { KeyboardEvent, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 const BundleAccountPage = () => {
   const dispatch = useAppDispatch();
 
-  const bundleAddress = useSelector(useCallback(selectBundleAddress, []));
-  const bundleAddresses = useSelector(useCallback(selectBundleAddresses, []));
+  const bundleAddress = useSelector(useCallback(selectDisplayAddress(PortfolioEnum.BUNDLE), []));
+  const bundleAddresses = useSelector(useCallback(selectAddresses(PortfolioEnum.BUNDLE), []));
 
   const addressInputRef = useRef<HTMLInputElement>(null);
 
@@ -29,7 +33,7 @@ const BundleAccountPage = () => {
     addressInputRef.current.value = '';
 
     dispatch(addAddressToBundle(address));
-  }, [addressInputRef]);
+  }, [dispatch, addressInputRef]);
 
   const handleRemoveButton = useCallback(
     (address: string) => {
@@ -37,7 +41,7 @@ const BundleAccountPage = () => {
 
       dispatch(removeAddressFromBundle(address));
     },
-    [addressInputRef]
+    [dispatch]
   );
 
   return (

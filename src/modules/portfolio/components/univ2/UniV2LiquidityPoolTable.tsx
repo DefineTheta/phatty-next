@@ -6,25 +6,20 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { selectBundleUniV2LiquidityPoolData } from '@app-src/store/bundles/selectors';
-import { selectUniV2LiquidityPoolData } from '@app-src/store/protocol/selectors';
+import { selectUniV2LiquidityPoolData } from '@app-src/store/portfolio/selectors';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import useSort from '../../hooks/useSort';
+import { Portfolio } from '../../types/portfolio';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IUniV2LiquidityPoolTableProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   loading: boolean;
 };
 
 const UniV2LiquidityPoolTable = ({ page, loading }: IUniV2LiquidityPoolTableProps) => {
-  const uniV2LPData = useAppSelector(
-    useCallback(
-      page === 'profile' ? selectUniV2LiquidityPoolData : selectBundleUniV2LiquidityPoolData,
-      [page]
-    )
-  );
+  const uniV2LPData = useAppSelector(useCallback(selectUniV2LiquidityPoolData(page), [page]));
 
   const [sortedUniV2LPData, sortKey, sortOrder, handleTableHeaderClick] = useSort<
     typeof uniV2LPData[number]

@@ -2,49 +2,34 @@ import TableHeader from '@app-src/common/components/table/TableHeader';
 import TableWrapper from '@app-src/common/components/table/TableWrapper';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { fetchBundlePancakeData } from '@app-src/store/bundles/bundleSlice';
+import { fetchPancakeData } from '@app-src/store/portfolio/portfolioSlice';
 import {
-  selectBundlePancakeError,
-  selectBundlePancakeLoading,
-  selectBundlePancakeTotal
-} from '@app-src/store/bundles/selectors';
-import { fetchPancakeData } from '@app-src/store/protocol/protocolSlice';
-import {
+  selectPancakeError,
   selectPancakeLoading,
-  selectPancakeTotal,
-  selectProfilePancakeError
-} from '@app-src/store/protocol/selectors';
+  selectPancakeTotal
+} from '@app-src/store/portfolio/selectors';
 import { useCallback, useMemo } from 'react';
-import { PortfolioChain } from '../../types/portfolio';
+import { Portfolio, PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
 import { isInCurrentChains } from '../../utils/misc';
 import PancakeFarmTable from './PancakeFarmTable';
 import PancakeLiquidityPoolTable from './PancakeLiquidityPoolTable';
 
 type IPancakeTableGroup = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   currentChains: PortfolioChain[];
 };
 
 const PancakeTableGroup = ({ page, currentChains }: IPancakeTableGroup) => {
   const dispatch = useAppDispatch();
 
-  const pancakeTotal = useAppSelector(
-    useCallback(page === 'profile' ? selectPancakeTotal : selectBundlePancakeTotal, [page])
-  );
-  const loading = useAppSelector(
-    useCallback(page === 'profile' ? selectPancakeLoading : selectBundlePancakeLoading, [page])
-  );
-  const error = useAppSelector(
-    useCallback(page === 'profile' ? selectProfilePancakeError : selectBundlePancakeError, [page])
-  );
+  const pancakeTotal = useAppSelector(useCallback(selectPancakeTotal(page), [page]));
+  const loading = useAppSelector(useCallback(selectPancakeLoading(page), [page]));
+  const error = useAppSelector(useCallback(selectPancakeError(page), [page]));
 
   const styledPancakeTotal = useMemo(() => formatToMoney(pancakeTotal), [pancakeTotal]);
 
-  const fetchTableData = useCallback(() => {
-    if (page === 'profile') dispatch(fetchPancakeData());
-    else dispatch(fetchBundlePancakeData());
-  }, [page, dispatch]);
+  const fetchTableData = useCallback(() => dispatch(fetchPancakeData(page)), [page, dispatch]);
 
   if ((!loading && pancakeTotal === 0) || !isInCurrentChains('BSC', currentChains)) {
     return null;

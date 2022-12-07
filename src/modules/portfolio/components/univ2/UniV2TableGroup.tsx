@@ -2,48 +2,33 @@ import TableHeader from '@app-src/common/components/table/TableHeader';
 import TableWrapper from '@app-src/common/components/table/TableWrapper';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { fetchBundleUniV2Data } from '@app-src/store/bundles/bundleSlice';
+import { fetchUniV2Data } from '@app-src/store/portfolio/portfolioSlice';
 import {
-  selectBundleUniV2Error,
-  selectBundleUniV2Loading,
-  selectBundleUniV2Total
-} from '@app-src/store/bundles/selectors';
-import { fetchUniV2Data } from '@app-src/store/protocol/protocolSlice';
-import {
-  selectProfileUniV2Error,
+  selectUniV2Error,
   selectUniV2Loading,
   selectUniV2Total
-} from '@app-src/store/protocol/selectors';
+} from '@app-src/store/portfolio/selectors';
 import { useCallback, useMemo } from 'react';
-import { PortfolioChain } from '../../types/portfolio';
+import { Portfolio, PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
 import { isInCurrentChains } from '../../utils/misc';
 import UniV2LiquidityPoolTable from './UniV2LiquidityPoolTable';
 
 type IUniV2TableGroup = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   currentChains: PortfolioChain[];
 };
 
 const UniV2TableGroup = ({ page, currentChains }: IUniV2TableGroup) => {
   const dispatch = useAppDispatch();
 
-  const uniV2Total = useAppSelector(
-    useCallback(page === 'profile' ? selectUniV2Total : selectBundleUniV2Total, [page])
-  );
-  const loading = useAppSelector(
-    useCallback(page === 'profile' ? selectUniV2Loading : selectBundleUniV2Loading, [page])
-  );
-  const error = useAppSelector(
-    useCallback(page === 'profile' ? selectProfileUniV2Error : selectBundleUniV2Error, [page])
-  );
+  const uniV2Total = useAppSelector(useCallback(selectUniV2Total(page), [page]));
+  const loading = useAppSelector(useCallback(selectUniV2Loading(page), [page]));
+  const error = useAppSelector(useCallback(selectUniV2Error(page), [page]));
 
   const styledUniV2Total = useMemo(() => formatToMoney(uniV2Total), [uniV2Total]);
 
-  const fetchTableData = useCallback(() => {
-    if (page === 'profile') dispatch(fetchUniV2Data());
-    else dispatch(fetchBundleUniV2Data());
-  }, [page, dispatch]);
+  const fetchTableData = useCallback(() => dispatch(fetchUniV2Data(page)), [page, dispatch]);
 
   if ((!loading && uniV2Total === 0) || !isInCurrentChains('ETH', currentChains)) {
     return null;

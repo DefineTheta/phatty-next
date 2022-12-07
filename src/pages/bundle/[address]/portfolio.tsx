@@ -16,18 +16,19 @@ import WalletTableGroup from '@app-src/modules/portfolio/components/wallet/Walle
 import XenTableGroup from '@app-src/modules/portfolio/components/xen/XenTableGroup';
 import {
   isArrayOfPortfolioChain,
-  PortfolioChain
+  PortfolioChain,
+  PortfolioEnum
 } from '@app-src/modules/portfolio/types/portfolio';
 import {
   fetchBundleAddresses,
-  fetchBundlePortfolioData,
-  setBundleFetched
-} from '@app-src/store/bundles/bundleSlice';
+  fetchPortfolioData,
+  setHasFetched
+} from '@app-src/store/portfolio/portfolioSlice';
 import {
-  selectBundleAddress,
-  selectBundleAddresses,
-  selectBundleHasFetched
-} from '@app-src/store/bundles/selectors';
+  selectAddresses,
+  selectDisplayAddress,
+  selectHasFetched
+} from '@app-src/store/portfolio/selectors';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -35,9 +36,9 @@ const BundlePortfolioPage = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const bundleAddress = useAppSelector(useCallback(selectBundleAddress, []));
-  const bundleAddresses = useAppSelector(useCallback(selectBundleAddresses, []));
-  const hasFetched = useAppSelector(useCallback(selectBundleHasFetched, []));
+  const bundleAddress = useAppSelector(useCallback(selectDisplayAddress(PortfolioEnum.BUNDLE), []));
+  const bundleAddresses = useAppSelector(useCallback(selectAddresses(PortfolioEnum.BUNDLE), []));
+  const hasFetched = useAppSelector(useCallback(selectHasFetched(PortfolioEnum.BUNDLE), []));
 
   const [currentChains, setCurrentChains] = useState<PortfolioChain[]>([]);
 
@@ -49,15 +50,15 @@ const BundlePortfolioPage = () => {
         bundleAddressPromise.abort();
       };
     }
-  }, [hasFetched, bundleAddress]);
+  }, [dispatch, hasFetched, bundleAddress]);
 
   useEffect(() => {
     if (hasFetched || !bundleAddresses || bundleAddresses.length === 0) return;
 
-    fetchBundlePortfolioData(dispatch, bundleAddresses).then(() =>
-      dispatch(setBundleFetched(true))
+    fetchPortfolioData(dispatch, bundleAddresses, PortfolioEnum.BUNDLE).then(() =>
+      dispatch(setHasFetched({ hasFetched: true, type: PortfolioEnum.BUNDLE }))
     );
-  }, [bundleAddresses, hasFetched]);
+  }, [dispatch, bundleAddresses, hasFetched]);
 
   useEffect(() => {
     const chains = router.query.chains;
@@ -75,18 +76,18 @@ const BundlePortfolioPage = () => {
       <div className="flex w-full justify-center">
         <Container>
           <div className="flex w-full flex-col items-center gap-y-30">
-            <ChainSummaryCard page="bundle" currentChains={currentChains} />
-            <WalletTableGroup page="bundle" currentChains={currentChains} />
-            <HexTableGroup page="bundle" currentChains={currentChains} />
-            <PhiatTableGroup page="bundle" currentChains={currentChains} />
-            <PhamousTableGroup page="bundle" currentChains={currentChains} />
-            <PulsexTableGroup page="bundle" currentChains={currentChains} />
-            <PancakeTableGroup page="bundle" currentChains={currentChains} />
-            <SushiTableGroup page="bundle" currentChains={currentChains} />
-            <UniV2TableGroup page="bundle" currentChains={currentChains} />
-            <UniV3TableGroup page="bundle" currentChains={currentChains} />
-            <HedronTableGroup page="bundle" currentChains={currentChains} />
-            <XenTableGroup page="bundle" currentChains={currentChains} />
+            <ChainSummaryCard page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
+            <WalletTableGroup page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
+            <HexTableGroup page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
+            <PhiatTableGroup page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
+            <PhamousTableGroup page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
+            <PulsexTableGroup page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
+            <PancakeTableGroup page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
+            <SushiTableGroup page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
+            <UniV2TableGroup page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
+            <UniV3TableGroup page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
+            <HedronTableGroup page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
+            <XenTableGroup page={PortfolioEnum.BUNDLE} currentChains={currentChains} />
           </div>
         </Container>
       </div>

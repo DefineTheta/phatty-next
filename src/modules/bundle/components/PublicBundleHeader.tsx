@@ -1,44 +1,48 @@
 import Container from '@app-src/common/components/layout/Container';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { truncateAddress } from '@app-src/common/utils/format';
-import { PortfolioChain, PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
+import {
+  Portfolio,
+  PortfolioChain,
+  PortfolioEnum
+} from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { fetchPortfolioData } from '@app-src/store/portfolio/portfolioSlice';
-import { selectAddresses, selectChainsTotal } from '@app-src/store/portfolio/selectors';
+import {
+  selectAddresses,
+  selectChainsTotal,
+  selectDisplayAddress
+} from '@app-src/store/portfolio/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
-import { toast } from 'react-hot-toast';
 
-type IBundleHeaderProps = {
-  address: string;
+type IPublicBundleHeaderProps = {
+  page: Portfolio;
   currentChains: PortfolioChain[];
+  displayName: string;
 };
 
-const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
-  const router = useRouter();
+const PublicBundleHeader = ({ page, currentChains, displayName }: IPublicBundleHeaderProps) => {
   const dispatch = useAppDispatch();
 
   const total = useAppSelector(
-    useCallback(selectChainsTotal(currentChains, PortfolioEnum.BUNDLE), [currentChains])
+    useCallback(selectChainsTotal(currentChains, page), [page, currentChains])
   );
-  const bundleAddresses = useAppSelector(useCallback(selectAddresses(PortfolioEnum.BUNDLE), []));
+  const privateBundleAddress = useAppSelector(
+    useCallback(selectDisplayAddress(PortfolioEnum.BUNDLE), [])
+  );
+  const bundleAddresses = useAppSelector(useCallback(selectAddresses(page), [page]));
 
   const styledTotal = useMemo(() => formatToMoney(total), [total]);
-
-  const currentTab = useMemo(
-    () => router.asPath.toLowerCase().split('/').at(-1)?.split('?')[0],
-    [router.asPath]
-  );
+  const currentTab = useMemo(() => 'public', []);
 
   const tabs = useMemo(
     () => [
       {
         displayName: 'Portfolio',
         name: 'portfolio',
-        href: `/bundle/${encodeURIComponent(address)}/portfolio`
+        href: `/bundle/${encodeURIComponent(privateBundleAddress)}/portfolio`
       },
       {
         displayName: 'Public',
@@ -48,26 +52,26 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
       {
         displayName: 'NFT',
         name: 'nft',
-        href: `/bundle/${encodeURIComponent(address)}/portfolio`
+        href: `/bundle/${encodeURIComponent(privateBundleAddress)}/portfolio`
       },
       {
         displayName: 'History',
         name: 'history',
-        href: `/bundle/${encodeURIComponent(address)}/portfolio`
+        href: `/bundle/${encodeURIComponent(privateBundleAddress)}/portfolio`
       },
       {
         displayName: 'Accounts',
         name: 'account',
-        href: `/bundle/${encodeURIComponent(address)}/account`
+        href: `/bundle/${encodeURIComponent(privateBundleAddress)}/account`
       }
     ],
-    [address]
+    [privateBundleAddress]
   );
 
-  const handleAddressCopyClick = useCallback(() => {
-    navigator.clipboard.writeText(address);
-    toast.success(<span className="text-md font-bold">Address copied!</span>);
-  }, [address]);
+  // const handleAddressCopyClick = useCallback(() => {
+  //   navigator.clipboard.writeText(address);
+  //   toast.success(<span className="text-md font-bold">Address copied!</span>);
+  // }, [address]);
 
   const handleRefreshDataClick = useCallback(() => {
     fetchPortfolioData(dispatch, bundleAddresses, PortfolioEnum.BUNDLE, true);
@@ -80,19 +84,21 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
           <div className="flex flex-row justify-between">
             <div className="flex flex-col items-start gap-y-12">
               <div className="flex flex-row items-center gap-x-6">
-                <span className="text-lg font-semibold tracking-wide text-text-200" title={address}>
-                  {truncateAddress(address)}
+                <span
+                  className="text-lg font-semibold tracking-wide text-text-200"
+                  title={displayName}
+                >
+                  {displayName}
                 </span>
                 <button
                   className="flex h-20 w-20 cursor-pointer items-center justify-center rounded-full bg-gray-100"
                   data-tip="Copy wallet address"
-                  onClick={handleAddressCopyClick}
                 >
                   <DocumentDuplicateIcon className="h-12 w-12" />
                 </button>
               </div>
               <div className="flex flex-row items-center gap-x-18">
-                {address && (
+                {privateBundleAddress && (
                   <button className="flex cursor-pointer flex-row items-center gap-x-6 rounded-full bg-purple-button py-6 px-12 drop-shadow-md">
                     <TrophyIcon className="h-14 w-14 text-white" />
                     <span className="text-sm text-white">Early Supporter</span>
@@ -112,7 +118,10 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
           </div>
           <div className="flex flex-row items-center gap-x-30">
             {tabs.map((tab) => (
-              <Link key={tab.name} href={address || tab.name === 'public' ? tab.href : '/bundle'}>
+              <Link
+                key={tab.name}
+                href={privateBundleAddress || tab.name === 'public' ? tab.href : '/bundle'}
+              >
                 <a
                   className={`cursor-pointer px-10 pb-6 text-base font-bold ${
                     tab.name === currentTab
@@ -132,4 +141,4 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
   );
 };
 
-export default BundleHeader;
+export default PublicBundleHeader;

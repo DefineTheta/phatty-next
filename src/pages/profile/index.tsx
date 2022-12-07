@@ -1,12 +1,13 @@
 import Card from '@app-src/common/components/layout/Card';
 import Container from '@app-src/common/components/layout/Container';
+import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import ProfileHeader from '@app-src/modules/profile/components/ProfileHeader';
-import { selectProfileAddress } from '@app-src/store/protocol/selectors';
+import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const ProfilePage = () => {
-  const profileAddress = useSelector(useCallback(selectProfileAddress, []));
+  const profileAddress = useSelector(useCallback(selectDisplayAddress(PortfolioEnum.PROFILE), []));
 
   const [isModalVisible, setIsModalVisible] = useState(true);
 

@@ -1,14 +1,15 @@
 import Card from '@app-src/common/components/layout/Card';
 import Container from '@app-src/common/components/layout/Container';
 import BundleHeader from '@app-src/modules/bundle/components/BundleHeader';
-import { selectBundleAddress } from '@app-src/store/bundles/selectors';
+import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
+import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 const BundlePage = () => {
   const router = useRouter();
-  const bundleAddress = useSelector(useCallback(selectBundleAddress, []));
+  const bundleAddress = useSelector(useCallback(selectDisplayAddress(PortfolioEnum.BUNDLE), []));
 
   useEffect(() => {
     if (!bundleAddress) return;

@@ -2,26 +2,20 @@ import TableHeader from '@app-src/common/components/table/TableHeader';
 import TableWrapper from '@app-src/common/components/table/TableWrapper';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
-import { fetchBundleHedronData } from '@app-src/store/bundles/bundleSlice';
+import { Portfolio, PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
+import { fetchHedronData } from '@app-src/store/portfolio/portfolioSlice';
 import {
-  selectBundleHedronComponentTotal,
-  selectBundleHedronError,
-  selectBundleHedronLoading
-} from '@app-src/store/bundles/selectors';
-import { fetchHedronData } from '@app-src/store/protocol/protocolSlice';
-import {
-  selectProfileHedronComponentTotal,
-  selectProfileHedronError,
-  selectProfileHedronLoading
-} from '@app-src/store/protocol/selectors';
+  selectHedronComponentTotal,
+  selectHedronError,
+  selectHedronLoading
+} from '@app-src/store/portfolio/selectors';
 import { useCallback, useMemo } from 'react';
 import { formatToMoney } from '../../utils/format';
 import { isInCurrentChains } from '../../utils/misc';
 import HedronStakeTable from './HedronStakeTable';
 
 type IHedronTableGroupProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   currentChains: PortfolioChain[];
 };
 
@@ -29,35 +23,18 @@ const HedronTableGroup = ({ page, currentChains }: IHedronTableGroupProps) => {
   const dispatch = useAppDispatch();
 
   const hedronEthTotal = useAppSelector(
-    useCallback(
-      page === 'profile'
-        ? selectProfileHedronComponentTotal('ETH')
-        : selectBundleHedronComponentTotal('ETH'),
-      []
-    )
+    useCallback(selectHedronComponentTotal('ETH', page), [page])
   );
   const hedronTplsTotal = useAppSelector(
-    useCallback(
-      page === 'profile'
-        ? selectProfileHedronComponentTotal('TPLS')
-        : selectBundleHedronComponentTotal('TPLS'),
-      []
-    )
+    useCallback(selectHedronComponentTotal('TPLS', page), [page])
   );
-  const loading = useAppSelector(
-    useCallback(page === 'profile' ? selectProfileHedronLoading : selectBundleHedronLoading, [])
-  );
-  const error = useAppSelector(
-    useCallback(page === 'profile' ? selectProfileHedronError : selectBundleHedronError, [])
-  );
+  const loading = useAppSelector(useCallback(selectHedronLoading(page), [page]));
+  const error = useAppSelector(useCallback(selectHedronError(page), [page]));
 
   const styledHedronEthTotal = useMemo(() => formatToMoney(hedronEthTotal), [hedronEthTotal]);
   const styledHedronTplsTotal = useMemo(() => formatToMoney(hedronTplsTotal), [hedronTplsTotal]);
 
-  const fetchTableData = useCallback(() => {
-    if (page === 'profile') dispatch(fetchHedronData());
-    else dispatch(fetchBundleHedronData());
-  }, [page, dispatch]);
+  const fetchTableData = useCallback(() => dispatch(fetchHedronData(page)), [page, dispatch]);
 
   if (
     (!loading && !error && hedronEthTotal + hedronTplsTotal === 0) ||

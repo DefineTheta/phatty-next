@@ -1,80 +1,39 @@
-import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
+import { Portfolio, PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import {
-  selectBundleHedrontotal,
-  selectBundleHextotal,
-  selectBundlePancakeTotal,
-  selectBundlePhamousTotal,
-  selectBundlePhiatTotal,
-  selectBundlePulsexTotal,
-  selectBundleSushiTotal,
-  selectBundleUniV2Total,
-  selectBundleUniV3Total,
-  selectBundleWalletTotal,
-  selectBundleXenTotal
-} from '@app-src/store/bundles/selectors';
-import {
-  selectHextotal,
+  selectHedronTotal,
+  selectHexTotal,
   selectPancakeTotal,
+  selectPhamousTotal,
   selectPhiatTotal,
-  selectProfileHedronTotal,
-  selectProfilePhamousTotal,
-  selectProfileXenTotal,
   selectPulsexTotal,
   selectSushiTotal,
   selectUniV2Total,
   selectUniV3Total,
-  selectWalletTotal
-} from '@app-src/store/protocol/selectors';
+  selectWalletTotal,
+  selectXenTotal
+} from '@app-src/store/portfolio/selectors';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import ChainProtocolItem from './ChainProtocolItem';
 
 export type IChainProtocolListProps = {
-  page: 'profile' | 'bundle';
+  page: Portfolio;
   currentAssetChains: PortfolioChain[];
 };
 
 const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps) => {
-  const walletTotal = useSelector(
-    useCallback(
-      page === 'profile'
-        ? selectWalletTotal(currentAssetChains)
-        : selectBundleWalletTotal(currentAssetChains),
-      [page]
-    )
-  );
-  const hexTotal = useSelector(
-    useCallback(page === 'profile' ? selectHextotal : selectBundleHextotal, [page])
-  );
-  const phiatTotal = useSelector(
-    useCallback(page === 'profile' ? selectPhiatTotal : selectBundlePhiatTotal, [page])
-  );
-  const pulsexTotal = useSelector(
-    useCallback(page === 'profile' ? selectPulsexTotal : selectBundlePulsexTotal, [page])
-  );
-  const pancakeTotal = useSelector(
-    useCallback(page === 'profile' ? selectPancakeTotal : selectBundlePancakeTotal, [page])
-  );
-  const sushiTotal = useSelector(
-    useCallback(page === 'profile' ? selectSushiTotal : selectBundleSushiTotal, [page])
-  );
-  const uniV2Total = useSelector(
-    useCallback(page === 'profile' ? selectUniV2Total : selectBundleUniV2Total, [page])
-  );
-  const uniV3Total = useSelector(
-    useCallback(page === 'profile' ? selectUniV3Total : selectBundleUniV3Total, [page])
-  );
-  const hedronTotal = useSelector(
-    useCallback(page === 'profile' ? selectProfileHedronTotal : selectBundleHedrontotal, [page])
-  );
-  const phamousTotal = useSelector(
-    useCallback(page === 'profile' ? selectProfilePhamousTotal : selectBundlePhamousTotal, [page])
-  );
-
-  const xenTotal = useSelector(
-    useCallback(page === 'profile' ? selectProfileXenTotal : selectBundleXenTotal, [page])
-  );
+  const walletTotal = useSelector(useCallback(selectWalletTotal(currentAssetChains, page), [page]));
+  const hexTotal = useSelector(useCallback(selectHexTotal(page), [page]));
+  const phiatTotal = useSelector(useCallback(selectPhiatTotal(page), [page]));
+  const pulsexTotal = useSelector(useCallback(selectPulsexTotal(page), [page]));
+  const pancakeTotal = useSelector(useCallback(selectPancakeTotal(page), [page]));
+  const sushiTotal = useSelector(useCallback(selectSushiTotal(page), [page]));
+  const uniV2Total = useSelector(useCallback(selectUniV2Total(page), [page]));
+  const uniV3Total = useSelector(useCallback(selectUniV3Total(page), [page]));
+  const hedronTotal = useSelector(useCallback(selectHedronTotal(page), [page]));
+  const phamousTotal = useSelector(useCallback(selectPhamousTotal(page), [page]));
+  const xenTotal = useSelector(useCallback(selectXenTotal(page), [page]));
 
   const protocolData = useMemo(
     () => [
