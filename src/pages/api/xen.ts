@@ -110,6 +110,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     if (!address || typeof address === 'object') return res.status(400).end();
 
+    let page: number = Number(req.query.page || 1);
+
+    if (page < 1) return res.status(400).end();
+
     const price = await fetchPrices();
 
     if (!price) return res.status(500).end();
@@ -121,9 +125,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     let stakingTotal = 0;
     let mintingTotal = 0;
 
-    const promises = contracts.map((data) =>
-      calculateXen(data.contract, address, xenPrice, data.name)
-    );
+    const isLastPage = page * 5 >= contracts.length;
+    const promises: Promise<[XenStakeItem, XenMintItem]>[] = [];
+
+    for (let i = (page - 1) * 5; i < (isLastPage ? contracts.length : page * 5); i++) {
+      const data = contracts[i];
+      promises.push(calculateXen(data.contract, address, xenPrice, data.name));
+    }
 
     const data = await Promise.all(promises);
 
@@ -149,7 +157,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           data: mintingData,
           totalValue: mintingTotal
         }
-      }
+      },
+      next: !isLastPage ? page + 1 : null
     } as XenResponse;
 
     res.status(200).json(resObj);

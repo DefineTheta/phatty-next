@@ -350,7 +350,7 @@ export type XenMintItem = {
   chainImg: string;
 };
 
-export type XenResponse = {
+export interface XenResponse extends ApiBaseResponse {
   data: {
     STAKING: {
       data: XenStakeItem[];
@@ -361,4 +361,4 @@ export type XenResponse = {
       totalValue: number;
     };
   };
-};
+}

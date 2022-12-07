@@ -625,11 +625,17 @@ export const getPhamous = async (addresses: string[], refresh: boolean) => {
 };
 
 export const getXen = async (addresses: string[], refresh: boolean) => {
-  const xenData = await getMultipleAddressData<XenResponse>(addresses, '/api/xen', {
-    cache: refresh ? 'reload' : 'default'
+  const fetchPromises: Promise<XenResponse[]>[] = [];
+
+  addresses.forEach((address) => {
+    fetchPromises.push(
+      getPaginatedData(`/api/xen?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+    );
   });
 
-  if (xenData.length === 1) return xenData[0];
+  const xenDataArr = await Promise.all(fetchPromises);
+
+  if (xenDataArr.length === 1 && xenDataArr[0].length === 1) return xenDataArr[0][0];
 
   const collatedRes = {
     data: {
@@ -641,20 +647,18 @@ export const getXen = async (addresses: string[], refresh: boolean) => {
         data: [],
         totalValue: 0
       }
-    }
+    },
+    next: null
   } as XenResponse;
 
-  // const isXenStakeItem = (item: XenStakeItem | XenMintItem): item is XenStakeItem => {
-  //   if ((item as XenStakeItem).staked) return true;
-  //   else return false;
-  // };
+  xenDataArr.forEach((arr) => {
+    arr.forEach((xen) => {
+      collatedRes.data.STAKING.data = collatedRes.data.STAKING.data.concat(xen.data.STAKING.data);
+      collatedRes.data.MINTING.data = collatedRes.data.MINTING.data.concat(xen.data.MINTING.data);
 
-  xenData.forEach((xen) => {
-    collatedRes.data.STAKING.data = collatedRes.data.STAKING.data.concat(xen.data.STAKING.data);
-    collatedRes.data.MINTING.data = collatedRes.data.MINTING.data.concat(xen.data.MINTING.data);
-
-    collatedRes.data.MINTING.totalValue += xen.data.MINTING.totalValue;
-    collatedRes.data.STAKING.totalValue += xen.data.STAKING.totalValue;
+      collatedRes.data.MINTING.totalValue += xen.data.MINTING.totalValue;
+      collatedRes.data.STAKING.totalValue += xen.data.STAKING.totalValue;
+    });
   });
 
   return collatedRes;
