@@ -3,11 +3,11 @@ import {
   bscClient,
   chainImages,
   ethClient,
-  fetchPrices,
   ftmClient,
   maticClient,
   tokenImages,
-  tplsClient
+  tplsClient,
+  withWeb3ApiRoute
 } from '@app-src/services/web3';
 import { WalletResponse, WalletTokenItem } from '@app-src/types/api';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -224,15 +224,11 @@ const calculateWalletTokenData = async (
   } as WalletTokenItem;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<WalletResponse>) {
-  res.setHeader('Cache-Control', 's-maxage=3600');
-  const { address } = req.query;
-
-  if (!address || typeof address === 'object') return res.status(400).end();
-
-  const price = await fetchPrices();
-
-  if (!price) return res.status(500).end();
+export default withWeb3ApiRoute(async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<WalletResponse>
+) {
+  const { address, price } = req.middleware;
 
   const totalValues: Record<string, number> = {
     ETH: 0,
@@ -280,4 +276,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   } as WalletResponse;
 
   res.status(200).json(resObj);
-}
+});

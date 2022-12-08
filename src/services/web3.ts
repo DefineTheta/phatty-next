@@ -1,3 +1,5 @@
+import { PriceResponse } from '@app-src/types/api';
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { hexABI, phattyUIDataProviderABI } from './abi';
@@ -16,6 +18,46 @@ export type PhiatReserveDataItem = {
   priceInPls: string;
   priceInUsd: number;
 };
+
+export const API_BASE_URL = process.env.API_BASE_URL;
+export const API_PRICE_URL = `${API_BASE_URL}/price`;
+
+type Web3ApiRouteOptions = {
+  isPaginated: boolean;
+};
+
+const defaultWeb3ApiRouteOptions: Web3ApiRouteOptions = {
+  isPaginated: false
+};
+
+export const withWeb3ApiRoute =
+  (handler: NextApiHandler, options: Web3ApiRouteOptions = defaultWeb3ApiRouteOptions) =>
+  async (req: NextApiRequest, res: NextApiResponse) => {
+    try {
+      res.setHeader('Cache-Control', 's-maxage=3600');
+      const { address } = req.query;
+
+      if (!address || typeof address === 'object') return res.status(400).end();
+
+      const page: number = Number(req.query.page || 1);
+
+      if (options.isPaginated && page < 1) return res.status(400).end();
+
+      const priceResponse = await fetch(API_PRICE_URL);
+
+      if (priceResponse.status !== 200) return res.status(500).end();
+
+      const price: PriceResponse = await priceResponse.json();
+
+      req.middleware = { address, price, page };
+
+      await handler(req, res);
+    } catch (err) {
+      res
+        .status(500)
+        .send({ data: [], error: 'An error occured while trying to process the request' });
+    }
+  };
 
 export type PhiatReserveResponse = PhiatReserveDataItem[];
 

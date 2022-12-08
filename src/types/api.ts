@@ -7,6 +7,8 @@ export interface AuthResponse {
   success: boolean;
 }
 
+export type PriceResponse = Record<string, number>;
+
 export interface BundleResponse {
   data: string[];
   error?: string;

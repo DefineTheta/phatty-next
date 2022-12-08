@@ -1,4 +1,4 @@
-import { fetchPrices, hexETHContract, hexPLSContract } from '@app-src/services/web3';
+import { hexETHContract, hexPLSContract, withWeb3ApiRoute } from '@app-src/services/web3';
 import { HexResponse, HexTokenItem } from '@app-src/types/api';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Contract } from 'web3-eth-contract';
@@ -123,19 +123,12 @@ const calculateHexStake = async (
   return res;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<HexResponse>) {
+export default withWeb3ApiRoute(async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<HexResponse>
+) {
   res.setHeader('Cache-Control', 's-maxage=3600');
-  const { address } = req.query;
-
-  if (!address) return res.status(400).end();
-
-  let page: number = Number(req.query.page || 1);
-
-  if (page < 1) return res.status(400).end();
-
-  const price = await fetchPrices();
-
-  if (!price) return res.status(500).end();
+  const { address, page, price } = req.middleware;
 
   const globalETHShares = await getGlobalShares(hexETHContract);
   const globalPLSShares = await getGlobalShares(hexPLSContract);
@@ -224,4 +217,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   } as HexResponse;
 
   res.status(200).json(resObj);
-}
+});
