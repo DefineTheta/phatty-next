@@ -23,6 +23,7 @@ import {
   PancakeResponse,
   PhamousResponse,
   PhiatResponse,
+  PublicBundleResponse,
   PulsexResponse,
   SushiResponse,
   UniV2Response,
@@ -209,7 +210,7 @@ const initialState: PortfolioState = {
 };
 
 const fetchBundleAddresses = createAsyncThunk<BundleResponse, void, { state: RootState }>(
-  'bundles/fetchBundleAddresses',
+  'portfolio/fetchBundleAddresses',
   async (_, thunkAPI) => {
     const controller = new AbortController();
 
@@ -237,7 +238,7 @@ const fetchBundleAddresses = createAsyncThunk<BundleResponse, void, { state: Roo
 );
 
 const addAddressToBundle = createAsyncThunk<BundleResponse, string, { state: RootState }>(
-  'bundles/addAddressToBundle',
+  'portfolio/addAddressToBundle',
   async (wallet, thunkAPI) => {
     const controller = new AbortController();
 
@@ -273,7 +274,7 @@ const addAddressToBundle = createAsyncThunk<BundleResponse, string, { state: Roo
 );
 
 const removeAddressFromBundle = createAsyncThunk<BundleResponse, string, { state: RootState }>(
-  'bundles/removeAddressFromBundle',
+  'portfolio/removeAddressFromBundle',
   async (wallet, thunkAPI) => {
     const controller = new AbortController();
 
@@ -309,7 +310,7 @@ const removeAddressFromBundle = createAsyncThunk<BundleResponse, string, { state
 );
 
 const deleteBundleSession = createAsyncThunk<AuthResponse, void, { state: RootState }>(
-  'bundles/deleteBundleSession',
+  'portfolio/deleteBundleSession',
   async (_, thunkAPI) => {
     const controller = new AbortController();
 
@@ -321,6 +322,53 @@ const deleteBundleSession = createAsyncThunk<AuthResponse, void, { state: RootSt
     const data = await res.json();
 
     return data;
+  }
+);
+
+const fetchPublicBundleData = createAsyncThunk<PublicBundleResponse, number, { state: RootState }>(
+  'portfolio/fetchPublicBundleData',
+  async (index, thunkAPI) => {
+    const controller = new AbortController();
+
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
+
+    const data = [
+      {
+        name: 'Dummy Bundle',
+        addresses: [
+          '0x431e81e5dfb5a24541b5ff8762bdef3f32f96354',
+          '0xeec0591c07000e41e88efd153801c3fc0a11f7f4',
+          '0x3ddfa8ec3052539b6c9549f12cea2c295cff5296'
+        ]
+      },
+      {
+        name: 'GodWhale',
+        addresses: [
+          '0xAF10cC6C50dEFFF901B535691550D7AF208939c5',
+          '0x2BDE3b9C0129be4689E245Ba689b9b0Ae4AC666D',
+          '0xf1Bd8E36a0e48650bdB28056277B05e851EBbAe8',
+          '0x828FD91d3e3a9FFa6305e78B9aE2Cfbc5B5D9f6B',
+          '0x1706D193862DA7f8C746aae63d514Df93Dfa5dbf',
+          '0xdDf744374B46Aa980ddcE4a5AA216478bf925cD1',
+          '0x2fD56159F4C8664a1de5c75E430338CFa58cd5b9',
+          '0x807dc01d44407D3EfA0171F6De39076a27F20338',
+          '0x3930F94249A66535bc0F177Bc567152320dd7e6c',
+          '0x41b20fBb9E38AbeAef31Fa45a9B760D251180A5b',
+          '0xF5D7B1B20288B9052E9CbdBf877A19077EdB34d8'
+        ]
+      },
+      {
+        name: 'PhiatSac',
+        addresses: [
+          '0xab502a6fb9b9984341e77716b36484ac13dddc62',
+          '0xb7be6284b4f8b808f5204c03dc9b5419840ad73d'
+        ]
+      }
+    ];
+
+    return { data: data[index] };
   }
 );
 
@@ -675,6 +723,26 @@ export const portfolioSlice = createSlice({
     });
 
     builder.addCase(deleteBundleSession.rejected, (state) => {
+      // state.WALLET.loading = false;
+      // state.WALLET.error = true;
+    });
+
+    // Public bundle data functions
+    builder.addCase(fetchPublicBundleData.pending, (state) => {
+      // state.WALLET.loading = true;
+    });
+
+    builder.addCase(fetchPublicBundleData.fulfilled, (state, action) => {
+      const res = action.payload.data;
+
+      state.PUBLIC.displayAddress = res.name;
+      state.PUBLIC.addresses = res.addresses;
+
+      // state.WALLET.loading = false;
+      // state.WALLET.error = false;
+    });
+
+    builder.addCase(fetchPublicBundleData.rejected, (state) => {
       // state.WALLET.loading = false;
       // state.WALLET.error = true;
     });
@@ -1042,6 +1110,7 @@ export {
   addAddressToBundle,
   removeAddressFromBundle,
   deleteBundleSession,
+  fetchPublicBundleData,
   fetchWalletData,
   fetchHexData,
   fetchPhiatData,

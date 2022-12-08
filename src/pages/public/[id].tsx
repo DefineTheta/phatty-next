@@ -8,7 +8,11 @@ import {
 } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import PublicHeader from '@app-src/modules/public/components/PublicHeader';
-import { fetchPortfolioData, setHasFetched } from '@app-src/store/portfolio/portfolioSlice';
+import {
+  fetchPortfolioData,
+  fetchPublicBundleData,
+  setHasFetched
+} from '@app-src/store/portfolio/portfolioSlice';
 import {
   selectAddresses,
   selectChainsTotal,
@@ -24,6 +28,8 @@ const BundlePublicPortfolioPage = () => {
 
   const [currentChains, setCurrentChains] = useState<PortfolioChain[]>([]);
 
+  const id = useMemo(() => Number(router.query.id), [router]);
+
   const displayAddress = useAppSelector(
     useCallback(selectDisplayAddress(PortfolioEnum.PUBLIC), [])
   );
@@ -35,15 +41,11 @@ const BundlePublicPortfolioPage = () => {
 
   const styledTotal = useMemo(() => formatToMoney(total), [total]);
 
-  // useEffect(() => {
-  //   if (!hasFetched && bundleAddress) {
-  //     const bundleAddressPromise = dispatch(fetchBundleAddresses());
+  useEffect(() => {
+    if (hasFetched || isNaN(id)) return;
 
-  //     return () => {
-  //       bundleAddressPromise.abort();
-  //     };
-  //   }
-  // }, [dispatch, hasFetched, bundleAddress]);
+    dispatch(fetchPublicBundleData(id));
+  }, [dispatch, hasFetched, id]);
 
   useEffect(() => {
     if (hasFetched || !addresses || addresses.length === 0) return;

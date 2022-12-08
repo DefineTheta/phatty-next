@@ -12,6 +12,15 @@ export interface BundleResponse {
   error?: string;
 }
 
+export interface PublicBundleItem {
+  name: string;
+  addresses: string[];
+}
+
+export interface PublicBundleResponse {
+  data: PublicBundleItem;
+}
+
 export interface HistoryResponse {
   data: HistoryItem[];
   error?: string;

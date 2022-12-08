@@ -2,7 +2,7 @@ import Container from '@app-src/common/components/layout/Container';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
-import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
+import { CalendarIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import { useCallback } from 'react';
 
 type IPublicBundleHeaderProps = {
@@ -29,12 +29,6 @@ const PublicHeader = ({ displayName, total, onRefreshData }: IPublicBundleHeader
                 >
                   {displayName}
                 </span>
-                <button
-                  className="flex h-20 w-20 cursor-pointer items-center justify-center rounded-full bg-gray-100"
-                  data-tip="Copy wallet address"
-                >
-                  <DocumentDuplicateIcon className="h-12 w-12" />
-                </button>
               </div>
               <div className="flex flex-row items-center gap-x-18">
                 {privateBundleAddress && (
