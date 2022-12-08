@@ -105,7 +105,7 @@ const getPaginatedData = async <T extends ApiBaseResponse>(URL: string, options?
 
     responses.push(data);
 
-    if (data.next === null) keepFetching = false;
+    if (!data.next) keepFetching = false;
     else page = data.next;
   }
 
@@ -198,9 +198,10 @@ export const getSeaCreature = (p: number) => {
   }
 };
 
-export const getWallet = async (addresses: string[], refresh: boolean) => {
+export const getWallet = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
   const walletData = await getMultipleAddressData<WalletResponse>(addresses, '/api/wallet', {
-    cache: refresh ? 'reload' : 'default'
+    cache: refresh ? 'reload' : 'default',
+    signal
   });
 
   if (walletData.length === 1) return walletData[0];
@@ -273,13 +274,14 @@ export const getWallet = async (addresses: string[], refresh: boolean) => {
   return collatedRes;
 };
 
-export const getHex = async (addresses: string[], refresh: boolean) => {
+export const getHex = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
   const fetchPromises: Promise<HexResponse[]>[] = [];
 
   addresses.forEach((address) => {
     fetchPromises.push(
       getPaginatedData(`/api/hex?address=${address}`, {
-        cache: refresh ? 'reload' : 'default'
+        cache: refresh ? 'reload' : 'default',
+        signal
       })
     );
   });
@@ -321,13 +323,14 @@ export const getHex = async (addresses: string[], refresh: boolean) => {
   return collatedRes;
 };
 
-export const getPhiat = async (addresses: string[], refresh: boolean) => {
+export const getPhiat = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
   const fetchPromises: Promise<PhiatResponse[]>[] = [];
 
   addresses.forEach((address) => {
     fetchPromises.push(
       getPaginatedData(`/api/phiat?address=${address}`, {
-        cache: refresh ? 'reload' : 'default'
+        cache: refresh ? 'reload' : 'default',
+        signal
       })
     );
   });
@@ -390,9 +393,10 @@ export const getPhiat = async (addresses: string[], refresh: boolean) => {
   return collatedRes;
 };
 
-export const getPulsex = async (addresses: string[], refresh: boolean) => {
+export const getPulsex = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
   const pulsexData = await getMultipleAddressData<PulsexResponse>(addresses, '/api/pulsex', {
-    cache: refresh ? 'reload' : 'default'
+    cache: refresh ? 'reload' : 'default',
+    signal
   });
 
   if (pulsexData.length === 1) return pulsexData[0];
@@ -416,9 +420,10 @@ export const getPulsex = async (addresses: string[], refresh: boolean) => {
   return collatedRes;
 };
 
-export const getPancake = async (addresses: string[], refresh: boolean) => {
+export const getPancake = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
   const pancakeData = await getMultipleAddressData<PancakeResponse>(addresses, '/api/pancake', {
-    cache: refresh ? 'reload' : 'default'
+    cache: refresh ? 'reload' : 'default',
+    signal
   });
 
   if (pancakeData.length === 1) return pancakeData[0];
@@ -449,9 +454,10 @@ export const getPancake = async (addresses: string[], refresh: boolean) => {
   return collatedRes;
 };
 
-export const getSushi = async (addresses: string[], refresh: boolean) => {
+export const getSushi = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
   const sushiData = await getMultipleAddressData<SushiResponse>(addresses, '/api/sushi', {
-    cache: refresh ? 'reload' : 'default'
+    cache: refresh ? 'reload' : 'default',
+    signal
   });
 
   if (sushiData.length === 1) return sushiData[0];
@@ -476,9 +482,10 @@ export const getSushi = async (addresses: string[], refresh: boolean) => {
   return collatedRes;
 };
 
-export const getUniV2 = async (addresses: string[], refresh: boolean) => {
+export const getUniV2 = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
   const uniV2Data = await getMultipleAddressData<UniV2Response>(addresses, '/api/univ2', {
-    cache: refresh ? 'reload' : 'default'
+    cache: refresh ? 'reload' : 'default',
+    signal
   });
 
   if (uniV2Data.length === 1) return uniV2Data[0];
@@ -503,12 +510,15 @@ export const getUniV2 = async (addresses: string[], refresh: boolean) => {
   return collatedRes;
 };
 
-export const getUniV3 = async (addresses: string[], refresh: boolean) => {
+export const getUniV3 = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
   const fetchPromises: Promise<UniV3Response[]>[] = [];
 
   addresses.forEach((address) => {
     fetchPromises.push(
-      getPaginatedData(`/api/univ3?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+      getPaginatedData(`/api/univ3?address=${address}`, {
+        cache: refresh ? 'reload' : 'default',
+        signal
+      })
     );
   });
 
@@ -539,9 +549,10 @@ export const getUniV3 = async (addresses: string[], refresh: boolean) => {
   return collatedRes;
 };
 
-export const getHedron = async (addresses: string[], refresh: boolean) => {
+export const getHedron = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
   const hedronData = await getMultipleAddressData<HedronResponse>(addresses, '/api/hedron', {
-    cache: refresh ? 'reload' : 'default'
+    cache: refresh ? 'reload' : 'default',
+    signal
   });
 
   if (hedronData.length === 1) return hedronData[0];
@@ -570,9 +581,10 @@ export const getHedron = async (addresses: string[], refresh: boolean) => {
   return collatedRes;
 };
 
-export const getPhamous = async (addresses: string[], refresh: boolean) => {
+export const getPhamous = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
   const phamousData = await getMultipleAddressData<PhamousResponse>(addresses, '/api/phamous', {
-    cache: refresh ? 'reload' : 'default'
+    cache: refresh ? 'reload' : 'default',
+    signal
   });
 
   if (phamousData.length === 1) return phamousData[0];
@@ -624,12 +636,15 @@ export const getPhamous = async (addresses: string[], refresh: boolean) => {
   return collatedRes;
 };
 
-export const getXen = async (addresses: string[], refresh: boolean) => {
+export const getXen = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
   const fetchPromises: Promise<XenResponse[]>[] = [];
 
   addresses.forEach((address) => {
     fetchPromises.push(
-      getPaginatedData(`/api/xen?address=${address}`, { cache: refresh ? 'reload' : 'default' })
+      getPaginatedData(`/api/xen?address=${address}`, {
+        cache: refresh ? 'reload' : 'default',
+        signal
+      })
     );
   });
 

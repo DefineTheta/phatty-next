@@ -7,10 +7,11 @@ import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { fetchPortfolioData } from '@app-src/store/portfolio/portfolioSlice';
 import { selectChainsTotal, selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import { PortfolioEnum } from '@app-src/store/portfolio/types';
-import { CalendarIcon, TrophyIcon } from '@heroicons/react/24/outline';
+import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
+import { toast } from 'react-hot-toast';
 
 type IProfileHeaderProps = {
   address: string;
@@ -53,8 +54,17 @@ const ProfileHeader = ({ address, currentChains }: IProfileHeaderProps) => {
     [address]
   );
 
+  const handleAddressCopyClick = useCallback(() => {
+    navigator.clipboard.writeText(address);
+    toast.success(<span className="text-md font-bold">Address copied!</span>);
+  }, [address]);
+
   const handleRefreshDataClick = useCallback(() => {
-    fetchPortfolioData(dispatch, [address], PortfolioEnum.PROFILE, true);
+    const controller = new AbortController();
+
+    fetchPortfolioData(dispatch, [address], PortfolioEnum.PROFILE, controller.signal, true);
+
+    return () => controller.abort();
   }, [dispatch, address]);
 
   return (
@@ -67,6 +77,13 @@ const ProfileHeader = ({ address, currentChains }: IProfileHeaderProps) => {
                 <span className="text-lg font-semibold tracking-wide text-text-200" title={address}>
                   {truncateAddress(address)}
                 </span>
+                <button
+                  className="flex h-20 w-20 cursor-pointer items-center justify-center rounded-full bg-gray-100"
+                  data-tip="Copy wallet address"
+                  onClick={handleAddressCopyClick}
+                >
+                  <DocumentDuplicateIcon className="h-12 w-12" />
+                </button>
               </div>
               <div className="flex flex-row items-center gap-x-18">
                 {bundleAddress && (

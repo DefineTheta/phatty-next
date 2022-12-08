@@ -9,6 +9,7 @@ import {
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import PublicHeader from '@app-src/modules/public/components/PublicHeader';
 import {
+  clearPortfolio,
   fetchPortfolioData,
   fetchPublicBundleData,
   setHasFetched
@@ -50,9 +51,16 @@ const BundlePublicPortfolioPage = () => {
   useEffect(() => {
     if (hasFetched || !addresses || addresses.length === 0) return;
 
-    fetchPortfolioData(dispatch, addresses, PortfolioEnum.PUBLIC).then(() =>
-      dispatch(setHasFetched({ hasFetched: true, type: PortfolioEnum.PUBLIC }))
-    );
+    const controller = new AbortController();
+
+    fetchPortfolioData(dispatch, addresses, PortfolioEnum.PUBLIC, controller.signal).then(() => {
+      const aborted = controller.signal.aborted;
+
+      if (aborted) dispatch(clearPortfolio(PortfolioEnum.PUBLIC));
+      else dispatch(setHasFetched({ hasFetched: true, type: PortfolioEnum.PUBLIC }));
+    });
+
+    return () => controller.abort();
   }, [dispatch, addresses, hasFetched]);
 
   useEffect(() => {
@@ -68,7 +76,11 @@ const BundlePublicPortfolioPage = () => {
   const handleRefreshData = useCallback(() => {
     if (!addresses || addresses.length === 0) return;
 
-    fetchPortfolioData(dispatch, addresses, PortfolioEnum.PUBLIC, true);
+    const controller = new AbortController();
+
+    fetchPortfolioData(dispatch, addresses, PortfolioEnum.PUBLIC, controller.signal, true);
+
+    return () => controller.abort();
   }, [dispatch, addresses]);
 
   return (

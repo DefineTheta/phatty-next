@@ -65,7 +65,11 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
   }, [address]);
 
   const handleRefreshDataClick = useCallback(() => {
-    fetchPortfolioData(dispatch, bundleAddresses, PortfolioEnum.BUNDLE, true);
+    const controller = new AbortController();
+
+    fetchPortfolioData(dispatch, bundleAddresses, PortfolioEnum.BUNDLE, controller.signal, true);
+
+    return () => controller.abort();
   }, [dispatch, bundleAddresses]);
 
   return (

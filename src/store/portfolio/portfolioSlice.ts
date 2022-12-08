@@ -66,7 +66,7 @@ const initialPortfolioData: PortfolioData = {
       [ChainEnum.AVAX]: 0,
       [ChainEnum.FTM]: 0
     },
-    loading: false,
+    loading: true,
     error: false,
     data: {
       [ChainEnum.ETH]: [],
@@ -86,7 +86,7 @@ const initialPortfolioData: PortfolioData = {
       [HexDataComponentEnum.ETH]: 0,
       [HexDataComponentEnum.TPLS]: 0
     },
-    loading: false,
+    loading: true,
     error: false,
     data: {
       [HexDataComponentEnum.ETH]: [],
@@ -100,7 +100,7 @@ const initialPortfolioData: PortfolioData = {
     balance: {
       STAKING: 0
     },
-    loading: false,
+    loading: true,
     error: false,
     data: {
       [PhiatDataComponentEnum.LENDING]: [],
@@ -115,7 +115,7 @@ const initialPortfolioData: PortfolioData = {
     total: {
       [PulsexDataComponentEnum.LIQUIDITY_POOL]: 0
     },
-    loading: false,
+    loading: true,
     error: false,
     data: {
       [PulsexDataComponentEnum.LIQUIDITY_POOL]: []
@@ -126,7 +126,7 @@ const initialPortfolioData: PortfolioData = {
       [PancakeDataComponentEnum.FARMING]: 0,
       [PancakeDataComponentEnum.LIQUIDITY_POOL]: 0
     },
-    loading: false,
+    loading: true,
     error: false,
     data: {
       [PancakeDataComponentEnum.FARMING]: [],
@@ -137,7 +137,7 @@ const initialPortfolioData: PortfolioData = {
     total: {
       [SushiDataComponentEnum.LIQUIDITY_POOL]: 0
     },
-    loading: false,
+    loading: true,
     error: false,
     data: {
       [SushiDataComponentEnum.LIQUIDITY_POOL]: []
@@ -147,7 +147,7 @@ const initialPortfolioData: PortfolioData = {
     total: {
       [UniswapV2DataComponentEnum.LIQUIDITY_POOL]: 0
     },
-    loading: false,
+    loading: true,
     error: false,
     data: {
       [UniswapV2DataComponentEnum.LIQUIDITY_POOL]: []
@@ -157,7 +157,7 @@ const initialPortfolioData: PortfolioData = {
     total: {
       [UniswapV3DataComponentEnum.LIQUIDITY_POOL]: 0
     },
-    loading: false,
+    loading: true,
     error: false,
     data: {
       [UniswapV3DataComponentEnum.LIQUIDITY_POOL]: []
@@ -168,7 +168,7 @@ const initialPortfolioData: PortfolioData = {
       [HedronDataComponentEnum.ETH]: 0,
       [HedronDataComponentEnum.TPLS]: 0
     },
-    loading: false,
+    loading: true,
     error: false,
     data: {
       [HedronDataComponentEnum.ETH]: [],
@@ -182,7 +182,7 @@ const initialPortfolioData: PortfolioData = {
     balance: {
       STAKING: 0
     },
-    loading: false,
+    loading: true,
     error: false,
     data: {
       [PhamousDataComponentEnum.LIQUIDITY_PROVIDING]: [],
@@ -194,7 +194,7 @@ const initialPortfolioData: PortfolioData = {
     total: {
       ETH: 0
     },
-    loading: false,
+    loading: true,
     error: false,
     data: {
       [XenDataComponentEnum.MINTING]: [],
@@ -384,13 +384,16 @@ const fetchWalletData = createAsyncThunk<
   };
 
   if (typeof input === 'object')
-    return { data: await getWallet(input.addresses, input.refresh), type: input.type };
+    return {
+      data: await getWallet(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
 
   const addresses = thunkAPI.getState().portfolio[input].addresses;
 
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  return { data: await getWallet(addresses, false), type: input };
+  return { data: await getWallet(addresses, false, controller.signal), type: input };
 });
 
 const fetchHexData = createAsyncThunk<
@@ -405,13 +408,16 @@ const fetchHexData = createAsyncThunk<
   };
 
   if (typeof input === 'object')
-    return { data: await getHex(input.addresses, input.refresh), type: input.type };
+    return {
+      data: await getHex(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
 
   const addresses = thunkAPI.getState().portfolio[input].addresses;
 
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  return { data: await getHex(addresses, false), type: input };
+  return { data: await getHex(addresses, false, controller.signal), type: input };
 });
 
 const fetchPhiatData = createAsyncThunk<
@@ -426,13 +432,16 @@ const fetchPhiatData = createAsyncThunk<
   };
 
   if (typeof input === 'object')
-    return { data: await getPhiat(input.addresses, input.refresh), type: input.type };
+    return {
+      data: await getPhiat(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
 
   const addresses = thunkAPI.getState().portfolio[input].addresses;
 
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  return { data: await getPhiat(addresses, false), type: input };
+  return { data: await getPhiat(addresses, false, controller.signal), type: input };
 });
 
 const fetchPulsexData = createAsyncThunk<
@@ -447,13 +456,16 @@ const fetchPulsexData = createAsyncThunk<
   };
 
   if (typeof input === 'object')
-    return { data: await getPulsex(input.addresses, input.refresh), type: input.type };
+    return {
+      data: await getPulsex(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
 
   const addresses = thunkAPI.getState().portfolio[input].addresses;
 
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  return { data: await getPulsex(addresses, false), type: input };
+  return { data: await getPulsex(addresses, false, controller.signal), type: input };
 });
 
 const fetchPancakeData = createAsyncThunk<
@@ -468,13 +480,16 @@ const fetchPancakeData = createAsyncThunk<
   };
 
   if (typeof input === 'object')
-    return { data: await getPancake(input.addresses, input.refresh), type: input.type };
+    return {
+      data: await getPancake(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
 
   const addresses = thunkAPI.getState().portfolio[input].addresses;
 
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  return { data: await getPancake(addresses, false), type: input };
+  return { data: await getPancake(addresses, false, controller.signal), type: input };
 });
 
 const fetchSushiData = createAsyncThunk<
@@ -489,13 +504,16 @@ const fetchSushiData = createAsyncThunk<
   };
 
   if (typeof input === 'object')
-    return { data: await getSushi(input.addresses, input.refresh), type: input.type };
+    return {
+      data: await getSushi(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
 
   const addresses = thunkAPI.getState().portfolio[input].addresses;
 
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  return { data: await getSushi(addresses, false), type: input };
+  return { data: await getSushi(addresses, false, controller.signal), type: input };
 });
 
 const fetchUniV2Data = createAsyncThunk<
@@ -510,13 +528,16 @@ const fetchUniV2Data = createAsyncThunk<
   };
 
   if (typeof input === 'object')
-    return { data: await getUniV2(input.addresses, input.refresh), type: input.type };
+    return {
+      data: await getUniV2(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
 
   const addresses = thunkAPI.getState().portfolio[input].addresses;
 
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  return { data: await getUniV2(addresses, false), type: input };
+  return { data: await getUniV2(addresses, false, controller.signal), type: input };
 });
 
 const fetchUniV3Data = createAsyncThunk<
@@ -531,13 +552,16 @@ const fetchUniV3Data = createAsyncThunk<
   };
 
   if (typeof input === 'object')
-    return { data: await getUniV3(input.addresses, input.refresh), type: input.type };
+    return {
+      data: await getUniV3(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
 
   const addresses = thunkAPI.getState().portfolio[input].addresses;
 
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  return { data: await getUniV3(addresses, false), type: input };
+  return { data: await getUniV3(addresses, false, controller.signal), type: input };
 });
 
 const fetchHedronData = createAsyncThunk<
@@ -552,13 +576,16 @@ const fetchHedronData = createAsyncThunk<
   };
 
   if (typeof input === 'object')
-    return { data: await getHedron(input.addresses, input.refresh), type: input.type };
+    return {
+      data: await getHedron(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
 
   const addresses = thunkAPI.getState().portfolio[input].addresses;
 
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  return { data: await getHedron(addresses, false), type: input };
+  return { data: await getHedron(addresses, false, controller.signal), type: input };
 });
 
 const fetchPhamousData = createAsyncThunk<
@@ -573,13 +600,16 @@ const fetchPhamousData = createAsyncThunk<
   };
 
   if (typeof input === 'object')
-    return { data: await getPhamous(input.addresses, input.refresh), type: input.type };
+    return {
+      data: await getPhamous(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
 
   const addresses = thunkAPI.getState().portfolio[input].addresses;
 
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  return { data: await getPhamous(addresses, false), type: input };
+  return { data: await getPhamous(addresses, false, controller.signal), type: input };
 });
 
 const fetchXenData = createAsyncThunk<
@@ -594,22 +624,76 @@ const fetchXenData = createAsyncThunk<
   };
 
   if (typeof input === 'object')
-    return { data: await getXen(input.addresses, input.refresh), type: input.type };
+    return {
+      data: await getXen(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
 
   const addresses = thunkAPI.getState().portfolio[input].addresses;
 
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
-  return { data: await getXen(addresses, false), type: input };
+  return { data: await getXen(addresses, false, controller.signal), type: input };
 });
+
+// const fetchPortfolioData = createAsyncThunk<
+//   void,
+//   { addresses: string[]; type: Portfolio; refresh: boolean; signal: AbortSignal },
+//   { state: RootState }
+// >('portfolio/fetchPortfolioData', async (input, thunkAPI) => {
+//   const promises = [
+//     thunkAPI.dispatch(
+//       fetchWalletData({ addresses: input.addresses, refresh: input.refresh, type: input.type })
+//     ),
+//     thunkAPI.dispatch(
+//       fetchHexData({ addresses: input.addresses, refresh: input.refresh, type: input.type })
+//     ),
+//     thunkAPI.dispatch(
+//       fetchPhiatData({ addresses: input.addresses, refresh: input.refresh, type: input.type })
+//     ),
+//     thunkAPI.dispatch(
+//       fetchPulsexData({ addresses: input.addresses, refresh: input.refresh, type: input.type })
+//     ),
+//     thunkAPI.dispatch(
+//       fetchPancakeData({ addresses: input.addresses, refresh: input.refresh, type: input.type })
+//     ),
+//     thunkAPI.dispatch(
+//       fetchSushiData({ addresses: input.addresses, refresh: input.refresh, type: input.type })
+//     ),
+//     thunkAPI.dispatch(
+//       fetchUniV2Data({ addresses: input.addresses, refresh: input.refresh, type: input.type })
+//     ),
+//     thunkAPI.dispatch(
+//       fetchUniV3Data({ addresses: input.addresses, refresh: input.refresh, type: input.type })
+//     ),
+//     thunkAPI.dispatch(
+//       fetchHedronData({ addresses: input.addresses, refresh: input.refresh, type: input.type })
+//     ),
+//     thunkAPI.dispatch(
+//       fetchPhamousData({ addresses: input.addresses, refresh: input.refresh, type: input.type })
+//     ),
+//     thunkAPI.dispatch(
+//       fetchXenData({ addresses: input.addresses, refresh: input.refresh, type: input.type })
+//     )
+//   ];
+
+//   input.signal.onabort = () => {
+//     promises.forEach((promise) => promise.abort());
+//   };
+
+//   await Promise.all(promises);
+
+//   if (input.signal.aborted) return thunkAPI.rejectWithValue('');
+// });
 
 const fetchPortfolioData = (
   dispatch: AppDispatch,
   addresses: string[],
   type: Portfolio,
+  signal: AbortSignal,
   refresh = false
 ) => {
-  return Promise.all([
+  const promises = [
     dispatch(fetchWalletData({ addresses, refresh, type })),
     dispatch(fetchHexData({ addresses, refresh, type })),
     dispatch(fetchPhiatData({ addresses, refresh, type })),
@@ -621,7 +705,15 @@ const fetchPortfolioData = (
     dispatch(fetchHedronData({ addresses, refresh, type })),
     dispatch(fetchPhamousData({ addresses, refresh, type })),
     dispatch(fetchXenData({ addresses, refresh, type }))
-  ]);
+  ];
+
+  signal.onabort = () => {
+    // throw new DOMException('ETH token wallet data aborted!', 'AbortError');
+    console.log('ABORT CALLED');
+    promises.forEach((promise) => promise.abort());
+  };
+
+  return Promise.all(promises);
 };
 
 export const portfolioSlice = createSlice({
@@ -631,6 +723,14 @@ export const portfolioSlice = createSlice({
     reset: () => initialState,
     clearAddresses: (state, action: PayloadAction<Portfolio>) => {
       state[action.payload].addresses = [];
+    },
+    clearPortfolio: (state, action: PayloadAction<Portfolio>) => {
+      state[action.payload] = initialPortfolioData;
+    },
+    clearBundlePortfolio: (state) => {
+      const { displayAddress, addresses, ...data } = initialPortfolioData;
+
+      state.BUNDLE = { ...state.BUNDLE, ...data };
     },
     setDisplayAddress: (state, action: PayloadAction<{ address: string; type: Portfolio }>) => {
       state[action.payload.type].displayAddress = action.payload.address;
@@ -746,6 +846,27 @@ export const portfolioSlice = createSlice({
       // state.WALLET.loading = false;
       // state.WALLET.error = true;
     });
+
+    // Portfolio data functions
+    // builder.addCase(fetchPortfolioData.pending, (state) => {
+    //   // state.WALLET.loading = true;
+    // });
+
+    // builder.addCase(fetchPortfolioData.fulfilled, (state, action) => {
+    //   // const res = action.payload.data;
+    //   // state.PUBLIC.displayAddress = res.name;
+    //   // state.PUBLIC.addresses = res.addresses;
+    //   // state.WALLET.loading = false;
+    //   // state.WALLET.error = false;
+    // });
+
+    // builder.addCase(fetchPortfolioData.rejected, (state, action) => {
+    //   const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+    //   state[type] = initialPortfolioData;
+    //   // state.WALLET.loading = false;
+    //   // state.WALLET.error = true;
+    // });
 
     //Wallet reducer functions
     builder.addCase(fetchWalletData.pending, (state, action) => {
@@ -1102,8 +1223,15 @@ export const portfolioSlice = createSlice({
   }
 });
 
-export const { reset, setHasFetched, setDisplayAddress, setAddresses, clearAddresses } =
-  portfolioSlice.actions;
+export const {
+  reset,
+  setHasFetched,
+  setDisplayAddress,
+  setAddresses,
+  clearAddresses,
+  clearPortfolio,
+  clearBundlePortfolio
+} = portfolioSlice.actions;
 
 export {
   fetchBundleAddresses,

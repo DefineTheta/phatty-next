@@ -34,6 +34,7 @@
     "web3": "^1.8.0"
   },
   "devDependencies": {
+    "@simbathesailor/use-what-changed": "^2.0.0",
     "@types/luxon": "^3.0.2",
     "@types/node": "18.11.2",
     "@types/react": "18.0.21",

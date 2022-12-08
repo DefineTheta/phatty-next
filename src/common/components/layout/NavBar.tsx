@@ -5,7 +5,6 @@ import { setHistoryHasFetched } from '@app-src/store/history/historySlice';
 import {
   deleteBundleSession,
   fetchBundleAddresses,
-  setDisplayAddress,
   setHasFetched
 } from '@app-src/store/portfolio/portfolioSlice';
 import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
@@ -31,17 +30,16 @@ const NavBar = () => {
         router.push(`/profile/${address}/portfolio`).then(() => {
           dispatch(setHasFetched({ hasFetched: false, type: PortfolioEnum.PROFILE }));
           dispatch(setHistoryHasFetched(false));
-          dispatch(setDisplayAddress({ address, type: PortfolioEnum.PROFILE }));
         });
       }
     },
-    [dispatch, searchInputRef]
+    [dispatch, router, searchInputRef]
   );
 
   const handleButtonClick = (type: 'connect' | 'disconnect') => {
     console.log(type);
     if (type === 'disconnect') {
-      dispatch(deleteBundleSession());
+      dispatch(deleteBundleSession()).then(() => router.push(`/bundle`));
     } else if (type === 'connect') {
       dispatch(fetchBundleAddresses());
     }

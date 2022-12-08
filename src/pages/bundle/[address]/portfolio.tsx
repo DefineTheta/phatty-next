@@ -8,6 +8,7 @@ import {
   PortfolioEnum
 } from '@app-src/modules/portfolio/types/portfolio';
 import {
+  clearBundlePortfolio,
   fetchBundleAddresses,
   fetchPortfolioData,
   setHasFetched
@@ -17,6 +18,7 @@ import {
   selectDisplayAddress,
   selectHasFetched
 } from '@app-src/store/portfolio/selectors';
+import { useWhatChanged } from '@simbathesailor/use-what-changed';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -29,6 +31,8 @@ const BundlePortfolioPage = () => {
   const hasFetched = useAppSelector(useCallback(selectHasFetched(PortfolioEnum.BUNDLE), []));
 
   const [currentChains, setCurrentChains] = useState<PortfolioChain[]>([]);
+
+  useWhatChanged([dispatch, hasFetched, bundleAddresses], 'dispatch, hasFetched, bundleAddresses');
 
   useEffect(() => {
     if (!hasFetched && bundleAddress) {
@@ -43,9 +47,18 @@ const BundlePortfolioPage = () => {
   useEffect(() => {
     if (hasFetched || !bundleAddresses || bundleAddresses.length === 0) return;
 
-    fetchPortfolioData(dispatch, bundleAddresses, PortfolioEnum.BUNDLE).then(() =>
-      dispatch(setHasFetched({ hasFetched: true, type: PortfolioEnum.BUNDLE }))
+    const controller = new AbortController();
+
+    fetchPortfolioData(dispatch, bundleAddresses, PortfolioEnum.BUNDLE, controller.signal).then(
+      () => {
+        const aborted = controller.signal.aborted;
+
+        if (aborted) dispatch(clearBundlePortfolio());
+        else dispatch(setHasFetched({ hasFetched: true, type: PortfolioEnum.BUNDLE }));
+      }
     );
+
+    return () => controller.abort();
   }, [dispatch, bundleAddresses, hasFetched]);
 
   useEffect(() => {

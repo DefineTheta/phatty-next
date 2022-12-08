@@ -9,7 +9,7 @@ import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { truncateAddress } from '@app-src/common/utils/format';
 import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import PublicHeader from '@app-src/modules/public/components/PublicHeader';
-import { setHasFetched } from '@app-src/store/portfolio/portfolioSlice';
+import { clearPortfolio } from '@app-src/store/portfolio/portfolioSlice';
 import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
@@ -78,8 +78,7 @@ const BundlePublicPage = () => {
       const data = publicBundleData[index];
       const route = `/public/${index}`;
 
-      if (currentBundleName !== data.name)
-        dispatch(setHasFetched({ hasFetched: false, type: PortfolioEnum.PUBLIC }));
+      if (currentBundleName !== data.name) dispatch(clearPortfolio(PortfolioEnum.PUBLIC));
 
       router.push(route);
     },
