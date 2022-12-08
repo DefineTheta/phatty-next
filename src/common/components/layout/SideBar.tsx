@@ -193,7 +193,7 @@ const SideBar = () => {
             <div className="flex flex-col gap-y-24">
               {navItems.map((item, index) => (
                 <>
-                  {index === 4 && <div className="mr:20 my-20 h-1 bg-gray-500 sm:mr-30"></div>}
+                  {index === 5 && <div className="mr:20 my-20 h-1 bg-gray-500 sm:mr-30"></div>}
                   <a
                     key={item.name}
                     className={`flex cursor-pointer items-center gap-x-12 duration-150 ease-in-out hover:text-gray-200 ${
