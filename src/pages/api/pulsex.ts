@@ -1,11 +1,11 @@
 import {
-  fetchPrices,
   lendingPoolProviderAddress,
   phiatProviderContract,
   PhiatReserveDataItem,
   PhiatReserveResponse,
   tokenImages,
-  tplsClient
+  tplsClient,
+  withWeb3ApiRoute
 } from '@app-src/services/web3';
 import { PulsexResponse, PulsexTokenItem } from '@app-src/types/api';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -450,15 +450,11 @@ const calculateLiquidityPool = async (
   return resObj;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<PulsexResponse>) {
-  res.setHeader('Cache-Control', 's-maxage=3600');
-  const { address } = req.query;
-
-  if (!address) return res.status(400);
-
-  const price = await fetchPrices();
-
-  if (!price) return res.status(500);
+export default withWeb3ApiRoute(async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<PulsexResponse>
+) {
+  const { address, price } = req.middleware;
 
   const phiatReserveData: PhiatReserveResponse = await phiatProviderContract.methods
     .getPhiatReserveData(lendingPoolProviderAddress, plsUsdPriceOracle)
@@ -513,4 +509,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   };
 
   res.status(200).json(resObj);
-}
+});

@@ -1,4 +1,4 @@
-import { bscClient, fetchPrices, tokenImages } from '@app-src/services/web3';
+import { bscClient, tokenImages, withWeb3ApiRoute } from '@app-src/services/web3';
 import { PancakeFarmTokenItem, PancakeLPTokenItem, PancakeResponse } from '@app-src/types/api';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Contract } from 'web3-eth-contract';
@@ -1061,155 +1061,149 @@ const calculateFarm = async (
   return resObj;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<PancakeResponse>) {
-  res.setHeader('Cache-Control', 's-maxage=3600');
-  const { address } = req.query;
+export default withWeb3ApiRoute(
+  async function handler(req: NextApiRequest, res: NextApiResponse<PancakeResponse>) {
+    const { address, page, price } = req.middleware;
 
-  if (!address) return res.status(400);
-
-  let page: number = Number(req.query.page || 1);
-
-  if (page < 1) return res.status(400);
-
-  const price = await fetchPrices();
-
-  if (!price) return res.status(500);
-
-  const phiatReservesLookupMap: Record<string, PhiatReserveItem> = {
-    '0x2170Ed0880ac9A755fd29B2688956BD959F933F8': {
-      symbol: 'ETH',
-      address: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
-      decimals: 18,
-      priceInUsd: price['ETH']
-    },
-    '0x55d398326f99059fF775485246999027B3197955': {
-      symbol: 'USDT',
-      address: '0x55d398326f99059fF775485246999027B3197955',
-      decimals: 18,
-      priceInUsd: price['USDT']
-    },
-    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c': {
-      symbol: 'WBNB',
-      address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-      decimals: 18,
-      priceInUsd: price['WBNB']
-    },
-    '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d': {
-      symbol: 'USDC',
-      address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
-      decimals: 18,
-      priceInUsd: price['USDC']
-    },
-    '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56': {
-      symbol: 'BUSD',
-      address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
-      decimals: 18,
-      priceInUsd: price['BUSD']
-    },
-    '0x2859e4544C4bB03966803b044A93563Bd2D0DD4D': {
-      symbol: 'SHIB',
-      address: '0x2859e4544C4bB03966803b044A93563Bd2D0DD4D',
-      decimals: 18,
-      priceInUsd: price['SHIB']
-    },
-    '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3': {
-      symbol: 'DAI',
-      address: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
-      decimals: 18,
-      priceInUsd: price['DAI']
-    },
-    '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD': {
-      symbol: 'LINK',
-      address: '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD',
-      decimals: 18,
-      priceInUsd: price['LINK']
-    },
-    '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82': {
-      symbol: 'CAKE',
-      address: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
-      decimals: 18,
-      priceInUsd: price['CAKE']
-    },
-    '0x3019BF2a2eF8040C242C9a4c5c4BD4C81678b2A1': {
-      symbol: 'GMT',
-      address: '0x3019BF2a2eF8040C242C9a4c5c4BD4C81678b2A1',
-      decimals: 8,
-      priceInUsd: price['GMT']
-    },
-    '0xBf5140A22578168FD562DCcF235E5D43A02ce9B1': {
-      symbol: 'UNI',
-      address: '0xBf5140A22578168FD562DCcF235E5D43A02ce9B1',
-      decimals: 18,
-      priceInUsd: price['UNI']
-    },
-    '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c': {
-      symbol: 'WBTC',
-      address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
-      decimals: 18,
-      priceInUsd: price['WBTC']
-    }
-  };
-
-  const pancakeLiquidityPoolPromises: Promise<PancakeLPTokenItem>[] = [];
-
-  liquidityPoolContracts.forEach((lp) => {
-    pancakeLiquidityPoolPromises.push(
-      calculateLiquidityPool(lp.contract, address as string, lp.address, phiatReservesLookupMap)
-    );
-  });
-
-  const liquidityPoolData = await Promise.all(pancakeLiquidityPoolPromises);
-  const liquidityPoolLookupMap: Record<string, PancakeLPTokenItem> = {};
-
-  let liquidityPoolTotal = 0;
-  const filteredLiqudityPoolData: PancakeLPTokenItem[] = [];
-
-  for (let i = 0; i < liquidityPoolData.length; i++) {
-    liquidityPoolLookupMap[liquidityPoolData[i].liquidityPoolAddress] = liquidityPoolData[i];
-
-    if (liquidityPoolData[i].usdValue > 0) {
-      liquidityPoolTotal += liquidityPoolData[i].usdValue;
-      filteredLiqudityPoolData.push(liquidityPoolData[i]);
-    }
-  }
-
-  const pancakeFarmPromises: Promise<PancakeFarmTokenItem>[] = [];
-
-  pancakeFarmAddresses.forEach((farm) => {
-    pancakeFarmPromises.push(
-      calculateFarm(
-        address as string,
-        farm.pid,
-        price['CAKE'],
-        liquidityPoolLookupMap[farm.address]
-      )
-    );
-  });
-
-  const pancakeFarmData = await Promise.all(pancakeFarmPromises);
-
-  let farmingTotal = 0;
-  const filteredFarmData: PancakeFarmTokenItem[] = [];
-
-  for (let i = 0; i < pancakeFarmData.length; i++) {
-    if (pancakeFarmData[i].usdValue > 0) {
-      farmingTotal += pancakeFarmData[i].usdValue;
-      filteredFarmData.push(pancakeFarmData[i]);
-    }
-  }
-
-  const resObj = {
-    data: {
-      LIQUIDITY_POOL: {
-        data: filteredLiqudityPoolData,
-        totalValue: liquidityPoolTotal
+    const phiatReservesLookupMap: Record<string, PhiatReserveItem> = {
+      '0x2170Ed0880ac9A755fd29B2688956BD959F933F8': {
+        symbol: 'ETH',
+        address: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
+        decimals: 18,
+        priceInUsd: price['ETH']
       },
-      FARMING: {
-        data: filteredFarmData,
-        totalValue: farmingTotal
+      '0x55d398326f99059fF775485246999027B3197955': {
+        symbol: 'USDT',
+        address: '0x55d398326f99059fF775485246999027B3197955',
+        decimals: 18,
+        priceInUsd: price['USDT']
+      },
+      '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c': {
+        symbol: 'WBNB',
+        address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+        decimals: 18,
+        priceInUsd: price['WBNB']
+      },
+      '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d': {
+        symbol: 'USDC',
+        address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+        decimals: 18,
+        priceInUsd: price['USDC']
+      },
+      '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56': {
+        symbol: 'BUSD',
+        address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+        decimals: 18,
+        priceInUsd: price['BUSD']
+      },
+      '0x2859e4544C4bB03966803b044A93563Bd2D0DD4D': {
+        symbol: 'SHIB',
+        address: '0x2859e4544C4bB03966803b044A93563Bd2D0DD4D',
+        decimals: 18,
+        priceInUsd: price['SHIB']
+      },
+      '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3': {
+        symbol: 'DAI',
+        address: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
+        decimals: 18,
+        priceInUsd: price['DAI']
+      },
+      '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD': {
+        symbol: 'LINK',
+        address: '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD',
+        decimals: 18,
+        priceInUsd: price['LINK']
+      },
+      '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82': {
+        symbol: 'CAKE',
+        address: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
+        decimals: 18,
+        priceInUsd: price['CAKE']
+      },
+      '0x3019BF2a2eF8040C242C9a4c5c4BD4C81678b2A1': {
+        symbol: 'GMT',
+        address: '0x3019BF2a2eF8040C242C9a4c5c4BD4C81678b2A1',
+        decimals: 8,
+        priceInUsd: price['GMT']
+      },
+      '0xBf5140A22578168FD562DCcF235E5D43A02ce9B1': {
+        symbol: 'UNI',
+        address: '0xBf5140A22578168FD562DCcF235E5D43A02ce9B1',
+        decimals: 18,
+        priceInUsd: price['UNI']
+      },
+      '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c': {
+        symbol: 'WBTC',
+        address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+        decimals: 18,
+        priceInUsd: price['WBTC']
+      }
+    };
+
+    const pancakeLiquidityPoolPromises: Promise<PancakeLPTokenItem>[] = [];
+
+    liquidityPoolContracts.forEach((lp) => {
+      pancakeLiquidityPoolPromises.push(
+        calculateLiquidityPool(lp.contract, address as string, lp.address, phiatReservesLookupMap)
+      );
+    });
+
+    const liquidityPoolData = await Promise.all(pancakeLiquidityPoolPromises);
+    const liquidityPoolLookupMap: Record<string, PancakeLPTokenItem> = {};
+
+    let liquidityPoolTotal = 0;
+    const filteredLiqudityPoolData: PancakeLPTokenItem[] = [];
+
+    for (let i = 0; i < liquidityPoolData.length; i++) {
+      liquidityPoolLookupMap[liquidityPoolData[i].liquidityPoolAddress] = liquidityPoolData[i];
+
+      if (liquidityPoolData[i].usdValue > 0) {
+        liquidityPoolTotal += liquidityPoolData[i].usdValue;
+        filteredLiqudityPoolData.push(liquidityPoolData[i]);
       }
     }
-  } as PancakeResponse;
 
-  res.status(200).json(resObj);
-}
+    const pancakeFarmPromises: Promise<PancakeFarmTokenItem>[] = [];
+
+    pancakeFarmAddresses.forEach((farm) => {
+      pancakeFarmPromises.push(
+        calculateFarm(
+          address as string,
+          farm.pid,
+          price['CAKE'],
+          liquidityPoolLookupMap[farm.address]
+        )
+      );
+    });
+
+    const pancakeFarmData = await Promise.all(pancakeFarmPromises);
+
+    let farmingTotal = 0;
+    const filteredFarmData: PancakeFarmTokenItem[] = [];
+
+    for (let i = 0; i < pancakeFarmData.length; i++) {
+      if (pancakeFarmData[i].usdValue > 0) {
+        farmingTotal += pancakeFarmData[i].usdValue;
+        filteredFarmData.push(pancakeFarmData[i]);
+      }
+    }
+
+    const resObj = {
+      data: {
+        LIQUIDITY_POOL: {
+          data: filteredLiqudityPoolData,
+          totalValue: liquidityPoolTotal
+        },
+        FARMING: {
+          data: filteredFarmData,
+          totalValue: farmingTotal
+        }
+      }
+    } as PancakeResponse;
+
+    res.status(200).json(resObj);
+  },
+  {
+    isPaginated: true
+  }
+);

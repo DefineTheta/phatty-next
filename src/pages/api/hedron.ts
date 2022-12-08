@@ -1,5 +1,5 @@
 import { hedronABI } from '@app-src/services/abi';
-import { fetchPrices, roundToPrecision, tplsClient } from '@app-src/services/web3';
+import { roundToPrecision, tplsClient, withWeb3ApiRoute } from '@app-src/services/web3';
 import { HedronItem, HedronResponse } from '@app-src/types/api';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Web3 from 'web3';
@@ -106,48 +106,38 @@ const calculateHedronStake = async (address: string, type: 'ETH' | 'TPLS', hedro
   return stakes;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    const address = req.query.address;
+export default withWeb3ApiRoute(async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { address, price } = req.middleware;
 
-    if (!address || typeof address === 'object') return res.status(400).end();
+  const ethHedronStakePromise = calculateHedronStake(address, 'ETH', price['HEX']);
+  const tplsHedronStakePromise = calculateHedronStake(address, 'TPLS', price['TPLS_HEX']);
 
-    const price = await fetchPrices();
+  const stakeData = await Promise.all([ethHedronStakePromise, tplsHedronStakePromise]);
 
-    if (!price) return res.status(500).end();
+  const filteredStakes: HedronItem[][] = [[], []];
+  const stakesTotal = [0, 0];
 
-    const ethHedronStakePromise = calculateHedronStake(address, 'ETH', price['HEX']);
-    const tplsHedronStakePromise = calculateHedronStake(address, 'TPLS', price['TPLS_HEX']);
-
-    const stakeData = await Promise.all([ethHedronStakePromise, tplsHedronStakePromise]);
-
-    const filteredStakes: HedronItem[][] = [[], []];
-    const stakesTotal = [0, 0];
-
-    for (let i = 0; i < filteredStakes.length; i++) {
-      for (let j = 0; j < stakeData[i].length; j++) {
-        if (stakeData[i][j].usdValue > 0) {
-          filteredStakes[i].push(stakeData[i][j]);
-          stakesTotal[i] += stakeData[i][j].usdValue;
-        }
+  for (let i = 0; i < filteredStakes.length; i++) {
+    for (let j = 0; j < stakeData[i].length; j++) {
+      if (stakeData[i][j].usdValue > 0) {
+        filteredStakes[i].push(stakeData[i][j]);
+        stakesTotal[i] += stakeData[i][j].usdValue;
       }
     }
-
-    const resObj = {
-      data: {
-        ETH: {
-          data: filteredStakes[0],
-          totalValue: stakesTotal[0]
-        },
-        TPLS: {
-          data: filteredStakes[1],
-          totalValue: stakesTotal[1]
-        }
-      }
-    } as HedronResponse;
-
-    res.status(200).send(resObj);
-  } catch (err) {
-    res.status(500).end();
   }
-}
+
+  const resObj = {
+    data: {
+      ETH: {
+        data: filteredStakes[0],
+        totalValue: stakesTotal[0]
+      },
+      TPLS: {
+        data: filteredStakes[1],
+        totalValue: stakesTotal[1]
+      }
+    }
+  } as HedronResponse;
+
+  res.status(200).send(resObj);
+});

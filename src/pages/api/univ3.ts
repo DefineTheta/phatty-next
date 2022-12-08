@@ -1,5 +1,5 @@
 import { uniFactoryABI, uniNftABI, uniPoolABI } from '@app-src/services/abi';
-import { DEFI_LLAMA_URL, tokenImages } from '@app-src/services/web3';
+import { DEFI_LLAMA_URL, tokenImages, withWeb3ApiRoute } from '@app-src/services/web3';
 import { UniV3Item, UniV3Response } from '@app-src/types/api';
 import { Token } from '@uniswap/sdk-core';
 import { Pool, Position } from '@uniswap/v3-sdk';
@@ -187,13 +187,9 @@ const calculateLiquidity = async (positions: UniNftPosition, nftId: string) => {
   return liquidityPoolObj;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    res.setHeader('Cache-Control', 's-maxage=3600');
-    const { address, page } = req.query;
-
-    if (!address || typeof address === 'object' || !page || typeof page === 'object')
-      return res.status(400).end();
+export default withWeb3ApiRoute(
+  async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const { address, page } = req.middleware;
 
     const pageCount = Number(page);
 
@@ -231,8 +227,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } as UniV3Response;
 
     res.status(200).send(resObj);
-  } catch (err) {
-    console.log(err);
-    res.status(500).end();
+  },
+  {
+    isPaginated: true
   }
-}
+);

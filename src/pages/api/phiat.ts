@@ -1,12 +1,12 @@
 import { feeABI, tokenABI } from '@app-src/services/abi';
 import {
-  fetchPrices,
   lendingPoolProviderAddress,
   phiatProviderContract,
   PhiatReserveDataItem,
   PhiatReserveResponse,
   tokenImages,
-  tplsClient
+  tplsClient,
+  withWeb3ApiRoute
 } from '@app-src/services/web3';
 import { PhiatData, PhiatResponse, PhiatTokenItem } from '@app-src/types/api';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -112,145 +112,139 @@ const calculatePhiatToken = async (rewardAmount: number, reserve: PhiatReserveDa
   return resObj;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<PhiatResponse>) {
-  res.setHeader('Cache-Control', 's-maxage=3600');
-  const { address } = req.query;
+export default withWeb3ApiRoute(
+  async function handler(req: NextApiRequest, res: NextApiResponse<PhiatResponse>) {
+    const { address, page, price } = req.middleware;
 
-  if (!address || typeof address === 'object') return res.status(400);
+    const reserverDataPromise = phiatProviderContract.methods
+      .getPhiatReserveData(lendingPoolProviderAddress, plsUsdPriceOracle)
+      .call();
+    const userDataPromise = phiatProviderContract.methods
+      .getPhiatUserData(lendingPoolProviderAddress, address)
+      .call();
+    const stakingDataPromise = phiatProviderContract.methods
+      .getPhiatStakingData(phiatFeeAddress)
+      .call();
+    const userRewardsDataPromise = phiatFeeContract.methods.claimableRewards(address).call();
+    const userStakePromise = phiatFeeContract.methods.stakedBalance(address).call();
 
-  const page: number = Number(req.query.page || 1);
+    const [phiatReserveData, userData, stakingData, userRewardsData, userStake] = await Promise.all<
+      [PhiatReserveResponse, UserDataResponse, PhiatStakingResponse, UserRewardResponse, number]
+    >([
+      reserverDataPromise,
+      userDataPromise,
+      stakingDataPromise,
+      userRewardsDataPromise,
+      userStakePromise
+    ]);
 
-  if (page < 1) return res.status(400);
+    const phiatReserveLookupMap: Record<string, PhiatReserveDataItem> = {};
+    const phiatReserveATokenLookupMap: Record<string, PhiatReserveDataItem> = {};
 
-  const price = await fetchPrices();
-
-  if (!price) return res.status(500);
-
-  const reserverDataPromise = phiatProviderContract.methods
-    .getPhiatReserveData(lendingPoolProviderAddress, plsUsdPriceOracle)
-    .call();
-  const userDataPromise = phiatProviderContract.methods
-    .getPhiatUserData(lendingPoolProviderAddress, address)
-    .call();
-  const stakingDataPromise = phiatProviderContract.methods
-    .getPhiatStakingData(phiatFeeAddress)
-    .call();
-  const userRewardsDataPromise = phiatFeeContract.methods.claimableRewards(address).call();
-  const userStakePromise = phiatFeeContract.methods.stakedBalance(address).call();
-
-  const [phiatReserveData, userData, stakingData, userRewardsData, userStake] = await Promise.all<
-    [PhiatReserveResponse, UserDataResponse, PhiatStakingResponse, UserRewardResponse, number]
-  >([
-    reserverDataPromise,
-    userDataPromise,
-    stakingDataPromise,
-    userRewardsDataPromise,
-    userStakePromise
-  ]);
-
-  const phiatReserveLookupMap: Record<string, PhiatReserveDataItem> = {};
-  const phiatReserveATokenLookupMap: Record<string, PhiatReserveDataItem> = {};
-
-  for (let i = 0; i < phiatReserveData.length; i++) {
-    const data = { ...phiatReserveData[i] };
-    data.decimals = Number(data.decimals);
-    data.priceInUsd = Number(data.priceInUsd) / 10 ** data.decimals / 10 ** 18;
-    phiatReserveLookupMap[data.underlyingAsset] = data;
-    phiatReserveATokenLookupMap[data.aTokenAddress] = data;
-  }
-
-  let phiatData = {
-    STABLE_DEBT: {
-      data: [],
-      totalValue: 0
-    },
-    VARIABLE_DEBT: {
-      data: [],
-      totalValue: 0
-    },
-    LENDING: {
-      data: [],
-      totalValue: 0
-    },
-    STAKING: {
-      data: [],
-      totalValue: 0
-    },
-    PH_TOKENS: {
-      data: [],
-      totalValue: 0
-    },
-    STAKING_APY: 0
-  } as PhiatData;
-
-  const userDataCountGreater = userData.length > page * 25;
-  const userRewardCountGreater = userRewardsData.length > page * 25;
-
-  const phiatUserDataPromises = [];
-
-  for (let i = (page - 1) * 25; i < (userDataCountGreater ? page * 25 : userData.length); i++) {
-    const data = { ...userData[i] };
-    const reserveData = phiatReserveLookupMap[data.underlyingAsset];
-
-    phiatUserDataPromises.push(calculatePhiatUserData(data, reserveData, phiatData));
-  }
-
-  await Promise.all(phiatUserDataPromises);
-
-  if (userStake > 0) {
-    const value = (userStake / 10 ** 18) * price['PHSAC'];
-
-    if (value > 0) {
-      phiatData.STAKING.data.push({
-        address: '',
-        balance: userStake / 10 ** 18,
-        symbol: 'PHSAC',
-        image: tokenImages['PHSAC'],
-        usdValue: value
-      });
-
-      phiatData.STAKING.totalValue += value;
+    for (let i = 0; i < phiatReserveData.length; i++) {
+      const data = { ...phiatReserveData[i] };
+      data.decimals = Number(data.decimals);
+      data.priceInUsd = Number(data.priceInUsd) / 10 ** data.decimals / 10 ** 18;
+      phiatReserveLookupMap[data.underlyingAsset] = data;
+      phiatReserveATokenLookupMap[data.aTokenAddress] = data;
     }
+
+    let phiatData = {
+      STABLE_DEBT: {
+        data: [],
+        totalValue: 0
+      },
+      VARIABLE_DEBT: {
+        data: [],
+        totalValue: 0
+      },
+      LENDING: {
+        data: [],
+        totalValue: 0
+      },
+      STAKING: {
+        data: [],
+        totalValue: 0
+      },
+      PH_TOKENS: {
+        data: [],
+        totalValue: 0
+      },
+      STAKING_APY: 0
+    } as PhiatData;
+
+    const userDataCountGreater = userData.length > page * 25;
+    const userRewardCountGreater = userRewardsData.length > page * 25;
+
+    const phiatUserDataPromises = [];
+
+    for (let i = (page - 1) * 25; i < (userDataCountGreater ? page * 25 : userData.length); i++) {
+      const data = { ...userData[i] };
+      const reserveData = phiatReserveLookupMap[data.underlyingAsset];
+
+      phiatUserDataPromises.push(calculatePhiatUserData(data, reserveData, phiatData));
+    }
+
+    await Promise.all(phiatUserDataPromises);
+
+    if (userStake > 0) {
+      const value = (userStake / 10 ** 18) * price['PHSAC'];
+
+      if (value > 0) {
+        phiatData.STAKING.data.push({
+          address: '',
+          balance: userStake / 10 ** 18,
+          symbol: 'PHSAC',
+          image: tokenImages['PHSAC'],
+          usdValue: value
+        });
+
+        phiatData.STAKING.totalValue += value;
+      }
+    }
+
+    const phiatTokenPromises: Promise<PhiatTokenItem>[] = [];
+
+    for (
+      let i = (page - 1) * 25;
+      i < (userRewardCountGreater ? page * 25 : userRewardsData.length);
+      i++
+    ) {
+      const rewardAmount = Number(userRewardsData[i].amount);
+      const reserve = phiatReserveATokenLookupMap[userRewardsData[i].token];
+
+      if (!reserve) continue;
+
+      phiatTokenPromises.push(calculatePhiatToken(rewardAmount, reserve));
+    }
+
+    const phiatTokens = await Promise.all(phiatTokenPromises);
+
+    phiatTokens.forEach((phiatToken) => {
+      if (phiatToken.usdValue <= 0) return;
+
+      phiatData.PH_TOKENS.data.push(phiatToken);
+      phiatData.PH_TOKENS.totalValue += phiatToken.usdValue;
+    });
+
+    const stakingApyUSD = stakingData.rewardsPerToken.reduce((prev, cur) => {
+      const reserve = phiatReserveATokenLookupMap[cur.token];
+
+      if (reserve) prev += Number(cur.amount) * reserve.priceInUsd;
+
+      return prev;
+    }, 0);
+
+    phiatData.STAKING_APY = (stakingApyUSD * 52) / price['PHSAC'];
+
+    const resObj = {
+      data: phiatData,
+      next: userDataCountGreater || userRewardCountGreater ? page + 1 : null
+    } as PhiatResponse;
+
+    res.status(200).json(resObj);
+  },
+  {
+    isPaginated: true
   }
-
-  const phiatTokenPromises: Promise<PhiatTokenItem>[] = [];
-
-  for (
-    let i = (page - 1) * 25;
-    i < (userRewardCountGreater ? page * 25 : userRewardsData.length);
-    i++
-  ) {
-    const rewardAmount = Number(userRewardsData[i].amount);
-    const reserve = phiatReserveATokenLookupMap[userRewardsData[i].token];
-
-    if (!reserve) continue;
-
-    phiatTokenPromises.push(calculatePhiatToken(rewardAmount, reserve));
-  }
-
-  const phiatTokens = await Promise.all(phiatTokenPromises);
-
-  phiatTokens.forEach((phiatToken) => {
-    if (phiatToken.usdValue <= 0) return;
-
-    phiatData.PH_TOKENS.data.push(phiatToken);
-    phiatData.PH_TOKENS.totalValue += phiatToken.usdValue;
-  });
-
-  const stakingApyUSD = stakingData.rewardsPerToken.reduce((prev, cur) => {
-    const reserve = phiatReserveATokenLookupMap[cur.token];
-
-    if (reserve) prev += Number(cur.amount) * reserve.priceInUsd;
-
-    return prev;
-  }, 0);
-
-  phiatData.STAKING_APY = (stakingApyUSD * 52) / price['PHSAC'];
-
-  const resObj = {
-    data: phiatData,
-    next: userDataCountGreater || userRewardCountGreater ? page + 1 : null
-  } as PhiatResponse;
-
-  res.status(200).json(resObj);
-}
+);

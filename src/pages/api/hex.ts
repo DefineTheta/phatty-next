@@ -123,98 +123,100 @@ const calculateHexStake = async (
   return res;
 };
 
-export default withWeb3ApiRoute(async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<HexResponse>
-) {
-  res.setHeader('Cache-Control', 's-maxage=3600');
-  const { address, page, price } = req.middleware;
+export default withWeb3ApiRoute(
+  async function handler(req: NextApiRequest, res: NextApiResponse<HexResponse>) {
+    res.setHeader('Cache-Control', 's-maxage=3600');
+    const { address, page, price } = req.middleware;
 
-  const globalETHShares = await getGlobalShares(hexETHContract);
-  const globalPLSShares = await getGlobalShares(hexPLSContract);
-  const ethStakeCount = await hexETHContract.methods.stakeCount(address).call();
-  const plsStakeCount = await hexPLSContract.methods.stakeCount(address).call();
+    const globalETHShares = await getGlobalShares(hexETHContract);
+    const globalPLSShares = await getGlobalShares(hexPLSContract);
+    const ethStakeCount = await hexETHContract.methods.stakeCount(address).call();
+    const plsStakeCount = await hexPLSContract.methods.stakeCount(address).call();
 
-  const startDate = new Date('2019-12-03');
-  const today = new Date();
+    const startDate = new Date('2019-12-03');
+    const today = new Date();
 
-  const ethPromises: Promise<HexTokenItem>[] = [];
-  const tplsPromises: Promise<HexTokenItem>[] = [];
+    const ethPromises: Promise<HexTokenItem>[] = [];
+    const tplsPromises: Promise<HexTokenItem>[] = [];
 
-  const ethStakeCountGreater = ethStakeCount > page * 25;
-  const plsStakeCountGreater = plsStakeCount > page * 25;
+    const ethStakeCountGreater = ethStakeCount > page * 25;
+    const plsStakeCountGreater = plsStakeCount > page * 25;
 
-  for (let i = (page - 1) * 25; i < (ethStakeCountGreater ? page * 25 : ethStakeCount); i++) {
-    ethPromises.push(
-      calculateHexStake(
-        'ETHEREUM',
-        address as string,
-        i,
-        startDate,
-        today,
-        globalETHShares,
-        price['HEX']
-      )
-    );
-  }
-
-  for (let i = (page - 1) * 25; i < (plsStakeCountGreater ? page * 25 : plsStakeCount); i++) {
-    tplsPromises.push(
-      calculateHexStake(
-        'TPLS',
-        address as string,
-        i,
-        startDate,
-        today,
-        globalPLSShares,
-        price['TPLS_HEX']
-      )
-    );
-  }
-
-  let data = await Promise.all([Promise.all(ethPromises), Promise.all(tplsPromises)]);
-
-  const filteredEthereumHexStake: HexTokenItem[] = [];
-  const ethereumHexTotals = {
-    value: 0,
-    tSharesPercentage: 0
-  };
-  const filteredTplsHexStake: HexTokenItem[] = [];
-  const tplsHexTotals = {
-    value: 0,
-    tSharesPercentage: 0
-  };
-
-  data[0].forEach((item) => {
-    if (item.usdValue > 0) {
-      filteredEthereumHexStake.push(item);
-      ethereumHexTotals.value += item.usdValue;
-      ethereumHexTotals.tSharesPercentage += item.tSharesPercentage;
+    for (let i = (page - 1) * 25; i < (ethStakeCountGreater ? page * 25 : ethStakeCount); i++) {
+      ethPromises.push(
+        calculateHexStake(
+          'ETHEREUM',
+          address as string,
+          i,
+          startDate,
+          today,
+          globalETHShares,
+          price['HEX']
+        )
+      );
     }
-  });
-  data[1].forEach((item) => {
-    if (item.usdValue > 0) {
-      filteredTplsHexStake.push(item);
-      tplsHexTotals.value += item.usdValue;
-      tplsHexTotals.tSharesPercentage += item.tSharesPercentage;
-    }
-  });
 
-  const resObj = {
-    data: {
-      ETHEREUM: {
-        data: filteredEthereumHexStake,
-        totalValue: ethereumHexTotals.value,
-        totalTSharesPercentage: ethereumHexTotals.tSharesPercentage
-      },
-      TPLS: {
-        data: filteredTplsHexStake,
-        totalValue: tplsHexTotals.value,
-        totalTSharesPercentage: tplsHexTotals.tSharesPercentage
+    for (let i = (page - 1) * 25; i < (plsStakeCountGreater ? page * 25 : plsStakeCount); i++) {
+      tplsPromises.push(
+        calculateHexStake(
+          'TPLS',
+          address as string,
+          i,
+          startDate,
+          today,
+          globalPLSShares,
+          price['TPLS_HEX']
+        )
+      );
+    }
+
+    let data = await Promise.all([Promise.all(ethPromises), Promise.all(tplsPromises)]);
+
+    const filteredEthereumHexStake: HexTokenItem[] = [];
+    const ethereumHexTotals = {
+      value: 0,
+      tSharesPercentage: 0
+    };
+    const filteredTplsHexStake: HexTokenItem[] = [];
+    const tplsHexTotals = {
+      value: 0,
+      tSharesPercentage: 0
+    };
+
+    data[0].forEach((item) => {
+      if (item.usdValue > 0) {
+        filteredEthereumHexStake.push(item);
+        ethereumHexTotals.value += item.usdValue;
+        ethereumHexTotals.tSharesPercentage += item.tSharesPercentage;
       }
-    },
-    next: ethStakeCountGreater || plsStakeCountGreater ? page + 1 : null
-  } as HexResponse;
+    });
+    data[1].forEach((item) => {
+      if (item.usdValue > 0) {
+        filteredTplsHexStake.push(item);
+        tplsHexTotals.value += item.usdValue;
+        tplsHexTotals.tSharesPercentage += item.tSharesPercentage;
+      }
+    });
 
-  res.status(200).json(resObj);
-});
+    const resObj = {
+      data: {
+        ETHEREUM: {
+          data: filteredEthereumHexStake,
+          totalValue: ethereumHexTotals.value,
+          totalTSharesPercentage: ethereumHexTotals.tSharesPercentage
+        },
+        TPLS: {
+          data: filteredTplsHexStake,
+          totalValue: tplsHexTotals.value,
+          totalTSharesPercentage: tplsHexTotals.tSharesPercentage
+        }
+      },
+      next: ethStakeCountGreater || plsStakeCountGreater ? page + 1 : null
+    } as HexResponse;
+
+    res.status(200).json(resObj);
+  },
+  {
+    isPaginated: true
+  }
+);

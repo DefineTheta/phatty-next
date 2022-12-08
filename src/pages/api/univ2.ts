@@ -1,4 +1,4 @@
-import { tokenImages } from '@app-src/services/web3';
+import { tokenImages, withWeb3ApiRoute } from '@app-src/services/web3';
 import { SushiResponse, UniV2Item, UniV2Response } from '@app-src/types/api';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from 'urql';
@@ -75,16 +75,15 @@ const calculateUniV2Pair = async (pair: string, balance: number) => {
   return resObj;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<SushiResponse>) {
-  try {
-    res.setHeader('Cache-Control', 's-maxage=3600');
-    const { address } = req.query;
+export default withWeb3ApiRoute(async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<SushiResponse>
+) {
+  const { address } = req.middleware;
 
-    if (!address || typeof address === 'object') return res.status(400).end();
-
-    const positionData = await graphClient
-      .query(
-        `
+  const positionData = await graphClient
+    .query(
+      `
           query postionQuery($id: ID!){
             user(id: $id) {
               id
@@ -98,48 +97,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             }
           }
         `,
-        { id: address }
-      )
-      .toPromise();
+      { id: address }
+    )
+    .toPromise();
 
-    let uniV2Data: UniV2Item[] = [];
+  let uniV2Data: UniV2Item[] = [];
 
-    if (positionData.data.user) {
-      const liquidityPositions: UniV2LiquidityPositionItem[] =
-        positionData.data.user.liquidityPositions;
+  if (positionData.data.user) {
+    const liquidityPositions: UniV2LiquidityPositionItem[] =
+      positionData.data.user.liquidityPositions;
 
-      const uniPairPromises: Promise<UniV2Item>[] = [];
+    const uniPairPromises: Promise<UniV2Item>[] = [];
 
-      liquidityPositions.forEach((position) => {
-        const balance = Number(position.liquidityTokenBalance);
+    liquidityPositions.forEach((position) => {
+      const balance = Number(position.liquidityTokenBalance);
 
-        if (balance > 0) uniPairPromises.push(calculateUniV2Pair(position.pair.id, balance));
-      });
+      if (balance > 0) uniPairPromises.push(calculateUniV2Pair(position.pair.id, balance));
+    });
 
-      uniV2Data = await Promise.all(uniPairPromises);
-    }
-
-    const filteredUniV2Data: UniV2Item[] = [];
-    let totalValue = 0;
-
-    for (let i = 0; i < uniV2Data.length; i++) {
-      if (uniV2Data[i].usdValue > 0) {
-        filteredUniV2Data.push(uniV2Data[i]);
-        totalValue += uniV2Data[i].usdValue;
-      }
-    }
-
-    const resObj = {
-      data: {
-        LIQUIDITY_POOL: {
-          data: filteredUniV2Data,
-          totalValue
-        }
-      }
-    } as UniV2Response;
-
-    res.status(200).send(resObj);
-  } catch (err) {
-    res.status(500).end();
+    uniV2Data = await Promise.all(uniPairPromises);
   }
-}
+
+  const filteredUniV2Data: UniV2Item[] = [];
+  let totalValue = 0;
+
+  for (let i = 0; i < uniV2Data.length; i++) {
+    if (uniV2Data[i].usdValue > 0) {
+      filteredUniV2Data.push(uniV2Data[i]);
+      totalValue += uniV2Data[i].usdValue;
+    }
+  }
+
+  const resObj = {
+    data: {
+      LIQUIDITY_POOL: {
+        data: filteredUniV2Data,
+        totalValue
+      }
+    }
+  } as UniV2Response;
+
+  res.status(200).send(resObj);
+});

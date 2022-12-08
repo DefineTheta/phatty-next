@@ -1,5 +1,5 @@
 import { feeABI, minABI, tokenABI } from '@app-src/services/abi';
-import { fetchPrices, tokenImages, tplsClient } from '@app-src/services/web3';
+import { tokenImages, tplsClient, withWeb3ApiRoute } from '@app-src/services/web3';
 import { PhamousResponse } from '@app-src/types/api';
 
 const PHLP_TOKEN_ADDRESS = '0xbB5F9DC3454b02fE5eaF5070C62ad4C055e05F1f';
@@ -73,98 +73,87 @@ type UserRewardResponse = UserRewardItem[];
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    res.setHeader('Cache-Control', 's-maxage=3600');
-    const { address } = req.query;
+export default withWeb3ApiRoute(async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { address, price } = req.middleware;
 
-    if (!address || typeof address === 'object') return res.status(400).end();
+  const phlpBalancePromise = phlpTokenContract.methods.balanceOf(address).call();
+  const userStakePromise = phameStakingContract.methods.stakedBalance(address).call();
+  let userRewardsPromise = phameStakingContract.methods.claimableRewards(address).call();
 
-    const price = await fetchPrices();
+  let [phlpBalance, userStake, userRewards] = await Promise.all<
+    [number, number, UserRewardResponse]
+  >([phlpBalancePromise, userStakePromise, userRewardsPromise]);
 
-    if (!price) return res.status(500);
+  phlpBalance = Number(phlpBalance);
+  userStake = Number(userStake);
 
-    const phlpBalancePromise = phlpTokenContract.methods.balanceOf(address).call();
-    const userStakePromise = phameStakingContract.methods.stakedBalance(address).call();
-    let userRewardsPromise = phameStakingContract.methods.claimableRewards(address).call();
+  const userRewardsLookupMap: Record<string, UserRewardItem> = {};
 
-    let [phlpBalance, userStake, userRewards] = await Promise.all<
-      [number, number, UserRewardResponse]
-    >([phlpBalancePromise, userStakePromise, userRewardsPromise]);
+  userRewards.forEach((reward) => {
+    userRewardsLookupMap[reward.token] = {
+      token: reward.token,
+      amount: Number(reward.amount)
+    };
+  });
 
-    phlpBalance = Number(phlpBalance);
-    userStake = Number(userStake);
-
-    const userRewardsLookupMap: Record<string, UserRewardItem> = {};
-
-    userRewards.forEach((reward) => {
-      userRewardsLookupMap[reward.token] = {
-        token: reward.token,
-        amount: Number(reward.amount)
-      };
-    });
-
-    const resObj = {
-      data: {
-        LIQUIDITY_PROVIDING: {
-          data: [
-            {
-              symbol: 'PHLP',
-              balance: phlpBalance / 10 ** 18,
-              usdValue: 0,
-              image: tokenImages['PHLP']
-            }
-          ],
-          totalValue: 0
-        },
-        STAKING: {
-          data: [],
-          totalValue: 0
-        },
-        REWARD: {
-          data: [],
-          totalValue: 0
-        }
+  const resObj = {
+    data: {
+      LIQUIDITY_PROVIDING: {
+        data: [
+          {
+            symbol: 'PHLP',
+            balance: phlpBalance / 10 ** 18,
+            usdValue: 0,
+            image: tokenImages['PHLP']
+          }
+        ],
+        totalValue: 0
+      },
+      STAKING: {
+        data: [],
+        totalValue: 0
+      },
+      REWARD: {
+        data: [],
+        totalValue: 0
       }
-    } as PhamousResponse;
+    }
+  } as PhamousResponse;
 
-    if (userStake > 0) {
-      for (let i = 0; i < phamousStakingRewards.length; i++) {
-        const reward = userRewardsLookupMap[phamousStakingRewards[i].address];
+  if (userStake > 0) {
+    for (let i = 0; i < phamousStakingRewards.length; i++) {
+      const reward = userRewardsLookupMap[phamousStakingRewards[i].address];
 
-        if (!reward) continue;
+      if (!reward) continue;
 
-        const balance = reward.amount / 10 ** phamousStakingRewards[i].decimals;
-        const value = balance * price[phamousStakingRewards[i].symbol];
+      const balance = reward.amount / 10 ** phamousStakingRewards[i].decimals;
+      const value = balance * price[phamousStakingRewards[i].symbol];
 
-        if (value <= 0) continue;
+      if (value <= 0) continue;
 
-        resObj.data.REWARD.data.push({
-          symbol: phamousStakingRewards[i].symbol,
-          usdValue: value,
-          image: tokenImages[phamousStakingRewards[i].symbol],
-          balance
-        });
-
-        resObj.data.REWARD.totalValue += value;
-      }
-
-      const PHLP_PRICE = 0.94;
-      resObj.data.LIQUIDITY_PROVIDING.data[0].usdValue = (userStake / 10 ** 18) * PHLP_PRICE;
-
-      const rewardTotalValue = (userStake / 10 ** 18) * price['PHAME'];
-      resObj.data.STAKING.data.push({
-        symbol: 'PHAME',
-        balance: userStake / 10 ** 18,
-        usdValue: rewardTotalValue,
-        image: tokenImages['PHAME']
+      resObj.data.REWARD.data.push({
+        symbol: phamousStakingRewards[i].symbol,
+        usdValue: value,
+        image: tokenImages[phamousStakingRewards[i].symbol],
+        balance
       });
 
-      resObj.data.STAKING.totalValue = rewardTotalValue;
+      resObj.data.REWARD.totalValue += value;
     }
 
-    res.status(200).send(resObj);
-  } catch (err) {
-    res.status(500).end();
+    const PHLP_PRICE = 0.94;
+    resObj.data.LIQUIDITY_PROVIDING.data[0].usdValue = (userStake / 10 ** 18) * PHLP_PRICE;
+
+    const rewardTotalValue = (userStake / 10 ** 18) * price['PHAME'];
+    resObj.data.STAKING.data.push({
+      symbol: 'PHAME',
+      balance: userStake / 10 ** 18,
+      usdValue: rewardTotalValue,
+      image: tokenImages['PHAME']
+    });
+
+    resObj.data.STAKING.totalValue = rewardTotalValue;
   }
-}
+
+  res.status(200).send(resObj);
+});

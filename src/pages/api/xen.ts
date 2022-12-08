@@ -7,11 +7,11 @@ import {
   ethClient,
   ethwClient,
   evmosClient,
-  fetchPrices,
   ftmClient,
   glmrClient,
   maticClient,
-  okcClient
+  okcClient,
+  withWeb3ApiRoute
 } from '@app-src/services/web3';
 import { XenMintItem, XenResponse, XenStakeItem } from '@app-src/types/api';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -103,20 +103,9 @@ const calculateXen = async (
   return [stake, mint] as [XenStakeItem, XenMintItem];
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<XenResponse>) {
-  try {
-    res.setHeader('Cache-Control', 's-maxage=3600');
-    const { address } = req.query;
-
-    if (!address || typeof address === 'object') return res.status(400).end();
-
-    let page: number = Number(req.query.page || 1);
-
-    if (page < 1) return res.status(400).end();
-
-    const price = await fetchPrices();
-
-    if (!price) return res.status(500).end();
+export default withWeb3ApiRoute(
+  async function handler(req: NextApiRequest, res: NextApiResponse<XenResponse>) {
+    const { address, page, price } = req.middleware;
 
     const stakingData: XenStakeItem[] = [];
     const mintingData: XenMintItem[] = [];
@@ -162,7 +151,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     } as XenResponse;
 
     res.status(200).json(resObj);
-  } catch (err) {
-    res.status(500).end();
+  },
+  {
+    isPaginated: true
   }
-}
+);
