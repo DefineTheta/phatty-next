@@ -107,7 +107,7 @@ const HexStakeTable = ({ page, chain, loading }: IHexStakeTableProps) => {
             {styleNumber(item.totalBalance, 3)}
           </TableRowCell>
           <TableRowCell className="hidden md:block md:basis-1/5">
-            {formatToMoney(item.totalInt)}
+            {styleNumber(item.totalInt, 2)}
           </TableRowCell>
           <TableRowCell className="basis-6/12 md:basis-1/5">
             {formatToMoney(item.usdValue)}
