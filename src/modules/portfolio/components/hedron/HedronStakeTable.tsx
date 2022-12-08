@@ -7,7 +7,7 @@ import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { selectHedronStakeData } from '@app-src/store/portfolio/selectors';
-import { HedronDataComponentEnum } from '@app-src/store/protocol/types';
+import { HedronDataComponentEnum } from '@app-src/store/portfolio/types';
 import { useCallback } from 'react';
 import useSort from '../../hooks/useSort';
 import { Portfolio } from '../../types/portfolio';

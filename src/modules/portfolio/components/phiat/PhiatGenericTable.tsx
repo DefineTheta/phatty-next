@@ -6,7 +6,7 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { selectPhiatComponentData } from '@app-src/store/portfolio/selectors';
-import { PhiatDataComponentEnum } from '@app-src/store/protocol/types';
+import { PhiatDataComponentEnum } from '@app-src/store/portfolio/types';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';

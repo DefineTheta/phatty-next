@@ -4,6 +4,7 @@ import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import {
   Bars3Icon,
+  EyeIcon,
   FlagIcon,
   Squares2X2Icon,
   UserIcon,
@@ -40,6 +41,10 @@ const SideBar = () => {
         const route = bundleAddress ? `/bundle/${bundleAddress}/portfolio` : '/bundle';
         router.push(route);
         // router.push(`/bundle/${bundleAddress || ''}`);
+      } else if (tabName === 'public') {
+        const route = '/public';
+        router.push(route);
+        // router.push(`/bundle/${bundleAddress || ''}`);
       } else if (tabName === 'phiat') {
         window.open('https://phiat.io/', '_blank')?.focus();
       } else if (tabName === 'phamous') {
@@ -72,6 +77,11 @@ const SideBar = () => {
         icon: <Squares2X2Icon className="h-24 w-24" />,
         name: 'bundle',
         displayName: 'Bundles'
+      },
+      {
+        icon: <EyeIcon className="h-24 w-24" />,
+        name: 'public',
+        displayName: 'Public'
       },
       // {
       //   icon: <BanknotesIcon className="h-24 w-24" />,
