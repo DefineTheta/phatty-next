@@ -146,7 +146,12 @@ export const tokenImages: Record<string, string> = {
   LQDR: '/img/tokens/lqdr.webp',
   SPELL: '/img/tokens/spell.webp',
   MAN: '/img/tokens/man.webp',
-  BEETS: '/img/tokens/beets.webp'
+  BEETS: '/img/tokens/beets.webp',
+  PLSD: '/img/tokens/plsd.webp',
+  ICSA: '/img/tokens/icsa.webp',
+  TRIO: '/img/tokens/trio.png',
+  BASE: '/img/tokens/base.png',
+  ASIC: '/img/tokens/asic.webp'
 };
 
 const defiLlamaPriceQueryData = [
@@ -229,7 +234,12 @@ const defiLlamaPriceQueryData = [
   { type: 'coingecko', symbol: 'XEN', id: 'xen-crypto' },
   { type: 'bsc', symbol: 'XEN', id: '0x2AB0e9e4eE70FFf1fB9D67031E44F6410170d00e' },
   { type: 'polygon', symbol: 'XEN', id: '0x2AB0e9e4eE70FFf1fB9D67031E44F6410170d00e' },
-  { type: 'avax', symbol: 'XEN', id: '0xC0C5AA69Dbe4d6DDdfBc89c0957686ec60F24389' }
+  { type: 'avax', symbol: 'XEN', id: '0xC0C5AA69Dbe4d6DDdfBc89c0957686ec60F24389' },
+  { type: 'coingecko', symbol: 'PLSD', id: 'pulsedogecoin' },
+  { type: 'coingecko', symbol: 'ICSA', id: 'icosa' },
+  { type: 'coingecko', symbol: 'ASIC', id: 'asic-token' },
+  { type: 'coingecko', symbol: 'TRIO', id: 'maximus-trio' },
+  { type: 'coingecko', symbol: 'BASE', id: 'maximus-base' }
 ];
 
 export const chainImages: Record<string, string> = {
@@ -357,7 +367,12 @@ const defiLlamaPriceQueryDataLookup: Record<string, number> = {
   XEN: 76,
   bXEN: 77,
   mXEN: 78,
-  aXEN: 79
+  aXEN: 79,
+  PLSD: 80,
+  ICSA: 81,
+  ASIC: 82,
+  TRIO: 83,
+  BASE: 84
 };
 
 type DefiLlamaPriceItem = {

@@ -95,7 +95,15 @@ const ethTokens: TokenItem[] = [
   { name: '1INCH', displayName: '1INCH', address: '0x111111111117dC0aa78b770fA6A738034120C302' },
   { name: 'YFI', displayName: 'YFI', address: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e' },
   { name: 'GLM', displayName: 'GLM', address: '0x7DD9c5Cba05E151C895FDe1CF355C9A1D5DA6429' },
-  { name: 'SYN', displayName: 'SYN', address: '0x7DD9c5Cba05E151C895FDe1CF355C9A1D5DA6429' }
+  { name: 'SYN', displayName: 'SYN', address: '0x7DD9c5Cba05E151C895FDe1CF355C9A1D5DA6429' },
+  { name: 'POLY', displayName: 'POLY', address: '0x9992ec3cf6a55b00978cddf2b27bc6882d88d1ec' },
+  { name: 'PLSD', displayName: 'PLSD', address: '0x34F0915a5f15a66Eba86F6a58bE1A471FB7836A7' },
+  { name: 'ASIC', displayName: 'ASIC', address: '0x347a96a5bd06d2e15199b032f46fb724d6c73047' },
+  { name: 'ICSA', displayName: 'ICSA', address: '0xfc4913214444af5c715cc9f7b52655e788a569ed' },
+  { name: 'MAXI', displayName: 'MAXI', address: '0x0d86EB9f43C57f6FF3BC9E23D8F9d82503f0e84b' },
+  { name: 'POLY', displayName: 'POLY', address: '0x9d93692e826a4bd9e903e2a27d7fbd1e116efdad' },
+  { name: 'TRIO', displayName: 'TRIO', address: '0xF55cD1e399e1cc3D95303048897a680be3313308' },
+  { name: 'BASE', displayName: 'BASE', address: '0xe9f84d418B008888A992Ff8c6D22389C2C3504e0' }
 ];
 
 const bscTokens: TokenItem[] = [
