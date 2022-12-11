@@ -53,6 +53,7 @@ export const withWeb3ApiRoute =
 
       await handler(req, res);
     } catch (err) {
+      if (err instanceof Error) console.error(err.message);
       res
         .status(500)
         .send({ data: [], error: 'An error occured while trying to process the request' });
@@ -486,9 +487,13 @@ export const decryptAddress = (message: string, signature: string) => {
   return new Web3().eth.accounts.recover(message, signature);
 };
 
-const ethProviderURL = 'https://rpc.ankr.com/eth';
-export const ethClient = new Web3();
-ethClient.setProvider(new Web3.providers.HttpProvider(ethProviderURL));
+const ethProviderURLs = [
+  'https://rpc.ankr.com/eth',
+  'https://cloudflare-eth.com',
+  'https://nodes.mewapi.io/rpc/eth'
+];
+const ethRandomIndex = Math.floor(Math.random() * 3);
+export const ethClient = new Web3(ethProviderURLs[ethRandomIndex]);
 
 const bscProviderURL = 'https://bsc-dataseed1.binance.org';
 export const bscClient = new Web3();
