@@ -44,7 +44,8 @@ export const ChainEnum = {
   BSC: 'BSC',
   MATIC: 'MATIC',
   AVAX: 'AVAX',
-  FTM: 'FTM'
+  FTM: 'FTM',
+  ARBI: 'ARBI'
 } as const;
 
 export type Chain = typeof ChainEnum[keyof typeof ChainEnum];

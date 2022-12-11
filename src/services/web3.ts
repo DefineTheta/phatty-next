@@ -68,7 +68,7 @@ export const tokenImages: Record<string, string> = {
   BNB: '/img/tokens/bnb.png',
   WBNB: '/img/tokens/bnb.png',
   BSC: '/img/tokens/bnb.png',
-  PLS: '/img/tokens/pls.svg',
+  // PLS: '/img/tokens/pls.svg',
   PHSAC: '/img/tokens/phsac.png',
   HEX: '/img/tokens/hex.svg',
   TPLS_HEX: '/img/tokens/hex.svg',
@@ -155,7 +155,14 @@ export const tokenImages: Record<string, string> = {
   'POLY Maximus': '/img/tokens/poly_max.webp',
   GUSD: '/img/tokens/gusd.webp',
   XRX: '/img/tokens/xrx.webp',
-  LUSD: '/img/tokens/lusd.webp'
+  LUSD: '/img/tokens/lusd.webp',
+  LPT: '/img/tokens/lpt.webp',
+  DPX: '/img/tokens/dpx.webp',
+  PLS: '/img/tokens/pls_dao.webp',
+  VSTA: '/img/tokens/vsta.webp',
+  DBL: '/img/tokens/dbl.webp',
+  BRC: '/img/tokens/brc.png',
+  RDPX: '/img/tokens/rdpx.png'
 };
 
 const defiLlamaPriceQueryData = [
@@ -248,7 +255,14 @@ const defiLlamaPriceQueryData = [
   { type: 'coingecko', symbol: 'DAO_MAXI', id: 'maximus-dao' },
   { type: 'coingecko', symbol: 'GUSD', id: 'gemini-dollar' },
   { type: 'coingecko', symbol: 'XRX', id: 'rex-token' },
-  { type: 'coingecko', symbol: 'LUSD', id: 'liquity-usd' }
+  { type: 'coingecko', symbol: 'LUSD', id: 'liquity-usd' },
+  { type: 'coingecko', symbol: 'LPT', id: 'livepeer' },
+  { type: 'coingecko', symbol: 'DPX', id: 'dopex' },
+  { type: 'coingecko', symbol: 'PLS', id: 'plutusdao' },
+  { type: 'coingecko', symbol: 'VSTA', id: 'vesta-finance' },
+  { type: 'coingecko', symbol: 'DBL', id: 'doubloon' },
+  { type: 'coingecko', symbol: 'BRC', id: 'brinc-finance' },
+  { type: 'coingecko', symbol: 'RDPX', id: 'dopex-rebate-token' }
 ];
 
 export const chainImages: Record<string, string> = {
@@ -386,7 +400,14 @@ const defiLlamaPriceQueryDataLookup: Record<string, number> = {
   'coingecko:maximus-dao': 86,
   'coingecko:gemini-dollar': 87,
   'coingecko:rex-token': 88,
-  'coingecko:liquity-usd': 89
+  'coingecko:liquity-usd': 89,
+  'coingecko:livepeer': 90,
+  'coingecko:dopex': 91,
+  'coingecko:plutusdao': 92,
+  'coingecko:vesta-finance': 93,
+  'coingecko:doubloon': 94,
+  'coingecko:brinc-finance': 95,
+  'coingecko:dopex-rebate-token': 96
 };
 
 type DefiLlamaPriceItem = {
@@ -503,6 +524,9 @@ export const okcClient = new Web3(OKC_CONTRACT_URL);
 
 const ETHW_CONTRACT_URL = 'https://mainnet.ethereumpow.org';
 export const ethwClient = new Web3(ETHW_CONTRACT_URL);
+
+const ARBI_CONTRACT_URL = 'https://arb1.arbitrum.io/rpc';
+export const arbiClient = new Web3(ARBI_CONTRACT_URL);
 
 export const hexETHContract = new ethClient.eth.Contract(
   hexABI as AbiItem[],

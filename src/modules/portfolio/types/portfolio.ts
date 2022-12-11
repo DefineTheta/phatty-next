@@ -9,7 +9,8 @@ const PortfolioChainEnum = {
   TPLS: 'TPLS',
   MATIC: 'MATIC',
   AVAX: 'AVAX',
-  FTM: 'FTM'
+  FTM: 'FTM',
+  ARBI: 'ARBI'
 } as const;
 
 export type PortfolioChain = typeof PortfolioChainEnum[keyof typeof PortfolioChainEnum];

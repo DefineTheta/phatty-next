@@ -63,7 +63,8 @@ export const selectWalletData = (chains: Chain[], type: Portfolio) =>
           state.portfolio[type].WALLET.data.BSC,
           state.portfolio[type].WALLET.data.MATIC,
           state.portfolio[type].WALLET.data.AVAX,
-          state.portfolio[type].WALLET.data.FTM
+          state.portfolio[type].WALLET.data.FTM,
+          state.portfolio[type].WALLET.data.ARBI
         ]
       );
 
@@ -239,6 +240,13 @@ export const selectFtmTotal = (type: Portfolio) =>
     return getPositiveOrZero(state.portfolio[type].WALLET.total.FTM);
   });
 
+export const selectArbiTotal = (type: Portfolio) =>
+  memoize((state: RootState): number => {
+    console.log('SELECT_ARBI_TOTAL');
+
+    return getPositiveOrZero(state.portfolio[type].WALLET.total.ARBI);
+  });
+
 export const selectWalletTotal = (chains: Chain[], type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_WALLET_TOTAL');
@@ -250,7 +258,8 @@ export const selectWalletTotal = (chains: Chain[], type: Portfolio) =>
         state.portfolio[type].WALLET.total.TPLS +
         state.portfolio[type].WALLET.total.MATIC +
         state.portfolio[type].WALLET.total.AVAX +
-        state.portfolio[type].WALLET.total.FTM
+        state.portfolio[type].WALLET.total.FTM +
+        state.portfolio[type].WALLET.total.ARBI
       );
     }
 
@@ -365,7 +374,8 @@ export const selectTotal = (type: Portfolio) =>
       selectTplsTotal(type)(state) +
       selectMaticTotal(type)(state) +
       selectAvaxTotal(type)(state) +
-      selectFtmTotal(type)(state)
+      selectFtmTotal(type)(state) +
+      selectArbiTotal(type)(state)
     );
   });
 
@@ -389,6 +399,8 @@ export const selectChainsTotal = (chains: Chain[], type: Portfolio) =>
           return selectAvaxTotal(type)(state);
         case ChainEnum.FTM:
           return selectFtmTotal(type)(state);
+        case ChainEnum.ARBI:
+          return selectArbiTotal(type)(state);
       }
     };
 

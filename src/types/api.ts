@@ -69,6 +69,7 @@ export interface WalletResponse {
     MATIC: WalletChainItem;
     AVAX: WalletChainItem;
     FTM: WalletChainItem;
+    ARBI: WalletChainItem;
   };
 }
 

@@ -4,6 +4,7 @@ import ChainSummaryItem from '@app-src/modules/chain/components/ChainSummaryItem
 import { Portfolio, PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
 import {
+  selectArbiTotal,
   selectAvaxTotal,
   selectBscTotal,
   selectEthereumTotal,
@@ -41,6 +42,7 @@ const ChainSummaryCard = ({ page, currentChains }: IChainSummaryCardProps) => {
   const maticTotal = useAppSelector(useCallback(selectMaticTotal(page), [page]));
   const avaxTotal = useAppSelector(useCallback(selectAvaxTotal(page), [page]));
   const ftmTotal = useAppSelector(useCallback(selectFtmTotal(page), [page]));
+  const arbiTotal = useAppSelector(useCallback(selectArbiTotal(page), [page]));
 
   const testData: ChainCardData[] = [
     {
@@ -96,6 +98,15 @@ const ChainSummaryCard = ({ page, currentChains }: IChainSummaryCardProps) => {
       total: ftmTotal,
       displayTotal: formatToMoney(ftmTotal),
       percentage: styleNumber((ftmTotal / total) * 100, 2) + '%'
+    },
+    {
+      imgSrc: '/img/chains/arbi.svg',
+      imgAlt: 'Arbitrum logo',
+      displayName: 'Arbitrum',
+      chainId: 'ARBI',
+      total: ftmTotal,
+      displayTotal: formatToMoney(arbiTotal),
+      percentage: styleNumber((arbiTotal / total) * 100, 2) + '%'
     }
   ];
 

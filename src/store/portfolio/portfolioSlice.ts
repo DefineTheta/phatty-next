@@ -64,7 +64,8 @@ const initialPortfolioData: PortfolioData = {
       [ChainEnum.BSC]: 0,
       [ChainEnum.MATIC]: 0,
       [ChainEnum.AVAX]: 0,
-      [ChainEnum.FTM]: 0
+      [ChainEnum.FTM]: 0,
+      [ChainEnum.ARBI]: 0
     },
     loading: true,
     error: false,
@@ -74,7 +75,8 @@ const initialPortfolioData: PortfolioData = {
       [ChainEnum.BSC]: [],
       [ChainEnum.MATIC]: [],
       [ChainEnum.AVAX]: [],
-      [ChainEnum.FTM]: []
+      [ChainEnum.FTM]: [],
+      [ChainEnum.ARBI]: []
     }
   },
   [ProtocolEnum.HEX]: {
@@ -893,6 +895,7 @@ export const portfolioSlice = createSlice({
       state[type].WALLET.data.MATIC = res.data.MATIC.data;
       state[type].WALLET.data.AVAX = res.data.AVAX.data;
       state[type].WALLET.data.FTM = res.data.FTM.data;
+      state[type].WALLET.data.ARBI = res.data.ARBI.data;
 
       state[type].WALLET.total.ETH = res.data.ETH.totalValue;
       state[type].WALLET.total.BSC = res.data.BSC.totalValue;
@@ -900,6 +903,7 @@ export const portfolioSlice = createSlice({
       state[type].WALLET.total.MATIC = res.data.MATIC.totalValue;
       state[type].WALLET.total.AVAX = res.data.AVAX.totalValue;
       state[type].WALLET.total.FTM = res.data.FTM.totalValue;
+      state[type].WALLET.total.ARBI = res.data.ARBI.totalValue;
 
       state[type].WALLET.loading = false;
       state[type].WALLET.error = false;

@@ -231,12 +231,16 @@ export const getWallet = async (addresses: string[], refresh: boolean, signal: A
       FTM: {
         data: [],
         totalValue: 0
+      },
+      ARBI: {
+        data: [],
+        totalValue: 0
       }
     }
   } as WalletResponse;
 
   const protocolData = new ProtocolData<WalletTokenItem>(
-    6,
+    7,
     (item) => item.chain + item.name,
     (existingItem, item) => {
       existingItem.balance += item.balance;
@@ -251,7 +255,8 @@ export const getWallet = async (addresses: string[], refresh: boolean, signal: A
       wallet.data.TPLS.data,
       wallet.data.MATIC.data,
       wallet.data.AVAX.data,
-      wallet.data.FTM.data
+      wallet.data.FTM.data,
+      wallet.data.ARBI.data
     ]);
 
     collatedRes.data.ETH.totalValue += wallet.data.ETH.totalValue;
@@ -260,6 +265,7 @@ export const getWallet = async (addresses: string[], refresh: boolean, signal: A
     collatedRes.data.MATIC.totalValue += wallet.data.MATIC.totalValue;
     collatedRes.data.AVAX.totalValue += wallet.data.AVAX.totalValue;
     collatedRes.data.FTM.totalValue += wallet.data.FTM.totalValue;
+    collatedRes.data.ARBI.totalValue += wallet.data.ARBI.totalValue;
   });
 
   const collatedData = protocolData.data;
@@ -270,6 +276,7 @@ export const getWallet = async (addresses: string[], refresh: boolean, signal: A
   collatedRes.data.MATIC.data = collatedData[3];
   collatedRes.data.AVAX.data = collatedData[4];
   collatedRes.data.FTM.data = collatedData[5];
+  collatedRes.data.ARBI.data = collatedData[6];
 
   return collatedRes;
 };
