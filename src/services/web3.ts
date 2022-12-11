@@ -277,7 +277,8 @@ export const chainImages: Record<string, string> = {
   DOGE: '/img/chains/doge.svg',
   EVMOS: '/img/chains/evmos.webp',
   OKC: '/img/chains/okx.svg',
-  ETHW: '/img/chains/ethw.png'
+  ETHW: '/img/chains/ethw.png',
+  ARBI: '/img/chains/arbi.svg'
 };
 
 export const phiatTokensLookupMap = {
@@ -493,7 +494,7 @@ const ethProviderURLs = [
   'https://nodes.mewapi.io/rpc/eth'
 ];
 const ethRandomIndex = Math.floor(Math.random() * 3);
-export const ethClient = new Web3(ethProviderURLs[ethRandomIndex]);
+export const ethClient = new Web3('https://rpc.ankr.com/eth');
 
 const bscProviderURL = 'https://bsc-dataseed1.binance.org';
 export const bscClient = new Web3();
