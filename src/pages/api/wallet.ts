@@ -85,7 +85,6 @@ const ethTokens: TokenItem[] = [
   // { name: 'LRC', displayName: 'LRC', address: '0xBBbbCA6A901c926F240b89EacB641d8Aec7AEafD' },
   { name: 'ONE', displayName: 'ONE', address: '0x799a4202c12ca952cB311598a024C80eD371a41e' },
   { name: 'POND', displayName: 'POND', address: '0x57B946008913B82E4dF85f501cbAeD910e58D26C' },
-  { name: 'POLY', displayName: 'POLY', address: '0x9992eC3cF6A55b00978cdDF2b27BC6882d88D1eC' },
   { name: 'STG', displayName: 'STG', address: '0xAf5191B0De278C7286d6C7CC6ab6BB8A73bA2Cd6' },
   { name: 'SNX', displayName: 'SNX', address: '0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F' },
   { name: 'OMG', displayName: 'OMG', address: '0xd26114cd6EE289AccF82350c8d8487fedB8A0C07' },
@@ -100,10 +99,16 @@ const ethTokens: TokenItem[] = [
   { name: 'PLSD', displayName: 'PLSD', address: '0x34F0915a5f15a66Eba86F6a58bE1A471FB7836A7' },
   { name: 'ASIC', displayName: 'ASIC', address: '0x347a96a5bd06d2e15199b032f46fb724d6c73047' },
   { name: 'ICSA', displayName: 'ICSA', address: '0xfc4913214444af5c715cc9f7b52655e788a569ed' },
-  { name: 'MAXI', displayName: 'MAXI', address: '0x0d86EB9f43C57f6FF3BC9E23D8F9d82503f0e84b' },
-  { name: 'POLY', displayName: 'POLY', address: '0x9d93692e826a4bd9e903e2a27d7fbd1e116efdad' },
+  { name: 'DAO_MAXI', displayName: 'MAXI', address: '0x0d86EB9f43C57f6FF3BC9E23D8F9d82503f0e84b' },
+  {
+    name: 'POLY_MAXI',
+    displayName: 'POLY Maximus',
+    address: '0x9d93692e826a4bd9e903e2a27d7fbd1e116efdad'
+  },
   { name: 'TRIO', displayName: 'TRIO', address: '0xF55cD1e399e1cc3D95303048897a680be3313308' },
-  { name: 'BASE', displayName: 'BASE', address: '0xe9f84d418B008888A992Ff8c6D22389C2C3504e0' }
+  { name: 'BASE', displayName: 'BASE', address: '0xe9f84d418B008888A992Ff8c6D22389C2C3504e0' },
+  { name: 'GUSD', displayName: 'GUSD', address: '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd' },
+  { name: 'LUSD', displayName: 'LUSD', address: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0' }
 ];
 
 const bscTokens: TokenItem[] = [
@@ -115,7 +120,8 @@ const bscTokens: TokenItem[] = [
   { name: 'BUSD', displayName: 'BUSD', address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56' },
   { name: 'SHIB', displayName: 'SHIB', address: '0x2859e4544C4bB03966803b044A93563Bd2D0DD4D' },
   { name: 'DAI', displayName: 'DAI', address: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3' },
-  { name: 'LINK', displayName: 'LINK', address: '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD' }
+  { name: 'LINK', displayName: 'LINK', address: '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD' },
+  { name: 'XRX', displayName: 'XRX', address: '0xb25583e5e2db32b7fcbffe3f5e8e305c36157e54' }
 ];
 
 const tplsTokens: TokenItem[] = [
