@@ -109,7 +109,8 @@ const ethTokens: TokenItem[] = [
   { name: 'TRIO', displayName: 'TRIO', address: '0xF55cD1e399e1cc3D95303048897a680be3313308' },
   { name: 'BASE', displayName: 'BASE', address: '0xe9f84d418B008888A992Ff8c6D22389C2C3504e0' },
   { name: 'GUSD', displayName: 'GUSD', address: '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd' },
-  { name: 'LUSD', displayName: 'LUSD', address: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0' }
+  { name: 'LUSD', displayName: 'LUSD', address: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0' },
+  { name: 'FRAX', displayName: 'FRAX', address: '0x853d955acef822db058eb8505911ed77f175b99e' }
 ];
 
 const bscTokens: TokenItem[] = [
@@ -192,7 +193,8 @@ const ftmTokens: TokenItem[] = [
   { name: 'ETH', displayName: 'ETH', address: '0x74b23882a30290451A17c44f4F05243b6b58C76d' },
   { name: 'MAN', displayName: 'MAN', address: '0x8a88b501a68cea5844b9d95f41892b05c4cd1d73' },
   { name: 'MIM', displayName: 'MIM', address: '0x82f0b8b456c1a451378467398982d4834b6829c1' },
-  { name: 'BEETS', displayName: 'BEETS', address: '0xf24bcf4d1e507740041c9cfd2dddb29585adce1e' }
+  { name: 'BEETS', displayName: 'BEETS', address: '0xf24bcf4d1e507740041c9cfd2dddb29585adce1e' },
+  { name: 'FRAX', displayName: 'FRAX', address: '0xdc301622e621166bd8e82f2ca0a26c13ad0be355' }
 ];
 
 const arbiTokens: TokenItem[] = [
