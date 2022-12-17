@@ -289,7 +289,7 @@ export default withWeb3ApiRoute(async function handler(
             chain.client,
             token.address,
             address,
-            token.displayName,
+            token.name,
             price[token.name],
             chain.name,
             totalValues
