@@ -239,30 +239,35 @@ const calculateWalletTokenData = async (
   chain: string,
   totalValueObj: Record<string, number>
 ) => {
-  let balance;
+  try {
+    let balance;
 
-  if (tokenAddress === '0x') {
-    balance = parseFloat(client.utils.fromWei(await client.eth.getBalance(walletAddress)));
-  } else {
-    const contract = new client.eth.Contract(walletABI, tokenAddress);
-    const result = await contract.methods.balanceOf(walletAddress).call();
-    const decimals = 18 - (await contract.methods.decimals().call());
-    balance = parseFloat(client.utils.fromWei(result)) * 10 ** decimals;
+    if (tokenAddress === '0x') {
+      balance = parseFloat(client.utils.fromWei(await client.eth.getBalance(walletAddress)));
+    } else {
+      const contract = new client.eth.Contract(walletABI, tokenAddress);
+      const result = await contract.methods.balanceOf(walletAddress).call();
+      const decimals = 18 - (await contract.methods.decimals().call());
+      balance = parseFloat(client.utils.fromWei(result)) * 10 ** decimals;
+    }
+    const value = balance * price;
+
+    totalValueObj[chain] += value;
+
+    return {
+      name,
+      balance,
+      chain,
+      price,
+      chainImg: chainImages[chain],
+      tokenImg: tokenImages[name],
+      usdValue: value
+    } as WalletTokenItem;
+  } catch (err: any) {
+    throw Error(
+      `Error: ${err.message}\nOccurded while trying to calculate token data for ${name} token on ${chain} chain with the price of $${price}`
+    );
   }
-
-  const value = balance * price;
-
-  totalValueObj[chain] += value;
-
-  return {
-    name,
-    balance,
-    chain,
-    price,
-    chainImg: chainImages[chain],
-    tokenImg: tokenImages[name],
-    usdValue: value
-  } as WalletTokenItem;
 };
 
 export default withWeb3ApiRoute(async function handler(
