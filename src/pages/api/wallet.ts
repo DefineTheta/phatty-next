@@ -216,7 +216,8 @@ const arbiTokens: TokenItem[] = [
   { name: 'SPELL', displayName: 'SPELL', address: '0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af' },
   { name: 'SUSHI', displayName: 'SUSHI', address: '0xd4d42f0b6def4ce0383636770ef773390d85c61a' },
   { name: 'WBTC', displayName: 'WBTC', address: '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f' },
-  { name: 'UNI', displayName: 'UNI', address: '0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0' }
+  { name: 'UNI', displayName: 'UNI', address: '0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0' },
+  { name: 'MAGIC', displayName: 'MAGIC', address: '0x539bdE0d7Dbd336b79148AA742883198BBF60342' }
 ];
 
 const CHAIN_DETAILS: ChainItem[] = [

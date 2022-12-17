@@ -163,7 +163,9 @@ export const tokenImages: Record<string, string> = {
   VSTA: '/img/tokens/vsta.webp',
   DBL: '/img/tokens/dbl.webp',
   BRC: '/img/tokens/brc.png',
-  RDPX: '/img/tokens/rdpx.png'
+  RDPX: '/img/tokens/rdpx.png',
+  GMX: '/img/tokens/gmx.webp',
+  MAGIC: '/img/tokens/magic.webp'
 };
 
 const defiLlamaPriceQueryData = [
@@ -263,7 +265,9 @@ const defiLlamaPriceQueryData = [
   { type: 'coingecko', symbol: 'VSTA', id: 'vesta-finance' },
   { type: 'coingecko', symbol: 'DBL', id: 'doubloon' },
   { type: 'coingecko', symbol: 'BRC', id: 'brinc-finance' },
-  { type: 'coingecko', symbol: 'RDPX', id: 'dopex-rebate-token' }
+  { type: 'coingecko', symbol: 'RDPX', id: 'dopex-rebate-token' },
+  { type: 'coingecko', symbol: 'GMX', id: 'gmx' },
+  { type: 'coingecko', symbol: 'MAGIC', id: 'magic' }
 ];
 
 export const chainImages: Record<string, string> = {
@@ -409,7 +413,9 @@ const defiLlamaPriceQueryDataLookup: Record<string, number> = {
   'coingecko:vesta-finance': 93,
   'coingecko:doubloon': 94,
   'coingecko:brinc-finance': 95,
-  'coingecko:dopex-rebate-token': 96
+  'coingecko:dopex-rebate-token': 96,
+  'coingecko:gmx': 97,
+  'coingecko:magic': 98
 };
 
 type DefiLlamaPriceItem = {
