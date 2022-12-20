@@ -203,7 +203,7 @@ const arbiTokens: TokenItem[] = [
   { name: 'LPT', displayName: 'LPT', address: '0x289ba1701c2f088cf0faf8b3705246331cb8a839' },
   { name: 'GMX', displayName: 'GMX', address: '0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a' },
   { name: 'DPX', displayName: 'DPX', address: '0x6c2c06790b3e3e3c38e12ee22f8183b37a13ee55' },
-  { name: 'PLS', displayName: 'PLS', address: '0x51318b7d00db7acc4026c88c3952b66278b6a67f' },
+  { name: 'PLS_DAO', displayName: 'PLS', address: '0x51318b7d00db7acc4026c88c3952b66278b6a67f' },
   { name: 'VSTA', displayName: 'VSTA', address: '0xa684cd057951541187f288294a1e1c2646aa2d24' },
   { name: 'SYN', displayName: 'SYN', address: '0x080f6aed32fc474dd5717105dba5ea57268f46eb' },
   { name: 'DBL', displayName: 'DBL', address: '0xd3f1da62cafb7e7bc6531ff1cef6f414291f03d3' },
@@ -235,6 +235,7 @@ const calculateWalletTokenData = async (
   tokenAddress: string,
   walletAddress: string,
   name: string,
+  displayName: string,
   price: number,
   chain: string,
   totalValueObj: Record<string, number>
@@ -255,7 +256,7 @@ const calculateWalletTokenData = async (
     totalValueObj[chain] += value;
 
     return {
-      name,
+      name: displayName,
       balance,
       chain,
       price,
@@ -295,6 +296,7 @@ export default withWeb3ApiRoute(async function handler(
             token.address,
             address,
             token.name,
+            token.displayName,
             price[token.name],
             chain.name,
             totalValues
