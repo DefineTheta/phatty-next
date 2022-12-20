@@ -104,7 +104,7 @@ const ChainSummaryCard = ({ page, currentChains }: IChainSummaryCardProps) => {
       imgAlt: 'Arbitrum logo',
       displayName: 'Arbitrum',
       chainId: 'ARBI',
-      total: ftmTotal,
+      total: arbiTotal,
       displayTotal: formatToMoney(arbiTotal),
       percentage: styleNumber((arbiTotal / total) * 100, 2) + '%'
     }
