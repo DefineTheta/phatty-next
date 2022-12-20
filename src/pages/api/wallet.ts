@@ -110,7 +110,12 @@ const ethTokens: TokenItem[] = [
   { name: 'BASE', displayName: 'BASE', address: '0xe9f84d418B008888A992Ff8c6D22389C2C3504e0' },
   { name: 'GUSD', displayName: 'GUSD', address: '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd' },
   { name: 'LUSD', displayName: 'LUSD', address: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0' },
-  { name: 'FRAX', displayName: 'FRAX', address: '0x853d955acef822db058eb8505911ed77f175b99e' }
+  { name: 'FRAX', displayName: 'FRAX', address: '0x853d955acef822db058eb8505911ed77f175b99e' },
+  { name: 'DECI', displayName: 'DECI', address: '0x6b32022693210cD2Cfc466b9Ac0085DE8fC34eA6' },
+  { name: 'LUCKY', displayName: 'LUCKY', address: '0x6B0956258fF7bd7645aa35369B55B61b8e6d6140' },
+  { name: 'PP', displayName: 'PP', address: '0x9565c2036963697786705120Fc59310F747bCfD0' },
+  { name: 'WISE', displayName: 'WISE', address: '0x66a0f676479Cee1d7373f3DC2e2952778BfF5bd6' },
+  { name: 'CULT', displayName: 'CULT', address: '0xf0f9D895aCa5c8678f706FB8216fa22957685A13' }
 ];
 
 const bscTokens: TokenItem[] = [
