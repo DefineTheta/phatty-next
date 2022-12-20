@@ -374,6 +374,74 @@ const fetchPublicBundleData = createAsyncThunk<PublicBundleResponse, number, { s
           '0xa5bD947Bc9Bb9215c3290FF43f11F708b1d5B263',
           '0xB8bC81524338C84d9BBe6b07B50F4702a7Bb7230'
         ]
+      },
+      {
+        name: 'PLSX',
+        addresses: ['0x075e72a5eDf65F0A5f44699c7654C1a76941Ddc8']
+      },
+      {
+        name: 'PulseChain',
+        addresses: ['0x9Cd83BE15a79646A3D22B81fc8dDf7B7240a62cB']
+      },
+      {
+        name: 'LiquidLoans',
+        addresses: ['0x2e91728aF3a54aCDCeD7938fE9016aE2cc5948C9']
+      },
+      {
+        name: 'Mintra',
+        addresses: ['0xf55f1569b8c6b9c29c123f9375f9915529851427']
+      },
+      {
+        name: 'Powercity',
+        addresses: ['0x976746306D46830f528b5f042BF2e7204128b6A9']
+      },
+      {
+        name: 'BNB/PLSPot',
+        addresses: ['0x8b9c06ed27eefa2ac9fd7f0e2ab98add09da2a7e']
+      },
+      {
+        name: 'Internet Money',
+        addresses: ['0xceBA0659AeB8527B47E9B176237361dDEe352001']
+      },
+      {
+        name: 'BankX',
+        addresses: ['0xBDAD0dd0c0207094a341bD930a5562de3aCCE8Eb']
+      },
+      {
+        name: 'PoorPleb',
+        addresses: ['0x5bb8878472a5398944a674b1e217f5c925ceb546']
+      },
+      {
+        name: 'PulseLN',
+        addresses: ['0xa07a9a2A553bBBb8E3fC1b9cEeFF61865bD9276C']
+      },
+      {
+        name: 'Texan',
+        addresses: ['0xb13ea7b5932e1d4a060508c5bbde0fa25ee10418']
+      },
+      {
+        name: 'uP Token',
+        addresses: ['0xf1ce5d4fe82ae1e487cc0742c00e59236a19bb00']
+      },
+      {
+        name: 'WinWin',
+        addresses: ['0xcfb1e0c5645Fe132aF153CD37213F017eAaDD96B']
+      },
+      {
+        name: 'PLSpeak',
+        addresses: ['0x89E261160b5564e82B1a97470BB787e2F7b8F246']
+      },
+      {
+        name: 'Dodeca',
+        addresses: ['0x9bd477fdd738ee65e3d67d201f67f020ccb2dfdf']
+      },
+      {
+        name: 'Hurricash',
+        addresses: ['0x6e3257a21f0406578405e0c738c87a400332e0b4']
+      },
+      {
+        name: 'decentralizeX',
+        addresses: ['0x017b5900B4681B5C9Edd9BB5C08bCd6365e0dadE']
       }
     ];
 
