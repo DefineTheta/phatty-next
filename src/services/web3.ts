@@ -168,7 +168,11 @@ export const tokenImages: Record<string, string> = {
   BRC: '/img/tokens/brc.png',
   RDPX: '/img/tokens/rdpx.png',
   GMX: '/img/tokens/gmx.webp',
-  MAGIC: '/img/tokens/magic.webp'
+  MAGIC: '/img/tokens/magic.webp',
+  DECI: '/img/tokens/deci.webp',
+  LUCKY: '/img/tokens/lukcy.png',
+  PP: '/img/tokens/pp.webp',
+  CULT: '/img/tokens/cult.webp'
 };
 
 const defiLlamaPriceQueryData = [
@@ -270,7 +274,11 @@ const defiLlamaPriceQueryData = [
   { type: 'coingecko', symbol: 'BRC', id: 'brinc-finance' },
   { type: 'coingecko', symbol: 'RDPX', id: 'dopex-rebate-token' },
   { type: 'coingecko', symbol: 'GMX', id: 'gmx' },
-  { type: 'coingecko', symbol: 'MAGIC', id: 'magic' }
+  { type: 'coingecko', symbol: 'MAGIC', id: 'magic' },
+  { type: 'coingecko', symbol: 'DECI', id: 'maximus-deci' },
+  { type: 'coingecko', symbol: 'LUCKY', id: 'maximus-lucky' },
+  { type: 'coingecko', symbol: 'PP', id: 'poorpleb' },
+  { type: 'coingecko', symbol: 'CULT', id: 'cult-dao' }
 ];
 
 export const chainImages: Record<string, string> = {
@@ -418,7 +426,11 @@ const defiLlamaPriceQueryDataLookup: Record<string, number> = {
   'coingecko:brinc-finance': 95,
   'coingecko:dopex-rebate-token': 96,
   'coingecko:gmx': 97,
-  'coingecko:magic': 98
+  'coingecko:magic': 98,
+  'coingecko:maximus-deci': 99,
+  'coingecko:maximus-lucky': 100,
+  'coingecko:poorpleb': 101,
+  'coingecko:cult-dao': 102
 };
 
 type DefiLlamaPriceItem = {
