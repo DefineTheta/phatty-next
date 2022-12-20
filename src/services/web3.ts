@@ -153,7 +153,7 @@ export const tokenImages: Record<string, string> = {
   BEETS: '/img/tokens/beets.webp',
   PLSD: '/img/tokens/plsd.webp',
   ICSA: '/img/tokens/icsa.webp',
-  TRIO: '/img/tokens/trio.png',
+  TRIO: '/img/tokens/trio.webp',
   BASE: '/img/tokens/base.png',
   ASIC: '/img/tokens/asic.webp',
   'POLY Maximus': '/img/tokens/poly_max.webp',
