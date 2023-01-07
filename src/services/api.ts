@@ -259,6 +259,8 @@ export const getWallet = async (addresses: string[], refresh: boolean, signal: A
       wallet.data.ARBI.data
     ]);
 
+    console.log(wallet);
+
     collatedRes.data.ETH.totalValue += wallet.data.ETH.totalValue;
     collatedRes.data.BSC.totalValue += wallet.data.BSC.totalValue;
     collatedRes.data.TPLS.totalValue += wallet.data.TPLS.totalValue;
@@ -269,6 +271,9 @@ export const getWallet = async (addresses: string[], refresh: boolean, signal: A
   });
 
   const collatedData = protocolData.data;
+
+  console.log('BULLY');
+  console.log(collatedData);
 
   collatedRes.data.ETH.data = collatedData[0];
   collatedRes.data.BSC.data = collatedData[1];

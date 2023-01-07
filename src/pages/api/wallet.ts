@@ -212,7 +212,7 @@ const arbiTokens: TokenItem[] = [
   { name: 'VSTA', displayName: 'VSTA', address: '0xa684cd057951541187f288294a1e1c2646aa2d24' },
   { name: 'SYN', displayName: 'SYN', address: '0x080f6aed32fc474dd5717105dba5ea57268f46eb' },
   { name: 'DBL', displayName: 'DBL', address: '0xd3f1da62cafb7e7bc6531ff1cef6f414291f03d3' },
-  { name: 'BRC', displayName: 'BRC', address: '0xb5de3f06af62d8428a8bf7b4400ea42ad2e0bc53' },
+  // { name: 'BRC', displayName: 'BRC', address: '0xb5de3f06af62d8428a8bf7b4400ea42ad2e0bc53' },
   { name: 'USDT', displayName: 'USDT', address: '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9' },
   { name: 'WETH', displayName: 'WETH', address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1' },
   { name: 'DAI', displayName: 'DAI', address: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1' },
@@ -256,6 +256,9 @@ const calculateWalletTokenData = async (
       const decimals = 18 - (await contract.methods.decimals().call());
       balance = parseFloat(client.utils.fromWei(result)) * 10 ** decimals;
     }
+
+    if (!price) console.warn(`Price for the token ${name} not available for chain ${chain}`);
+
     const value = balance * price;
 
     totalValueObj[chain] += value;
