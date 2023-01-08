@@ -103,7 +103,7 @@ const ethTokens: TokenItem[] = [
   { name: 'DAO_MAXI', displayName: 'MAXI', address: '0x0d86EB9f43C57f6FF3BC9E23D8F9d82503f0e84b' },
   {
     name: 'POLY_MAXI',
-    displayName: 'POLY Maximus',
+    displayName: 'POLY M',
     address: '0x9d93692e826a4bd9e903e2a27d7fbd1e116efdad'
   },
   { name: 'TRIO', displayName: 'TRIO', address: '0xF55cD1e399e1cc3D95303048897a680be3313308' },
