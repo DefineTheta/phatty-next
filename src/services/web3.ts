@@ -170,9 +170,11 @@ export const tokenImages: Record<string, string> = {
   GMX: '/img/tokens/gmx.webp',
   MAGIC: '/img/tokens/magic.webp',
   DECI: '/img/tokens/deci.webp',
-  LUCKY: '/img/tokens/lukcy.png',
+  LUCKY: '/img/tokens/lucky.png',
   PP: '/img/tokens/pp.webp',
-  CULT: '/img/tokens/cult.webp'
+  CULT: '/img/tokens/cult.webp',
+  PLSB: '/img/tokens/plsb.webp',
+  TEXAN: '/img/tokens/texan.png'
 };
 
 const defiLlamaPriceQueryData = [
@@ -493,7 +495,25 @@ export const fetchPrices = async () => {
       ...tplsTokenPrices
     } = tplsPriceData.chain_tpls;
 
-    prices = { ...tplsTokenPrices, ...prices, TPLS_HEX, TPLS_HDRN, TPLS_XEN };
+    const plsbPrice = await fetch(
+      'https://api.dexscreener.com/latest/dex/pairs/ethereum/0xA5eF2a6BbE8852BD6fd2EF6AB9bB45081a6F531C'
+    );
+    const texanPrice = await fetch(
+      'https://api.dexscreener.com/latest/dex/pairs/ethereum/0xB78A10166295ceC4cbCf2891f635C8F42068CE35'
+    );
+
+    const plsbData = await plsbPrice.json();
+    const texanData = await texanPrice.json();
+
+    prices = {
+      ...tplsTokenPrices,
+      ...prices,
+      TPLS_HEX,
+      TPLS_HDRN,
+      TPLS_XEN,
+      PLSB: Number(plsbData.pair.priceUsd),
+      TEXAN: Number(texanData.pair.priceUsd)
+    };
 
     return prices as Record<string, number>;
   } catch (e) {

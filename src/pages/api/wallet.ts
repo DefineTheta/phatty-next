@@ -115,7 +115,9 @@ const ethTokens: TokenItem[] = [
   { name: 'LUCKY', displayName: 'LUCKY', address: '0x6B0956258fF7bd7645aa35369B55B61b8e6d6140' },
   { name: 'PP', displayName: 'PP', address: '0x9565c2036963697786705120Fc59310F747bCfD0' },
   { name: 'WISE', displayName: 'WISE', address: '0x66a0f676479Cee1d7373f3DC2e2952778BfF5bd6' },
-  { name: 'CULT', displayName: 'CULT', address: '0xf0f9D895aCa5c8678f706FB8216fa22957685A13' }
+  { name: 'CULT', displayName: 'CULT', address: '0xf0f9D895aCa5c8678f706FB8216fa22957685A13' },
+  { name: 'PLSB', displayName: 'PLSB', address: '0x5EE84583f67D5EcEa5420dBb42b462896E7f8D06' },
+  { name: 'TEXAN', displayName: 'TEXAN', address: '0xcFCFfE432A48dB53F59c301422d2EdD77B2A88d7' }
 ];
 
 const bscTokens: TokenItem[] = [
@@ -128,7 +130,8 @@ const bscTokens: TokenItem[] = [
   { name: 'SHIB', displayName: 'SHIB', address: '0x2859e4544C4bB03966803b044A93563Bd2D0DD4D' },
   { name: 'DAI', displayName: 'DAI', address: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3' },
   { name: 'LINK', displayName: 'LINK', address: '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD' },
-  { name: 'XRX', displayName: 'XRX', address: '0xb25583e5e2db32b7fcbffe3f5e8e305c36157e54' }
+  { name: 'XRX', displayName: 'XRX', address: '0xb25583e5e2db32b7fcbffe3f5e8e305c36157e54' },
+  { name: 'FRAX', displayName: 'FRAX', address: '0x90C97F71E18723b0Cf0dfa30ee176Ab653E89F40' }
 ];
 
 const tplsTokens: TokenItem[] = [
@@ -222,7 +225,8 @@ const arbiTokens: TokenItem[] = [
   { name: 'SUSHI', displayName: 'SUSHI', address: '0xd4d42f0b6def4ce0383636770ef773390d85c61a' },
   { name: 'WBTC', displayName: 'WBTC', address: '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f' },
   { name: 'UNI', displayName: 'UNI', address: '0xfa7f8980b0f1e64a2062791cc3b0871572f1f7f0' },
-  { name: 'MAGIC', displayName: 'MAGIC', address: '0x539bdE0d7Dbd336b79148AA742883198BBF60342' }
+  { name: 'MAGIC', displayName: 'MAGIC', address: '0x539bdE0d7Dbd336b79148AA742883198BBF60342' },
+  { name: 'FRAX', displayName: 'FRAX', address: '0x17FC002b466eEc40DaE837Fc4bE5c67993ddBd6F' }
 ];
 
 const CHAIN_DETAILS: ChainItem[] = [
