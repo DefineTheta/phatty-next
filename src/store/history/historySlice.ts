@@ -23,14 +23,14 @@ const fetchProfileHistory = createAsyncThunk<HistoryResponse, string, { state: R
     // const response = await fetch(`/api/history?address=${address}`, { signal: controller.signal });
     // const data: HistoryResponse = await response.json();
 
-    const response = await fetch(`https://phiat.finance/history?add=${address}`, {
+    const response = await fetch(`/api/history?address=${address}`, {
       signal: controller.signal
     });
     const data = await response.json();
 
     const resArr: HistoryItem[] = [];
 
-    data.forEach((item: HistoryItem) => {
+    data.data.forEach((item: HistoryItem) => {
       resArr.push({
         chain: item.chain,
         image: tokenImages[item.chain],
