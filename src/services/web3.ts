@@ -2,7 +2,7 @@ import { PriceResponse } from '@app-src/types/api';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
-import { hexABI, phattyUIDataProviderABI } from './abi';
+import { hexABI, ICSA_ABI, phattyUIDataProviderABI } from './abi';
 
 export type PhiatReserveDataItem = {
   underlyingAsset: string;
@@ -583,6 +583,11 @@ export const hexPLSContract = new tplsClient.eth.Contract(
   hexABI as AbiItem[],
   '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39'
 );
+
+const ICSA_ADDRESS = '0xfc4913214444aF5c715cc9F7b52655e788A569ed';
+const ICOSA_CONTRACT_URL = 'https://mainnet.infura.io/v3/083f9de389b741b8896f61446153d1cd';
+export const icosaClient = new Web3(ICOSA_CONTRACT_URL);
+export const icsaContract = new icosaClient.eth.Contract(ICSA_ABI, ICSA_ADDRESS);
 
 const phattyUIDataProviderAddress = '0x050faCf199CE9bF0E982619880225C55c90b2536';
 export const phiatProviderContract = new tplsClient.eth.Contract(
