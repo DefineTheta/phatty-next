@@ -117,7 +117,8 @@ const ethTokens: TokenItem[] = [
   { name: 'WISE', displayName: 'WISE', address: '0x66a0f676479Cee1d7373f3DC2e2952778BfF5bd6' },
   { name: 'CULT', displayName: 'CULT', address: '0xf0f9D895aCa5c8678f706FB8216fa22957685A13' },
   { name: 'PLSB', displayName: 'PLSB', address: '0x5EE84583f67D5EcEa5420dBb42b462896E7f8D06' },
-  { name: 'TEXAN', displayName: 'TEXAN', address: '0xcFCFfE432A48dB53F59c301422d2EdD77B2A88d7' }
+  { name: 'TEXAN', displayName: 'TEXAN', address: '0xcFCFfE432A48dB53F59c301422d2EdD77B2A88d7' },
+  { name: 'COM', displayName: 'COM', address: '0x5A9780Bfe63f3ec57f01b087cD65BD656C9034A8' }
 ];
 
 const bscTokens: TokenItem[] = [
@@ -131,7 +132,8 @@ const bscTokens: TokenItem[] = [
   { name: 'DAI', displayName: 'DAI', address: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3' },
   { name: 'LINK', displayName: 'LINK', address: '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD' },
   { name: 'XRX', displayName: 'XRX', address: '0xb25583e5e2db32b7fcbffe3f5e8e305c36157e54' },
-  { name: 'FRAX', displayName: 'FRAX', address: '0x90C97F71E18723b0Cf0dfa30ee176Ab653E89F40' }
+  { name: 'FRAX', displayName: 'FRAX', address: '0x90C97F71E18723b0Cf0dfa30ee176Ab653E89F40' },
+  { name: 'BNBP', displayName: 'BNBP', address: '0x4D9927a8Dc4432B93445dA94E4084D292438931F' }
 ];
 
 const tplsTokens: TokenItem[] = [

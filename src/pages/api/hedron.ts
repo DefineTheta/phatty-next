@@ -1,7 +1,7 @@
 import { hedronABI } from '@app-src/services/abi';
 import { roundToPrecision, tplsClient, withWeb3ApiRoute } from '@app-src/services/web3';
 import { HedronItem, HedronResponse } from '@app-src/types/api';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import Web3 from 'web3';
 import type { Contract } from 'web3-eth-contract';
 
@@ -105,6 +105,16 @@ const calculateHedronStake = async (address: string, type: 'ETH' | 'TPLS', hedro
 
   return stakes;
 };
+
+// export default withTypedApiRoute(
+//   z.object({ address: z.string() }),
+//   z.object({}),
+//   async ({ input }) => {
+//     const priceResponse = await fetch(API_PRICE_URL);
+//     const price: PriceResponse = await priceResponse.json();
+
+//   }
+// );
 
 export default withWeb3ApiRoute(async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { address, price } = req.middleware;

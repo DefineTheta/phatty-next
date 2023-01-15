@@ -174,7 +174,9 @@ export const tokenImages: Record<string, string> = {
   PP: '/img/tokens/pp.webp',
   CULT: '/img/tokens/cult.webp',
   PLSB: '/img/tokens/plsb.webp',
-  TEXAN: '/img/tokens/texan.png'
+  TEXAN: '/img/tokens/texan.png',
+  BNBP: '/img/tokens/bnbp.png',
+  COM: '/img/tokens/com.webp'
 };
 
 const defiLlamaPriceQueryData = [
@@ -280,7 +282,9 @@ const defiLlamaPriceQueryData = [
   { type: 'coingecko', symbol: 'DECI', id: 'maximus-deci' },
   { type: 'coingecko', symbol: 'LUCKY', id: 'maximus-lucky' },
   { type: 'coingecko', symbol: 'PP', id: 'poorpleb' },
-  { type: 'coingecko', symbol: 'CULT', id: 'cult-dao' }
+  { type: 'coingecko', symbol: 'CULT', id: 'cult-dao' },
+  { type: 'coingecko', symbol: 'BNBP', id: 'bnbpot' },
+  { type: 'coingecko', symbol: 'COM', id: 'communis' }
 ];
 
 export const chainImages: Record<string, string> = {
@@ -432,7 +436,9 @@ const defiLlamaPriceQueryDataLookup: Record<string, number> = {
   'coingecko:maximus-deci': 99,
   'coingecko:maximus-lucky': 100,
   'coingecko:poorpleb': 101,
-  'coingecko:cult-dao': 102
+  'coingecko:cult-dao': 102,
+  'coingecko:bnbpot': 103,
+  'coingecko:communis': 104
 };
 
 type DefiLlamaPriceItem = {
