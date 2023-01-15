@@ -1,3 +1,4 @@
+import { HedronIcosaStakeItem, IcsaIcosaStakeItem } from '@app-src/server/icosa';
 import {
   HedronItem,
   HexTokenItem,
@@ -35,7 +36,8 @@ export const ProtocolEnum = {
   UNISWAPV3: 'UNISWAPV3',
   HEDRON: 'HEDRON',
   PHAMOUS: 'PHAMOUS',
-  XEN: 'XEN'
+  XEN: 'XEN',
+  ICOSA: 'ICOSA'
 } as const;
 
 export const ChainEnum = {
@@ -104,6 +106,13 @@ export const XenDataComponentEnum = {
 } as const;
 
 export type XenDataComponent = typeof XenDataComponentEnum[keyof typeof XenDataComponentEnum];
+
+export const IcosaDataComponentEnum = {
+  HEDRON: 'HEDRON',
+  ICSA: 'ICSA'
+} as const;
+
+export type IcosaDataComponent = typeof IcosaDataComponentEnum[keyof typeof IcosaDataComponentEnum];
 
 export interface ProtocolData {
   loading: boolean;
@@ -186,6 +195,16 @@ interface XenData extends ProtocolData {
   };
 }
 
+interface IcosaData extends ProtocolData {
+  total: {
+    ETH: number;
+  };
+  data: {
+    [IcosaDataComponentEnum.HEDRON]: HedronIcosaStakeItem[];
+    [IcosaDataComponentEnum.ICSA]: IcsaIcosaStakeItem[];
+  };
+}
+
 export interface PortfolioData {
   displayAddress: string;
   addresses: string[];
@@ -201,6 +220,7 @@ export interface PortfolioData {
   [ProtocolEnum.HEDRON]: HedronData;
   [ProtocolEnum.PHAMOUS]: PhamousData;
   [ProtocolEnum.XEN]: XenData;
+  [ProtocolEnum.ICOSA]: IcosaData;
 }
 
 export const PortfolioEnum = {

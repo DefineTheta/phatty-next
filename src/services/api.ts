@@ -1,4 +1,5 @@
 import { roundToPrecision } from '@app-src/common/utils/format';
+import { getStakedIcosa, IcosaResponse } from '@app-src/server/icosa';
 import {
   ApiBaseResponse,
   AuthResponse,
@@ -686,6 +687,40 @@ export const getXen = async (addresses: string[], refresh: boolean, signal: Abor
       collatedRes.data.MINTING.totalValue += xen.data.MINTING.totalValue;
       collatedRes.data.STAKING.totalValue += xen.data.STAKING.totalValue;
     });
+  });
+
+  return collatedRes;
+};
+
+export const getIcosa = async (addresses: string[], refresh: boolean, signal: AbortSignal) => {
+  const fetchPromises: Promise<IcosaResponse>[] = [];
+
+  addresses.forEach((address) => {
+    fetchPromises.push(
+      getStakedIcosa(address, {
+        cache: refresh ? 'reload' : 'default',
+        signal
+      })
+    );
+  });
+
+  const icosaDataArr = await Promise.all(fetchPromises);
+
+  if (icosaDataArr.length === 1) return icosaDataArr[0];
+
+  const collatedRes = {
+    data: {
+      HEDRON: [],
+      ICSA: []
+    },
+    totalValue: 0
+  } as IcosaResponse;
+
+  icosaDataArr.forEach((icosa) => {
+    collatedRes.data.HEDRON = collatedRes.data.HEDRON.concat(icosa.data.HEDRON);
+    collatedRes.data.ICSA = collatedRes.data.ICSA.concat(icosa.data.ICSA);
+
+    collatedRes.totalValue += icosa.totalValue;
   });
 
   return collatedRes;

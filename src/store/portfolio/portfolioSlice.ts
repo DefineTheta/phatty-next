@@ -1,8 +1,10 @@
+import { IcosaResponse } from '@app-src/server/icosa';
 import {
   AuthenticationError,
   getAccountFromMetamask,
   getHedron,
   getHex,
+  getIcosa,
   getPancake,
   getPhamous,
   getPhiat,
@@ -201,6 +203,17 @@ const initialPortfolioData: PortfolioData = {
     data: {
       [XenDataComponentEnum.MINTING]: [],
       [XenDataComponentEnum.STAKING]: []
+    }
+  },
+  [ProtocolEnum.ICOSA]: {
+    total: {
+      ETH: 0
+    },
+    loading: false,
+    error: false,
+    data: {
+      HEDRON: [],
+      ICSA: []
     }
   }
 };
@@ -711,6 +724,30 @@ const fetchXenData = createAsyncThunk<
   if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
 
   return { data: await getXen(addresses, false, controller.signal), type: input };
+});
+
+const fetchIcosaData = createAsyncThunk<
+  { data: IcosaResponse; type: Portfolio },
+  FetchDataInput,
+  { state: RootState }
+>('portfolio/fetchIcosaData', async (input, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  if (typeof input === 'object')
+    return {
+      data: await getIcosa(input.addresses, input.refresh, controller.signal),
+      type: input.type
+    };
+
+  const addresses = thunkAPI.getState().portfolio[input].addresses;
+
+  if (!addresses || addresses.length === 0) thunkAPI.rejectWithValue(null);
+
+  return { data: await getIcosa(addresses, false, controller.signal), type: input };
 });
 
 // const fetchPortfolioData = createAsyncThunk<
@@ -1299,6 +1336,34 @@ export const portfolioSlice = createSlice({
       // state[type].XEN.loading = false;
       state[type].XEN.error = true;
     });
+
+    //Icosa reducer functions
+    builder.addCase(fetchIcosaData.pending, (state, action) => {
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].ICOSA.loading = true;
+      state[type].ICOSA.error = false;
+    });
+
+    builder.addCase(fetchIcosaData.fulfilled, (state, action) => {
+      const res = action.payload.data;
+      const type = action.payload.type;
+
+      state[type].ICOSA.data.HEDRON = res.data.HEDRON;
+      state[type].ICOSA.data.ICSA = res.data.ICSA;
+
+      state[type].ICOSA.total.ETH = res.totalValue;
+
+      state[type].ICOSA.loading = false;
+      state[type].ICOSA.error = false;
+    });
+
+    builder.addCase(fetchIcosaData.rejected, (state, action) => {
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      // state[type].ICOSA.loading = false;
+      state[type].ICOSA.error = true;
+    });
   }
 });
 
@@ -1329,6 +1394,7 @@ export {
   fetchHedronData,
   fetchPhamousData,
   fetchXenData,
+  fetchIcosaData,
   fetchPortfolioData
 };
 

@@ -23,3 +23,14 @@ export const withTypedApiRoute =
       console.error(err);
     }
   };
+
+export const typedFetch = async <T extends z.ZodTypeAny>(
+  responseSchema: T,
+  fetchPromise: Promise<Response>
+): Promise<z.infer<T>> => {
+  const promise = await fetchPromise;
+  const data = await promise.json();
+  const parsed = responseSchema.parse(data);
+
+  return parsed;
+};

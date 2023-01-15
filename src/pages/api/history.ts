@@ -1,16 +1,5 @@
-import { withTypedApiRoute } from '@app-src/utils/tapi';
+import { typedFetch, withTypedApiRoute } from '@app-src/utils/tapi';
 import { z } from 'zod';
-
-const typedFetch = async <T extends z.ZodTypeAny>(
-  responseSchema: T,
-  fetchPromise: Promise<Response>
-): Promise<z.infer<T>> => {
-  const promise = await fetchPromise;
-  const data = await promise.json();
-  const parsed = responseSchema.parse(data);
-
-  return parsed;
-};
 
 const TransactionSchema = z.object({
   hash: z.string(),

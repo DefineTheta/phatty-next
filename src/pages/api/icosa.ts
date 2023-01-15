@@ -22,26 +22,37 @@ export default withTypedApiRoute(
 
     const price: PriceResponse = await priceResponse.json();
 
-    const hedronStake = IcosaStakeSchema.parse(
-      await icsaContract.methods.hdrnStakes(input.address).call()
-    );
-    const icsaStake = IcosaStakeSchema.parse(
-      await icsaContract.methods.icsaStakes(input.address).call()
-    );
+    const data = await Promise.all([
+      icsaContract.methods.hdrnStakes(input.address).call(),
+      icsaContract.methods.icsaStakes(input.address).call()
+    ]);
+
+    const hedronStake = IcosaStakeSchema.parse(data[0]);
+    const icsaStake = IcosaStakeSchema.parse(data[1]);
+
+    const hedronStakeValue = price['HDRN'] * (hedronStake.stakeAmount / 10e8);
+    const icsaStakeValue = price['ICSA'] * (icsaStake.stakeAmount / 10e8);
 
     const resObj = {
-      hedron: {
-        stakedHedron: hedronStake.stakeAmount / 10e8,
-        stakePoints: hedronStake.stakePoints,
-        minStakeDays: hedronStake.minStakeLength,
-        usdValue: price['HDRN'] * (hedronStake.stakeAmount / 10e8)
+      data: {
+        HEDRON: [
+          {
+            stakedHedron: hedronStake.stakeAmount / 10e8,
+            stakePoints: hedronStake.stakePoints,
+            minStakeDays: hedronStake.minStakeLength,
+            usdValue: hedronStakeValue
+          }
+        ],
+        ICSA: [
+          {
+            stakedIcsa: icsaStake.stakeAmount / 10e8,
+            stakePoints: icsaStake.stakePoints,
+            minStakeDays: icsaStake.minStakeLength,
+            usdValue: icsaStakeValue
+          }
+        ]
       },
-      icsa: {
-        stakedIcsa: icsaStake.stakeAmount / 10e8,
-        stakePoints: icsaStake.stakePoints,
-        minStakeDays: icsaStake.minStakeLength,
-        usdValue: price['ICSA'] * (icsaStake.stakeAmount / 10e8)
-      }
+      totalValue: hedronStakeValue + icsaStakeValue
     };
 
     return resObj;
