@@ -2,6 +2,7 @@ import { PriceResponse } from '@app-src/types/api';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
+import { z } from 'zod';
 import { hexABI, ICSA_ABI, phattyUIDataProviderABI } from './abi';
 
 export type PhiatReserveDataItem = {
@@ -529,6 +530,20 @@ export const fetchPrices = async () => {
   } catch (e) {
     console.error('Could not fetch live prices');
   }
+};
+
+export const web3ResponseToObject = <T extends z.ZodTypeAny>(
+  schema: T,
+  keys: string[],
+  response: any[]
+): z.infer<T> => {
+  const returnObj: { [index: string]: any } = {};
+
+  keys.forEach((key, index) => {
+    returnObj[key] = response[index];
+  });
+
+  return schema.parse(returnObj);
 };
 
 export const roundToPrecision = (amount: number, precision: number) => {
