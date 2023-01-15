@@ -3,6 +3,7 @@ import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import {
   selectHedronTotal,
   selectHexTotal,
+  selectIcosaTotal,
   selectPancakeTotal,
   selectPhamousTotal,
   selectPhiatTotal,
@@ -34,6 +35,7 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
   const hedronTotal = useSelector(useCallback(selectHedronTotal(page), [page]));
   const phamousTotal = useSelector(useCallback(selectPhamousTotal(page), [page]));
   const xenTotal = useSelector(useCallback(selectXenTotal(page), [page]));
+  const icosaTotal = useSelector(useCallback(selectIcosaTotal(page), [page]));
 
   const protocolData = useMemo(
     () => [
@@ -124,6 +126,14 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         imgSrc: '/img/icon/xen.png',
         imgAlt: 'Xen',
         linkHref: '#xen'
+      },
+      {
+        protocolName: 'Icosa',
+        totalAmount: icosaTotal,
+        displayTotalAmount: formatToMoney(icosaTotal),
+        imgSrc: '/img/icon/icosa.png',
+        imgAlt: 'Icosa',
+        linkHref: '#icosa'
       }
     ],
     [
@@ -137,7 +147,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
       uniV3Total,
       hedronTotal,
       phamousTotal,
-      xenTotal
+      xenTotal,
+      icosaTotal
     ]
   );
 

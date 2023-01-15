@@ -1,4 +1,5 @@
 import { getPositiveOrZero } from '@app-src/common/utils/query';
+import { HedronIcosaStakeItem, IcsaIcosaStakeItem } from '@app-src/server/icosa';
 import { getSeaCreature } from '@app-src/services/api';
 import { RootState } from '@app-src/store/store';
 import {
@@ -22,6 +23,7 @@ import {
   ChainEnum,
   HedronDataComponentEnum,
   HexDataComponentEnum,
+  IcosaDataComponent,
   PhamousDataComponent,
   PhiatDataComponentEnum,
   Portfolio,
@@ -180,6 +182,23 @@ export function selectXenComponentData(component: XenDataComponent, type: Portfo
   });
 }
 
+export function selectIcosaStakeData(
+  component: Extract<IcosaDataComponent, 'HEDRON'>,
+  type: Portfolio
+): (state: RootState) => HedronIcosaStakeItem[];
+export function selectIcosaStakeData(
+  component: Extract<IcosaDataComponent, 'ICSA'>,
+  type: Portfolio
+): (state: RootState) => IcsaIcosaStakeItem[];
+
+export function selectIcosaStakeData(component: IcosaDataComponent, type: Portfolio) {
+  return memoize((state: RootState) => {
+    console.log(`SELECT_${component}_ICOSA_STAKE_DATA`);
+
+    return state.portfolio[type].ICOSA.data[component];
+  });
+}
+
 export const selectEthereumTotal = (type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_ETHEREUM_TOTAL');
@@ -191,7 +210,8 @@ export const selectEthereumTotal = (type: Portfolio) =>
       getPositiveOrZero(state.portfolio[type].UNISWAPV2.total.LIQUIDITY_POOL) +
       getPositiveOrZero(state.portfolio[type].UNISWAPV3.total.LIQUIDITY_POOL) +
       getPositiveOrZero(state.portfolio[type].HEDRON.total.ETH) +
-      getPositiveOrZero(state.portfolio[type].XEN.total.ETH)
+      getPositiveOrZero(state.portfolio[type].XEN.total.ETH) +
+      getPositiveOrZero(state.portfolio[type].ICOSA.total.ETH)
     );
   });
 
@@ -364,6 +384,13 @@ export const selectXenTotal = (type: Portfolio) =>
     return state.portfolio[type].XEN.total.ETH;
   });
 
+export const selectIcosaTotal = (type: Portfolio) =>
+  memoize((state: RootState): number => {
+    console.log('SELECT_ICOSA_TOTAL');
+
+    return state.portfolio[type].ICOSA.total.ETH;
+  });
+
 export const selectTotal = (type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_TOTAL');
@@ -516,6 +543,13 @@ export const selectXenLoading = (type: Portfolio) =>
     return state.portfolio[type].XEN.loading;
   });
 
+export const selectIcosaLoading = (type: Portfolio) =>
+  memoize((state: RootState): boolean => {
+    console.log('SELECT_ICOSA_LOADING');
+
+    return state.portfolio[type].ICOSA.loading;
+  });
+
 export const selectWalletError = (type: Portfolio) =>
   memoize((state: RootState): boolean => {
     console.log('SELECT_WALLET_ERROR');
@@ -591,4 +625,11 @@ export const selectXenError = (type: Portfolio) =>
     console.log('SELECT_XEN_ERROR');
 
     return state.portfolio[type].XEN.error;
+  });
+
+export const selectIcosaError = (type: Portfolio) =>
+  memoize((state: RootState): boolean => {
+    console.log('SELECT_ICOSA_ERROR');
+
+    return state.portfolio[type].ICOSA.error;
   });

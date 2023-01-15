@@ -3,6 +3,7 @@ import ChainSummaryCard from '@app-src/modules/chain/components/ChainSummaryCard
 import { Portfolio, PortfolioChain } from '../types/portfolio';
 import HedronTableGroup from './hedron/HedronTableGroup';
 import HexTableGroup from './hex/HexTableGroup';
+import IcosaTableGroup from './icosa/IcosaTableGroup';
 import PancakeTableGroup from './pancake/PancakeTableGroup';
 import PhamousTableGroup from './phamous/PhamousTableGroup';
 import PhiatTableGroup from './phiat/PhiatTableGroup';
@@ -35,6 +36,7 @@ const PortfolioPage = ({ page, chains }: IPortfolioPageProps) => {
           <UniV3TableGroup page={page} currentChains={chains} />
           <HedronTableGroup page={page} currentChains={chains} />
           <XenTableGroup page={page} currentChains={chains} />
+          <IcosaTableGroup page={page} currentChains={chains} />
         </div>
       </Container>
     </div>
