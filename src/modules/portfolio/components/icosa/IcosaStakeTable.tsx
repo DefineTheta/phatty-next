@@ -9,6 +9,7 @@ import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { selectIcosaStakeData } from '@app-src/store/portfolio/selectors';
 import { Portfolio } from '@app-src/store/portfolio/types';
 import { useCallback } from 'react';
+import useFilter from '../../hooks/useFilter';
 import { formatToMoney, styleNumber } from '../../utils/format';
 
 type IIcosaStakeTableProps = {
@@ -22,6 +23,17 @@ const IcosaStakeTable = ({ page, loading }: IIcosaStakeTableProps) => {
   );
   const icosaIcsaStakingData = useAppSelector(
     useCallback(selectIcosaStakeData('ICSA', page), [page])
+  );
+
+  const [filteredIcosaHedronStakingData] = useFilter<typeof icosaHedronStakingData[number]>(
+    icosaHedronStakingData,
+    'usdValue',
+    0
+  );
+  const [filteredIcosaIcsaStakingData] = useFilter<typeof icosaIcsaStakingData[number]>(
+    icosaIcsaStakingData,
+    'usdValue',
+    0
   );
 
   if (loading) {
@@ -54,7 +66,7 @@ const IcosaStakeTable = ({ page, loading }: IIcosaStakeTableProps) => {
     );
   }
 
-  if (icosaHedronStakingData.length === 0 && icosaIcsaStakingData.length === 0) {
+  if (filteredIcosaHedronStakingData.length === 0 && filteredIcosaIcsaStakingData.length === 0) {
     return null;
   }
 
@@ -67,7 +79,7 @@ const IcosaStakeTable = ({ page, loading }: IIcosaStakeTableProps) => {
         <TableHeaderRowCell className="basis-1/4">Min Staking Days</TableHeaderRowCell>
         <TableHeaderRowCell className="basis-1/4">Value</TableHeaderRowCell>
       </TableHeaderRow>
-      {icosaHedronStakingData.map((stake, index) => (
+      {filteredIcosaHedronStakingData.map((stake, index) => (
         <TableRow key={index}>
           <TableRowCell className="basis-1/4 pr-20">{`${styleNumber(
             stake.stakedHedron,
@@ -78,7 +90,7 @@ const IcosaStakeTable = ({ page, loading }: IIcosaStakeTableProps) => {
           <TableRowCell className="basis-1/4 pr-20">{formatToMoney(stake.usdValue)}</TableRowCell>
         </TableRow>
       ))}
-      {icosaIcsaStakingData.map((stake, index) => (
+      {filteredIcosaIcsaStakingData.map((stake, index) => (
         <TableRow key={index}>
           <TableRowCell className="basis-1/4 pr-20">{`${styleNumber(
             stake.stakedIcsa,

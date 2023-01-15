@@ -385,7 +385,8 @@ const fetchPublicBundleData = createAsyncThunk<PublicBundleResponse, number, { s
         name: 'PhameSac',
         addresses: [
           '0xa5bD947Bc9Bb9215c3290FF43f11F708b1d5B263',
-          '0xB8bC81524338C84d9BBe6b07B50F4702a7Bb7230'
+          '0xB8bC81524338C84d9BBe6b07B50F4702a7Bb7230',
+          '0xb51745ef6f44180b93c392fee0542b0f52afc6da'
         ]
       },
       {
