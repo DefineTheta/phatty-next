@@ -118,7 +118,8 @@ const ethTokens: TokenItem[] = [
   { name: 'CULT', displayName: 'CULT', address: '0xf0f9D895aCa5c8678f706FB8216fa22957685A13' },
   { name: 'PLSB', displayName: 'PLSB', address: '0x5EE84583f67D5EcEa5420dBb42b462896E7f8D06' },
   { name: 'TEXAN', displayName: 'TEXAN', address: '0xcFCFfE432A48dB53F59c301422d2EdD77B2A88d7' },
-  { name: 'COM', displayName: 'COM', address: '0x5A9780Bfe63f3ec57f01b087cD65BD656C9034A8' }
+  { name: 'COM', displayName: 'COM', address: '0x5A9780Bfe63f3ec57f01b087cD65BD656C9034A8' },
+  { name: 'FXS', displayName: 'FXS', address: '0x3432B6A60D23Ca0dFCa7761B7ab56459D9C964D0' }
 ];
 
 const bscTokens: TokenItem[] = [
