@@ -15,6 +15,23 @@ const PortfolioChainEnum = {
 
 export type PortfolioChain = typeof PortfolioChainEnum[keyof typeof PortfolioChainEnum];
 
+const PortfolioProtocolEnum = {
+  WALLET: 'WALLET',
+  HEX: 'HEX',
+  PHIAT: 'PHIAT',
+  PULSEX: 'PULSEX',
+  PANCAKE: 'PANCAKE',
+  SUSHI: 'SUSHI',
+  UNISWAPV2: 'UNISWAPV2',
+  UNISWAPV3: 'UNISWAPV3',
+  HEDRON: 'HEDRON',
+  PHAMOUS: 'PHAMOUS',
+  XEN: 'XEN',
+  ICOSA: 'ICOSA'
+} as const;
+
+export type PortfolioProtocol = typeof PortfolioProtocolEnum[keyof typeof PortfolioProtocolEnum];
+
 export const PortfolioEnum = {
   PROFILE: 'PROFILE',
   BUNDLE: 'BUNDLE',
