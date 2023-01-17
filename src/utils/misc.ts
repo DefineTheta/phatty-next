@@ -9,7 +9,7 @@ export const addObjects = <
 
   [a, b].forEach((obj) =>
     Object.keys(obj).forEach((key) => {
-      c[key] = c[key] || 0 + obj[key];
+      c[key] = (c[key] || 0) + obj[key];
     })
   );
 
