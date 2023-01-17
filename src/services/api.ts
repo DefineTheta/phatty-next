@@ -1,5 +1,7 @@
 import { roundToPrecision } from '@app-src/common/utils/format';
+import { PaginatedApi } from '@app-src/schema/api';
 import { getStakedIcosa, IcosaResponse } from '@app-src/server/icosa';
+import { fetchXen, XenResponse, XenTotal } from '@app-src/server/xen';
 import {
   ApiBaseResponse,
   AuthResponse,
@@ -14,9 +16,9 @@ import {
   UniV2Response,
   UniV3Response,
   WalletResponse,
-  WalletTokenItem,
-  XenResponse
+  WalletTokenItem
 } from '@app-src/types/api';
+import { addObjects } from '@app-src/utils/misc';
 import { ProtocolData } from './protocol';
 
 export class AuthenticationError extends Error {
@@ -103,6 +105,26 @@ const getPaginatedData = async <T extends ApiBaseResponse>(URL: string, options?
       options
     );
     const data: T = await res.json();
+
+    responses.push(data);
+
+    if (!data.next) keepFetching = false;
+    else page = data.next;
+  }
+
+  return responses;
+};
+
+const getNewPaginatedData = async <T extends PaginatedApi>(
+  getData: (page: number) => Promise<T>
+) => {
+  const responses: T[] = [];
+
+  let keepFetching = true;
+  let page = 1;
+
+  while (keepFetching) {
+    const data = await getData(page);
 
     responses.push(data);
 
@@ -654,10 +676,12 @@ export const getXen = async (addresses: string[], refresh: boolean, signal: Abor
 
   addresses.forEach((address) => {
     fetchPromises.push(
-      getPaginatedData(`/api/xen?address=${address}`, {
-        cache: refresh ? 'reload' : 'default',
-        signal
-      })
+      getNewPaginatedData((page: number) =>
+        fetchXen(address, page, {
+          cache: refresh ? 'reload' : 'default',
+          signal
+        })
+      )
     );
   });
 
@@ -669,11 +693,15 @@ export const getXen = async (addresses: string[], refresh: boolean, signal: Abor
     data: {
       STAKING: {
         data: [],
-        totalValue: 0
+        totalValue: {
+          TOTAL: 0
+        }
       },
       MINTING: {
         data: [],
-        totalValue: 0
+        totalValue: {
+          TOTAL: 0
+        }
       }
     },
     next: null
@@ -684,8 +712,14 @@ export const getXen = async (addresses: string[], refresh: boolean, signal: Abor
       collatedRes.data.STAKING.data = collatedRes.data.STAKING.data.concat(xen.data.STAKING.data);
       collatedRes.data.MINTING.data = collatedRes.data.MINTING.data.concat(xen.data.MINTING.data);
 
-      collatedRes.data.MINTING.totalValue += xen.data.MINTING.totalValue;
-      collatedRes.data.STAKING.totalValue += xen.data.STAKING.totalValue;
+      collatedRes.data.STAKING.totalValue = addObjects<XenTotal, XenTotal>(
+        collatedRes.data.STAKING.totalValue,
+        xen.data.STAKING.totalValue
+      );
+      collatedRes.data.MINTING.totalValue = addObjects<XenTotal, XenTotal>(
+        collatedRes.data.MINTING.totalValue,
+        xen.data.MINTING.totalValue
+      );
     });
   });
 

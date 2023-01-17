@@ -221,6 +221,7 @@ export const selectBscTotal = (type: Portfolio) =>
 
     return (
       getPositiveOrZero(state.portfolio[type].WALLET.total.BSC) +
+      getPositiveOrZero(state.portfolio[type].XEN.total.BSC) +
       getPositiveOrZero(selectPancakeTotal(type)(state))
     );
   });
@@ -243,21 +244,30 @@ export const selectMaticTotal = (type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_MATIC_TOTAL');
 
-    return getPositiveOrZero(state.portfolio[type].WALLET.total.MATIC);
+    return (
+      getPositiveOrZero(state.portfolio[type].WALLET.total.MATIC) +
+      getPositiveOrZero(state.portfolio[type].XEN.total.MATIC)
+    );
   });
 
 export const selectAvaxTotal = (type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_AVAX_TOTAL');
 
-    return getPositiveOrZero(state.portfolio[type].WALLET.total.AVAX);
+    return (
+      getPositiveOrZero(state.portfolio[type].WALLET.total.AVAX) +
+      getPositiveOrZero(state.portfolio[type].XEN.total.AVAX)
+    );
   });
 
 export const selectFtmTotal = (type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_FTM_TOTAL');
 
-    return getPositiveOrZero(state.portfolio[type].WALLET.total.FTM);
+    return (
+      getPositiveOrZero(state.portfolio[type].WALLET.total.FTM) +
+      getPositiveOrZero(state.portfolio[type].XEN.total.FTM)
+    );
   });
 
 export const selectArbiTotal = (type: Portfolio) =>
@@ -381,7 +391,7 @@ export const selectXenTotal = (type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_XEN_TOTAL');
 
-    return state.portfolio[type].XEN.total.ETH;
+    return state.portfolio[type].XEN.total.TOTAL;
   });
 
 export const selectIcosaTotal = (type: Portfolio) =>

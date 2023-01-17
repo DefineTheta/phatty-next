@@ -1,4 +1,5 @@
 import { HedronIcosaStakeItem, IcsaIcosaStakeItem } from '@app-src/server/icosa';
+import { XenTotal } from '@app-src/server/xen';
 import {
   HedronItem,
   HexTokenItem,
@@ -186,9 +187,7 @@ interface PhamousData extends ProtocolData {
 }
 
 interface XenData extends ProtocolData {
-  total: {
-    ETH: number;
-  };
+  total: XenTotal;
   data: {
     [XenDataComponentEnum.STAKING]: XenStakeItem[];
     [XenDataComponentEnum.MINTING]: XenMintItem[];
