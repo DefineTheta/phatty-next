@@ -52,7 +52,12 @@ const ProfilePortfolioPage = () => {
 
   useEffect(() => {
     const chains = router.query.chains;
-    if (!chains || typeof chains === 'object') return;
+
+    if (typeof chains === 'object') return;
+    else if (!chains) {
+      setCurrentChains([]);
+      return;
+    }
 
     const chainsArr = chains.split(',');
 

@@ -14,11 +14,12 @@ export const withTypedApiRoute =
     outputSchema: K,
     handler: TypedApiRouterHandler<T, K>
   ) =>
-  async (req: NextApiRequest, res: NextApiResponse) => {
+  async (req: NextApiRequest, res: NextApiResponse<z.infer<K>>) => {
     try {
       const input = inputSchema.parse(req.query);
+      const response = outputSchema.parse(await handler({ input }));
 
-      res.json(await handler({ input }));
+      res.json(response);
     } catch (err) {
       console.error(err);
     }

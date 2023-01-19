@@ -7,7 +7,7 @@ import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { howLongAgo } from '@app-src/common/utils/time';
 import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
-import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
+import { styleNumber } from '@app-src/modules/portfolio/utils/format';
 import { fetchProfileHistory, setHistoryHasFetched } from '@app-src/store/history/historySlice';
 import {
   selectProfileHistory,
@@ -110,11 +110,11 @@ const HistoryTable = () => {
                       : 'text-text-200'
                   }`}
                 >
-                  <span>{token.token}</span>
+                  <span>{`$${token.token}`}</span>
                   <span>
-                    {token.transaction === 'Receive' ? '+' : token.transaction === 'Send' && '-'}
+                    {token.transaction === 'Receive' ? '+' : token.transaction === 'Send' && '−'}
                   </span>
-                  <span>{formatToMoney(token.amount)}</span>
+                  <span>{styleNumber(token.amount)}</span>
                 </div>
               ))}
             </div>

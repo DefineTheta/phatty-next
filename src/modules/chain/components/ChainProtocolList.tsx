@@ -1,5 +1,10 @@
-import { Portfolio, PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
+import {
+  Portfolio,
+  PortfolioChain,
+  PortfolioProtocol
+} from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
+import { isProtocolInCurrnetChains } from '@app-src/modules/portfolio/utils/misc';
 import {
   selectHedronTotal,
   selectHexTotal,
@@ -23,6 +28,16 @@ export type IChainProtocolListProps = {
   currentAssetChains: PortfolioChain[];
 };
 
+type ProtocolData = {
+  protocolName: PortfolioProtocol;
+  protocolDisplayName: string;
+  totalAmount: number;
+  displayTotalAmount: string;
+  imgSrc: string;
+  imgAlt: string;
+  linkHref: string;
+};
+
 const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps) => {
   const walletTotal = useSelector(useCallback(selectWalletTotal(currentAssetChains, page), [page]));
   const hexTotal = useSelector(useCallback(selectHexTotal(page), [page]));
@@ -37,10 +52,11 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
   const xenTotal = useSelector(useCallback(selectXenTotal(page), [page]));
   const icosaTotal = useSelector(useCallback(selectIcosaTotal(page), [page]));
 
-  const protocolData = useMemo(
+  const protocolData = useMemo<ProtocolData[]>(
     () => [
       {
-        protocolName: 'Wallet',
+        protocolName: 'WALLET',
+        protocolDisplayName: 'Wallet',
         totalAmount: walletTotal,
         displayTotalAmount: formatToMoney(walletTotal),
         imgSrc: '/img/icon/wallet.svg',
@@ -48,7 +64,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         linkHref: '#wallet'
       },
       {
-        protocolName: 'Hex',
+        protocolName: 'HEX',
+        protocolDisplayName: 'Hex',
         totalAmount: hexTotal,
         displayTotalAmount: formatToMoney(hexTotal),
         imgSrc: '/img/icon/hex.svg',
@@ -56,7 +73,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         linkHref: '#hex'
       },
       {
-        protocolName: 'Phiat',
+        protocolName: 'PHIAT',
+        protocolDisplayName: 'Phiat',
         totalAmount: phiatTotal,
         displayTotalAmount: formatToMoney(phiatTotal),
         imgSrc: '/img/icon/phiat.png',
@@ -64,7 +82,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         linkHref: '#phiat'
       },
       {
-        protocolName: 'PulseX',
+        protocolName: 'PULSEX',
+        protocolDisplayName: 'PulseX',
         totalAmount: pulsexTotal,
         displayTotalAmount: formatToMoney(pulsexTotal),
         imgSrc: '/img/tokens/pulsex.jpeg',
@@ -72,7 +91,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         linkHref: '#pulsex'
       },
       {
-        protocolName: 'Pancake',
+        protocolName: 'PANCAKE',
+        protocolDisplayName: 'Pancake',
         totalAmount: pancakeTotal,
         displayTotalAmount: formatToMoney(pancakeTotal),
         imgSrc: '/img/icon/pancake.svg',
@@ -80,7 +100,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         linkHref: '#pancake'
       },
       {
-        protocolName: 'Sushi',
+        protocolName: 'SUSHI',
+        protocolDisplayName: 'Sushi',
         totalAmount: sushiTotal,
         displayTotalAmount: formatToMoney(sushiTotal),
         imgSrc: '/img/icon/sushi.svg',
@@ -88,7 +109,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         linkHref: '#sushi'
       },
       {
-        protocolName: 'Uniswap V2',
+        protocolName: 'UNISWAPV2',
+        protocolDisplayName: 'Uniswap V2',
         totalAmount: uniV2Total,
         displayTotalAmount: formatToMoney(uniV2Total),
         imgSrc: '/img/icon/univ2.svg',
@@ -96,7 +118,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         linkHref: '#univ2'
       },
       {
-        protocolName: 'Uniswap V3',
+        protocolName: 'UNISWAPV3',
+        protocolDisplayName: 'Uniswap V3',
         totalAmount: uniV3Total,
         displayTotalAmount: formatToMoney(uniV3Total),
         imgSrc: '/img/icon/univ2.svg',
@@ -104,7 +127,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         linkHref: '#univ3'
       },
       {
-        protocolName: 'Hedron',
+        protocolName: 'HEDRON',
+        protocolDisplayName: 'Hedron',
         totalAmount: hedronTotal,
         displayTotalAmount: formatToMoney(hedronTotal),
         imgSrc: '/img/icon/hedron.webp',
@@ -112,7 +136,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         linkHref: '#hedron'
       },
       {
-        protocolName: 'Phamous',
+        protocolName: 'PHAMOUS',
+        protocolDisplayName: 'Phamous',
         totalAmount: phamousTotal,
         displayTotalAmount: formatToMoney(phamousTotal),
         imgSrc: '/img/icon/phamous_table.svg',
@@ -120,7 +145,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         linkHref: '#phamous'
       },
       {
-        protocolName: 'Xen',
+        protocolName: 'XEN',
+        protocolDisplayName: 'Xen',
         totalAmount: xenTotal,
         displayTotalAmount: formatToMoney(xenTotal),
         imgSrc: '/img/icon/xen.png',
@@ -128,7 +154,8 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
         linkHref: '#xen'
       },
       {
-        protocolName: 'Icosa',
+        protocolName: 'ICOSA',
+        protocolDisplayName: 'Icosa',
         totalAmount: icosaTotal,
         displayTotalAmount: formatToMoney(icosaTotal),
         imgSrc: '/img/icon/icosa.png',
@@ -152,14 +179,22 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
     ]
   );
 
+  const filteredProtocolData = useMemo<ProtocolData[]>(
+    () =>
+      protocolData.filter((data) =>
+        isProtocolInCurrnetChains(data.protocolName, currentAssetChains)
+      ),
+    [protocolData, currentAssetChains]
+  );
+
   return (
     <div className="flex flex-row flex-wrap gap-x-10 gap-y-10">
-      {protocolData.map((protocol, index) => {
+      {filteredProtocolData.map((protocol, index) => {
         if (protocol.totalAmount !== 0) {
           return (
             <ChainProtocolItem
               key={index}
-              protocolName={protocol.protocolName}
+              protocolName={protocol.protocolDisplayName}
               totalAmount={protocol.displayTotalAmount}
               imgSrc={protocol.imgSrc}
               imgAlt={protocol.imgAlt}

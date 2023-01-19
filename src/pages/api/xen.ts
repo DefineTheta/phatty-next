@@ -1,5 +1,7 @@
+import { XenMint, XenResponse, XenStake, XenTotal, XenTotalEnum } from '@app-src/server/xen';
 import { XEN_ABI } from '@app-src/services/abi';
 import {
+  API_PRICE_URL,
   avaxClient,
   bscClient,
   chainImages,
@@ -10,12 +12,12 @@ import {
   ftmClient,
   glmrClient,
   maticClient,
-  okcClient,
-  withWeb3ApiRoute
+  okcClient
 } from '@app-src/services/web3';
-import { XenMintItem, XenResponse, XenStakeItem } from '@app-src/types/api';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { PriceResponse, XenMintItem, XenStakeItem } from '@app-src/types/api';
+import { withTypedApiRoute } from '@app-src/utils/tapi';
 import type { Contract } from 'web3-eth-contract';
+import { z } from 'zod';
 
 type StakeDetail = {
   term: number;
@@ -44,7 +46,7 @@ const XEN_DOGE_ADDRESS = '0x948eed4490833D526688fD1E5Ba0b9B35CD2c32e';
 const XEN_OKC_ADDRESS = '0x1cC4D981e897A3D2E7785093A648c0a75fAd0453';
 const XEN_ETHW_ADDRESS = '0x2AB0e9e4eE70FFf1fB9D67031E44F6410170d00e';
 
-const contracts = [
+const contracts: { name: XenTotalEnum; contract: Contract }[] = [
   { name: 'ETH', contract: new ethClient.eth.Contract(XEN_ABI, XEN_ETH_ADDRESS) },
   { name: 'BSC', contract: new bscClient.eth.Contract(XEN_ABI, XEN_BSC_ADDRESS) },
   { name: 'MATIC', contract: new maticClient.eth.Contract(XEN_ABI, XEN_MATIC_ADDRESS) },
@@ -61,7 +63,7 @@ const calculateXen = async (
   contract: Contract,
   address: string,
   price: number,
-  chainName: string
+  chainName: XenTotalEnum
 ) => {
   const walletBalancePromise = await contract.methods.balanceOf(address).call();
   const stakeDetailsPromise = await contract.methods.userStakes(address).call();
@@ -89,7 +91,7 @@ const calculateXen = async (
     usdValue: (walletAmount + stakedAmount) * price,
     chain: chainName,
     chainImg
-  } as XenStakeItem;
+  } as XenStake;
 
   const mint = {
     term: Number(mintDetails.term),
@@ -98,28 +100,36 @@ const calculateXen = async (
     estimatedXen,
     chain: chainName,
     chainImg
-  } as XenMintItem;
+  } as XenMint;
 
-  return [stake, mint] as [XenStakeItem, XenMintItem];
+  return [stake, mint] as [XenStake, XenMint];
 };
 
-export default withWeb3ApiRoute(
-  async function handler(req: NextApiRequest, res: NextApiResponse<XenResponse>) {
-    const { address, page, price } = req.middleware;
+export default withTypedApiRoute(
+  z.object({ address: z.string(), page: z.coerce.number() }),
+  XenResponse,
+  async ({ input }) => {
+    const priceResponse = await fetch(API_PRICE_URL);
+
+    const price: PriceResponse = await priceResponse.json();
 
     const stakingData: XenStakeItem[] = [];
     const mintingData: XenMintItem[] = [];
-    let stakingTotal = 0;
-    let mintingTotal = 0;
+    let stakingTotal: XenTotal = {
+      TOTAL: 0
+    };
+    let mintingTotal: XenTotal = {
+      TOTAL: 0
+    };
 
-    const isLastPage = page * 5 >= contracts.length;
-    const promises: Promise<[XenStakeItem, XenMintItem]>[] = [];
+    const isLastPage = input.page * 5 >= contracts.length;
+    const promises: Promise<[XenStake, XenMint]>[] = [];
 
-    for (let i = (page - 1) * 5; i < (isLastPage ? contracts.length : page * 5); i++) {
+    for (let i = (input.page - 1) * 5; i < (isLastPage ? contracts.length : input.page * 5); i++) {
       const data = contracts[i];
       const xenPrice = price[`XEN_${data.name}`] || price['XEN'];
 
-      promises.push(calculateXen(data.contract, address, xenPrice, data.name));
+      promises.push(calculateXen(data.contract, input.address, xenPrice, data.name));
     }
 
     const data = await Promise.all(promises);
@@ -127,12 +137,14 @@ export default withWeb3ApiRoute(
     data.forEach((item) => {
       if (item[0].usdValue > 0) {
         stakingData.push(item[0]);
-        stakingTotal += item[0].usdValue;
+        stakingTotal[item[0].chain] = item[0].usdValue;
+        stakingTotal.TOTAL += item[0].usdValue;
       }
 
       if (item[1].usdValue > 0) {
         mintingData.push(item[1]);
-        mintingTotal += item[1].usdValue;
+        mintingTotal[item[1].chain] = item[1].usdValue;
+        mintingTotal.TOTAL += item[1].usdValue;
       }
     });
 
@@ -147,12 +159,9 @@ export default withWeb3ApiRoute(
           totalValue: mintingTotal
         }
       },
-      next: !isLastPage ? page + 1 : null
-    } as XenResponse;
+      next: !isLastPage ? input.page + 1 : null
+    };
 
-    res.status(200).json(resObj);
-  },
-  {
-    isPaginated: true
+    return resObj;
   }
 );

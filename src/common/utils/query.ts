@@ -1,4 +1,4 @@
-export const getPositiveOrZero = (num: number) => {
-  if (num > 0) return num;
-  else return 0;
+export const getPositiveOrZero = (num?: number) => {
+  if (!num || num < 0) return 0;
+  else return num;
 };

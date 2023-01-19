@@ -27,6 +27,8 @@ const PortfolioPage = ({ page, chains }: IPortfolioPageProps) => {
           <ChainSummaryCard page={page} currentChains={chains} />
           <WalletTableGroup page={page} currentChains={chains} />
           <HexTableGroup page={page} currentChains={chains} />
+          <HedronTableGroup page={page} currentChains={chains} />
+          <IcosaTableGroup page={page} currentChains={chains} />
           <PhiatTableGroup page={page} currentChains={chains} />
           <PhamousTableGroup page={page} currentChains={chains} />
           <PulsexTableGroup page={page} currentChains={chains} />
@@ -34,9 +36,7 @@ const PortfolioPage = ({ page, chains }: IPortfolioPageProps) => {
           <SushiTableGroup page={page} currentChains={chains} />
           <UniV2TableGroup page={page} currentChains={chains} />
           <UniV3TableGroup page={page} currentChains={chains} />
-          <HedronTableGroup page={page} currentChains={chains} />
           <XenTableGroup page={page} currentChains={chains} />
-          <IcosaTableGroup page={page} currentChains={chains} />
         </div>
       </Container>
     </div>

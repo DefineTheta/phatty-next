@@ -12,6 +12,7 @@ import { Portfolio } from '@app-src/store/portfolio/types';
 import { useCallback, useMemo } from 'react';
 import { PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
+import { isInCurrentChains } from '../../utils/misc';
 import IcosaStakeTable from './IcosaStakeTable';
 
 type IIcosaTableGroupProps = {
@@ -30,7 +31,7 @@ const IcosaTableGroup = ({ page, currentChains }: IIcosaTableGroupProps) => {
 
   const fetchTableData = useCallback(() => dispatch(fetchIcosaData(page)), [page, dispatch]);
 
-  if (!loading && !error && icosaTotal === 0) {
+  if ((!loading && !error && icosaTotal === 0) || !isInCurrentChains(['ETH'], currentChains)) {
     return null;
   }
 

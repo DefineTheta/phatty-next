@@ -1,3 +1,5 @@
+import { XenTotal } from '@app-src/server/xen';
+
 export interface ApiBaseResponse {
   error?: string;
   next: number | null;
@@ -349,7 +351,7 @@ export type XenStakeItem = {
   staked: number;
   term: number;
   usdValue: number;
-  chain: string;
+  chain: keyof XenTotal;
   chainImg: string;
 };
 
@@ -358,7 +360,7 @@ export type XenMintItem = {
   rank: number;
   usdValue: number;
   estimatedXen: number;
-  chain: string;
+  chain: keyof XenTotal;
   chainImg: string;
 };
 

@@ -1,4 +1,5 @@
 import { IcosaResponse } from '@app-src/server/icosa';
+import { XenResponse, XenTotal } from '@app-src/server/xen';
 import {
   AuthenticationError,
   getAccountFromMetamask,
@@ -30,9 +31,9 @@ import {
   SushiResponse,
   UniV2Response,
   UniV3Response,
-  WalletResponse,
-  XenResponse
+  WalletResponse
 } from '@app-src/types/api';
+import { addObjects } from '@app-src/utils/misc';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   ChainEnum,
@@ -196,7 +197,17 @@ const initialPortfolioData: PortfolioData = {
   },
   [ProtocolEnum.XEN]: {
     total: {
-      ETH: 0
+      ETH: 0,
+      BSC: 0,
+      AVAX: 0,
+      DOGE: 0,
+      ETHW: 0,
+      EVMOS: 0,
+      FTM: 0,
+      GLMR: 0,
+      MATIC: 0,
+      OKC: 0,
+      TOTAL: 0
     },
     loading: true,
     error: false,
@@ -1325,7 +1336,10 @@ export const portfolioSlice = createSlice({
       state[type].XEN.data.STAKING = res.data.STAKING.data;
       state[type].XEN.data.MINTING = res.data.MINTING.data;
 
-      state[type].XEN.total.ETH = res.data.STAKING.totalValue + res.data.MINTING.totalValue;
+      state[type].XEN.total = addObjects<XenTotal, XenTotal>(
+        res.data.STAKING.totalValue,
+        res.data.MINTING.totalValue
+      );
 
       state[type].XEN.loading = false;
       state[type].XEN.error = false;
