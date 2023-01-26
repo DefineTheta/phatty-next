@@ -42,7 +42,9 @@ type ProtocolData = {
 };
 
 const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps) => {
-  const walletTotal = useSelector(useCallback(selectWalletTotal(currentAssetChains, page), [page]));
+  const walletTotal = useSelector(
+    useCallback(selectWalletTotal(currentAssetChains, page), [page, currentAssetChains])
+  );
   const hexTotal = useSelector(
     useCallback(selectHexTotal(filterCurrentChains(['ETH', 'TPLS'], currentAssetChains), page), [
       page,

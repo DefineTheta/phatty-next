@@ -1,7 +1,7 @@
 import { PortfolioChain } from '@app-src/modules/portfolio/types/portfolio';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { SyntheticEvent, useCallback, useMemo, useState } from 'react';
+import { SyntheticEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 type IChainDropdownSelectorProps = {
   currentChains: PortfolioChain[];
@@ -16,6 +16,7 @@ type ChainDataItem = {
 const ChainDropdownSelector = ({ currentChains }: IChainDropdownSelectorProps) => {
   const router = useRouter();
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   const chainData = useMemo<ChainDataItem[]>(
@@ -29,6 +30,19 @@ const ChainDropdownSelector = ({ currentChains }: IChainDropdownSelectorProps) =
       { name: 'ARBI', displayName: 'Arbitrum', imgPath: '/img/chains/arbi.svg' }
     ],
     []
+  );
+
+  const handleClickOutside = useCallback(
+    (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        e.target instanceof Element &&
+        !dropdownRef.current.contains(e.target)
+      ) {
+        setIsVisible(false);
+      }
+    },
+    [dropdownRef]
   );
 
   const handleChainSelect = useCallback(
@@ -57,6 +71,12 @@ const ChainDropdownSelector = ({ currentChains }: IChainDropdownSelectorProps) =
     [currentChains, router]
   );
 
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside, true);
+
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [handleClickOutside]);
+
   return (
     <div className="relative">
       <div
@@ -67,7 +87,10 @@ const ChainDropdownSelector = ({ currentChains }: IChainDropdownSelectorProps) =
         <span className="ml-4 text-sm">{isVisible ? '▲' : '▼'}</span>
       </div>
       {isVisible && (
-        <div className="absolute z-50 -ml-320 grid w-400 cursor-pointer grid-cols-2 gap-y-16 gap-x-24 bg-background-300 p-16 shadow-xl">
+        <div
+          ref={dropdownRef}
+          className="absolute z-50 -ml-320 grid w-400 cursor-pointer grid-cols-2 gap-y-16 gap-x-24 bg-background-300 p-16 shadow-xl"
+        >
           {chainData.map((chain) => (
             <label
               key={chain.name}
