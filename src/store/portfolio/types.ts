@@ -53,10 +53,12 @@ export const ChainEnum = {
 
 export type Chain = typeof ChainEnum[keyof typeof ChainEnum];
 
-export enum HexDataComponentEnum {
-  ETH = 'ETH',
-  TPLS = 'TPLS'
-}
+export const HexDataComponentEnum = {
+  ETH: 'ETH',
+  TPLS: 'TPLS'
+} as const;
+
+export type HexDataComponent = typeof HexDataComponentEnum[keyof typeof HexDataComponentEnum];
 
 export enum PhiatDataComponentEnum {
   STABLE_DEBT = 'STABLE_DEBT',
@@ -126,9 +128,9 @@ interface WalletData extends ProtocolData {
 }
 
 interface HexData extends ProtocolData {
-  total: Record<HexDataComponentEnum, number>;
-  totalTSharesPercentage: Record<HexDataComponentEnum, number>;
-  data: Record<keyof typeof HexDataComponentEnum, HexTokenItem[]>;
+  total: Record<HexDataComponent, number>;
+  totalTSharesPercentage: Record<HexDataComponent, number>;
+  data: Record<HexDataComponent, HexTokenItem[]>;
 }
 
 interface PhiatData extends ProtocolData {

@@ -37,3 +37,12 @@ export const isProtocolInCurrnetChains = (
 
   return false;
 };
+
+export const filterCurrentChains = (
+  filterChains: PortfolioChain[],
+  currentChains: PortfolioChain[]
+) => {
+  if (currentChains.length === 0) return filterChains;
+
+  return currentChains.filter((chain) => filterChains.includes(chain));
+};

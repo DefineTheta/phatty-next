@@ -4,7 +4,10 @@ import {
   PortfolioProtocol
 } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
-import { isProtocolInCurrnetChains } from '@app-src/modules/portfolio/utils/misc';
+import {
+  filterCurrentChains,
+  isProtocolInCurrnetChains
+} from '@app-src/modules/portfolio/utils/misc';
 import {
   selectHedronTotal,
   selectHexTotal,
@@ -40,7 +43,12 @@ type ProtocolData = {
 
 const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps) => {
   const walletTotal = useSelector(useCallback(selectWalletTotal(currentAssetChains, page), [page]));
-  const hexTotal = useSelector(useCallback(selectHexTotal(page), [page]));
+  const hexTotal = useSelector(
+    useCallback(selectHexTotal(filterCurrentChains(['ETH', 'TPLS'], currentAssetChains), page), [
+      page,
+      currentAssetChains
+    ])
+  );
   const phiatTotal = useSelector(useCallback(selectPhiatTotal(page), [page]));
   const pulsexTotal = useSelector(useCallback(selectPulsexTotal(page), [page]));
   const pancakeTotal = useSelector(useCallback(selectPancakeTotal(page), [page]));

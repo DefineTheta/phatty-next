@@ -64,7 +64,7 @@ const ChainDropdownSelector = ({ currentChains }: IChainDropdownSelectorProps) =
         onClick={() => setIsVisible((state) => !state)}
       >
         Chains
-        <span className="ml-4 text-sm">▼</span>
+        <span className="ml-4 text-sm">{isVisible ? '▲' : '▼'}</span>
       </div>
       {isVisible && (
         <div className="absolute z-50 -ml-320 grid w-400 cursor-pointer grid-cols-2 gap-y-16 gap-x-24 bg-background-300 p-16 shadow-xl">

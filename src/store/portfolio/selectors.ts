@@ -22,7 +22,7 @@ import {
   Chain,
   ChainEnum,
   HedronDataComponentEnum,
-  HexDataComponentEnum,
+  HexDataComponent,
   IcosaDataComponent,
   PhamousDataComponent,
   PhiatDataComponentEnum,
@@ -75,7 +75,7 @@ export const selectWalletData = (chains: Chain[], type: Portfolio) =>
     }, [] as WalletTokenItem[]);
   });
 
-export const selectHexStakeData = (chain: keyof typeof HexDataComponentEnum, type: Portfolio) =>
+export const selectHexStakeData = (chain: HexDataComponent, type: Portfolio) =>
   memoize((state: RootState): HexTokenItem[] => {
     console.log(`SELECT_${chain}_HEX_STAKE_DATA`);
 
@@ -296,22 +296,26 @@ export const selectWalletTotal = (chains: Chain[], type: Portfolio) =>
     return chains.reduce((total, chain) => total + state.portfolio[type].WALLET.total[chain], 0);
   });
 
-export const selectHexComponentTotal = (
-  chain: keyof typeof HexDataComponentEnum,
-  type: Portfolio
-) =>
+export const selectHexComponentTotal = (chain: Chain, type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log(`SELECT_${chain}_HEX_STAKE_TOTAL`);
 
-    return state.portfolio[type].HEX.total[chain];
+    if (chain === 'ETH' || chain === 'TPLS') {
+      return state.portfolio[type].HEX.total[chain];
+    } else {
+      return 0;
+    }
   });
 
-export const selectHexTotal = (type: Portfolio) =>
+export const selectHexTotal = (chains: Chain[], type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_HEX_TOTAL');
 
-    return (
-      selectHexComponentTotal('ETH', type)(state) + selectHexComponentTotal('TPLS', type)(state)
+    console.log('&&&&&&&&&&&&&&', chains);
+
+    return chains.reduce(
+      (total, chain) => (total += selectHexComponentTotal(chain, type)(state)),
+      0
     );
   });
 
@@ -444,10 +448,7 @@ export const selectChainsTotal = (chains: Chain[], type: Portfolio) =>
     return chains.reduce((total, chain) => total + selectChaintotal(chain), 0);
   });
 
-export const selectHexToatlTSharesPercentage = (
-  chain: keyof typeof HexDataComponentEnum,
-  type: Portfolio
-) =>
+export const selectHexToatlTSharesPercentage = (chain: HexDataComponent, type: Portfolio) =>
   memoize((state: RootState) => {
     console.log('SELECT_HEX_TOTAL_T_SHARES_PERCENTAGE');
 

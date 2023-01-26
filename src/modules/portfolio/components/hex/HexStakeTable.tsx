@@ -9,7 +9,7 @@ import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import useSort from '@app-src/modules/portfolio/hooks/useSort';
 import { formatToMoney, styleNumber } from '@app-src/modules/portfolio/utils/format';
 import { selectHexStakeData } from '@app-src/store/portfolio/selectors';
-import { HexDataComponentEnum } from '@app-src/store/portfolio/types';
+import { HexDataComponent } from '@app-src/store/portfolio/types';
 import { useCallback } from 'react';
 import { PORTFOLIO_DATA_LIMIT } from '../../constants/data';
 import useLimit from '../../hooks/useLimit';
@@ -17,7 +17,7 @@ import { Portfolio } from '../../types/portfolio';
 
 type IHexStakeTableProps = {
   page: Portfolio;
-  chain: keyof typeof HexDataComponentEnum;
+  chain: HexDataComponent;
   loading: boolean;
 };
 
