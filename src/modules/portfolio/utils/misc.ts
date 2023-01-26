@@ -17,11 +17,11 @@ export const isInCurrentChains: IsInCurrentChainsFunc = (
 
 const chainProtocols: { [key in PortfolioChain]: PortfolioProtocol[] } = {
   ETH: ['WALLET', 'HEX', 'SUSHI', 'UNISWAPV2', 'UNISWAPV3', 'HEDRON', 'XEN', 'ICOSA'],
-  BSC: ['WALLET', 'PANCAKE'],
+  BSC: ['WALLET', 'PANCAKE', 'XEN'],
   TPLS: ['WALLET', 'HEX', 'HEDRON', 'PHAMOUS'],
-  MATIC: ['WALLET'],
-  AVAX: ['WALLET'],
-  FTM: ['WALLET'],
+  MATIC: ['WALLET', 'XEN'],
+  AVAX: ['WALLET', 'XEN'],
+  FTM: ['WALLET', 'XEN'],
   ARBI: ['WALLET']
 };
 

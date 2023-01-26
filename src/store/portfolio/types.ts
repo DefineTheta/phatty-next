@@ -89,10 +89,13 @@ export enum UniswapV3DataComponentEnum {
   LIQUIDITY_POOL = 'LIQUIDITY_POOL'
 }
 
-export enum HedronDataComponentEnum {
-  ETH = 'ETH',
-  TPLS = 'TPLS'
-}
+export const HedronDataComponentEnum = {
+  ETH: 'ETH',
+  TPLS: 'TPLS'
+} as const;
+
+export type HedronDataComponent =
+  typeof HedronDataComponentEnum[keyof typeof HedronDataComponentEnum];
 
 export const PhamousDataComponentEnum = {
   LIQUIDITY_PROVIDING: 'LIQUIDITY_PROVIDING',
@@ -174,8 +177,8 @@ interface UniswapV3Data extends ProtocolData {
 }
 
 interface HedronData extends ProtocolData {
-  total: Record<HedronDataComponentEnum, number>;
-  data: Record<HedronDataComponentEnum, HedronItem[]>;
+  total: Record<HedronDataComponent, number>;
+  data: Record<HedronDataComponent, HedronItem[]>;
 }
 
 interface PhamousData extends ProtocolData {

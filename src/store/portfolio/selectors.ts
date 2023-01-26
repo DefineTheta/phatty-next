@@ -21,7 +21,7 @@ import memoize from 'proxy-memoize';
 import {
   Chain,
   ChainEnum,
-  HedronDataComponentEnum,
+  HedronDataComponent,
   HexDataComponent,
   IcosaDataComponent,
   PhamousDataComponent,
@@ -141,10 +141,7 @@ export const selectUniV3LiquidityPoolData = (type: Portfolio) =>
     return state.portfolio[type].UNISWAPV3.data.LIQUIDITY_POOL;
   });
 
-export const selectHedronStakeData = (
-  chain: keyof typeof HedronDataComponentEnum,
-  type: Portfolio
-) =>
+export const selectHedronStakeData = (chain: HedronDataComponent, type: Portfolio) =>
   memoize((state: RootState): HedronItem[] => {
     console.log(`SELECT_${chain}_HEDRON_STAKE_DATA`);
 
@@ -311,8 +308,6 @@ export const selectHexTotal = (chains: Chain[], type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_HEX_TOTAL');
 
-    console.log('&&&&&&&&&&&&&&', chains);
-
     return chains.reduce(
       (total, chain) => (total += selectHexComponentTotal(chain, type)(state)),
       0
@@ -364,23 +359,24 @@ export const selectUniV3Total = (type: Portfolio) =>
     return state.portfolio[type].UNISWAPV3.total.LIQUIDITY_POOL;
   });
 
-export const selectHedronComponentTotal = (
-  chain: keyof typeof HedronDataComponentEnum,
-  type: Portfolio
-) =>
+export const selectHedronComponentTotal = (chain: Chain, type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log(`SELECT_${chain}_HEDRON_STAKE_TOTAL`);
 
-    return state.portfolio[type].HEDRON.total[chain];
+    if (chain === 'ETH' || chain === 'TPLS') {
+      return state.portfolio[type].HEDRON.total[chain];
+    } else {
+      return 0;
+    }
   });
 
-export const selectHedronTotal = (type: Portfolio) =>
+export const selectHedronTotal = (chains: Chain[], type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_HEDRON_TOTAL');
 
-    return (
-      selectHedronComponentTotal('ETH', type)(state) +
-      selectHedronComponentTotal('TPLS', type)(state)
+    return chains.reduce(
+      (total, chain) => (total += selectHedronComponentTotal(chain, type)(state)),
+      0
     );
   });
 
@@ -391,11 +387,31 @@ export const selectPhamousTotal = (type: Portfolio) =>
     return state.portfolio[type].PHAMOUS.total.TPLS;
   });
 
-export const selectXenTotal = (type: Portfolio) =>
+export const selectXenComponentTotal = (chain: Chain, type: Portfolio) =>
+  memoize((state: RootState): number => {
+    console.log(`SELECT_${chain}_XEN_TOTAL`);
+
+    if (
+      chain === 'ETH' ||
+      chain === 'BSC' ||
+      chain === 'AVAX' ||
+      chain === 'FTM' ||
+      chain === 'MATIC'
+    ) {
+      return state.portfolio[type].XEN.total[chain] || 0;
+    } else {
+      return 0;
+    }
+  });
+
+export const selectXenTotal = (chains: Chain[], type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_XEN_TOTAL');
 
-    return state.portfolio[type].XEN.total.TOTAL;
+    return chains.reduce(
+      (total, chain) => (total += selectXenComponentTotal(chain, type)(state)),
+      0
+    );
   });
 
 export const selectIcosaTotal = (type: Portfolio) =>

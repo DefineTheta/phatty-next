@@ -55,9 +55,22 @@ const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps
   const sushiTotal = useSelector(useCallback(selectSushiTotal(page), [page]));
   const uniV2Total = useSelector(useCallback(selectUniV2Total(page), [page]));
   const uniV3Total = useSelector(useCallback(selectUniV3Total(page), [page]));
-  const hedronTotal = useSelector(useCallback(selectHedronTotal(page), [page]));
+  const hedronTotal = useSelector(
+    useCallback(selectHedronTotal(filterCurrentChains(['ETH', 'TPLS'], currentAssetChains), page), [
+      page,
+      currentAssetChains
+    ])
+  );
   const phamousTotal = useSelector(useCallback(selectPhamousTotal(page), [page]));
-  const xenTotal = useSelector(useCallback(selectXenTotal(page), [page]));
+  const xenTotal = useSelector(
+    useCallback(
+      selectXenTotal(
+        filterCurrentChains(['ETH', 'BSC', 'AVAX', 'FTM', 'MATIC'], currentAssetChains),
+        page
+      ),
+      [page, currentAssetChains]
+    )
+  );
   const icosaTotal = useSelector(useCallback(selectIcosaTotal(page), [page]));
 
   const protocolData = useMemo<ProtocolData[]>(
