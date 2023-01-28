@@ -19,6 +19,8 @@ export const withTypedApiRoute =
       const input = inputSchema.parse(req.query);
       const response = outputSchema.parse(await handler({ input }));
 
+      console.log(response);
+
       res.json(response);
     } catch (err) {
       console.error(err);
