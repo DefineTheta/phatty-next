@@ -85,16 +85,16 @@ export default withTypedApiRoute(
     ]);
 
     const filteredPhiatTransactions = phiatTransactions.filter(
-      (transaction) => transaction.From === input.address
+      (transaction) => transaction.From.toLowerCase() === input.address.toLowerCase()
     );
     const filteredPhiatPoints = phiatPoints.filter(
-      (transaction) => transaction.From === input.address
+      (transaction) => transaction.From.toLowerCase() === input.address.toLowerCase()
     );
     const filteredPhameTransactions = phameTransactions.filter(
-      (transaction) => transaction.From === input.address
+      (transaction) => transaction.From.toLowerCase() === input.address.toLowerCase()
     );
     const filteredPhamePoints = phamePoints.filter(
-      (transaction) => transaction.From === input.address
+      (transaction) => transaction.From.toLowerCase() === input.address.toLowerCase()
     );
 
     const resObj = {
