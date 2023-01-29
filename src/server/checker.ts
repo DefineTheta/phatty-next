@@ -57,5 +57,7 @@ export const CheckerResponse = z.object({
   phamePoints: PhamePointsResponse
 });
 
+export type CheckerResponse = z.infer<typeof CheckerResponse>;
+
 export const getChecker = (address: string, fetchOptions?: RequestInit) =>
   typedFetch(CheckerResponse, fetch(`/api/checker?address=${address}`, fetchOptions));

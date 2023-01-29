@@ -1,11 +1,4 @@
-import {
-  CheckerResponse,
-  PhamePointsResponse,
-  PhameTiersResponse,
-  PhameTransactionsResponse,
-  PhiatPointsResponse,
-  PhiatTransactionsResponse
-} from '@app-src/server/checker';
+import { CheckerResponse } from '@app-src/server/checker';
 import { withTypedApiRoute } from '@app-src/utils/tapi';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -105,11 +98,11 @@ export default withTypedApiRoute(
     );
 
     const resObj = {
-      phiatTransactions: PhiatTransactionsResponse.parse(filteredPhiatTransactions),
-      phiatPoints: PhiatPointsResponse.parse(filteredPhiatPoints),
-      phameTransactions: PhameTransactionsResponse.parse(filteredPhameTransactions),
-      phameTiers: PhameTiersResponse.parse(filteredPhameTransactions),
-      phamePoints: PhamePointsResponse.parse(filteredPhamePoints)
+      phiatTransactions: filteredPhiatTransactions,
+      phiatPoints: filteredPhiatPoints,
+      phameTransactions: filteredPhameTransactions,
+      phameTiers: filteredPhameTransactions,
+      phamePoints: filteredPhamePoints
     };
 
     return resObj;

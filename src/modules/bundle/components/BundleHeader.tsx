@@ -41,9 +41,9 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
         href: `/bundle/${encodeURIComponent(address)}/portfolio`
       },
       {
-        displayName: 'NFT',
-        name: 'nft',
-        href: `/bundle/${encodeURIComponent(address)}/portfolio`
+        displayName: 'Checker',
+        name: 'checker',
+        href: `/bundle/${encodeURIComponent(address)}/checker`
       },
       {
         displayName: 'History',
