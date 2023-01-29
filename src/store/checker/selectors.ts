@@ -32,3 +32,15 @@ export const selectPhameTiers = memoize((state: RootState) => {
 export const selectPhamePoints = memoize((state: RootState) => {
   return state.checker.data.phamePoints;
 });
+
+export const selectPhiatDataLength = memoize((state: RootState) => {
+  return state.checker.data.phiatTransactions.length + state.checker.data.phiatPoints.length;
+});
+
+export const selectPhameDataLength = memoize((state: RootState) => {
+  return (
+    state.checker.data.phameTransactions.length +
+    state.checker.data.phameTiers.length +
+    state.checker.data.phamePoints.length
+  );
+});
