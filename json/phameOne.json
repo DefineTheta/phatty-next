@@ -28320,5 +28320,19 @@
     "PoolATier0": "",
     "PoolATier1": "",
     "PoolATier2": 862.87
+  },
+  {
+    "Txhash": "0x934aa343eb16b896c7256ceb05e67ba60b761849e66a468a39d1c9b7a3f914db",
+    "DateTime": "44,948.82",
+    "From": "0x96A7BC5121f76e283723F635a85a097B620B9557",
+    "Token": "HEXtest",
+    "Token Amount": "55,555.00",
+    "Token Price": 0.0239525,
+    "MagicM": "",
+    "USD Value": 555555,
+    "Phomo": "5555555",
+    "PoolATier0": "555",
+    "PoolATier1": "555",
+    "PoolATier2": 555
   }
 ]
