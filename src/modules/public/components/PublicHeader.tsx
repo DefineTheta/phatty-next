@@ -1,23 +1,30 @@
 import Container from '@app-src/common/components/layout/Container';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
+import ChainDropdownSelector from '@app-src/modules/chain/components/ChainDropdownSelector';
+import { PortfolioChain, PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import { CalendarIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import { useCallback } from 'react';
 
 type IPublicBundleHeaderProps = {
   displayName: string;
+  currentChains: PortfolioChain[];
   total: string;
   onRefreshData: () => void;
 };
 
-const PublicHeader = ({ displayName, total, onRefreshData }: IPublicBundleHeaderProps) => {
+const PublicHeader = ({
+  displayName,
+  currentChains,
+  total,
+  onRefreshData
+}: IPublicBundleHeaderProps) => {
   const privateBundleAddress = useAppSelector(
     useCallback(selectDisplayAddress(PortfolioEnum.BUNDLE), [])
   );
 
   return (
-    <div className="flex flex-row justify-center bg-background-200 pt-36 pb-24">
+    <div className="flex flex-row justify-center bg-background-200 pt-36">
       <Container>
         <div className="flex w-full max-w-96 flex-col gap-y-30">
           <div className="flex flex-row justify-between">
@@ -48,6 +55,9 @@ const PublicHeader = ({ displayName, total, onRefreshData }: IPublicBundleHeader
             </div>
             {/* <span className="text-lg font-semibold text-text-200">{truncateAddress(address)}</span> */}
             <span className="text-2xl font-black text-text-100">{total}</span>
+          </div>
+          <div className="flex flex-row items-center justify-end pb-2">
+            <ChainDropdownSelector currentChains={currentChains} />
           </div>
         </div>
       </Container>

@@ -2,6 +2,7 @@ import Container from '@app-src/common/components/layout/Container';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { truncateAddress } from '@app-src/common/utils/format';
+import ChainDropdownSelector from '@app-src/modules/chain/components/ChainDropdownSelector';
 import { PortfolioChain, PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { fetchPortfolioData } from '@app-src/store/portfolio/portfolioSlice';
@@ -109,21 +110,24 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
             {/* <span className="text-lg font-semibold text-text-200">{truncateAddress(address)}</span> */}
             <span className="text-2xl font-black text-text-100">{styledTotal}</span>
           </div>
-          <div className="flex flex-row items-center gap-x-30">
-            {tabs.map((tab) => (
-              <Link key={tab.name} href={address || tab.name === 'public' ? tab.href : '/bundle'}>
-                <a
-                  className={`cursor-pointer px-10 pb-6 text-base font-bold ${
-                    tab.name === currentTab
-                      ? 'border-b-4 border-text-900 text-text-900'
-                      : 'text-text-200'
-                  }`}
-                  // onClick={() => router.push(`/${router.pathname}/${tab.name}`)}
-                >
-                  {tab.displayName}
-                </a>
-              </Link>
-            ))}
+          <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-x-30">
+              {tabs.map((tab) => (
+                <Link key={tab.name} href={address || tab.name === 'public' ? tab.href : '/bundle'}>
+                  <a
+                    className={`cursor-pointer px-10 pb-6 text-base font-bold ${
+                      tab.name === currentTab
+                        ? 'border-b-4 border-text-900 text-text-900'
+                        : 'text-text-200'
+                    }`}
+                    // onClick={() => router.push(`/${router.pathname}/${tab.name}`)}
+                  >
+                    {tab.displayName}
+                  </a>
+                </Link>
+              ))}
+            </div>
+            <ChainDropdownSelector currentChains={currentChains} />
           </div>
         </div>
       </Container>
