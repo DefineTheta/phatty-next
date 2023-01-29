@@ -45,11 +45,6 @@ const PhiatPointsTable = ({ loading }: IPhiatPointsTableProps) => {
       </Card>
     );
   }
-
-  if (phiatPoints.length === 0) {
-    return null;
-  }
-
   return (
     <Card>
       <Bookmark>Points Summary</Bookmark>

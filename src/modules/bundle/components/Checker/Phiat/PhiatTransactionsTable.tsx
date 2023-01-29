@@ -54,10 +54,6 @@ const PhiatTransactionsTable = ({ loading }: IPhiatTransactionsTableProps) => {
     );
   }
 
-  if (phiatTransactions.length === 0) {
-    return null;
-  }
-
   return (
     <Card>
       <Bookmark>Transactions</Bookmark>

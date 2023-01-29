@@ -50,10 +50,6 @@ const PhameTiersTable = ({ loading }: IPhameTiersTableProps) => {
     );
   }
 
-  if (phameTiers.length === 0) {
-    return null;
-  }
-
   return (
     <Card>
       <Bookmark>Tiers</Bookmark>

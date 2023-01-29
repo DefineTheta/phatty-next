@@ -50,10 +50,6 @@ const PhameTransactionsTable = ({ loading }: IPhameTransactionsTableProps) => {
     );
   }
 
-  if (phameTransactions.length === 0) {
-    return null;
-  }
-
   return (
     <Card>
       <Bookmark>Transactions</Bookmark>

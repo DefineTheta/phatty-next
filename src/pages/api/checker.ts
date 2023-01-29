@@ -49,7 +49,8 @@ const PhamePointsSchema = z.array(
     From: z.coerce.string(),
     'Phame Points (Normal)': z.coerce.string(),
     'ePhiat Points (Bonus)': z.coerce.string(),
-    'Phame Points (Volume Bonus)': z.coerce.string()
+    'Phame Points (Volume Bonus)': z.coerce.string(),
+    'Phame Points (Loyalty Bonus)': z.coerce.string()
   })
 );
 
