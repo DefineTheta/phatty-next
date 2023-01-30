@@ -4,6 +4,7 @@ import {
   PortfolioProtocol
 } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
+import { isProtocolInCurrnetChains } from '@app-src/modules/portfolio/utils/misc';
 import {
   filterCurrentChains,
   isProtocolInCurrnetChains
