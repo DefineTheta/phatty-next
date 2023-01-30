@@ -64,7 +64,7 @@ const PhameTransactionsTable = ({ loading }: IPhameTransactionsTableProps) => {
       {phameTransactions.map((transaction, index) => (
         <TableRow key={index}>
           <TableRowCell className="basis-1/5 pr-20">
-            {timestampToDate(Number(transaction.TimeStamp))}
+            {timestampToDate(Number(transaction.TimeStamp) * 1000)}
           </TableRowCell>
           <TableRowCell className="basis-1/5 pr-20">{transaction.Token}</TableRowCell>
           <TableRowCell className="basis-1/5 pr-20">{transaction['Token Amount']}</TableRowCell>
