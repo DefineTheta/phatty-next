@@ -11,6 +11,7 @@ import {
 import { useCallback, useMemo } from 'react';
 import { Portfolio, PortfolioChain } from '../../types/portfolio';
 import { formatToMoney } from '../../utils/format';
+import { filterCurrentChains } from '../../utils/misc';
 import XenMintTable from './XenMintTable';
 import XenStakeTable from './XenStakeTable';
 
@@ -22,7 +23,15 @@ type IXenTableGroupProps = {
 const XenTableGroup = ({ page, currentChains }: IXenTableGroupProps) => {
   const dispatch = useAppDispatch();
 
-  const xenTotal = useAppSelector(useCallback(selectXenTotal(page), [page]));
+  const xenTotal = useAppSelector(
+    useCallback(
+      selectXenTotal(
+        filterCurrentChains(['ETH', 'BSC', 'AVAX', 'FTM', 'MATIC'], currentChains),
+        page
+      ),
+      [page, currentChains]
+    )
+  );
   const loading = useAppSelector(useCallback(selectXenLoading(page), [page]));
   const error = useAppSelector(useCallback(selectXenError(page), [page]));
 

@@ -162,7 +162,7 @@ const BundlePublicPage = () => {
 
   return (
     <div className="flex flex-col gap-y-24">
-      <PublicHeader displayName="..." total="..." onRefreshData={() => {}} />
+      <PublicHeader displayName="..." currentChains={[]} total="..." onRefreshData={() => {}} />
       <div className="flex w-full flex-col items-center">
         <Container>
           <Card>

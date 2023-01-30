@@ -6,6 +6,10 @@ import {
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
 import { isProtocolInCurrnetChains } from '@app-src/modules/portfolio/utils/misc';
 import {
+  filterCurrentChains,
+  isProtocolInCurrnetChains
+} from '@app-src/modules/portfolio/utils/misc';
+import {
   selectHedronTotal,
   selectHexTotal,
   selectIcosaTotal,
@@ -39,17 +43,37 @@ type ProtocolData = {
 };
 
 const ChainProtocolList = ({ page, currentAssetChains }: IChainProtocolListProps) => {
-  const walletTotal = useSelector(useCallback(selectWalletTotal(currentAssetChains, page), [page]));
-  const hexTotal = useSelector(useCallback(selectHexTotal(page), [page]));
+  const walletTotal = useSelector(
+    useCallback(selectWalletTotal(currentAssetChains, page), [page, currentAssetChains])
+  );
+  const hexTotal = useSelector(
+    useCallback(selectHexTotal(filterCurrentChains(['ETH', 'TPLS'], currentAssetChains), page), [
+      page,
+      currentAssetChains
+    ])
+  );
   const phiatTotal = useSelector(useCallback(selectPhiatTotal(page), [page]));
   const pulsexTotal = useSelector(useCallback(selectPulsexTotal(page), [page]));
   const pancakeTotal = useSelector(useCallback(selectPancakeTotal(page), [page]));
   const sushiTotal = useSelector(useCallback(selectSushiTotal(page), [page]));
   const uniV2Total = useSelector(useCallback(selectUniV2Total(page), [page]));
   const uniV3Total = useSelector(useCallback(selectUniV3Total(page), [page]));
-  const hedronTotal = useSelector(useCallback(selectHedronTotal(page), [page]));
+  const hedronTotal = useSelector(
+    useCallback(selectHedronTotal(filterCurrentChains(['ETH', 'TPLS'], currentAssetChains), page), [
+      page,
+      currentAssetChains
+    ])
+  );
   const phamousTotal = useSelector(useCallback(selectPhamousTotal(page), [page]));
-  const xenTotal = useSelector(useCallback(selectXenTotal(page), [page]));
+  const xenTotal = useSelector(
+    useCallback(
+      selectXenTotal(
+        filterCurrentChains(['ETH', 'BSC', 'AVAX', 'FTM', 'MATIC'], currentAssetChains),
+        page
+      ),
+      [page, currentAssetChains]
+    )
+  );
   const icosaTotal = useSelector(useCallback(selectIcosaTotal(page), [page]));
 
   const protocolData = useMemo<ProtocolData[]>(

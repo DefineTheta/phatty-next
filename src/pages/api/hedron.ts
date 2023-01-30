@@ -1,3 +1,4 @@
+import { HedronResponse } from '@app-src/server/hedron';
 import { hedronABI, hedronStakeABI } from '@app-src/services/abi';
 import {
   API_PRICE_URL,
@@ -5,7 +6,7 @@ import {
   tplsClient,
   web3ResponseToObject
 } from '@app-src/services/web3';
-import { HedronItem, HedronResponse, PriceResponse } from '@app-src/types/api';
+import { HedronItem, PriceResponse } from '@app-src/types/api';
 import { withTypedApiRoute } from '@app-src/utils/tapi';
 import Web3 from 'web3';
 import type { Contract } from 'web3-eth-contract';
@@ -161,7 +162,7 @@ const calculateHedronStake = async (address: string, type: 'ETH' | 'TPLS', hedro
 
 export default withTypedApiRoute(
   z.object({ address: z.string() }),
-  z.object({}),
+  HedronResponse,
   async ({ input }) => {
     const priceResponse = await fetch(API_PRICE_URL);
     const price: PriceResponse = await priceResponse.json();
@@ -194,7 +195,7 @@ export default withTypedApiRoute(
           totalValue: stakesTotal[1]
         }
       }
-    } as HedronResponse;
+    };
 
     return resObj;
   }

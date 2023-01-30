@@ -1,3 +1,4 @@
+import { IcosaResponse } from '@app-src/server/icosa';
 import { API_PRICE_URL, icsaContract } from '@app-src/services/web3';
 import { PriceResponse } from '@app-src/types/api';
 import { withTypedApiRoute } from '@app-src/utils/tapi';
@@ -16,7 +17,7 @@ const IcosaStakeSchema = z.object({
 
 export default withTypedApiRoute(
   z.object({ address: z.string() }),
-  z.object({}),
+  IcosaResponse,
   async ({ input }) => {
     const priceResponse = await fetch(API_PRICE_URL);
 

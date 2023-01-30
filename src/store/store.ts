@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import checkerSlice from './checker/checkerSlice';
 import historySlice from './history/historySlice';
 import portfolioSlice from './portfolio/portfolioSlice';
 // import chainsReducer from './chains/chainsSlice';
@@ -13,6 +14,7 @@ export const store = configureStore({
     // utility: utilityReducer,
     // histories: historiesReducer,
     history: historySlice,
+    checker: checkerSlice,
     // protocols: protocolsReducer,
     portfolio: portfolioSlice
     // chains: chainsReducer,

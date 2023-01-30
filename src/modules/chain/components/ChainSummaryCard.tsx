@@ -114,7 +114,7 @@ const ChainSummaryCard = ({ page, currentChains }: IChainSummaryCardProps) => {
     let updatedChains = [...currentChains];
 
     if (updatedChains.includes(chain)) {
-      updatedChains = updatedChains.filter((chainIterator) => chainIterator != chain);
+      updatedChains = updatedChains.filter((chainIterator) => chainIterator !== chain);
     } else {
       updatedChains.push(chain);
     }

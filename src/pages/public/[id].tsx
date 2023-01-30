@@ -87,6 +87,7 @@ const BundlePublicPortfolioPage = () => {
     <div className="flex flex-col gap-y-24">
       <PublicHeader
         displayName={displayAddress}
+        currentChains={currentChains}
         onRefreshData={handleRefreshData}
         total={styledTotal}
       />

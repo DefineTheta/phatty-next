@@ -53,10 +53,12 @@ export const ChainEnum = {
 
 export type Chain = typeof ChainEnum[keyof typeof ChainEnum];
 
-export enum HexDataComponentEnum {
-  ETH = 'ETH',
-  TPLS = 'TPLS'
-}
+export const HexDataComponentEnum = {
+  ETH: 'ETH',
+  TPLS: 'TPLS'
+} as const;
+
+export type HexDataComponent = typeof HexDataComponentEnum[keyof typeof HexDataComponentEnum];
 
 export enum PhiatDataComponentEnum {
   STABLE_DEBT = 'STABLE_DEBT',
@@ -87,10 +89,13 @@ export enum UniswapV3DataComponentEnum {
   LIQUIDITY_POOL = 'LIQUIDITY_POOL'
 }
 
-export enum HedronDataComponentEnum {
-  ETH = 'ETH',
-  TPLS = 'TPLS'
-}
+export const HedronDataComponentEnum = {
+  ETH: 'ETH',
+  TPLS: 'TPLS'
+} as const;
+
+export type HedronDataComponent =
+  typeof HedronDataComponentEnum[keyof typeof HedronDataComponentEnum];
 
 export const PhamousDataComponentEnum = {
   LIQUIDITY_PROVIDING: 'LIQUIDITY_PROVIDING',
@@ -126,9 +131,9 @@ interface WalletData extends ProtocolData {
 }
 
 interface HexData extends ProtocolData {
-  total: Record<HexDataComponentEnum, number>;
-  totalTSharesPercentage: Record<HexDataComponentEnum, number>;
-  data: Record<keyof typeof HexDataComponentEnum, HexTokenItem[]>;
+  total: Record<HexDataComponent, number>;
+  totalTSharesPercentage: Record<HexDataComponent, number>;
+  data: Record<HexDataComponent, HexTokenItem[]>;
 }
 
 interface PhiatData extends ProtocolData {
@@ -172,8 +177,8 @@ interface UniswapV3Data extends ProtocolData {
 }
 
 interface HedronData extends ProtocolData {
-  total: Record<HedronDataComponentEnum, number>;
-  data: Record<HedronDataComponentEnum, HedronItem[]>;
+  total: Record<HedronDataComponent, number>;
+  data: Record<HedronDataComponent, HedronItem[]>;
 }
 
 interface PhamousData extends ProtocolData {

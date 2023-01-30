@@ -27,6 +27,7 @@ module.exports = {
         'text-900': '#9467FB',
         'border-100': '#373e51',
         'border-200': '#252a37',
+        'border-900': '#9467FB',
         'bluegray-button': 'rgba(80, 137, 255, 0.1)'
       },
       backgroundImage: {

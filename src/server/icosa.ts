@@ -19,7 +19,7 @@ const IcsaIcosaStakeResponse = BaseIcosaStakeResponse.extend({
 
 export type IcsaIcosaStakeItem = z.infer<typeof IcsaIcosaStakeResponse>;
 
-const IcosaResponse = z.object({
+export const IcosaResponse = z.object({
   data: z.object({
     HEDRON: z.array(HedronIcosaStakeResponse),
     ICSA: z.array(IcsaIcosaStakeResponse)
