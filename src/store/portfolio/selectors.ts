@@ -407,7 +407,7 @@ export const selectXenComponentTotal = (chain: Chain, type: Portfolio) =>
 export const selectXenTotal = (chains: Chain[], type: Portfolio) =>
   memoize((state: RootState): number => {
     console.log('SELECT_XEN_TOTAL');
-    
+
     return chains.reduce(
       (total, chain) => (total += selectXenComponentTotal(chain, type)(state)),
       0
