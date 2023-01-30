@@ -45,10 +45,10 @@ const CheckerPage = () => {
             <XMarkIcon className="h-24 w-24 text-text-300" />
           </button>
         </div>
-        <p className="text-base">Checker data is as at 28th-Jan-2023 UCT.</p>
+        <p className="text-base">Data is as at 28th-Jan-2023 UCT.</p>
         <p className="text-base">
-          Only transactions before/on this date are included. We will re-pull numbers again 
-          towards the end of sac. Some token prices might change if Nomics updates their data.
+          Only transactions before/on this date are included. We will re-pull numbers again towards
+           the end of sac. Some token prices might change if Nomics updates their data.
         </p>
         <p className="text-base">
           Please note the calculations are not finalized. It is only a draft version and might
