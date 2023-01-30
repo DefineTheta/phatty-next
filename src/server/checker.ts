@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const PhiatTransactionsResponse = z.array(
   z.object({
-    Date: z.coerce.string(),
+    TimeStamp: z.coerce.string(),
     Token: z.coerce.string(),
     'Token Amount': z.coerce.string(),
     'Token Price': z.coerce.string(),
@@ -23,7 +23,7 @@ export const PhiatPointsResponse = z.array(
 
 export const PhameTransactionsResponse = z.array(
   z.object({
-    DateTime: z.coerce.string(),
+    TimeStamp: z.coerce.string(),
     Token: z.coerce.string(),
     'Token Amount': z.coerce.string(),
     'Token Price': z.coerce.string(),

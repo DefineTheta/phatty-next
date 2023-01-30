@@ -7,7 +7,7 @@ import { z } from 'zod';
 const PhiatTransactionsSchema = z.array(
   z.object({
     Txhash: z.coerce.string(),
-    Date: z.coerce.string(),
+    TimeStamp: z.coerce.string(),
     From: z.coerce.string(),
     Token: z.coerce.string(),
     'Token Amount': z.coerce.string(),
@@ -30,7 +30,7 @@ const PhiatPointsSchema = z.array(
 const PhameTransactionsSchema = z.array(
   z.object({
     Txhash: z.coerce.string(),
-    DateTime: z.coerce.string(),
+    TimeStamp: z.coerce.string(),
     From: z.coerce.string(),
     Token: z.coerce.string(),
     'Token Amount': z.coerce.string(),

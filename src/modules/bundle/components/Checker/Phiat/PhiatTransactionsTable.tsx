@@ -6,6 +6,7 @@ import TableHeaderRowCell from '@app-src/common/components/table/TableHeaderRowC
 import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
+import { timestampToDate } from '@app-src/common/utils/format';
 import { selectPhiatTransactions } from '@app-src/store/checker/selectors';
 import { useCallback } from 'react';
 
@@ -67,7 +68,9 @@ const PhiatTransactionsTable = ({ loading }: IPhiatTransactionsTableProps) => {
       </TableHeaderRow>
       {phiatTransactions.map((transaction, index) => (
         <TableRow key={index}>
-          <TableRowCell className="basis-1/6 pr-20">{transaction.Date}</TableRowCell>
+          <TableRowCell className="basis-1/6 pr-20">
+            {timestampToDate(Number(transaction.TimeStamp))}
+          </TableRowCell>
           <TableRowCell className="basis-1/6 pr-20">{transaction.Token}</TableRowCell>
           <TableRowCell className="basis-1/6 pr-20">{transaction['Token Amount']}</TableRowCell>
           <TableRowCell className="basis-1/6 pr-20">{transaction['Token Price']}</TableRowCell>
