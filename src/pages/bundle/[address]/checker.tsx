@@ -48,9 +48,12 @@ const CheckerPage = () => {
         <p className="text-base">Above data is as at 28th-Jan-2023 UCT.</p>
         <p className="text-base">
           Please note the calculations are not finalized. It is only a draft version and might
-          contain errors. If you notice any error, please let us know. We will update this table
-          once every few days so your latest transactions might not be captured. Some token prices
-          might change if Nomics have updated their data.
+          contain errors. If you notice any error, please let us know in Telegram.
+        </p>
+        <p className="text-base">
+          Checker data is as at end of 28th-Jan-2023 UCT. Only transactions before this date 
+          are included. We will re-pull numbers again towards the end of sac.Some token prices 
+          might change if Nomics updates their data.
         </p>
       </Modal>
       <div className="flex flex-col gap-y-24">
