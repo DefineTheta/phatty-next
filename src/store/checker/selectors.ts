@@ -1,46 +1,60 @@
 import memoize from 'proxy-memoize';
 import { RootState } from '../store';
+import { Section } from './types';
 
-export const selectCheckerLoading = memoize((state: RootState) => {
-  return state.checker.loading;
-});
+export const selectCheckerLoading = (type: Section) =>
+  memoize((state: RootState) => {
+    return state.checker[type].loading;
+  });
 
-export const selectCheckerError = memoize((state: RootState) => {
-  return state.checker.error;
-});
+export const selectCheckerError = (type: Section) =>
+  memoize((state: RootState) => {
+    return state.checker[type].error;
+  });
 
-export const selectCheckerHasFetched = memoize((state: RootState) => {
-  return state.checker.hasFetched;
-});
+export const selectCheckerHasFetched = (type: Section) =>
+  memoize((state: RootState) => {
+    return state.checker[type].hasFetched;
+  });
 
-export const selectPhiatTransactions = memoize((state: RootState) => {
-  return state.checker.data.phiatTransactions;
-});
+export const selectPhiatTransactions = (type: Section) =>
+  memoize((state: RootState) => {
+    return state.checker[type].data.phiatTransactions;
+  });
 
-export const selectPhiatPoints = memoize((state: RootState) => {
-  return state.checker.data.phiatPoints;
-});
+export const selectPhiatPoints = (type: Section) =>
+  memoize((state: RootState) => {
+    return state.checker[type].data.phiatPoints;
+  });
 
-export const selectPhameTransactions = memoize((state: RootState) => {
-  return state.checker.data.phameTransactions;
-});
+export const selectPhameTransactions = (type: Section) =>
+  memoize((state: RootState) => {
+    return state.checker[type].data.phameTransactions;
+  });
 
-export const selectPhameTiers = memoize((state: RootState) => {
-  return state.checker.data.phameTiers;
-});
+export const selectPhameTiers = (type: Section) =>
+  memoize((state: RootState) => {
+    return state.checker[type].data.phameTiers;
+  });
 
-export const selectPhamePoints = memoize((state: RootState) => {
-  return state.checker.data.phamePoints;
-});
+export const selectPhamePoints = (type: Section) =>
+  memoize((state: RootState) => {
+    return state.checker[type].data.phamePoints;
+  });
 
-export const selectPhiatDataLength = memoize((state: RootState) => {
-  return state.checker.data.phiatTransactions.length + state.checker.data.phiatPoints.length;
-});
+export const selectPhiatDataLength = (type: Section) =>
+  memoize((state: RootState) => {
+    return (
+      state.checker[type].data.phiatTransactions.length +
+      state.checker[type].data.phiatPoints.length
+    );
+  });
 
-export const selectPhameDataLength = memoize((state: RootState) => {
-  return (
-    state.checker.data.phameTransactions.length +
-    state.checker.data.phameTiers.length +
-    state.checker.data.phamePoints.length
-  );
-});
+export const selectPhameDataLength = (type: Section) =>
+  memoize((state: RootState) => {
+    return (
+      state.checker[type].data.phameTransactions.length +
+      state.checker[type].data.phameTiers.length +
+      state.checker[type].data.phamePoints.length
+    );
+  });

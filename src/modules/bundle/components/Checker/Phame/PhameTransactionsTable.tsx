@@ -8,14 +8,18 @@ import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { timestampToDate } from '@app-src/common/utils/format';
 import { selectPhameTransactions } from '@app-src/store/checker/selectors';
+import { Section } from '@app-src/store/checker/types';
 import { useCallback } from 'react';
 
 type IPhameTransactionsTableProps = {
   loading: boolean;
+  section: Section;
 };
 
-const PhameTransactionsTable = ({ loading }: IPhameTransactionsTableProps) => {
-  const phameTransactions = useAppSelector(useCallback(selectPhameTransactions, []));
+const PhameTransactionsTable = ({ loading, section }: IPhameTransactionsTableProps) => {
+  const phameTransactions = useAppSelector(
+    useCallback(selectPhameTransactions(section), [section])
+  );
 
   if (loading) {
     return (

@@ -7,14 +7,16 @@ import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { selectPhamePoints } from '@app-src/store/checker/selectors';
+import { Section } from '@app-src/store/checker/types';
 import { useCallback } from 'react';
 
 type IPhamePointsTableProps = {
   loading: boolean;
+  section: Section;
 };
 
-const PhamePointsTable = ({ loading }: IPhamePointsTableProps) => {
-  const phamePoints = useAppSelector(useCallback(selectPhamePoints, []));
+const PhamePointsTable = ({ loading, section }: IPhamePointsTableProps) => {
+  const phamePoints = useAppSelector(useCallback(selectPhamePoints(section), [section]));
 
   if (loading) {
     return (

@@ -7,14 +7,16 @@ import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { selectPhiatPoints } from '@app-src/store/checker/selectors';
+import { Section } from '@app-src/store/checker/types';
 import { useCallback } from 'react';
 
 type IPhiatPointsTableProps = {
   loading: boolean;
+  section: Section;
 };
 
-const PhiatPointsTable = ({ loading }: IPhiatPointsTableProps) => {
-  const phiatPoints = useAppSelector(useCallback(selectPhiatPoints, []));
+const PhiatPointsTable = ({ loading, section }: IPhiatPointsTableProps) => {
+  const phiatPoints = useAppSelector(useCallback(selectPhiatPoints(section), [section]));
 
   if (loading) {
     return (
@@ -22,7 +24,7 @@ const PhiatPointsTable = ({ loading }: IPhiatPointsTableProps) => {
         <Bookmark>Points Summary</Bookmark>
         <TableHeaderRow>
           <TableHeaderRowCell className="base-1/4">Phiat Points (Normal)</TableHeaderRowCell>
-          <TableHeaderRowCell className="base-1/4">Phiat Points (Bonus)</TableHeaderRowCell>
+          <TableHeaderRowCell className="base-1/4">Phiat Points (X-Tier)</TableHeaderRowCell>
           <TableHeaderRowCell className="base-1/4">ePhiat Points (Bonus)</TableHeaderRowCell>
           <TableHeaderRowCell className="base-1/4">Phame Points (Bonus)</TableHeaderRowCell>
         </TableHeaderRow>
@@ -50,7 +52,7 @@ const PhiatPointsTable = ({ loading }: IPhiatPointsTableProps) => {
       <Bookmark>Points Summary</Bookmark>
       <TableHeaderRow>
         <TableHeaderRowCell className="base-1/4">Phiat Points (Normal)</TableHeaderRowCell>
-        <TableHeaderRowCell className="base-1/4">Phiat Points (Bonus)</TableHeaderRowCell>
+        <TableHeaderRowCell className="base-1/4">Phiat Points (X-Tier)</TableHeaderRowCell>
         <TableHeaderRowCell className="base-1/4">ePhiat Points (Bonus)</TableHeaderRowCell>
         <TableHeaderRowCell className="base-1/4">Phame Points (Bonus)</TableHeaderRowCell>
       </TableHeaderRow>

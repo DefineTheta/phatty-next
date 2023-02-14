@@ -1,9 +1,9 @@
 import { CheckerResponse, getChecker } from '@app-src/server/checker';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { CheckerState } from './types';
+import { CheckerData, CheckerState, Section, SectionEnum } from './types';
 
-const initialState: CheckerState = {
+const initialCheckerData: CheckerData = {
   hasFetched: false,
   loading: false,
   error: false,
@@ -16,43 +16,60 @@ const initialState: CheckerState = {
   }
 };
 
-const fetchCheckerData = createAsyncThunk<CheckerResponse, string, { state: RootState }>(
-  'checker/fetchCheckerData',
-  async (address, thunkAPI) => {
-    const controller = new AbortController();
+const initialState: CheckerState = {
+  [SectionEnum.PROFILE]: initialCheckerData,
+  [SectionEnum.BUNDLE]: initialCheckerData
+};
 
-    thunkAPI.signal.onabort = () => {
-      controller.abort();
-    };
+const fetchCheckerData = createAsyncThunk<
+  { data: CheckerResponse; type: Section },
+  { address: string; type: Section },
+  { state: RootState }
+>('checker/fetchCheckerData', async (input, thunkAPI) => {
+  const controller = new AbortController();
 
-    const data = await getChecker(address, { signal: controller.signal });
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
 
-    return data;
-  }
-);
+  const data = await getChecker(input.address, { signal: controller.signal });
+
+  return {
+    data,
+    type: input.type
+  };
+});
 
 export const checkerSlice = createSlice({
   name: 'checker',
   initialState,
   reducers: {
-    setHasFetched: (state, action: PayloadAction<boolean>) => {
-      state.hasFetched = action.payload;
+    setHasFetched: (state, action: PayloadAction<{ type: Section; fetched: boolean }>) => {
+      state[action.payload.type].hasFetched = action.payload.fetched;
     }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCheckerData.pending, (state, action) => {
-      state.loading = true;
-      state.error = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].loading = true;
+      state[type].error = false;
     });
 
     builder.addCase(fetchCheckerData.fulfilled, (state, action) => {
-      state.data = action.payload;
-      state.loading = false;
+      if (!action.payload) return;
+
+      const type = action.payload.type;
+
+      state[type].data = action.payload.data;
+      state[type].loading = false;
     });
 
     builder.addCase(fetchCheckerData.rejected, (state, action) => {
-      state.error = true;
-      state.loading = false;
+      const type = typeof action.meta.arg === 'object' ? action.meta.arg.type : action.meta.arg;
+
+      state[type].error = true;
+      state[type].loading = false;
     });
   }
 });

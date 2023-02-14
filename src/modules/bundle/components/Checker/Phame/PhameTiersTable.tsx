@@ -7,14 +7,16 @@ import TableRow from '@app-src/common/components/table/TableRow';
 import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { selectPhameTiers } from '@app-src/store/checker/selectors';
+import { Section } from '@app-src/store/checker/types';
 import { useCallback } from 'react';
 
 type IPhameTiersTableProps = {
   loading: boolean;
+  section: Section;
 };
 
-const PhameTiersTable = ({ loading }: IPhameTiersTableProps) => {
-  const phameTiers = useAppSelector(useCallback(selectPhameTiers, []));
+const PhameTiersTable = ({ loading, section }: IPhameTiersTableProps) => {
+  const phameTiers = useAppSelector(useCallback(selectPhameTiers(section), [section]));
 
   if (loading) {
     return (

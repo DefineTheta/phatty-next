@@ -42,9 +42,9 @@ const ProfileHeader = ({ address, currentChains }: IProfileHeaderProps) => {
         href: `/profile/${encodeURIComponent(address)}/portfolio`
       },
       {
-        displayName: 'NFT',
-        name: 'nft',
-        href: `/profile/${encodeURIComponent(address)}/portfolio`
+        displayName: 'Checker',
+        name: 'checker',
+        href: `/profile/${encodeURIComponent(address)}/checker`
       },
       {
         displayName: 'History',

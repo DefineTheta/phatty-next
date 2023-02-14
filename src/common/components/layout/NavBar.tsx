@@ -30,6 +30,7 @@ const NavBar = () => {
 
         router.push(`/profile/${address}/portfolio`).then(() => {
           dispatch(setHasFetched({ hasFetched: false, type: PortfolioEnum.PROFILE }));
+          dispatch(setCheckerHasFetched({ fetched: false, type: 'PROFILE' }));
           dispatch(setHistoryHasFetched(false));
         });
       }
@@ -41,7 +42,7 @@ const NavBar = () => {
     console.log(type);
     if (type === 'disconnect') {
       dispatch(deleteBundleSession()).then(() => {
-        dispatch(setCheckerHasFetched(false));
+        dispatch(setCheckerHasFetched({ type: 'BUNDLE', fetched: false }));
         router.push(`/bundle`);
       });
     } else if (type === 'connect') {
