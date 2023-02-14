@@ -95,7 +95,7 @@ const ethTokens: TokenItem[] = [
   { name: '1INCH', displayName: '1INCH', address: '0x111111111117dC0aa78b770fA6A738034120C302' },
   { name: 'YFI', displayName: 'YFI', address: '0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e' },
   { name: 'GLM', displayName: 'GLM', address: '0x7DD9c5Cba05E151C895FDe1CF355C9A1D5DA6429' },
-  { name: 'SYN', displayName: 'SYN', address: '0x7DD9c5Cba05E151C895FDe1CF355C9A1D5DA6429' },
+  { name: 'SYN', displayName: 'SYN', address: '0x0f2D719407FdBeFF09D87557AbB7232601FD9F29' },
   { name: 'POLY', displayName: 'POLY', address: '0x9992ec3cf6a55b00978cddf2b27bc6882d88d1ec' },
   { name: 'PLSD', displayName: 'PLSD', address: '0x34F0915a5f15a66Eba86F6a58bE1A471FB7836A7' },
   { name: 'ASIC', displayName: 'ASIC', address: '0x347a96a5bd06d2e15199b032f46fb724d6c73047' },

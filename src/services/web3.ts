@@ -179,7 +179,8 @@ export const tokenImages: Record<string, string> = {
   BNBP: '/img/tokens/bnbp.png',
   COM: '/img/tokens/com.webp',
   FXS: '/img/tokens/fxs.webp',
-  INC: '/img/tokens/inc.png'
+  INC: '/img/tokens/inc.png',
+  ILV: '/img/tokens/ilv.webp'
 };
 
 const defiLlamaPriceQueryData = [
@@ -288,7 +289,8 @@ const defiLlamaPriceQueryData = [
   { type: 'coingecko', symbol: 'CULT', id: 'cult-dao' },
   { type: 'coingecko', symbol: 'BNBP', id: 'bnbpot' },
   { type: 'coingecko', symbol: 'COM', id: 'communis' },
-  { type: 'coingecko', symbol: 'FXS', id: 'frax-share' }
+  { type: 'coingecko', symbol: 'FXS', id: 'frax-share' },
+  { type: 'coingecko', symbol: 'ILV', id: 'illuvium' }
 ];
 
 export const chainImages: Record<string, string> = {
@@ -443,7 +445,8 @@ const defiLlamaPriceQueryDataLookup: Record<string, number> = {
   'coingecko:cult-dao': 102,
   'coingecko:bnbpot': 103,
   'coingecko:communis': 104,
-  'coingecko:frax-share': 105
+  'coingecko:frax-share': 105,
+  'coingecko:illuvium': 106
 };
 
 type DefiLlamaPriceItem = {
