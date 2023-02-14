@@ -6,9 +6,8 @@ import {
   Bars3Icon,
   EyeIcon,
   FlagIcon,
-  Squares2X2Icon,
-  UserIcon,
-  XMarkIcon
+  MagnifyingGlassIcon,
+  Squares2X2Icon, XMarkIcon
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -69,9 +68,9 @@ const SideBar = () => {
   const navItems = useMemo(
     () => [
       {
-        icon: <UserIcon className="h-24 w-24" />,
+        icon: <MagnifyingGlassIcon className="h-24 w-24" />,
         name: 'profile',
-        displayName: 'Profile'
+        displayName: 'Search'
       },
       {
         icon: <Squares2X2Icon className="h-24 w-24" />,
