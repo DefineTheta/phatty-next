@@ -7,7 +7,8 @@ import {
   EyeIcon,
   FlagIcon,
   MagnifyingGlassIcon,
-  Squares2X2Icon, XMarkIcon
+  Squares2X2Icon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
