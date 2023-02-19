@@ -10,15 +10,19 @@
     "lint:fix": "npm run lint -- --fix",
     "prettier": "npx prettier src --check",
     "prettier:fix": "npm run prettier -- --write",
-    "format": "npm run prettier:fix && npm run lint:fix"
+    "format": "npm run prettier:fix && npm run lint:fix",
+    "migrate:dev": "dotenv -e .env.local -- npx prisma migrate dev",
+    "prisma:generate": "dotenv -e .env.local -- npx prisma generate"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.12",
     "@metamask/providers": "^10.0.0",
+    "@prisma/client": "^4.10.1",
     "@reduxjs/toolkit": "^1.8.6",
     "@uniswap/sdk-core": "^3.1.0",
     "@uniswap/v3-sdk": "^3.9.0",
     "@vercel/analytics": "^0.1.5",
+    "bson": "^5.0.1",
     "graphql": "^16.6.0",
     "iron-session": "^6.3.1",
     "luxon": "^3.0.4",
@@ -45,6 +49,7 @@
     "@types/react-dom": "18.0.6",
     "@types/react-modal": "^3.13.1",
     "autoprefixer": "^10.4.12",
+    "dotenv-cli": "^7.0.0",
     "eslint": "8.25.0",
     "eslint-config-next": "12.3.1",
     "eslint-config-prettier": "^8.5.0",

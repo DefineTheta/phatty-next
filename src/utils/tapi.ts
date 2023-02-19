@@ -4,12 +4,37 @@ import { z } from 'zod';
 
 type TypedApiRouterHandlerArgs<T extends z.ZodTypeAny> = {
   input: z.infer<T>;
-  method?: string;
 };
 type TypedApiRouterHandler<T extends z.ZodTypeAny, K extends z.ZodTypeAny> = ({
-  input,
-  method
+  input
 }: TypedApiRouterHandlerArgs<T>) => Promise<z.infer<K>>;
+
+type ApiRoutes = {
+  GET?: ReturnType<typeof typedApiRoute>;
+  POST?: ReturnType<typeof typedApiRoute>;
+  PUT?: ReturnType<typeof typedApiRoute>;
+};
+
+type ApiRouterSettings = {
+  protected: boolean;
+};
+
+export const typedApiRoute =
+  <T extends z.ZodTypeAny, K extends z.ZodTypeAny>(
+    inputSchema: T,
+    outputSchema: K,
+    handler: TypedApiRouterHandler<T, K>
+  ) =>
+  async (req: NextApiRequest, res: NextApiResponse<z.infer<K>>) => {
+    try {
+      const input = inputSchema.parse(req.query);
+      const response = outputSchema.parse(await handler({ input }));
+
+      res.json(response);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
 export const withTypedApiRoute =
   <T extends z.ZodTypeAny, K extends z.ZodTypeAny>(
@@ -20,7 +45,7 @@ export const withTypedApiRoute =
   async (req: NextApiRequest, res: NextApiResponse<z.infer<K>>) => {
     try {
       const input = inputSchema.parse(req.query);
-      const response = outputSchema.parse(await handler({ input, method: req.method }));
+      const response = outputSchema.parse(await handler({ input }));
 
       res.json(response);
     } catch (err) {
@@ -28,24 +53,30 @@ export const withTypedApiRoute =
     }
   };
 
+const defaultApiRouterSettings: ApiRouterSettings = {
+  protected: false
+};
+
 export const withProtectedTypedApiRoute =
-  <T extends z.ZodTypeAny, K extends z.ZodTypeAny>(
-    inputSchema: T,
-    outputSchema: K,
-    handler: TypedApiRouterHandler<T, K>
+  (
+    { GET: getRoute, POST: postRoute, PUT: putRoute }: ApiRoutes,
+    settings = defaultApiRouterSettings
   ) =>
-  async (req: NextApiRequest, res: NextApiResponse<z.infer<K>>) => {
+  async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-      const token = await getToken({ req });
+      if (settings.protected) {
+        const token = await getToken({ req });
 
-      if (token) {
-        const input = inputSchema.parse(req.query);
-        const response = outputSchema.parse(await handler({ input, method: req.method }));
-
-        res.json(response);
-      } else {
-        res.status(401).end();
+        if (!token) res.status(401).end();
       }
+
+      if (req.method === 'GET' && getRoute) {
+        await getRoute(req, res);
+      } else if (req.method === 'POST' && postRoute) {
+        await postRoute(req, res);
+      }
+
+      res.end();
     } catch (err) {
       console.error(err);
     }

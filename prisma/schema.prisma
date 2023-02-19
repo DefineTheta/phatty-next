@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,33 @@ generator client {
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum BundleVisibility {
+  PRIVATE
+  PUBLIC
+  HIDDEN
+}
+
+model User {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  connectedAddresses String[]
+  role               UserRole @default(USER)
+  bundles            Bundle[]
+}
+
+model Bundle {
+  id         String           @id @default(auto()) @map("_id") @db.ObjectId
+  addresses  String[]
+  name       String
+  visibility BundleVisibility @default(PRIVATE)
+  userId     String           @db.ObjectId
+  user       User             @relation(fields: [userId], references: [id])
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
 }

@@ -1,15 +1,48 @@
-import { withProtectedTypedApiRoute } from '@app-src/utils/tapi';
+import prisma from '@app-src/lib/prisma';
+import { ObjectIdSchema } from '@app-src/lib/zod';
+import { typedApiRoute, withProtectedTypedApiRoute } from '@app-src/utils/tapi';
 import { z } from 'zod';
 
 export default withProtectedTypedApiRoute(
-  z.object({ address: z.string() }),
-  z.object({ text: z.string() }),
-  async ({ input, method }) => {
-    return {
-      text: 'It worked!'
-    };
+  {
+    GET: typedApiRoute(
+      z.object({ id: ObjectIdSchema }),
+      z.object({ addresses: z.array(z.string()) }),
+      async ({ input }) => {
+        const bundle = await prisma.bundle.findUnique({
+          where: { id: input.id }
+        });
+
+        if (!bundle) throw new Error('Bundle with requested ID does not exist');
+
+        return {
+          addresses: bundle.addresses
+        };
+      }
+    ),
+    POST: typedApiRoute(
+      z.object({ address: z.string() }),
+      z.object({ newText: z.string() }),
+      async ({ input }) => {
+        return {
+          newText: 'Post worked!'
+        };
+      }
+    )
+  },
+  {
+    protected: true
   }
 );
+// export default withProtectedTypedApiRoute(
+//   z.object({ address: z.string() }),
+//   z.object({ text: z.string() }),
+//   async ({ input, method }) => {
+//     return {
+//       text: 'It worked!'
+//     };
+//   }
+// );
 
 // export default withIronSessionApiRoute(
 //   async function handler(req: NextApiRequest, res: NextApiResponse<BundleResponse>) {
