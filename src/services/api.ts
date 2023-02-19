@@ -4,7 +4,6 @@ import { getStakedIcosa, IcosaResponse } from '@app-src/server/icosa';
 import { fetchXen, XenResponse, XenTotal } from '@app-src/server/xen';
 import {
   ApiBaseResponse,
-  AuthResponse,
   HedronResponse,
   HexResponse,
   PancakeResponse,
@@ -55,18 +54,34 @@ export const authorize = async (signal: AbortSignal) => {
       params: [msg, address]
     });
 
-    const response = await fetch(`/api/auth/verify?address=${address}&sign=${sign}`, {
+    if (typeof sign !== 'string') {
+      throw new Error('Error sigining through metamask');
+    }
+
+    const csrfResponse = await fetch('/api/auth/csrf', {
       signal,
       cache: 'no-store'
     });
-    const data: AuthResponse = await response.json();
+    const csrf: { csrfToken: string } = await csrfResponse.json();
 
-    if (!data.success) {
-      alert('Error occured trying to authorize');
-      return false;
+    const signInFormData = new FormData();
+    signInFormData.append('address', address);
+    signInFormData.append('sign', sign);
+    signInFormData.append('csrfToken', csrf.csrfToken);
+    signInFormData.append('redirect', 'false');
+
+    const credentialsResponse = await fetch('/api/auth/callback/credentials', {
+      method: 'POST',
+      body: signInFormData,
+      cache: 'no-store',
+      signal
+    });
+
+    if (credentialsResponse.status === 200) {
+      return true;
     }
 
-    return true;
+    return false;
   } catch (err) {
     console.log(err);
   }
