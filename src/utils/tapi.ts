@@ -67,7 +67,9 @@ export const withProtectedTypedApiRoute =
       if (settings.protected) {
         const token = await getToken({ req });
 
-        if (!token) res.status(401).end();
+        console.log(token);
+
+        if (!token) return res.status(401).end();
       }
 
       if (req.method === 'GET' && getRoute) {
