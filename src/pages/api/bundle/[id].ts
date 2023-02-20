@@ -1,103 +1,92 @@
+import { AuthorizationError, NotFoundError } from '@app-src/lib/error';
 import prisma from '@app-src/lib/prisma';
-import { ObjectIdSchema } from '@app-src/lib/zod';
+import { objectIdSchema, web3AddressSchema } from '@app-src/lib/zod';
 import { typedApiRoute, withProtectedTypedApiRoute } from '@app-src/utils/tapi';
+import { Bundle } from '@prisma/client';
+import type { JWT } from 'next-auth/jwt';
 import { z } from 'zod';
+
+const isUserAuthorized = (token: JWT | null, bundle: Bundle) => {
+  if (!token || bundle.userId !== token.user.id) return false;
+
+  return true;
+};
 
 export default withProtectedTypedApiRoute(
   {
-    GET: typedApiRoute(
-      z.object({ id: ObjectIdSchema }),
-      z.object({ addresses: z.array(z.string()) }),
-      async ({ input }) => {
+    GET: typedApiRoute({
+      query: z.object({ id: objectIdSchema }),
+      output: z.object({ addresses: z.array(z.string()) }),
+      isProtected: true,
+      handler: async ({ query, token }) => {
         const bundle = await prisma.bundle.findUnique({
-          where: { id: input.id }
+          where: { id: query.id }
         });
 
-        if (!bundle) throw new Error('Bundle with requested ID does not exist');
+        if (!bundle) throw new NotFoundError('Requested bundle does not exist');
+        if (!isUserAuthorized(token, bundle))
+          throw new AuthorizationError('Tried to access unauthorized bundle');
 
         return {
           addresses: bundle.addresses
         };
       }
-    ),
-    POST: typedApiRoute(
-      z.object({ address: z.string() }),
-      z.object({ newText: z.string() }),
-      async ({ input }) => {
+    }),
+    PATCH: typedApiRoute({
+      query: z.object({ id: objectIdSchema }),
+      body: z.object({ addresses: z.array(web3AddressSchema) }),
+      output: z.object({
+        id: objectIdSchema,
+        addresses: z.array(web3AddressSchema),
+        userId: objectIdSchema
+      }),
+      isProtected: true,
+      handler: async ({ query, body, token }) => {
+        const bundle = await prisma.bundle.findUnique({
+          where: { id: query.id }
+        });
+
+        if (!bundle) throw new NotFoundError('Requested bundle does not exist');
+        if (!isUserAuthorized(token, bundle))
+          throw new AuthorizationError('Tried to access unauthorized bundle');
+
+        const updatedBundle = await prisma.bundle.update({
+          where: {
+            id: query.id
+          },
+          data: {
+            addresses: body.addresses
+          }
+        });
+
         return {
-          newText: 'Post worked!'
+          id: updatedBundle.id,
+          addresses: updatedBundle.addresses,
+          userId: updatedBundle.userId
         };
       }
-    )
+    }),
+    DELETE: typedApiRoute({
+      query: z.object({ id: objectIdSchema }),
+      isProtected: true,
+      handler: async ({ query, token }) => {
+        const bundle = await prisma.bundle.findUnique({
+          where: { id: query.id }
+        });
+
+        if (!bundle) throw new NotFoundError('Requested bundle does not exist');
+        if (!isUserAuthorized(token, bundle))
+          throw new AuthorizationError('Tried to access unauthorized bundle');
+
+        await prisma.bundle.delete({
+          where: {
+            id: query.id
+          }
+        });
+      }
+    })
   },
   {
     protected: true
   }
 );
-// export default withProtectedTypedApiRoute(
-//   z.object({ address: z.string() }),
-//   z.object({ text: z.string() }),
-//   async ({ input, method }) => {
-//     return {
-//       text: 'It worked!'
-//     };
-//   }
-// );
-
-// export default withIronSessionApiRoute(
-//   async function handler(req: NextApiRequest, res: NextApiResponse<BundleResponse>) {
-//     try {
-//       const address = String(req.query.address);
-//       const { decryptedAddress } = req.session;
-
-//       if (!address) return res.status(400);
-
-//       if (decryptedAddress !== address)
-//         return res
-//           .status(401)
-//           .send({ data: [], error: `Unauthorized&${decryptedAddress}&${address}` });
-
-//       if (req.method === 'GET') {
-//         const response = await fetch(
-//           `https://phiat.exchange/PhattyLogin?add=${address}&tk=fhasilfhiosadfh529038`
-//         );
-//         const data = await response.json();
-
-//         res.status(200).send({ data });
-//       } else if (req.method === 'POST') {
-//         const wallet = String(req.body.wallet);
-
-//         if (!address || !wallet) return res.status(400);
-
-//         const response = await fetch(
-//           `https://phiat.exchange/PhattyWallet?add=${address}&wallet=${wallet}&action=Add&tk=fhasilfhiosadfh529038`
-//         );
-//         const data = await response.json();
-
-//         res.status(200).send({ data });
-//       } else if (req.method === 'PUT') {
-//         const wallet = String(req.body.wallet);
-
-//         if (!address || !wallet) return res.status(400);
-
-//         const response = await fetch(
-//           `https://phiat.exchange/PhattyWallet?add=${address}&wallet=${wallet}&action=Cancel&tk=fhasilfhiosadfh529038`
-//         );
-//         const data = await response.json();
-
-//         res.status(200).send({ data });
-//       }
-//     } catch (err) {
-//       res
-//         .status(500)
-//         .send({ data: [], error: 'An error occured while trying to process the request' });
-//     }
-//   },
-//   {
-//     cookieName: 'phatty_auth',
-//     password: process.env.COOKIE_SECRET as string,
-//     cookieOptions: {
-//       secure: process.env.NODE_ENV === 'production'
-//     }
-//   }
-// );

@@ -81,7 +81,9 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       },
       jwt: async ({ token, user }) => {
         if (user) {
-          token.id = user.id;
+          token.user = {
+            id: user.id
+          };
         }
 
         console.log(token);
