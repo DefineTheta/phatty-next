@@ -1,14 +1,12 @@
 import SearchInput from '@app-src/common/components/input/SearchInput';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
+import { signIn } from '@app-src/lib/auth';
 import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import { setCheckerHasFetched } from '@app-src/store/checker/checkerSlice';
 import { setHistoryHasFetched } from '@app-src/store/history/historySlice';
-import {
-  deleteBundleSession,
-  fetchBundleAddresses,
-  setHasFetched
-} from '@app-src/store/portfolio/portfolioSlice';
+import { deleteBundleSession, setHasFetched } from '@app-src/store/portfolio/portfolioSlice';
 import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { KeyboardEvent, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -17,6 +15,11 @@ import Container from './Container';
 const NavBar = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  const { data: session, status } = useSession();
+
+  console.log('SESSION!!!!', session);
+  console.log('STATUS!!!!', status);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -46,7 +49,11 @@ const NavBar = () => {
         router.push(`/bundle`);
       });
     } else if (type === 'connect') {
-      dispatch(fetchBundleAddresses());
+      const controller = new AbortController();
+
+      signIn(controller.signal);
+
+      // dispatch(fetchBundleAddresses());
     }
   };
 
@@ -57,10 +64,10 @@ const NavBar = () => {
           <SearchInput onKeyDown={handleSearch} inputRef={searchInputRef} />
           <button
             className="hidden cursor-pointer rounded-full bg-purple-button py-6 px-24 shadow-md md:flex"
-            onClick={() => handleButtonClick(bundleAddress ? 'disconnect' : 'connect')}
+            onClick={() => handleButtonClick(status === 'authenticated' ? 'disconnect' : 'connect')}
           >
             <span className="text-base font-semibold text-text-300">
-              {bundleAddress ? 'Disconnect' : 'Connect Wallet'}
+              {status === 'authenticated' ? 'Disconnect' : 'Connect Wallet'}
             </span>
           </button>
         </div>
