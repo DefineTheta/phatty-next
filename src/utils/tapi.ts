@@ -1,24 +1,7 @@
-import { AuthorizationError, NotFoundError } from '@app-src/lib/error';
+import { AuthenticationError, AuthorizationError, NotFoundError } from '@app-src/lib/error';
 import { NextApiRequest, NextApiResponse } from 'next';
-import type { JWT } from 'next-auth/jwt';
-import { getToken } from 'next-auth/jwt';
+import { getToken, JWT } from 'next-auth/jwt';
 import { z } from 'zod';
-
-type TypedApiRouterHandlerArgs<
-  T extends z.ZodTypeAny,
-  U extends z.ZodTypeAny,
-  V extends boolean
-> = {
-  query: z.infer<T>;
-  body: z.infer<U>;
-  token: V extends true ? JWT : null;
-};
-type TypedApiRouterHandler<
-  T extends z.ZodTypeAny,
-  U extends z.ZodTypeAny,
-  V extends z.ZodTypeAny,
-  W extends boolean
-> = ({ query, body, token }: TypedApiRouterHandlerArgs<T, U, W>) => Promise<z.infer<V>>;
 
 type ApiRoutes = {
   GET?: ReturnType<typeof typedApiRoute>;
@@ -28,11 +11,22 @@ type ApiRoutes = {
   DELETE?: ReturnType<typeof typedApiRoute>;
 };
 
-type ApiRouterSettings = {
-  protected: boolean;
-};
+type RouteHandler<
+  T extends z.ZodTypeAny,
+  U extends z.ZodTypeAny,
+  V extends z.ZodTypeAny,
+  W extends boolean
+> = ({
+  query,
+  body,
+  token
+}: {
+  query: z.infer<T>;
+  body: z.infer<U>;
+  token: W extends true ? JWT : null;
+}) => Promise<z.infer<V>>;
 
-type TypedApiRouteArgs<
+type RouteArgs<
   T extends z.ZodTypeAny,
   U extends z.ZodTypeAny,
   V extends z.ZodTypeAny,
@@ -42,35 +36,56 @@ type TypedApiRouteArgs<
   body?: U;
   output?: V;
   isProtected: W;
-  handler: TypedApiRouterHandler<T, U, V, W>;
+  handler: RouteHandler<T, U, V, W>;
 };
 
-export const typedApiRoute =
-  <T extends z.ZodTypeAny, U extends z.ZodTypeAny, V extends z.ZodTypeAny, W extends boolean>({
-    query: querySchema,
-    body: bodySchema,
-    output: outputSchema,
-    isProtected,
-    handler
-  }: TypedApiRouteArgs<T, U, V, W>) =>
-  async (req: NextApiRequest, res: NextApiResponse<z.infer<V>>) => {
+type NextApiHandler<T extends z.ZodTypeAny> = (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => Promise<void | NextApiResponse>;
+
+export function typedApiRoute<
+  T extends z.ZodTypeAny,
+  U extends z.ZodTypeAny,
+  V extends z.ZodTypeAny
+>({ query, body, output, isProtected, handler }: RouteArgs<T, U, V, false>): NextApiHandler<V>;
+export function typedApiRoute<
+  T extends z.ZodTypeAny,
+  U extends z.ZodTypeAny,
+  V extends z.ZodTypeAny
+>({ query, body, output, isProtected, handler }: RouteArgs<T, U, V, true>): NextApiHandler<V>;
+export function typedApiRoute<
+  T extends z.ZodTypeAny,
+  U extends z.ZodTypeAny,
+  V extends z.ZodTypeAny
+>({
+  query: querySchema,
+  body: bodySchema,
+  output: outputSchema,
+  isProtected,
+  handler
+}: RouteArgs<T, U, V, boolean>): NextApiHandler<V> {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const query = querySchema ? querySchema.parse(req.query) : undefined;
       const body = bodySchema ? bodySchema.parse(req.body) : undefined;
-
       const token = await getToken({ req });
+
+      if (isProtected && !token) throw new AuthenticationError('Unauthenticated user');
+
+      const handlerResponse = await handler({ query, body, token });
 
       if (outputSchema) {
         const response = outputSchema.parse(handlerResponse);
-
         return res.json(response);
       } else {
         return res.status(204).end();
       }
     } catch (err) {
       if (err instanceof Error) console.error(err.message);
-
       switch (true) {
+        case err instanceof AuthenticationError:
+          return res.status(401).end();
         case err instanceof AuthorizationError:
           return res.status(403).end();
         case err instanceof NotFoundError:
@@ -78,6 +93,7 @@ export const typedApiRoute =
       }
     }
   };
+}
 
 type TypedApiRouterHandlerArgs2<T extends z.ZodTypeAny> = {
   input: z.infer<T>;
@@ -103,21 +119,14 @@ export const withTypedApiRoute =
     }
   };
 
-const defaultApiRouterSettings: ApiRouterSettings = {
-  protected: false
-};
-
 export const withProtectedTypedApiRoute =
-  (
-    {
-      GET: getRoute,
-      POST: postRoute,
-      PUT: putRoute,
-      PATCH: patchRoute,
-      DELETE: deleteRoute
-    }: ApiRoutes,
-    settings = defaultApiRouterSettings
-  ) =>
+  ({
+    GET: getRoute,
+    POST: postRoute,
+    PUT: putRoute,
+    PATCH: patchRoute,
+    DELETE: deleteRoute
+  }: ApiRoutes) =>
   async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       if (req.method === 'GET' && getRoute) {
