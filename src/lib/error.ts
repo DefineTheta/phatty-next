@@ -26,8 +26,10 @@ export class MetamaskError extends Error {
   }
 }
 
-const HttpErrorCodeEnum = {
+export const HttpErrorCodeEnum = {
   UNAUTHORIZED: 'UNAUTHORIZED',
+  FORBIDDEN: 'FORBIDDEN',
+  NOT_FOUND: 'NOT_FOUND',
   INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR'
 } as const;
 

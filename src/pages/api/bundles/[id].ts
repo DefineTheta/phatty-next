@@ -1,4 +1,4 @@
-import { AuthorizationError, NotFoundError } from '@app-src/lib/error';
+import { HttpError } from '@app-src/lib/error';
 import prisma from '@app-src/lib/prisma';
 import { objectIdSchema, web3AddressSchema } from '@app-src/lib/zod';
 import { typedApiRoute, withProtectedTypedApiRoute } from '@app-src/utils/tapi';
@@ -6,10 +6,10 @@ import { Bundle } from '@prisma/client';
 import type { JWT } from 'next-auth/jwt';
 import { z } from 'zod';
 
-const isUserAuthorized = (token: JWT | null, bundle: Bundle) => {
-  if (!token || bundle.userId !== token.user.id) return false;
+const isUserBundle = (token: JWT, bundle: Bundle) => {
+  if (bundle.userId === token.user.id) return true;
 
-  return true;
+  return false;
 };
 
 export default withProtectedTypedApiRoute({
@@ -22,9 +22,9 @@ export default withProtectedTypedApiRoute({
         where: { id: query.id }
       });
 
-      if (!bundle) throw new NotFoundError('Requested bundle does not exist');
-      if (!isUserAuthorized(token, bundle))
-        throw new AuthorizationError('Tried to access unauthorized bundle');
+      if (!bundle) throw new HttpError('NOT_FOUND', 'Requested bundle does not exist');
+      if (!isUserBundle(token, bundle))
+        throw new HttpError('FORBIDDEN', 'Tried to access unauthorized bundle');
 
       return {
         addresses: bundle.addresses
@@ -45,9 +45,9 @@ export default withProtectedTypedApiRoute({
         where: { id: query.id }
       });
 
-      if (!bundle) throw new NotFoundError('Requested bundle does not exist');
-      if (!isUserAuthorized(token, bundle))
-        throw new AuthorizationError('Tried to access unauthorized bundle');
+      if (!bundle) throw new HttpError('NOT_FOUND', 'Requested bundle does not exist');
+      if (!isUserBundle(token, bundle))
+        throw new HttpError('FORBIDDEN', 'Tried to access unauthorized bundle');
 
       const updatedBundle = await prisma.bundle.update({
         where: {
@@ -73,9 +73,9 @@ export default withProtectedTypedApiRoute({
         where: { id: query.id }
       });
 
-      if (!bundle) throw new NotFoundError('Requested bundle does not exist');
-      if (!isUserAuthorized(token, bundle))
-        throw new AuthorizationError('Tried to access unauthorized bundle');
+      if (!bundle) throw new HttpError('NOT_FOUND', 'Requested bundle does not exist');
+      if (!isUserBundle(token, bundle))
+        throw new HttpError('FORBIDDEN', 'Tried to access unauthorized bundle');
 
       await prisma.bundle.delete({
         where: {

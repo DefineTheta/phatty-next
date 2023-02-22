@@ -1,12 +1,25 @@
 import prisma from '@app-src/lib/prisma';
-import { objectIdSchema } from '@app-src/lib/zod';
+import { BundleSchema } from '@app-src/server/bundle';
 import { typedApiRoute, withProtectedTypedApiRoute } from '@app-src/utils/tapi';
 import { z } from 'zod';
 
 export default withProtectedTypedApiRoute({
+  GET: typedApiRoute({
+    output: z.array(BundleSchema),
+    isProtected: true,
+    handler: async ({ token }) => {
+      const bundles = await prisma.bundle.findMany({
+        where: {
+          userId: token.user.id
+        }
+      });
+
+      return bundles;
+    }
+  }),
   POST: typedApiRoute({
     body: z.object({ name: z.string() }),
-    output: z.object({ bundleId: objectIdSchema }),
+    output: BundleSchema,
     isProtected: true,
     handler: async ({ body, token }) => {
       const bundle = await prisma.bundle.create({
@@ -20,9 +33,7 @@ export default withProtectedTypedApiRoute({
         }
       });
 
-      return {
-        bundleId: bundle.id
-      };
+      return bundle;
     }
   })
 });

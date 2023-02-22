@@ -1,6 +1,6 @@
-import { AuthenticationError, AuthorizationError, NotFoundError } from '@app-src/lib/error';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { HttpError, HttpErrorCodeEnum } from '@app-src/lib/error';
 import { getToken, JWT } from 'next-auth/jwt';
+import { NextApiRequest, NextApiResponse } from 'next/types';
 import { z } from 'zod';
 
 type ApiRoutes = {
@@ -71,7 +71,7 @@ export function typedApiRoute<
       const body = bodySchema ? bodySchema.parse(req.body) : undefined;
       const token = await getToken({ req });
 
-      if (isProtected && !token) throw new AuthenticationError('Unauthenticated user');
+      if (isProtected && !token) throw new HttpError('UNAUTHORIZED', 'Unauthenticated user');
 
       const handlerResponse = await handler({ query, body, token });
 
@@ -83,13 +83,18 @@ export function typedApiRoute<
       }
     } catch (err) {
       if (err instanceof Error) console.error(err.message);
-      switch (true) {
-        case err instanceof AuthenticationError:
-          return res.status(401).end();
-        case err instanceof AuthorizationError:
-          return res.status(403).end();
-        case err instanceof NotFoundError:
-          return res.status(404).end();
+
+      if (err instanceof HttpError) {
+        switch (err.name) {
+          case HttpErrorCodeEnum.UNAUTHORIZED:
+            return res.status(401).end();
+          case HttpErrorCodeEnum.FORBIDDEN:
+            return res.status(403).end();
+          case HttpErrorCodeEnum.NOT_FOUND:
+            return res.status(404).end();
+          case HttpErrorCodeEnum.INTERNAL_SERVER_ERROR:
+            return res.status(500).end();
+        }
       }
     }
   };
@@ -150,8 +155,22 @@ export const typedFetch = async <T extends z.ZodTypeAny>(
   fetchPromise: Promise<Response>
 ): Promise<z.infer<T>> => {
   const promise = await fetchPromise;
+
+  switch (promise.status) {
+    case 401:
+      throw new HttpError('UNAUTHORIZED', 'User is unauthorized to make this request');
+    case 403:
+      throw new HttpError('FORBIDDEN', 'User is forbiden to make this request');
+    case 404:
+      throw new HttpError('NOT_FOUND', 'Requested resource not found');
+    case 500:
+      throw new HttpError('INTERNAL_SERVER_ERROR', 'Unexpected internal server error');
+  }
+
   const data = await promise.json();
   const parsed = responseSchema.parse(data);
 
   return parsed;
 };
+
+export type TReturnType<TFetch extends (...args: any) => any> = Awaited<ReturnType<TFetch>>;

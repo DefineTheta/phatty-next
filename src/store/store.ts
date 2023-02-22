@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import bundleSlice from './bundle/bundleSlice';
 import checkerSlice from './checker/checkerSlice';
 import historySlice from './history/historySlice';
 import portfolioSlice from './portfolio/portfolioSlice';
@@ -15,6 +16,7 @@ export const store = configureStore({
     // histories: historiesReducer,
     history: historySlice,
     checker: checkerSlice,
+    bundle: bundleSlice,
     // protocols: protocolsReducer,
     portfolio: portfolioSlice
     // chains: chainsReducer,
