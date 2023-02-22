@@ -1,4 +1,4 @@
-import { signIn as authSignIn } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 import { AuthenticationError, MetamaskError } from './error';
 import { getMetamaskAccount, signWithMetamask } from './metamask';
 
@@ -12,7 +12,7 @@ export const getCsrfToken = async (signal: AbortSignal) => {
   return csrf.csrfToken;
 };
 
-export const signIn = async (signal: AbortSignal) => {
+export const connectAddress = async () => {
   try {
     const address = await getMetamaskAccount();
 
@@ -25,12 +25,18 @@ export const signIn = async (signal: AbortSignal) => {
     if (typeof sign !== 'string')
       throw new MetamaskError('There was an error signing message with metamask');
 
-    const csrfToken = await getCsrfToken(signal);
-
-    const signInResponse = await authSignIn('metamask', { address, sign, redirect: false });
+    const signInResponse = await signIn('metamask', { address, sign, redirect: false });
 
     if (signInResponse?.status !== 200)
       throw new AuthenticationError('There was an error authenticating during signin');
+  } catch (err) {
+    if (err instanceof Error) console.error(err.message);
+  }
+};
+
+export const disconnectAddress = async () => {
+  try {
+    await signOut({ redirect: false });
   } catch (err) {
     if (err instanceof Error) console.error(err.message);
   }

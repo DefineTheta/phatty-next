@@ -19,10 +19,10 @@ enum BundleVisibility {
 }
 
 model User {
-  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  connectedAddresses String[]
-  role               UserRole @default(USER)
-  bundles            Bundle[]
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  connectedAddress String
+  role             UserRole @default(USER)
+  bundles          Bundle[]
 }
 
 model Bundle {

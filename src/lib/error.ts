@@ -25,3 +25,17 @@ export class MetamaskError extends Error {
     this.name = 'MetamaskError';
   }
 }
+
+const HttpErrorCodeEnum = {
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR'
+} as const;
+
+type HttpErrorCode = typeof HttpErrorCodeEnum[keyof typeof HttpErrorCodeEnum];
+
+export class HttpError extends Error {
+  constructor(type: HttpErrorCode, message: string) {
+    super(message);
+    this.name = type;
+  }
+}

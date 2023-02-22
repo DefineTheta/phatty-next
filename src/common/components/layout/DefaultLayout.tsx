@@ -39,6 +39,7 @@ const DefaultLayout = ({ children }: IDefaultLayoutProps) => {
       const handleAccountChange = (accounts: unknown) => {
         console.log('Metamask accounts change');
         let acc = accounts as string[];
+        console.log(acc);
         if (acc && acc.length !== 0 && acc[0]) {
           dispatch(setDisplayAddress({ address: acc[0], type: PortfolioEnum.BUNDLE }));
           dispatch(clearAddresses(PortfolioEnum.BUNDLE));

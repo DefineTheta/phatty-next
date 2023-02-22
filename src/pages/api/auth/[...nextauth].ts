@@ -1,8 +1,10 @@
+import { HttpError } from '@app-src/lib/error';
 import prisma from '@app-src/lib/prisma';
 import { decryptAddress } from '@app-src/services/web3';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { User } from '@prisma/client';
 import NextAuth from 'next-auth/next';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import type { NextApiRequest, NextApiResponse } from 'next/types';
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   console.log(req.method);
@@ -40,26 +42,22 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
             if (credentials.address === decryptedAddress) {
               let user = await prisma.user.findFirst({
                 where: {
-                  connectedAddresses: {
-                    has: decryptedAddress
-                  }
+                  connectedAddress: decryptedAddress
                 }
               });
 
               if (!user) {
                 user = await prisma.user.create({
                   data: {
-                    connectedAddresses: [decryptedAddress]
+                    connectedAddress: decryptedAddress
                   }
                 });
               }
 
-              return {
-                id: user.id
-              };
+              return user;
             }
 
-            return null;
+            throw new HttpError('UNAUTHORIZED', 'Credentials and metamask signature do not match');
           } catch (error) {
             if (error instanceof Error) console.error(error.message);
 
@@ -73,20 +71,15 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       strategy: 'jwt'
     },
     callbacks: {
-      session: async ({ session }) => {
-        console.log('session');
-        console.log(session);
-
-        return session;
-      },
       jwt: async ({ token, user }) => {
+        const newUser = user as User;
+
         if (user) {
-          token.user = {
-            id: user.id
+          return {
+            ...token,
+            user: newUser
           };
         }
-
-        console.log(token);
 
         return token;
       }

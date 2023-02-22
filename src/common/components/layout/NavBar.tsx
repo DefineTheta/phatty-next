@@ -1,10 +1,10 @@
 import SearchInput from '@app-src/common/components/input/SearchInput';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
-import { signIn } from '@app-src/lib/auth';
+import { connectAddress, disconnectAddress } from '@app-src/lib/auth';
 import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import { setCheckerHasFetched } from '@app-src/store/checker/checkerSlice';
 import { setHistoryHasFetched } from '@app-src/store/history/historySlice';
-import { deleteBundleSession, setHasFetched } from '@app-src/store/portfolio/portfolioSlice';
+import { setHasFetched } from '@app-src/store/portfolio/portfolioSlice';
 import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -44,14 +44,13 @@ const NavBar = () => {
   const handleButtonClick = (type: 'connect' | 'disconnect') => {
     console.log(type);
     if (type === 'disconnect') {
-      dispatch(deleteBundleSession()).then(() => {
-        dispatch(setCheckerHasFetched({ type: 'BUNDLE', fetched: false }));
-        router.push(`/bundle`);
-      });
+      disconnectAddress();
+      // dispatch(deleteBundleSession()).then(() => {
+      //   dispatch(setCheckerHasFetched({ type: 'BUNDLE', fetched: false }));
+      //   router.push(`/bundle`);
+      // });
     } else if (type === 'connect') {
-      const controller = new AbortController();
-
-      signIn(controller.signal);
+      connectAddress();
 
       // dispatch(fetchBundleAddresses());
     }
