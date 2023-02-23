@@ -1,6 +1,6 @@
 import { fetchPrices } from '@app-src/services/web3';
 import { PriceResponse } from '@app-src/types/api';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next/types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<PriceResponse>) {
   try {

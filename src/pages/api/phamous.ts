@@ -71,7 +71,7 @@ type UserRewardItem = {
 
 type UserRewardResponse = UserRewardItem[];
 
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next/types';
 
 export default withWeb3ApiRoute(async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { address, price } = req.middleware;

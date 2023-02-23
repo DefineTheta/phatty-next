@@ -3,7 +3,7 @@ import { DEFI_LLAMA_URL, tokenImages, withWeb3ApiRoute } from '@app-src/services
 import { UniV3Item, UniV3Response } from '@app-src/types/api';
 import { Token } from '@uniswap/sdk-core';
 import { Pool, Position } from '@uniswap/v3-sdk';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next/types';
 import { createClient } from 'urql';
 import Web3 from 'web3';
 

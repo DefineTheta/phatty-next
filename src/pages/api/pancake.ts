@@ -1,6 +1,6 @@
 import { bscClient, tokenImages, withWeb3ApiRoute } from '@app-src/services/web3';
 import { PancakeFarmTokenItem, PancakeLPTokenItem, PancakeResponse } from '@app-src/types/api';
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next/types';
 import { Contract } from 'web3-eth-contract';
 import { AbiItem } from 'web3-utils';
 

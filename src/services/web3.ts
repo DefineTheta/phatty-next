@@ -1,5 +1,5 @@
 import { PriceResponse } from '@app-src/types/api';
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next/types';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { z } from 'zod';

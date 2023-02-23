@@ -9,7 +9,7 @@ import {
   withWeb3ApiRoute
 } from '@app-src/services/web3';
 import { PhiatData, PhiatResponse, PhiatTokenItem } from '@app-src/types/api';
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next/types';
 
 const phiatFeeAddress = '0x37838B260DD27565786B6c7E6cC35c0E65a47620';
 const phiatTokenAddress = '0x609BFD40359B3656858D83dc4c4E40D4fD34737F';

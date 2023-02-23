@@ -1,6 +1,6 @@
 import { tokenImages, withWeb3ApiRoute } from '@app-src/services/web3';
 import { SushiItem, SushiResponse } from '@app-src/types/api';
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next/types';
 import { createClient } from 'urql';
 
 type SushiLiquidityPositionItem = {

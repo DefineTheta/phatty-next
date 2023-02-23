@@ -1,6 +1,6 @@
 import { tokenImages, withWeb3ApiRoute } from '@app-src/services/web3';
 import { SushiResponse, UniV2Item, UniV2Response } from '@app-src/types/api';
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next/types';
 import { createClient } from 'urql';
 
 type UniV2LiquidityPositionItem = {
