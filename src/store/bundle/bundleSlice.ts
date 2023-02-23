@@ -7,7 +7,10 @@ import { BundleState } from './types';
 const initialState: BundleState = {
   bundlesIndex: {},
   bundles: [],
-  currentBundle: null
+  currentBundle: null,
+  publicBundlesIndex: {},
+  publicBundles: [],
+  currentPublicBundle: null
 };
 
 const fetchBundle = createAsyncThunk<
@@ -15,6 +18,20 @@ const fetchBundle = createAsyncThunk<
   string,
   { state: RootState }
 >('bundle/fetchBundle', async (bundleId, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  return await bundle.fetch(bundleId, { signal: controller.signal, cache: 'no-store' });
+});
+
+const fetchPublicBundle = createAsyncThunk<
+  TReturnType<typeof bundle.fetch>,
+  string,
+  { state: RootState }
+>('bundle/fetchPublicBundle', async (bundleId, thunkAPI) => {
   const controller = new AbortController();
 
   thunkAPI.signal.onabort = () => {
@@ -35,7 +52,7 @@ const fetchBundles = createAsyncThunk<
     controller.abort();
   };
 
-  return await bundle.fetchAll({ signal: controller.signal, cache: 'no-store' });
+  return await bundle.fetchAll(false, { signal: controller.signal, cache: 'no-store' });
 });
 
 const updateBundle = createAsyncThunk<
@@ -83,6 +100,20 @@ const deleteBundle = createAsyncThunk<
   return await bundle.delete(bundleId, { signal: controller.signal, cache: 'no-store' });
 });
 
+const fetchPublicBundles = createAsyncThunk<
+  TReturnType<typeof bundle.fetchAll>,
+  void,
+  { state: RootState }
+>('bundle/fetchPublicBundles', async (_, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  return await bundle.fetchAll(true, { signal: controller.signal, cache: 'no-store' });
+});
+
 export const bundleSlice = createSlice({
   name: 'bundle',
   initialState,
@@ -95,6 +126,16 @@ export const bundleSlice = createSlice({
     });
 
     builder.addCase(fetchBundle.rejected, (state, action) => {
+      console.error(action.error.message);
+    });
+
+    builder.addCase(fetchPublicBundle.pending, (state) => {});
+
+    builder.addCase(fetchPublicBundle.fulfilled, (state, action) => {
+      state.currentPublicBundle = action.payload;
+    });
+
+    builder.addCase(fetchPublicBundle.rejected, (state, action) => {
       console.error(action.error.message);
     });
 
@@ -156,9 +197,33 @@ export const bundleSlice = createSlice({
     builder.addCase(deleteBundle.rejected, (state, action) => {
       throw new Error(action.error.message);
     });
+
+    builder.addCase(fetchPublicBundles.pending, (state) => {});
+
+    builder.addCase(fetchPublicBundles.fulfilled, (state, action) => {
+      const bundlesIndex: { [k: string]: number } = {};
+      action.payload.forEach((bundle, index) => {
+        bundlesIndex[bundle.id] = index;
+      });
+
+      state.publicBundles = action.payload;
+      state.publicBundlesIndex = bundlesIndex;
+    });
+
+    builder.addCase(fetchPublicBundles.rejected, (state, action) => {
+      console.error(action.error.message);
+    });
   }
 });
 
-export { fetchBundle, fetchBundles, updateBundle, deleteBundle, createBundle };
+export {
+  fetchBundle,
+  fetchBundles,
+  updateBundle,
+  deleteBundle,
+  createBundle,
+  fetchPublicBundles,
+  fetchPublicBundle
+};
 
 export default bundleSlice.reducer;

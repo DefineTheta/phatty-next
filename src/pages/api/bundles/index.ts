@@ -5,13 +5,12 @@ import { z } from 'zod';
 
 export default withProtectedTypedApiRoute({
   GET: typedApiRoute({
+    query: z.object({ public: z.coerce.boolean().optional() }),
     output: z.array(BundleSchema),
     isProtected: true,
-    handler: async ({ token }) => {
+    handler: async ({ query, token }) => {
       const bundles = await prisma.bundle.findMany({
-        where: {
-          userId: token.user.id
-        }
+        where: query.public ? { visibility: 'PUBLIC' } : { userId: token.user.id }
       });
 
       return bundles;

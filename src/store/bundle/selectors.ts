@@ -16,3 +16,19 @@ export const selectCurrentBundleAddresses = memoize((state: RootState) => {
 
   return state.bundle.currentBundle.addresses;
 });
+
+export const selectCurrentPublicBundleAddresses = memoize((state: RootState) => {
+  if (!state.bundle.currentPublicBundle) return [];
+
+  return state.bundle.currentPublicBundle.addresses;
+});
+
+export const selectCurrentPublicBundleName = memoize((state: RootState) => {
+  if (!state.bundle.currentPublicBundle) return '';
+
+  return state.bundle.currentPublicBundle.name;
+});
+
+export const selectPublicBundles = memoize((state: RootState) => {
+  return state.bundle.publicBundles;
+});

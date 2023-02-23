@@ -16,8 +16,11 @@ export type Bundle = z.infer<typeof BundleSchema>;
 const bundle = {
   fetch: (bundleId: string, fetchOptions?: RequestInit) =>
     typedFetch(BundleSchema, fetch(`/api/bundles/${bundleId}`, { ...fetchOptions, method: 'GET' })),
-  fetchAll: (fetchOptions?: RequestInit) =>
-    typedFetch(z.array(BundleSchema), fetch('/api/bundles', fetchOptions)),
+  fetchAll: (showPublic: boolean, fetchOptions?: RequestInit) =>
+    typedFetch(
+      z.array(BundleSchema),
+      fetch(`/api/bundles${showPublic ? '?public=true' : ''}`, fetchOptions)
+    ),
   create: (bundle: Omit<Bundle, 'id'>, fetchOptions?: Omit<RequestInit, 'method'>) =>
     typedFetch(
       BundleSchema,
