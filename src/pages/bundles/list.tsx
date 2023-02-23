@@ -7,7 +7,6 @@ import TableRowCell from '@app-src/common/components/table/TableRowCell';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { truncateAddressList } from '@app-src/common/utils/format';
-import BundleHeader from '@app-src/modules/bundle/components/BundleHeader';
 import EditBundleModal from '@app-src/modules/modal/EditBundleModal';
 import { createBundle, fetchBundles } from '@app-src/store/bundle/bundleSlice';
 import { selectBundles } from '@app-src/store/bundle/selectors';
@@ -71,48 +70,45 @@ const BundlesListPage = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-y-24">
-        <BundleHeader address="" currentChains={[]} />
-        <div className="flex w-full flex-col items-center">
-          <Container>
-            <Card>
-              <TableHeaderRow>
-                <TableHeaderRowCell className="basis-3/12">Name</TableHeaderRowCell>
-                <TableHeaderRowCell className="basis-8/12">Addresses</TableHeaderRowCell>
-                <TableHeaderRowCell className="basis-1/12"></TableHeaderRowCell>
-              </TableHeaderRow>
-              {bundles.map((bundle) => (
-                <a
-                  className="cursor-pointer"
-                  key={bundle.id}
-                  onClick={() => handleBundleClick(bundle.id)}
-                >
-                  <TableRow>
-                    <TableRowCell className="basis-3/12">{bundle.name}</TableRowCell>
-                    <TableRowCell className="basis-8/12 text-md font-bold text-text-200 underline underline-offset-2">
-                      {truncateAddressList(bundle.addresses)}
-                    </TableRowCell>
-                    <TableRowCell className="basis-1/12">
-                      <button
-                        className="cursor-pointer"
-                        onClick={(e) => handleBundleEditClick(bundle.id, e)}
-                      >
-                        <PencilIcon className="h-16 w-16" />
-                      </button>
-                    </TableRowCell>
-                  </TableRow>
-                </a>
-              ))}
-              <button
-                className="mt-8 flex cursor-pointer flex-row items-center gap-x-10 rounded-lg bg-purple-600 p-12 text-md font-semibold text-text-100"
-                onClick={handleBundleCreate}
+      <div className="mt-36 flex w-full flex-col items-center">
+        <Container>
+          <Card>
+            <TableHeaderRow>
+              <TableHeaderRowCell className="basis-3/12">Name</TableHeaderRowCell>
+              <TableHeaderRowCell className="basis-8/12">Addresses</TableHeaderRowCell>
+              <TableHeaderRowCell className="basis-1/12"></TableHeaderRowCell>
+            </TableHeaderRow>
+            {bundles.map((bundle) => (
+              <a
+                className="cursor-pointer"
+                key={bundle.id}
+                onClick={() => handleBundleClick(bundle.id)}
               >
-                <PlusIcon className="h-20 w-20" />
-                <span>New Bundle</span>
-              </button>
-            </Card>
-          </Container>
-        </div>
+                <TableRow>
+                  <TableRowCell className="basis-3/12">{bundle.name}</TableRowCell>
+                  <TableRowCell className="basis-8/12 text-md font-bold text-text-200 underline underline-offset-2">
+                    {truncateAddressList(bundle.addresses)}
+                  </TableRowCell>
+                  <TableRowCell className="basis-1/12">
+                    <button
+                      className="cursor-pointer"
+                      onClick={(e) => handleBundleEditClick(bundle.id, e)}
+                    >
+                      <PencilIcon className="h-16 w-16" />
+                    </button>
+                  </TableRowCell>
+                </TableRow>
+              </a>
+            ))}
+            <button
+              className="mt-8 flex cursor-pointer flex-row items-center gap-x-10 rounded-lg bg-purple-600 p-12 text-md font-semibold text-text-100"
+              onClick={handleBundleCreate}
+            >
+              <PlusIcon className="h-20 w-20" />
+              <span>New Bundle</span>
+            </button>
+          </Card>
+        </Container>
       </div>
       {isBundleEditModalVisible && (
         <EditBundleModal

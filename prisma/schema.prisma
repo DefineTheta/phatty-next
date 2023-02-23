@@ -32,6 +32,8 @@ model Bundle {
   visibility BundleVisibility @default(PRIVATE)
   userId     String           @db.ObjectId
   user       User             @relation(fields: [userId], references: [id])
+  likedBy    String[]         @default([])
+  dislikedBy String[]         @default([])
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
 }

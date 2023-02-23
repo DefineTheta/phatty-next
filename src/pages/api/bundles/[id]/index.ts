@@ -24,7 +24,7 @@ export default withProtectedTypedApiRoute({
       });
 
       if (!bundle) throw new HttpError('NOT_FOUND', 'Requested bundle does not exist');
-      if (!isUserBundle(token, bundle))
+      if (!isUserBundle(token, bundle) && bundle.visibility !== 'PUBLIC')
         throw new HttpError('FORBIDDEN', 'Tried to access unauthorized bundle');
 
       return bundle;
