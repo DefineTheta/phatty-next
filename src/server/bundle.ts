@@ -17,7 +17,16 @@ const bundle = {
   fetchAll: (fetchOptions?: RequestInit) =>
     typedFetch(z.array(BundleSchema), fetch('/api/bundles', fetchOptions)),
   create: (name: string, fetchOptions?: Omit<RequestInit, 'method'>) =>
-    typedFetch(BundleSchema, fetch('api/bundles', { ...fetchOptions, method: 'POST' }))
+    typedFetch(BundleSchema, fetch('api/bundles', { ...fetchOptions, method: 'POST' })),
+  update: (bundleId: string, bundle: Partial<Bundle>, fetchOptions?: Omit<RequestInit, 'method'>) =>
+    typedFetch(
+      BundleSchema,
+      fetch(`/api/bundles/${bundleId}`, {
+        ...fetchOptions,
+        method: 'PATCH',
+        body: JSON.stringify(bundle)
+      })
+    )
 };
 
 export default bundle;

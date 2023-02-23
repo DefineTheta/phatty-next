@@ -1,6 +1,7 @@
 import { HttpError } from '@app-src/lib/error';
 import prisma from '@app-src/lib/prisma';
-import { objectIdSchema, web3AddressSchema } from '@app-src/lib/zod';
+import { objectIdSchema } from '@app-src/lib/zod';
+import { BundleSchema } from '@app-src/server/bundle';
 import { typedApiRoute, withProtectedTypedApiRoute } from '@app-src/utils/tapi';
 import { Bundle } from '@prisma/client';
 import type { JWT } from 'next-auth/jwt';
@@ -33,12 +34,8 @@ export default withProtectedTypedApiRoute({
   }),
   PATCH: typedApiRoute({
     query: z.object({ id: objectIdSchema }),
-    body: z.object({ addresses: z.array(web3AddressSchema) }),
-    output: z.object({
-      id: objectIdSchema,
-      addresses: z.array(web3AddressSchema),
-      userId: objectIdSchema
-    }),
+    body: BundleSchema.partial(),
+    output: BundleSchema,
     isProtected: true,
     handler: async ({ query, body, token }) => {
       const bundle = await prisma.bundle.findUnique({
@@ -49,20 +46,20 @@ export default withProtectedTypedApiRoute({
       if (!isUserBundle(token, bundle))
         throw new HttpError('FORBIDDEN', 'Tried to access unauthorized bundle');
 
+      const updatedData = {
+        name: body.name || bundle.name,
+        addresses: body.addresses || bundle.addresses,
+        visibility: body.visibility || bundle.visibility
+      };
+
       const updatedBundle = await prisma.bundle.update({
         where: {
           id: query.id
         },
-        data: {
-          addresses: body.addresses
-        }
+        data: updatedData
       });
 
-      return {
-        id: updatedBundle.id,
-        addresses: updatedBundle.addresses,
-        userId: updatedBundle.userId
-      };
+      return updatedBundle;
     }
   }),
   DELETE: typedApiRoute({

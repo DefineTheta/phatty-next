@@ -16,10 +16,7 @@ const NavBar = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { data: session, status } = useSession();
-
-  console.log('SESSION!!!!', session);
-  console.log('STATUS!!!!', status);
+  const { status } = useSession();
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
