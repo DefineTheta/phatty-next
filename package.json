@@ -13,7 +13,8 @@
     "format": "npm run prettier:fix && npm run lint:fix",
     "migrate:dev": "dotenv -e .env.local -- npx prisma migrate dev",
     "prisma:generate": "dotenv -e .env.local -- npx prisma generate",
-    "prisma:push": "dotenv -e .env.local -- npx prisma db push"
+    "prisma:push": "dotenv -e .env.local -- npx prisma db push",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.12",
