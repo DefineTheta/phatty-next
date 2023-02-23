@@ -14,7 +14,7 @@ import { selectBundles } from '@app-src/store/bundle/selectors';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 const BundlesListPage = () => {
@@ -51,7 +51,9 @@ const BundlesListPage = () => {
     );
   }, []);
 
-  const handleBundleEditClick = useCallback((bundleId: string) => {
+  const handleBundleEditClick = useCallback((bundleId: string, e: MouseEvent) => {
+    e.stopPropagation();
+
     setSelectedBundleId(bundleId);
     setIsBundleEditModalVisible(true);
   }, []);
@@ -59,6 +61,13 @@ const BundlesListPage = () => {
   const handleBundleEditClose = useCallback(() => {
     setIsBundleEditModalVisible(false);
   }, []);
+
+  const handleBundleClick = useCallback(
+    (bundleId: string) => {
+      router.push(`/bundles/${bundleId}/portfolio`);
+    },
+    [router]
+  );
 
   return (
     <>
@@ -73,20 +82,26 @@ const BundlesListPage = () => {
                 <TableHeaderRowCell className="basis-1/12"></TableHeaderRowCell>
               </TableHeaderRow>
               {bundles.map((bundle) => (
-                <TableRow key={bundle.id}>
-                  <TableRowCell className="basis-3/12">{bundle.name}</TableRowCell>
-                  <TableRowCell className="basis-8/12 text-md font-bold text-text-200 underline underline-offset-2">
-                    {truncateAddressList(bundle.addresses)}
-                  </TableRowCell>
-                  <TableRowCell className="basis-1/12">
-                    <button
-                      className="cursor-pointer"
-                      onClick={() => handleBundleEditClick(bundle.id)}
-                    >
-                      <PencilIcon className="h-16 w-16" />
-                    </button>
-                  </TableRowCell>
-                </TableRow>
+                <a
+                  className="cursor-pointer"
+                  key={bundle.id}
+                  onClick={() => handleBundleClick(bundle.id)}
+                >
+                  <TableRow>
+                    <TableRowCell className="basis-3/12">{bundle.name}</TableRowCell>
+                    <TableRowCell className="basis-8/12 text-md font-bold text-text-200 underline underline-offset-2">
+                      {truncateAddressList(bundle.addresses)}
+                    </TableRowCell>
+                    <TableRowCell className="basis-1/12">
+                      <button
+                        className="cursor-pointer"
+                        onClick={(e) => handleBundleEditClick(bundle.id, e)}
+                      >
+                        <PencilIcon className="h-16 w-16" />
+                      </button>
+                    </TableRowCell>
+                  </TableRow>
+                </a>
               ))}
               <button
                 className="mt-8 flex cursor-pointer flex-row items-center gap-x-10 rounded-lg bg-purple-600 p-12 text-md font-semibold text-text-100"

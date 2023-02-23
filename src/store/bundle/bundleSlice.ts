@@ -6,8 +6,23 @@ import { BundleState } from './types';
 
 const initialState: BundleState = {
   bundlesIndex: {},
-  bundles: []
+  bundles: [],
+  currentBundle: null
 };
+
+const fetchBundle = createAsyncThunk<
+  TReturnType<typeof bundle.fetch>,
+  string,
+  { state: RootState }
+>('bundle/fetchBundle', async (bundleId, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  return await bundle.fetch(bundleId, { signal: controller.signal, cache: 'no-store' });
+});
 
 const fetchBundles = createAsyncThunk<
   TReturnType<typeof bundle.fetchAll>,
@@ -73,6 +88,16 @@ export const bundleSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(fetchBundle.pending, (state) => {});
+
+    builder.addCase(fetchBundle.fulfilled, (state, action) => {
+      state.currentBundle = action.payload;
+    });
+
+    builder.addCase(fetchBundle.rejected, (state, action) => {
+      console.error(action.error.message);
+    });
+
     builder.addCase(fetchBundles.pending, (state) => {});
 
     builder.addCase(fetchBundles.fulfilled, (state, action) => {
@@ -134,6 +159,6 @@ export const bundleSlice = createSlice({
   }
 });
 
-export { fetchBundles, updateBundle, deleteBundle, createBundle };
+export { fetchBundle, fetchBundles, updateBundle, deleteBundle, createBundle };
 
 export default bundleSlice.reducer;

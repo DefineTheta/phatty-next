@@ -16,7 +16,7 @@ const isUserBundle = (token: JWT, bundle: Bundle) => {
 export default withProtectedTypedApiRoute({
   GET: typedApiRoute({
     query: z.object({ id: objectIdSchema }),
-    output: z.object({ addresses: z.array(z.string()) }),
+    output: BundleSchema,
     isProtected: true,
     handler: async ({ query, token }) => {
       const bundle = await prisma.bundle.findUnique({
@@ -27,9 +27,7 @@ export default withProtectedTypedApiRoute({
       if (!isUserBundle(token, bundle))
         throw new HttpError('FORBIDDEN', 'Tried to access unauthorized bundle');
 
-      return {
-        addresses: bundle.addresses
-      };
+      return bundle;
     }
   }),
   PATCH: typedApiRoute({

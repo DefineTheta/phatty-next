@@ -39,22 +39,22 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
       {
         displayName: 'Portfolio',
         name: 'portfolio',
-        href: `/bundle/${encodeURIComponent(address)}/portfolio`
+        href: `/bundles/${encodeURIComponent(address)}/portfolio`
       },
       {
         displayName: 'Checker',
         name: 'checker',
-        href: `/bundle/${encodeURIComponent(address)}/checker`
+        href: `/bundles/${encodeURIComponent(address)}/checker`
       },
       {
         displayName: 'History',
         name: 'history',
-        href: `/bundle/${encodeURIComponent(address)}/portfolio`
+        href: `/bundles/${encodeURIComponent(address)}/portfolio`
       },
       {
         displayName: 'Accounts',
         name: 'account',
-        href: `/bundle/${encodeURIComponent(address)}/account`
+        href: `/bundles/${encodeURIComponent(address)}/account`
       }
     ],
     [address]

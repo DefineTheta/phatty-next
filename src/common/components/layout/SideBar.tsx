@@ -38,8 +38,8 @@ const SideBar = () => {
         router.push(route);
         // router.push(`/profile/${cryptoAddress || ''}`);
       } else if (tabName === 'bundle') {
-        const route = bundleAddress ? `/bundle/${bundleAddress}/portfolio` : '/bundle';
-        router.push(route);
+        // const route = bundleAddress ? `/bundles/${bundleAddress}/portfolio` : '/bundles';
+        router.push('/bundles');
         // router.push(`/bundle/${bundleAddress || ''}`);
       } else if (tabName === 'public') {
         const route = '/public';

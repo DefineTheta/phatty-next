@@ -4,7 +4,6 @@ import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import BundleHeader from '@app-src/modules/bundle/components/BundleHeader';
 import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
-import { fetchBundles } from '@app-src/store/bundle/bundleSlice';
 import { selectBundles } from '@app-src/store/bundle/selectors';
 import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import { useSession } from 'next-auth/react';
@@ -22,14 +21,14 @@ const BundlePage = () => {
   useEffect(() => {
     if (!bundleAddress) return;
 
-    router.push(`/bundle/${bundleAddress}/portfolio`);
-  }, [bundleAddress]);
+    router.push(`/bundles/${bundleAddress}/portfolio`);
+  }, [router, bundleAddress]);
 
   useEffect(() => {
     if (authStatus === 'authenticated') {
-      dispatch(fetchBundles());
+      router.push('/bundles/list');
     }
-  }, [dispatch, authStatus]);
+  }, [router, authStatus]);
 
   return (
     <div className="flex flex-col gap-y-24">
