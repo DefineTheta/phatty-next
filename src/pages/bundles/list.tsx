@@ -9,12 +9,13 @@ import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import { truncateAddressList } from '@app-src/common/utils/format';
 import BundleHeader from '@app-src/modules/bundle/components/BundleHeader';
 import EditBundleModal from '@app-src/modules/modal/EditBundleModal';
-import { fetchBundles } from '@app-src/store/bundle/bundleSlice';
+import { createBundle, fetchBundles } from '@app-src/store/bundle/bundleSlice';
 import { selectBundles } from '@app-src/store/bundle/selectors';
-import { PencilIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 const BundlesListPage = () => {
   const router = useRouter();
@@ -34,8 +35,23 @@ const BundlesListPage = () => {
 
   const bundles = useAppSelector(useCallback(selectBundles, []));
 
+  const handleBundleCreate = useCallback(() => {
+    toast.promise(
+      dispatch(createBundle())
+        .unwrap()
+        .then((bundle) => {
+          setSelectedBundleId(bundle.id);
+          setIsBundleEditModalVisible(true);
+        }),
+      {
+        loading: <span className="text-md font-bold">Creating...</span>,
+        success: <span className="text-md font-bold">Bundle created!</span>,
+        error: <span className="text-md font-bold">Could not create bundle</span>
+      }
+    );
+  }, []);
+
   const handleBundleEditClick = useCallback((bundleId: string) => {
-    console.log(bundleId);
     setSelectedBundleId(bundleId);
     setIsBundleEditModalVisible(true);
   }, []);
@@ -72,6 +88,13 @@ const BundlesListPage = () => {
                   </TableRowCell>
                 </TableRow>
               ))}
+              <button
+                className="mt-8 flex cursor-pointer flex-row items-center gap-x-10 rounded-lg bg-purple-600 p-12 text-md font-semibold text-text-100"
+                onClick={handleBundleCreate}
+              >
+                <PlusIcon className="h-20 w-20" />
+                <span>New Bundle</span>
+              </button>
             </Card>
           </Container>
         </div>

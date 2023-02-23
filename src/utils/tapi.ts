@@ -167,6 +167,8 @@ export const typedFetch = async <T extends z.ZodTypeAny>(
       throw new HttpError('INTERNAL_SERVER_ERROR', 'Unexpected internal server error');
   }
 
+  if (promise.status === 204) return;
+
   const data = await promise.json();
   const parsed = responseSchema.parse(data);
 

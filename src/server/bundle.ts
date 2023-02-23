@@ -16,8 +16,11 @@ export type Bundle = z.infer<typeof BundleSchema>;
 const bundle = {
   fetchAll: (fetchOptions?: RequestInit) =>
     typedFetch(z.array(BundleSchema), fetch('/api/bundles', fetchOptions)),
-  create: (name: string, fetchOptions?: Omit<RequestInit, 'method'>) =>
-    typedFetch(BundleSchema, fetch('api/bundles', { ...fetchOptions, method: 'POST' })),
+  create: (bundle: Omit<Bundle, 'id'>, fetchOptions?: Omit<RequestInit, 'method'>) =>
+    typedFetch(
+      BundleSchema,
+      fetch('/api/bundles', { ...fetchOptions, method: 'POST', body: JSON.stringify(bundle) })
+    ),
   update: (bundleId: string, bundle: Partial<Bundle>, fetchOptions?: Omit<RequestInit, 'method'>) =>
     typedFetch(
       BundleSchema,
@@ -26,7 +29,9 @@ const bundle = {
         method: 'PATCH',
         body: JSON.stringify(bundle)
       })
-    )
+    ),
+  delete: (bundleId: string, fetchOptions?: Omit<RequestInit, 'method'>) =>
+    typedFetch(z.void(), fetch(`/api/bundles/${bundleId}`, { ...fetchOptions, method: 'DELETE' }))
 };
 
 export default bundle;

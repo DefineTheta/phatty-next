@@ -18,13 +18,13 @@ export default withProtectedTypedApiRoute({
     }
   }),
   POST: typedApiRoute({
-    body: z.object({ name: z.string() }),
+    body: BundleSchema.omit({ id: true }),
     output: BundleSchema,
     isProtected: true,
     handler: async ({ body, token }) => {
       const bundle = await prisma.bundle.create({
         data: {
-          name: body.name,
+          ...body,
           user: {
             connect: {
               id: token.user.id

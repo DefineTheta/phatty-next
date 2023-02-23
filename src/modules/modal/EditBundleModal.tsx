@@ -2,7 +2,7 @@ import Input from '@app-src/common/components/input/Input';
 import RadioButton from '@app-src/common/components/input/RadioButton';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { updateBundle } from '@app-src/store/bundle/bundleSlice';
+import { deleteBundle, updateBundle } from '@app-src/store/bundle/bundleSlice';
 import { selectBundle } from '@app-src/store/bundle/selectors';
 import { BriefcaseIcon, LinkIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
@@ -85,11 +85,24 @@ const EditBundleModal = ({ bundleId, isVisible, handleClose }: IEditBundleModalP
 
   const handleSave = useCallback(() => {
     setIsSaving(true);
-    dispatch(updateBundle(bundleData)).then(() => {
-      setIsSaving(false);
-      toast.success(<span className="text-md font-bold">Bundle saved!</span>);
-    });
+    toast
+      .promise(dispatch(updateBundle(bundleData)), {
+        loading: <span className="text-md font-bold">Saving...</span>,
+        success: <span className="text-md font-bold">Bundle saved!</span>,
+        error: <span className="text-md font-bold">Could not save</span>
+      })
+      .then(() => {
+        setIsSaving(false);
+      });
   }, [dispatch, bundleData]);
+
+  const handleDelete = useCallback(() => {
+    toast.promise(dispatch(deleteBundle(bundleId)), {
+      loading: <span className="text-md font-bold">Deleting...</span>,
+      success: <span className="text-md font-bold">Bundle deleted!</span>,
+      error: <span className="text-md font-bold">Could not deleted</span>
+    });
+  }, [dispatch, bundleId]);
 
   if (!bundleData) return null;
 
@@ -166,7 +179,10 @@ const EditBundleModal = ({ bundleId, isVisible, handleClose }: IEditBundleModalP
             <LinkIcon className="h-16 w-16" />
             <span className="text-md text-text-200">Copy Link</span>
           </button>
-          <button className="flex flex-row items-center gap-x-6 decoration-red-600 underline-offset-4 hover:underline">
+          <button
+            className="flex flex-row items-center gap-x-6 decoration-red-600 underline-offset-4 hover:underline"
+            onClick={handleDelete}
+          >
             <TrashIcon className="h-16 w-16 text-red-600" />
             <span className="text-md text-red-600/80">Delete Bundle</span>
           </button>

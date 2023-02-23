@@ -29,7 +29,6 @@ const updateBundle = createAsyncThunk<
   { state: RootState }
 >('bundle/updateBundle', async (data, thunkAPI) => {
   const controller = new AbortController();
-  console.log(data);
 
   thunkAPI.signal.onabort = () => {
     controller.abort();
@@ -37,6 +36,38 @@ const updateBundle = createAsyncThunk<
 
   return await bundle.update(data.id, data, { signal: controller.signal, cache: 'no-store' });
 });
+
+const createBundle = createAsyncThunk<
+  TReturnType<typeof bundle.create>,
+  void,
+  { state: RootState }
+>('bundle/createBundle', async (_, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  return await bundle.create(
+    { name: 'Untitled Bundle', addresses: [], visibility: 'PRIVATE' },
+    { signal: controller.signal, cache: 'no-store' }
+  );
+});
+
+const deleteBundle = createAsyncThunk<
+  TReturnType<typeof bundle.delete>,
+  string,
+  { state: RootState }
+>('bundle/deleteBundle', async (bundleId, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  return await bundle.delete(bundleId, { signal: controller.signal, cache: 'no-store' });
+});
+
 export const bundleSlice = createSlice({
   name: 'bundle',
   initialState,
@@ -67,12 +98,42 @@ export const bundleSlice = createSlice({
     });
 
     builder.addCase(updateBundle.rejected, (state, action) => {
-      console.log(action);
+      throw new Error(action.error.message);
+    });
+
+    builder.addCase(createBundle.pending, (state) => {});
+
+    builder.addCase(createBundle.fulfilled, (state, action) => {
+      const index = state.bundles.length;
+      state.bundles.push(action.payload);
+
+      state.bundlesIndex[action.payload.id] = index;
+    });
+
+    builder.addCase(createBundle.rejected, (state, action) => {
+      throw new Error(action.error.message);
+    });
+
+    builder.addCase(deleteBundle.pending, (state) => {});
+
+    builder.addCase(deleteBundle.fulfilled, (state, action) => {
+      const bundlesIndex: { [k: string]: number } = {};
+      const bundles = state.bundles.filter((bundle) => bundle.id !== action.meta.arg);
+
+      bundles.forEach((bundle, index) => {
+        bundlesIndex[bundle.id] = index;
+      });
+
+      state.bundles = bundles;
+      state.bundlesIndex = bundlesIndex;
+    });
+
+    builder.addCase(deleteBundle.rejected, (state, action) => {
       throw new Error(action.error.message);
     });
   }
 });
 
-export { fetchBundles, updateBundle };
+export { fetchBundles, updateBundle, deleteBundle, createBundle };
 
 export default bundleSlice.reducer;
