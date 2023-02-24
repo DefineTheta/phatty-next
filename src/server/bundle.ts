@@ -42,7 +42,8 @@ const bundle = {
       fetch(`/api/bundles/${bundleId}`, {
         ...fetchOptions,
         method: 'PATCH',
-        body: JSON.stringify(bundle)
+        body: JSON.stringify(bundle),
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
       })
     ),
   delete: (bundleId: string, fetchOptions?: Omit<RequestInit, 'method'>) =>
