@@ -96,6 +96,8 @@ export function typedApiRoute<
             return res.status(500).end();
         }
       }
+
+      return res.status(500).end();
     }
   };
 }

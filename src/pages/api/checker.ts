@@ -1,5 +1,6 @@
+import { web3AddressSchema } from '@app-src/lib/zod';
 import { CheckerResponse } from '@app-src/server/checker';
-import { withTypedApiRoute } from '@app-src/utils/tapi';
+import { typedApiRoute, withProtectedTypedApiRoute } from '@app-src/utils/tapi';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { z } from 'zod';
@@ -54,58 +55,61 @@ const PhamePointsSchema = z.array(
   })
 );
 
-export default withTypedApiRoute(
-  z.object({ address: z.string() }),
-  CheckerResponse,
-  async ({ input }) => {
-    const jsonDirectory = path.join(process.cwd(), 'json');
-    const phiatOnePromise = fs.readFile(jsonDirectory + '/phiatOne.json', 'utf8');
-    const phiatTwoPromise = fs.readFile(jsonDirectory + '/phiatTwo.json', 'utf8');
-    const phameOnePromise = fs.readFile(jsonDirectory + '/phameOne.json', 'utf8');
-    const phameTwoPromise = fs.readFile(jsonDirectory + '/phameTwo.json', 'utf8');
+export default withProtectedTypedApiRoute({
+  GET: typedApiRoute({
+    query: z.object({ address: web3AddressSchema }),
+    output: CheckerResponse,
+    isProtected: false,
+    handler: async ({ query }) => {
+      const jsonDirectory = path.join(process.cwd(), 'json');
+      const phiatOnePromise = fs.readFile(jsonDirectory + '/phiatOne.json', 'utf8');
+      const phiatTwoPromise = fs.readFile(jsonDirectory + '/phiatTwo.json', 'utf8');
+      const phameOnePromise = fs.readFile(jsonDirectory + '/phameOne.json', 'utf8');
+      const phameTwoPromise = fs.readFile(jsonDirectory + '/phameTwo.json', 'utf8');
 
-    const [phiatOne, phiatTwo, phameOne, phameTwo] = await Promise.all([
-      phiatOnePromise,
-      phiatTwoPromise,
-      phameOnePromise,
-      phameTwoPromise
-    ]);
-    const [phiatOneContents, phiatTwoContents, phameOneContents, phameTwoContents] =
-      await Promise.all([
-        JSON.parse(phiatOne),
-        JSON.parse(phiatTwo),
-        JSON.parse(phameOne),
-        JSON.parse(phameTwo)
+      const [phiatOne, phiatTwo, phameOne, phameTwo] = await Promise.all([
+        phiatOnePromise,
+        phiatTwoPromise,
+        phameOnePromise,
+        phameTwoPromise
+      ]);
+      const [phiatOneContents, phiatTwoContents, phameOneContents, phameTwoContents] =
+        await Promise.all([
+          JSON.parse(phiatOne),
+          JSON.parse(phiatTwo),
+          JSON.parse(phameOne),
+          JSON.parse(phameTwo)
+        ]);
+
+      const [phiatTransactions, phiatPoints, phameTransactions, phamePoints] = await Promise.all([
+        PhiatTransactionsSchema.parseAsync(phiatOneContents),
+        PhiatPointsSchema.parseAsync(phiatTwoContents),
+        PhameTransactionsSchema.parseAsync(phameOneContents),
+        PhamePointsSchema.parseAsync(phameTwoContents)
       ]);
 
-    const [phiatTransactions, phiatPoints, phameTransactions, phamePoints] = await Promise.all([
-      PhiatTransactionsSchema.parseAsync(phiatOneContents),
-      PhiatPointsSchema.parseAsync(phiatTwoContents),
-      PhameTransactionsSchema.parseAsync(phameOneContents),
-      PhamePointsSchema.parseAsync(phameTwoContents)
-    ]);
+      const filteredPhiatTransactions = phiatTransactions.filter(
+        (transaction) => transaction.From.toLowerCase() === query.address
+      );
+      const filteredPhiatPoints = phiatPoints.filter(
+        (transaction) => transaction.From.toLowerCase() === query.address
+      );
+      const filteredPhameTransactions = phameTransactions.filter(
+        (transaction) => transaction.From.toLowerCase() === query.address
+      );
+      const filteredPhamePoints = phamePoints.filter(
+        (transaction) => transaction.From.toLowerCase() === query.address
+      );
 
-    const filteredPhiatTransactions = phiatTransactions.filter(
-      (transaction) => transaction.From.toLowerCase() === input.address.toLowerCase()
-    );
-    const filteredPhiatPoints = phiatPoints.filter(
-      (transaction) => transaction.From.toLowerCase() === input.address.toLowerCase()
-    );
-    const filteredPhameTransactions = phameTransactions.filter(
-      (transaction) => transaction.From.toLowerCase() === input.address.toLowerCase()
-    );
-    const filteredPhamePoints = phamePoints.filter(
-      (transaction) => transaction.From.toLowerCase() === input.address.toLowerCase()
-    );
+      const resObj = {
+        phiatTransactions: filteredPhiatTransactions,
+        phiatPoints: filteredPhiatPoints,
+        phameTransactions: filteredPhameTransactions,
+        phameTiers: filteredPhameTransactions,
+        phamePoints: filteredPhamePoints
+      };
 
-    const resObj = {
-      phiatTransactions: filteredPhiatTransactions,
-      phiatPoints: filteredPhiatPoints,
-      phameTransactions: filteredPhameTransactions,
-      phameTiers: filteredPhameTransactions,
-      phamePoints: filteredPhamePoints
-    };
-
-    return resObj;
-  }
-);
+      return resObj;
+    }
+  })
+});

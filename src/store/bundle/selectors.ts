@@ -11,10 +11,20 @@ export const selectBundle = (bundleId: string) =>
     return state.bundle.bundles[index];
   });
 
+export const selectCurrentBundle = memoize((state: RootState) => {
+  return state.bundle.currentBundle;
+});
+
 export const selectCurrentBundleAddresses = memoize((state: RootState) => {
   if (!state.bundle.currentBundle) return [];
 
   return state.bundle.currentBundle.addresses;
+});
+
+export const selectCurrentBundleName = memoize((state: RootState) => {
+  if (!state.bundle.currentBundle) return '';
+
+  return state.bundle.currentBundle.name;
 });
 
 export const selectCurrentPublicBundleAddresses = memoize((state: RootState) => {

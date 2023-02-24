@@ -75,7 +75,7 @@ const SideBar = () => {
       },
       {
         icon: <Squares2X2Icon className="h-24 w-24" />,
-        name: 'bundle',
+        name: 'bundles',
         displayName: 'Bundles'
       },
       {

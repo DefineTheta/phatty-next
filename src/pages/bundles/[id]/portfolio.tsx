@@ -73,7 +73,7 @@ const BundlePortfolioPage = () => {
 
   return (
     <div className="flex flex-col gap-y-24">
-      <BundleHeader address="" currentChains={currentChains} />
+      <BundleHeader currentChains={currentChains} />
       <PortfolioPage page={PortfolioEnum.BUNDLE} chains={currentChains} />
     </div>
   );

@@ -1,31 +1,33 @@
 import Container from '@app-src/common/components/layout/Container';
 import { useAppDispatch } from '@app-src/common/hooks/useAppDispatch';
 import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
-import { truncateAddress } from '@app-src/common/utils/format';
 import ChainDropdownSelector from '@app-src/modules/chain/components/ChainDropdownSelector';
 import { PortfolioChain, PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import { formatToMoney } from '@app-src/modules/portfolio/utils/format';
+import { selectCurrentBundle } from '@app-src/store/bundle/selectors';
 import { fetchPortfolioData } from '@app-src/store/portfolio/portfolioSlice';
-import { selectAddresses, selectChainsTotal } from '@app-src/store/portfolio/selectors';
+import { selectChainsTotal } from '@app-src/store/portfolio/selectors';
 import { CalendarIcon, DocumentDuplicateIcon, TrophyIcon } from '@heroicons/react/24/outline';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 
 type IBundleHeaderProps = {
-  address: string;
   currentChains: PortfolioChain[];
 };
 
-const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
+const BundleHeader = ({ currentChains }: IBundleHeaderProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const { status: authStatus } = useSession();
 
   const total = useAppSelector(
     useCallback(selectChainsTotal(currentChains, PortfolioEnum.BUNDLE), [currentChains])
   );
-  const bundleAddresses = useAppSelector(useCallback(selectAddresses(PortfolioEnum.BUNDLE), []));
+  const currentBundle = useAppSelector(useCallback(selectCurrentBundle, []));
 
   const styledTotal = useMemo(() => formatToMoney(total), [total]);
 
@@ -39,39 +41,53 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
       {
         displayName: 'Portfolio',
         name: 'portfolio',
-        href: `/bundles/${encodeURIComponent(address)}/portfolio`
+        href: currentBundle
+          ? `/bundles/${encodeURIComponent(currentBundle.id)}/portfolio`
+          : '/bundles'
       },
       {
         displayName: 'Checker',
         name: 'checker',
-        href: `/bundles/${encodeURIComponent(address)}/checker`
+        href: `/bundles/checker`
       },
       {
         displayName: 'History',
         name: 'history',
-        href: `/bundles/${encodeURIComponent(address)}/portfolio`
+        href: currentBundle
+          ? `/bundles/${encodeURIComponent(currentBundle.id)}/portfolio`
+          : '/bundles'
       },
       {
         displayName: 'Accounts',
         name: 'account',
-        href: `/bundles/${encodeURIComponent(address)}/account`
+        href: currentBundle
+          ? `/bundles/${encodeURIComponent(currentBundle.id)}/account`
+          : '/bundles'
       }
     ],
-    [address]
+    [currentBundle]
   );
 
   const handleAddressCopyClick = useCallback(() => {
-    navigator.clipboard.writeText(address);
-    toast.success(<span className="text-md font-bold">Address copied!</span>);
-  }, [address]);
+    navigator.clipboard.writeText(window.location.href);
+    toast.success(<span className="text-md font-bold">Link copied!</span>);
+  }, []);
 
   const handleRefreshDataClick = useCallback(() => {
+    if (!currentBundle) return;
+
     const controller = new AbortController();
 
-    fetchPortfolioData(dispatch, bundleAddresses, PortfolioEnum.BUNDLE, controller.signal, true);
+    fetchPortfolioData(
+      dispatch,
+      currentBundle.addresses,
+      PortfolioEnum.BUNDLE,
+      controller.signal,
+      true
+    );
 
     return () => controller.abort();
-  }, [dispatch, bundleAddresses]);
+  }, [dispatch, currentBundle]);
 
   return (
     <div className="flex flex-row justify-center bg-background-200 pt-36">
@@ -80,8 +96,8 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
           <div className="flex flex-row justify-between">
             <div className="flex flex-col items-start gap-y-12">
               <div className="flex flex-row items-center gap-x-6">
-                <span className="text-lg font-semibold tracking-wide text-text-200" title={address}>
-                  {truncateAddress(address)}
+                <span className="text-lg font-semibold tracking-wide text-text-200">
+                  {currentBundle?.name || ''}
                 </span>
                 <button
                   className="flex h-20 w-20 cursor-pointer items-center justify-center rounded-full bg-gray-100"
@@ -92,7 +108,7 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
                 </button>
               </div>
               <div className="flex flex-row items-center gap-x-18">
-                {address && (
+                {authStatus === 'authenticated' && (
                   <button className="flex cursor-pointer flex-row items-center gap-x-6 rounded-full bg-purple-button py-6 px-12 drop-shadow-md">
                     <TrophyIcon className="h-14 w-14 text-white" />
                     <span className="text-sm text-white">Early Supporter</span>
@@ -113,7 +129,7 @@ const BundleHeader = ({ address, currentChains }: IBundleHeaderProps) => {
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-x-30">
               {tabs.map((tab) => (
-                <Link key={tab.name} href={address || tab.name === 'public' ? tab.href : '/bundle'}>
+                <Link key={tab.name} href={tab.href}>
                   <a
                     className={`cursor-pointer px-10 pb-6 text-base font-bold ${
                       tab.name === currentTab

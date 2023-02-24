@@ -41,7 +41,9 @@ const NavBar = () => {
   const handleButtonClick = (type: 'connect' | 'disconnect') => {
     console.log(type);
     if (type === 'disconnect') {
-      disconnectAddress();
+      disconnectAddress().then(() => {
+        dispatch(setCheckerHasFetched({ type: 'BUNDLE', fetched: false }));
+      });
       // dispatch(deleteBundleSession()).then(() => {
       //   dispatch(setCheckerHasFetched({ type: 'BUNDLE', fetched: false }));
       //   router.push(`/bundle`);

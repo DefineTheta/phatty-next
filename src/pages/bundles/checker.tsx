@@ -4,19 +4,18 @@ import { useAppSelector } from '@app-src/common/hooks/useAppSelector';
 import BundleHeader from '@app-src/modules/bundle/components/BundleHeader';
 import PhameTableGroup from '@app-src/modules/bundle/components/Checker/Phame/PhameTableGroup';
 import PhiatTableGroup from '@app-src/modules/bundle/components/Checker/Phiat/PhiatTableGroup';
-import { PortfolioEnum } from '@app-src/modules/portfolio/types/portfolio';
 import { fetchCheckerData, setCheckerHasFetched } from '@app-src/store/checker/checkerSlice';
 import { selectCheckerHasFetched } from '@app-src/store/checker/selectors';
 import { SectionEnum } from '@app-src/store/checker/types';
-import { selectDisplayAddress } from '@app-src/store/portfolio/selectors';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
 const CheckerPage = () => {
   const dispatch = useAppDispatch();
+  const { data: session } = useSession();
 
-  const bundleAddress = useAppSelector(useCallback(selectDisplayAddress(PortfolioEnum.BUNDLE), []));
   const hasFetched = useAppSelector(useCallback(selectCheckerHasFetched('BUNDLE'), []));
 
   const [isModalVisible, setIsModalVisible] = useState(true);
@@ -24,12 +23,14 @@ const CheckerPage = () => {
   const handleModalClose = useCallback(() => setIsModalVisible(false), []);
 
   useEffect(() => {
-    if (!hasFetched && bundleAddress) {
-      dispatch(fetchCheckerData({ address: bundleAddress, type: 'BUNDLE' })).then(() => {
-        dispatch(setCheckerHasFetched({ type: 'BUNDLE', fetched: true }));
-      });
+    if (!hasFetched && session) {
+      dispatch(fetchCheckerData({ address: session.user.connectedAddress, type: 'BUNDLE' })).then(
+        () => {
+          dispatch(setCheckerHasFetched({ type: 'BUNDLE', fetched: true }));
+        }
+      );
     }
-  }, [dispatch, hasFetched, bundleAddress]);
+  }, [dispatch, hasFetched, session]);
 
   return (
     <>
@@ -57,7 +58,7 @@ const CheckerPage = () => {
         </p>
       </Modal>
       <div className="flex flex-col gap-y-24">
-        <BundleHeader address={bundleAddress} currentChains={[]} />
+        <BundleHeader currentChains={[]} />
         <div className="flex w-full justify-center">
           <Container>
             <div className="flex w-full flex-col items-center gap-y-30">

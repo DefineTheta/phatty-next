@@ -82,6 +82,11 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
         }
 
         return token;
+      },
+      session: async ({ session, token }) => {
+        session.user.connectedAddress = token.user.connectedAddress;
+
+        return session;
       }
     }
   });
