@@ -9,12 +9,14 @@ import { selectCheckerHasFetched } from '@app-src/store/checker/selectors';
 import { SectionEnum } from '@app-src/store/checker/types';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
 const CheckerPage = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
-  const { data: session } = useSession();
+  const { data: session, status: authStatus } = useSession();
 
   const hasFetched = useAppSelector(useCallback(selectCheckerHasFetched('BUNDLE'), []));
 
@@ -31,6 +33,10 @@ const CheckerPage = () => {
       );
     }
   }, [dispatch, hasFetched, session]);
+
+  useEffect(() => {
+    if (authStatus !== 'authenticated') router.push('/bundles');
+  }, [router, authStatus]);
 
   return (
     <>

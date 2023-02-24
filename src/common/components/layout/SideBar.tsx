@@ -37,7 +37,7 @@ const SideBar = () => {
         const route = profileAddress ? `/profile/${profileAddress}/portfolio` : '/profile';
         router.push(route);
         // router.push(`/profile/${cryptoAddress || ''}`);
-      } else if (tabName === 'bundle') {
+      } else if (tabName === 'bundles') {
         // const route = bundleAddress ? `/bundles/${bundleAddress}/portfolio` : '/bundles';
         router.push('/bundles');
         // router.push(`/bundle/${bundleAddress || ''}`);
