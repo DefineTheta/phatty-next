@@ -114,6 +114,33 @@ const fetchPublicBundles = createAsyncThunk<
   return await bundle.fetchAll(true, { signal: controller.signal, cache: 'no-store' });
 });
 
+const likeBundle = createAsyncThunk<TReturnType<typeof bundle.like>, string, { state: RootState }>(
+  'bundle/likeBundle',
+  async (bundleId, thunkAPI) => {
+    const controller = new AbortController();
+
+    thunkAPI.signal.onabort = () => {
+      controller.abort();
+    };
+
+    return await bundle.like(bundleId, { signal: controller.signal, cache: 'no-store' });
+  }
+);
+
+const dislikeBundle = createAsyncThunk<
+  TReturnType<typeof bundle.dislike>,
+  string,
+  { state: RootState }
+>('bundle/dislikeBundles', async (bundleId, thunkAPI) => {
+  const controller = new AbortController();
+
+  thunkAPI.signal.onabort = () => {
+    controller.abort();
+  };
+
+  return await bundle.dislike(bundleId, { signal: controller.signal, cache: 'no-store' });
+});
+
 export const bundleSlice = createSlice({
   name: 'bundle',
   initialState,
@@ -213,6 +240,28 @@ export const bundleSlice = createSlice({
     builder.addCase(fetchPublicBundles.rejected, (state, action) => {
       console.error(action.error.message);
     });
+
+    builder.addCase(likeBundle.pending, (state) => {});
+
+    builder.addCase(likeBundle.fulfilled, (state, action) => {
+      const index = state.publicBundlesIndex[action.payload.id];
+      state.publicBundles[index] = action.payload;
+    });
+
+    builder.addCase(likeBundle.rejected, (state, action) => {
+      console.error(action.error.message);
+    });
+
+    builder.addCase(dislikeBundle.pending, (state) => {});
+
+    builder.addCase(dislikeBundle.fulfilled, (state, action) => {
+      const index = state.publicBundlesIndex[action.payload.id];
+      state.publicBundles[index] = action.payload;
+    });
+
+    builder.addCase(dislikeBundle.rejected, (state, action) => {
+      console.error(action.error.message);
+    });
   }
 });
 
@@ -223,7 +272,9 @@ export {
   deleteBundle,
   createBundle,
   fetchPublicBundles,
-  fetchPublicBundle
+  fetchPublicBundle,
+  likeBundle,
+  dislikeBundle
 };
 
 export default bundleSlice.reducer;

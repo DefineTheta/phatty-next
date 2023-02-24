@@ -68,7 +68,7 @@ export function typedApiRoute<
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const query = querySchema ? querySchema.parse(req.query) : undefined;
-      const body = bodySchema ? bodySchema.parse(req.body) : undefined;
+      const body = bodySchema ? bodySchema.parse(await JSON.parse(req.body)) : undefined;
       const token = await getToken({ req });
 
       if (isProtected && !token) throw new HttpError('UNAUTHORIZED', 'Unauthenticated user');

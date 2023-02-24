@@ -19,6 +19,7 @@ type IEditBundleModalProps = {
 const EditBundleModal = ({ bundleId, isVisible, handleClose }: IEditBundleModalProps) => {
   const dispatch = useAppDispatch();
 
+  const nameInputRef = useRef<HTMLInputElement>(null);
   const addressInputRef = useRef<HTMLInputElement>(null);
 
   const bundle = useAppSelector(useCallback(selectBundle(bundleId), [bundleId]));
@@ -84,9 +85,18 @@ const EditBundleModal = ({ bundleId, isVisible, handleClose }: IEditBundleModalP
   );
 
   const handleSave = useCallback(() => {
+    if (!nameInputRef.current) return;
+
+    const data: typeof bundleData = {
+      ...bundleData,
+      name: nameInputRef.current.value
+    };
+
+    setBundleData(data);
+
     setIsSaving(true);
     toast
-      .promise(dispatch(updateBundle(bundleData)), {
+      .promise(dispatch(updateBundle(data)), {
         loading: <span className="text-md font-bold">Saving...</span>,
         success: <span className="text-md font-bold">Bundle saved!</span>,
         error: <span className="text-md font-bold">Could not save</span>
@@ -94,7 +104,7 @@ const EditBundleModal = ({ bundleId, isVisible, handleClose }: IEditBundleModalP
       .then(() => {
         setIsSaving(false);
       });
-  }, [dispatch, bundleData]);
+  }, [dispatch, bundleData, nameInputRef]);
 
   const handleDelete = useCallback(() => {
     toast.promise(dispatch(deleteBundle(bundleId)), {
@@ -116,7 +126,13 @@ const EditBundleModal = ({ bundleId, isVisible, handleClose }: IEditBundleModalP
     >
       <div className="flex flex-row items-center gap-x-12 border-b border-white/20 pb-8">
         <BriefcaseIcon className="h-24 w-24" />
-        <h1 className="text-lg font-bold text-text-200">{bundleData.name}</h1>
+        <h1 className="text-lg font-bold text-text-200">Edit Bundle</h1>
+      </div>
+      <div className="flex flex-col justify-center gap-y-6">
+        <div className="flex flex-row items-center gap-x-4">
+          <h3 className="text-md font-semibold text-text-200">Bundle Name</h3>
+        </div>
+        <Input inputRef={nameInputRef} placeholder={bundleData.name} />
       </div>
       <div className="flex flex-col justify-center gap-y-6">
         <div className="flex flex-row items-center gap-x-4">

@@ -33,7 +33,7 @@ const bundle = {
         ...fetchOptions,
         method: 'POST',
         body: JSON.stringify(bundle),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
       })
     ),
   update: (bundleId: string, bundle: Partial<Bundle>, fetchOptions?: Omit<RequestInit, 'method'>) =>
@@ -46,7 +46,17 @@ const bundle = {
       })
     ),
   delete: (bundleId: string, fetchOptions?: Omit<RequestInit, 'method'>) =>
-    typedFetch(z.void(), fetch(`/api/bundles/${bundleId}`, { ...fetchOptions, method: 'DELETE' }))
+    typedFetch(z.void(), fetch(`/api/bundles/${bundleId}`, { ...fetchOptions, method: 'DELETE' })),
+  like: (bundleId: string, fetchOptions?: Omit<RequestInit, 'method'>) =>
+    typedFetch(
+      BundleSchema,
+      fetch(`/api/bundles/${bundleId}/like`, { ...fetchOptions, method: 'POST' })
+    ),
+  dislike: (bundleId: string, fetchOptions?: Omit<RequestInit, 'method'>) =>
+    typedFetch(
+      BundleSchema,
+      fetch(`/api/bundles/${bundleId}/dislike`, { ...fetchOptions, method: 'POST' })
+    )
 };
 
 export default bundle;
