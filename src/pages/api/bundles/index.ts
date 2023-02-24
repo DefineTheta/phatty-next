@@ -17,7 +17,7 @@ export default withProtectedTypedApiRoute({
     }
   }),
   POST: typedApiRoute({
-    body: BundleSchema.omit({ id: true }),
+    body: BundleSchema.omit({ id: true, likes: true, dislikes: true }),
     output: BundleSchema,
     isProtected: true,
     handler: async ({ body, token }) => {

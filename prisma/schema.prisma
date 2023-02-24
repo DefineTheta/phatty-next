@@ -19,21 +19,29 @@ enum BundleVisibility {
 }
 
 model User {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  connectedAddress String
-  role             UserRole @default(USER)
-  bundles          Bundle[]
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  connectedAddress  String
+  role              UserRole @default(USER)
+  bundles           Bundle[]
+  likedBundleIds    String[] @default([]) @db.ObjectId
+  dislikedBundleIds String[] @default([]) @db.ObjectId
+  likedBundles      Bundle[] @relation(name: "LikedBundles", fields: [likedBundleIds], references: [id])
+  dislikedBundles   Bundle[] @relation(name: "DislikedBundles", fields: [dislikedBundleIds], references: [id])
 }
 
 model Bundle {
-  id         String           @id @default(auto()) @map("_id") @db.ObjectId
-  addresses  String[]         @default([])
-  name       String
-  visibility BundleVisibility @default(PRIVATE)
-  userId     String           @db.ObjectId
-  user       User             @relation(fields: [userId], references: [id])
-  likedBy    String[]         @default([])
-  dislikedBy String[]         @default([])
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  addresses         String[]         @default([])
+  name              String           @default("Untitled")
+  visibility        BundleVisibility @default(PRIVATE)
+  userId            String           @db.ObjectId
+  user              User             @relation(fields: [userId], references: [id])
+  likedByUserIds    String[]         @default([]) @db.ObjectId
+  dislikedByUserIds String[]         @default([]) @db.ObjectId
+  likedByUsers      User[]           @relation(name: "LikedBundles", fields: [likedByUserIds], references: [id])
+  dislikedByUsers   User[]           @relation(name: "DislikedBundles", fields: [dislikedByUserIds], references: [id])
+  likes             Int              @default(0)
+  dislikes          Int              @default(0)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 }

@@ -20,28 +20,28 @@ export default withProtectedTypedApiRoute({
 
       if (!bundle) throw new HttpError('NOT_FOUND', 'Requested bundle does not exist');
 
-      const isLikedByUser = bundle.likedByUserIds.find((id) => id === token.user.id);
-      if (isLikedByUser) return bundle;
-
       const isDislikedByUser = bundle.dislikedByUserIds.find((id) => id === token.user.id);
+      if (isDislikedByUser) return bundle;
+
+      const isLikedByUser = bundle.likedByUserIds.find((id) => id === token.user.id);
 
       const updatedBundle = await prisma.bundle.update({
         where: {
           id: query.id
         },
         data: {
-          likes: {
+          dislikes: {
             increment: 1
           },
-          dislikes: {
-            decrement: isDislikedByUser ? 1 : 0
+          likes: {
+            decrement: isLikedByUser ? 1 : 0
           },
-          likedByUsers: {
+          dislikedByUsers: {
             connect: {
               id: token.user.id
             }
           },
-          dislikedByUsers: isDislikedByUser
+          likedByUsers: isLikedByUser
             ? {
                 disconnect: {
                   id: token.user.id
